@@ -1,0 +1,629 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3DAD44DB1BDEF84B007E123A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44DA1BDEF84B007E123A /* main.m */; };
+		3DAD44DE1BDEF84B007E123A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44DD1BDEF84B007E123A /* AppDelegate.m */; };
+		3DAD44E11BDEF84B007E123A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44E01BDEF84B007E123A /* ViewController.m */; };
+		3DAD44E41BDEF84B007E123A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E21BDEF84B007E123A /* Main.storyboard */; };
+		3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E51BDEF84B007E123A /* Assets.xcassets */; };
+		3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */; };
+		3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */; };
+		3DAD44FF1BDEF84C007E123A /* CMSimulatorUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */; };
+		3DAD450D1BDF0CB9007E123A /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD450C1BDF0CB9007E123A /* Media.xcassets */; };
+		3DAD45101BDF131C007E123A /* Structural.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD450F1BDF131C007E123A /* Structural.jpeg */; };
+		3DAD45121BDF132C007E123A /* Architect.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45111BDF132C007E123A /* Architect.jpeg */; };
+		3DAD45141BDF1351007E123A /* IHS.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45131BDF1351007E123A /* IHS.jpeg */; };
+		3DAD45161BDF1361007E123A /* IES.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45151BDF1361007E123A /* IES.jpeg */; };
+		3DAD45181BDF1373007E123A /* Woman-15 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45171BDF1373007E123A /* Woman-15 6.jpeg */; };
+		3DAD451A1BDF1390007E123A /* Man-6 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45191BDF1390007E123A /* Man-6 6.jpeg */; };
+		3DAD451C1BDF1397007E123A /* Man-1 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD451B1BDF1397007E123A /* Man-1 6.jpeg */; };
+		3DAD451E1BDF13AB007E123A /* Businesswoman-1 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD451D1BDF13AB007E123A /* Businesswoman-1 6.jpeg */; };
+		3DAD45201BDF13B4007E123A /* Boss-5 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD451F1BDF13B4007E123A /* Boss-5 6.jpeg */; };
+		3DAD45221BDF13BC007E123A /* Boss-2 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45211BDF13BC007E123A /* Boss-2 6.jpeg */; };
+		3DAD45241BDF13C2007E123A /* Boss-3 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45231BDF13C2007E123A /* Boss-3 6.jpeg */; };
+		3DAD45261BDF13E3007E123A /* Car-Jumper 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45251BDF13E3007E123A /* Car-Jumper 6.jpeg */; };
+		3DAD45281BDF13EC007E123A /* Checklist 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45271BDF13EC007E123A /* Checklist 6.jpeg */; };
+		3DAD452A1BDF13F4007E123A /* Clipboard-Plan 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45291BDF13F4007E123A /* Clipboard-Plan 6.jpeg */; };
+		3DAD452C1BDF1402007E123A /* Gold-Cart 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD452B1BDF1402007E123A /* Gold-Cart 6.jpeg */; };
+		3DAD452E1BDF1407007E123A /* Graph-Magnifier 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD452D1BDF1407007E123A /* Graph-Magnifier 6.jpeg */; };
+		3DAD45301BDF1415007E123A /* Money-Increase 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD452F1BDF1415007E123A /* Money-Increase 6.jpeg */; };
+		3DAD45321BDF141A007E123A /* Money-Graph 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45311BDF141A007E123A /* Money-Graph 6.jpeg */; };
+		3DAD45341BDF1423007E123A /* Nuclear-Mushroom 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45331BDF1423007E123A /* Nuclear-Mushroom 6.jpeg */; };
+		3DAD45361BDF142D007E123A /* Programming 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45351BDF142D007E123A /* Programming 6.jpeg */; };
+		3DAD45381BDF143E007E123A /* Vector 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45371BDF143E007E123A /* Vector 6.jpeg */; };
+		3DAD453A1BDF1445007E123A /* Tower 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45391BDF1445007E123A /* Tower 6.jpeg */; };
+		3DAD453C1BDF15CE007E123A /* Magician 6.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD453B1BDF15CE007E123A /* Magician 6.jpeg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3DAD44F01BDEF84C007E123A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DAD44CE1BDEF84B007E123A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DAD44D51BDEF84B007E123A;
+			remoteInfo = CMSimulator;
+		};
+		3DAD44FB1BDEF84C007E123A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DAD44CE1BDEF84B007E123A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DAD44D51BDEF84B007E123A;
+			remoteInfo = CMSimulator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3DAD44D61BDEF84B007E123A /* CMSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DAD44DA1BDEF84B007E123A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3DAD44DC1BDEF84B007E123A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3DAD44DD1BDEF84B007E123A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3DAD44DF1BDEF84B007E123A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3DAD44E01BDEF84B007E123A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3DAD44E31BDEF84B007E123A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3DAD44E51BDEF84B007E123A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3DAD44E81BDEF84B007E123A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3DAD44EA1BDEF84B007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DAD44EF1BDEF84C007E123A /* CMSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMSimulatorTests.m; sourceTree = "<group>"; };
+		3DAD44F51BDEF84C007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DAD44FA1BDEF84C007E123A /* CMSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMSimulatorUITests.m; sourceTree = "<group>"; };
+		3DAD45001BDEF84C007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DAD450C1BDF0CB9007E123A /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = Simulator/Media.xcassets; sourceTree = "<group>"; };
+		3DAD450F1BDF131C007E123A /* Structural.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Structural.jpeg; sourceTree = "<group>"; };
+		3DAD45111BDF132C007E123A /* Architect.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Architect.jpeg; sourceTree = "<group>"; };
+		3DAD45131BDF1351007E123A /* IHS.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IHS.jpeg; sourceTree = "<group>"; };
+		3DAD45151BDF1361007E123A /* IES.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IES.jpeg; sourceTree = "<group>"; };
+		3DAD45171BDF1373007E123A /* Woman-15 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Woman-15 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45191BDF1390007E123A /* Man-6 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Man-6 6.jpeg"; sourceTree = "<group>"; };
+		3DAD451B1BDF1397007E123A /* Man-1 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Man-1 6.jpeg"; sourceTree = "<group>"; };
+		3DAD451D1BDF13AB007E123A /* Businesswoman-1 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Businesswoman-1 6.jpeg"; sourceTree = "<group>"; };
+		3DAD451F1BDF13B4007E123A /* Boss-5 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boss-5 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45211BDF13BC007E123A /* Boss-2 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boss-2 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45231BDF13C2007E123A /* Boss-3 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boss-3 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45251BDF13E3007E123A /* Car-Jumper 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Car-Jumper 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45271BDF13EC007E123A /* Checklist 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Checklist 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45291BDF13F4007E123A /* Clipboard-Plan 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Clipboard-Plan 6.jpeg"; sourceTree = "<group>"; };
+		3DAD452B1BDF1402007E123A /* Gold-Cart 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Gold-Cart 6.jpeg"; sourceTree = "<group>"; };
+		3DAD452D1BDF1407007E123A /* Graph-Magnifier 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Graph-Magnifier 6.jpeg"; sourceTree = "<group>"; };
+		3DAD452F1BDF1415007E123A /* Money-Increase 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Money-Increase 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45311BDF141A007E123A /* Money-Graph 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Money-Graph 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45331BDF1423007E123A /* Nuclear-Mushroom 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Nuclear-Mushroom 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45351BDF142D007E123A /* Programming 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Programming 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45371BDF143E007E123A /* Vector 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Vector 6.jpeg"; sourceTree = "<group>"; };
+		3DAD45391BDF1445007E123A /* Tower 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Tower 6.jpeg"; sourceTree = "<group>"; };
+		3DAD453B1BDF15CE007E123A /* Magician 6.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Magician 6.jpeg"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3DAD44D31BDEF84B007E123A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44EC1BDEF84C007E123A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44F71BDEF84C007E123A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3DAD44CD1BDEF84B007E123A = {
+			isa = PBXGroup;
+			children = (
+				3DAD450C1BDF0CB9007E123A /* Media.xcassets */,
+				3DAD44D81BDEF84B007E123A /* CMSimulator */,
+				3DAD44F21BDEF84C007E123A /* CMSimulatorTests */,
+				3DAD44FD1BDEF84C007E123A /* CMSimulatorUITests */,
+				3DAD44D71BDEF84B007E123A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3DAD44D71BDEF84B007E123A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD44D61BDEF84B007E123A /* CMSimulator.app */,
+				3DAD44EF1BDEF84C007E123A /* CMSimulatorTests.xctest */,
+				3DAD44FA1BDEF84C007E123A /* CMSimulatorUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3DAD44D81BDEF84B007E123A /* CMSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD450E1BDF1302007E123A /* Iconos */,
+				3DAD44DC1BDEF84B007E123A /* AppDelegate.h */,
+				3DAD44DD1BDEF84B007E123A /* AppDelegate.m */,
+				3DAD44DF1BDEF84B007E123A /* ViewController.h */,
+				3DAD44E01BDEF84B007E123A /* ViewController.m */,
+				3DAD44E21BDEF84B007E123A /* Main.storyboard */,
+				3DAD44E51BDEF84B007E123A /* Assets.xcassets */,
+				3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */,
+				3DAD44EA1BDEF84B007E123A /* Info.plist */,
+				3DAD44D91BDEF84B007E123A /* Supporting Files */,
+			);
+			path = CMSimulator;
+			sourceTree = "<group>";
+		};
+		3DAD44D91BDEF84B007E123A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD44DA1BDEF84B007E123A /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3DAD44F21BDEF84C007E123A /* CMSimulatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */,
+				3DAD44F51BDEF84C007E123A /* Info.plist */,
+			);
+			path = CMSimulatorTests;
+			sourceTree = "<group>";
+		};
+		3DAD44FD1BDEF84C007E123A /* CMSimulatorUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */,
+				3DAD45001BDEF84C007E123A /* Info.plist */,
+			);
+			path = CMSimulatorUITests;
+			sourceTree = "<group>";
+		};
+		3DAD450E1BDF1302007E123A /* Iconos */ = {
+			isa = PBXGroup;
+			children = (
+				3DAD45111BDF132C007E123A /* Architect.jpeg */,
+				3DAD45391BDF1445007E123A /* Tower 6.jpeg */,
+				3DAD45371BDF143E007E123A /* Vector 6.jpeg */,
+				3DAD45331BDF1423007E123A /* Nuclear-Mushroom 6.jpeg */,
+				3DAD45351BDF142D007E123A /* Programming 6.jpeg */,
+				3DAD45311BDF141A007E123A /* Money-Graph 6.jpeg */,
+				3DAD452F1BDF1415007E123A /* Money-Increase 6.jpeg */,
+				3DAD452D1BDF1407007E123A /* Graph-Magnifier 6.jpeg */,
+				3DAD452B1BDF1402007E123A /* Gold-Cart 6.jpeg */,
+				3DAD45291BDF13F4007E123A /* Clipboard-Plan 6.jpeg */,
+				3DAD45271BDF13EC007E123A /* Checklist 6.jpeg */,
+				3DAD45251BDF13E3007E123A /* Car-Jumper 6.jpeg */,
+				3DAD45231BDF13C2007E123A /* Boss-3 6.jpeg */,
+				3DAD45211BDF13BC007E123A /* Boss-2 6.jpeg */,
+				3DAD451F1BDF13B4007E123A /* Boss-5 6.jpeg */,
+				3DAD451D1BDF13AB007E123A /* Businesswoman-1 6.jpeg */,
+				3DAD451B1BDF1397007E123A /* Man-1 6.jpeg */,
+				3DAD45191BDF1390007E123A /* Man-6 6.jpeg */,
+				3DAD45171BDF1373007E123A /* Woman-15 6.jpeg */,
+				3DAD450F1BDF131C007E123A /* Structural.jpeg */,
+				3DAD453B1BDF15CE007E123A /* Magician 6.jpeg */,
+				3DAD45151BDF1361007E123A /* IES.jpeg */,
+				3DAD45131BDF1351007E123A /* IHS.jpeg */,
+			);
+			name = Iconos;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3DAD44D51BDEF84B007E123A /* CMSimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DAD45031BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulator" */;
+			buildPhases = (
+				3DAD44D21BDEF84B007E123A /* Sources */,
+				3DAD44D31BDEF84B007E123A /* Frameworks */,
+				3DAD44D41BDEF84B007E123A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CMSimulator;
+			productName = CMSimulator;
+			productReference = 3DAD44D61BDEF84B007E123A /* CMSimulator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3DAD44EE1BDEF84C007E123A /* CMSimulatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DAD45061BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulatorTests" */;
+			buildPhases = (
+				3DAD44EB1BDEF84C007E123A /* Sources */,
+				3DAD44EC1BDEF84C007E123A /* Frameworks */,
+				3DAD44ED1BDEF84C007E123A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3DAD44F11BDEF84C007E123A /* PBXTargetDependency */,
+			);
+			name = CMSimulatorTests;
+			productName = CMSimulatorTests;
+			productReference = 3DAD44EF1BDEF84C007E123A /* CMSimulatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3DAD44F91BDEF84C007E123A /* CMSimulatorUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DAD45091BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulatorUITests" */;
+			buildPhases = (
+				3DAD44F61BDEF84C007E123A /* Sources */,
+				3DAD44F71BDEF84C007E123A /* Frameworks */,
+				3DAD44F81BDEF84C007E123A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3DAD44FC1BDEF84C007E123A /* PBXTargetDependency */,
+			);
+			name = CMSimulatorUITests;
+			productName = CMSimulatorUITests;
+			productReference = 3DAD44FA1BDEF84C007E123A /* CMSimulatorUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3DAD44CE1BDEF84B007E123A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Enrique Galicia";
+				TargetAttributes = {
+					3DAD44D51BDEF84B007E123A = {
+						CreatedOnToolsVersion = 7.1;
+					};
+					3DAD44EE1BDEF84C007E123A = {
+						CreatedOnToolsVersion = 7.1;
+						TestTargetID = 3DAD44D51BDEF84B007E123A;
+					};
+					3DAD44F91BDEF84C007E123A = {
+						CreatedOnToolsVersion = 7.1;
+						TestTargetID = 3DAD44D51BDEF84B007E123A;
+					};
+				};
+			};
+			buildConfigurationList = 3DAD44D11BDEF84B007E123A /* Build configuration list for PBXProject "CMSimulator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3DAD44CD1BDEF84B007E123A;
+			productRefGroup = 3DAD44D71BDEF84B007E123A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3DAD44D51BDEF84B007E123A /* CMSimulator */,
+				3DAD44EE1BDEF84C007E123A /* CMSimulatorTests */,
+				3DAD44F91BDEF84C007E123A /* CMSimulatorUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3DAD44D41BDEF84B007E123A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DAD45181BDF1373007E123A /* Woman-15 6.jpeg in Resources */,
+				3DAD45261BDF13E3007E123A /* Car-Jumper 6.jpeg in Resources */,
+				3DAD45141BDF1351007E123A /* IHS.jpeg in Resources */,
+				3DAD453C1BDF15CE007E123A /* Magician 6.jpeg in Resources */,
+				3DAD452C1BDF1402007E123A /* Gold-Cart 6.jpeg in Resources */,
+				3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */,
+				3DAD45121BDF132C007E123A /* Architect.jpeg in Resources */,
+				3DAD45341BDF1423007E123A /* Nuclear-Mushroom 6.jpeg in Resources */,
+				3DAD45301BDF1415007E123A /* Money-Increase 6.jpeg in Resources */,
+				3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */,
+				3DAD45221BDF13BC007E123A /* Boss-2 6.jpeg in Resources */,
+				3DAD452A1BDF13F4007E123A /* Clipboard-Plan 6.jpeg in Resources */,
+				3DAD45161BDF1361007E123A /* IES.jpeg in Resources */,
+				3DAD45241BDF13C2007E123A /* Boss-3 6.jpeg in Resources */,
+				3DAD45281BDF13EC007E123A /* Checklist 6.jpeg in Resources */,
+				3DAD45101BDF131C007E123A /* Structural.jpeg in Resources */,
+				3DAD45361BDF142D007E123A /* Programming 6.jpeg in Resources */,
+				3DAD452E1BDF1407007E123A /* Graph-Magnifier 6.jpeg in Resources */,
+				3DAD453A1BDF1445007E123A /* Tower 6.jpeg in Resources */,
+				3DAD45321BDF141A007E123A /* Money-Graph 6.jpeg in Resources */,
+				3DAD45201BDF13B4007E123A /* Boss-5 6.jpeg in Resources */,
+				3DAD451A1BDF1390007E123A /* Man-6 6.jpeg in Resources */,
+				3DAD451E1BDF13AB007E123A /* Businesswoman-1 6.jpeg in Resources */,
+				3DAD450D1BDF0CB9007E123A /* Media.xcassets in Resources */,
+				3DAD451C1BDF1397007E123A /* Man-1 6.jpeg in Resources */,
+				3DAD45381BDF143E007E123A /* Vector 6.jpeg in Resources */,
+				3DAD44E41BDEF84B007E123A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44ED1BDEF84C007E123A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44F81BDEF84C007E123A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3DAD44D21BDEF84B007E123A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DAD44E11BDEF84B007E123A /* ViewController.m in Sources */,
+				3DAD44DE1BDEF84B007E123A /* AppDelegate.m in Sources */,
+				3DAD44DB1BDEF84B007E123A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44EB1BDEF84C007E123A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DAD44F61BDEF84C007E123A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DAD44FF1BDEF84C007E123A /* CMSimulatorUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3DAD44F11BDEF84C007E123A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DAD44D51BDEF84B007E123A /* CMSimulator */;
+			targetProxy = 3DAD44F01BDEF84C007E123A /* PBXContainerItemProxy */;
+		};
+		3DAD44FC1BDEF84C007E123A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DAD44D51BDEF84B007E123A /* CMSimulator */;
+			targetProxy = 3DAD44FB1BDEF84C007E123A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3DAD44E21BDEF84B007E123A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3DAD44E31BDEF84B007E123A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3DAD44E81BDEF84B007E123A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3DAD45011BDEF84C007E123A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		3DAD45021BDEF84C007E123A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3DAD45041BDEF84C007E123A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				INFOPLIST_FILE = CMSimulator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3DAD45051BDEF84C007E123A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				INFOPLIST_FILE = CMSimulator/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3DAD45071BDEF84C007E123A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = CMSimulatorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
+			};
+			name = Debug;
+		};
+		3DAD45081BDEF84C007E123A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = CMSimulatorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
+			};
+			name = Release;
+		};
+		3DAD450A1BDEF84C007E123A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = CMSimulatorUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = CMSimulator;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		3DAD450B1BDEF84C007E123A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = CMSimulatorUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = CMSimulator;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3DAD44D11BDEF84B007E123A /* Build configuration list for PBXProject "CMSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DAD45011BDEF84C007E123A /* Debug */,
+				3DAD45021BDEF84C007E123A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3DAD45031BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DAD45041BDEF84C007E123A /* Debug */,
+				3DAD45051BDEF84C007E123A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3DAD45061BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DAD45071BDEF84C007E123A /* Debug */,
+				3DAD45081BDEF84C007E123A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3DAD45091BDEF84C007E123A /* Build configuration list for PBXNativeTarget "CMSimulatorUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DAD450A1BDEF84C007E123A /* Debug */,
+				3DAD450B1BDEF84C007E123A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3DAD44CE1BDEF84B007E123A /* Project object */;
+}

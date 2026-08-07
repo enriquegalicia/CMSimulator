@@ -17,7 +17,7 @@
 #import "Intro.h"
 #import "Help.h"
 
-@interface ViewController : UIViewController<recursoA,potA,UIAlertViewDelegate,UIPopoverControllerDelegate,result,scorespro,helpopro,GKGameCenterControllerDelegate>{
+@interface ViewController : UIViewController<recursoA,potA,UIAlertViewDelegate,UIPopoverControllerDelegate,result,scorespro,helpopro,introA,GKGameCenterControllerDelegate>{
     
     IBOutlet SPI *riesgo;
     IBOutlet SPI *calidad;

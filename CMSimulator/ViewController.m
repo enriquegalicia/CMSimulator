@@ -8,8 +8,11 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+static NSString * const kCMSimulatorLeaderboardID = @"com.magarchitecture.CMSimulator.constructionmaster";
 
+@interface ViewController ()
+@property (nonatomic, assign) BOOL introShown;
+@property (nonatomic, assign) BOOL resultShown;
 @end
 
 @implementation ViewController
@@ -86,7 +89,7 @@
     RP2.view.frame= IvP2.frame;
     [self.view addSubview:RP2.view];
     
-    [RP2 setvalues:@"Procurement.jpeg" titulo:@"Procurement" costo:@"$800.00" total:@"$0.00" start:@"15.0" affects:@"Resources Cost, Support Costs, Planning and Risk"];
+    [RP2 setvalues:@"Procurement.png" titulo:@"Procurement" costo:@"$800.00" total:@"$0.00" start:@"15.0" affects:@"Resources Cost, Support Costs, Planning and Risk"];
 
     
     RP3=[[Potenciadores alloc]init];
@@ -123,9 +126,209 @@
     dias=0;
     totaltime.text=[NSString stringWithFormat:@"%i Dias",dias];
     totalprogress.text=@"0.0%";
-   
-    
+
+    gestorbd=[[GestorBD alloc]initwithdatabases];
+    self.introShown=NO;
+    self.resultShown=NO;
+    [self authenticateLocalPlayer];
+
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if (!self.introShown) {
+        self.introShown=YES;
+        Intro1=[[Intro alloc]init];
+        Intro1.delegado=self;
+        Intro1.modalPresentationStyle=UIModalPresentationFullScreen;
+        [self presentViewController:Intro1 animated:NO completion:nil];
+    }
+}
+
+#pragma mark - Intro / Help / Scores navigation
+
+-(void)introPlay{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)introHelp{
+    __weak typeof(self) weakSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        [weakSelf presentHelp];
+    }];
+}
+-(void)introScores{
+    __weak typeof(self) weakSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        [weakSelf presentScores];
+    }];
+}
+
+-(void)presentHelp{
+    helpo=[[Help alloc]init];
+    helpo.delehelpo=self;
+    helpo.modalPresentationStyle=UIModalPresentationOverFullScreen;
+    [self presentViewController:helpo animated:YES completion:nil];
+}
+-(void)exithelp{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)presentScores{
+    ScoresA=[[Scores alloc]init];
+    ScoresA.delescore=self;
+    ScoresA.modalPresentationStyle=UIModalPresentationFullScreen;
+    [self presentViewController:ScoresA animated:YES completion:nil];
+}
+-(void)exit{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Result / Scores data source
+
+-(void)resultado:(NSMutableDictionary*)arreglo{
+    NSDate *hoy=[NSDate date];
+    NSDateFormatter *df=[[NSDateFormatter alloc]init];
+    df.dateFormat=@"dd";
+    NSString *dia=[df stringFromDate:hoy];
+    df.dateFormat=@"MM";
+    NSString *mes=[df stringFromDate:hoy];
+    df.dateFormat=@"yyyy";
+    NSString *ano=[df stringFromDate:hoy];
+
+    NSString *nombre=[arreglo objectForKey:@"Nombre"];
+    if (nombre==nil || [nombre length]==0) {
+        nombre=@"Player";
+    }
+
+    NSArray *valoresguardar=[NSArray arrayWithObjects:nombre,[arreglo objectForKey:@"Costo"],[arreglo objectForKey:@"Tiempo"],dia,mes,ano, nil];
+    [gestorbd saveinfoalways:valoresguardar val:@"BDN1S" tabla:@"SCORES"];
+
+    [self reportScore];
+
+    __weak typeof(self) weakSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        [weakSelf presentScores];
+    }];
+}
+
+-(NSMutableArray*)changescore:(NSString*)score{
+    return [[NSMutableArray alloc]init];
+}
+
+-(NSMutableDictionary*)obtenerinformacion2{
+    NSArray *columnas=[NSArray arrayWithObjects:@"Id",@"Nombre",@"Costo",@"Tiempo",@"Dia",@"Mes",@"Ano", nil];
+    NSDictionary *tabla=[gestorbd getalltb:@"SCORES" val:@"BDN1"];
+
+    NSArray *ids=[tabla objectForKey:@"Id"];
+    NSUInteger total=[ids count];
+    NSMutableArray *indices=[NSMutableArray arrayWithCapacity:total];
+    for (NSUInteger i=0; i<total; i++) {
+        [indices addObject:[NSNumber numberWithUnsignedInteger:i]];
+    }
+
+    NSMutableDictionary *resultado=[[NSMutableDictionary alloc]init];
+    [resultado setObject:[self ordenarTabla:tabla indices:indices columnas:columnas porCampo:@"Costo" ascendente:YES] forKey:@"Costos"];
+    [resultado setObject:[self ordenarTabla:tabla indices:indices columnas:columnas porCampo:@"Tiempo" ascendente:YES] forKey:@"Tiempos"];
+    [resultado setObject:[self ordenarTablaCombinado:tabla indices:indices columnas:columnas] forKey:@"Total"];
+
+    return resultado;
+}
+
+-(NSDictionary*)ordenarTabla:(NSDictionary*)tabla indices:(NSArray*)indices columnas:(NSArray*)columnas porCampo:(NSString*)campo ascendente:(BOOL)ascendente{
+    NSArray *valoresCampo=[tabla objectForKey:campo];
+    NSArray *ordenados=[indices sortedArrayUsingComparator:^NSComparisonResult(NSNumber *a, NSNumber *b) {
+        float va=[[valoresCampo objectAtIndex:[a unsignedIntegerValue]] floatValue];
+        float vb=[[valoresCampo objectAtIndex:[b unsignedIntegerValue]] floatValue];
+        if (va<vb) return ascendente ? NSOrderedAscending : NSOrderedDescending;
+        if (va>vb) return ascendente ? NSOrderedDescending : NSOrderedAscending;
+        return NSOrderedSame;
+    }];
+    return [self reordenarColumnas:tabla columnas:columnas ordenados:ordenados];
+}
+
+-(NSDictionary*)ordenarTablaCombinado:(NSDictionary*)tabla indices:(NSArray*)indices columnas:(NSArray*)columnas{
+    NSArray *costos=[tabla objectForKey:@"Costo"];
+    NSArray *tiempos=[tabla objectForKey:@"Tiempo"];
+    float maxCosto=0.0f, maxTiempo=0.0f;
+    for (NSString *c in costos) { maxCosto=MAX(maxCosto,[c floatValue]); }
+    for (NSString *t in tiempos) { maxTiempo=MAX(maxTiempo,[t floatValue]); }
+    if (maxCosto<=0) maxCosto=1;
+    if (maxTiempo<=0) maxTiempo=1;
+
+    NSArray *ordenados=[indices sortedArrayUsingComparator:^NSComparisonResult(NSNumber *a, NSNumber *b) {
+        NSUInteger ia=[a unsignedIntegerValue], ib=[b unsignedIntegerValue];
+        float va=([[costos objectAtIndex:ia] floatValue]/maxCosto)+([[tiempos objectAtIndex:ia] floatValue]/maxTiempo);
+        float vb=([[costos objectAtIndex:ib] floatValue]/maxCosto)+([[tiempos objectAtIndex:ib] floatValue]/maxTiempo);
+        if (va<vb) return NSOrderedAscending;
+        if (va>vb) return NSOrderedDescending;
+        return NSOrderedSame;
+    }];
+    return [self reordenarColumnas:tabla columnas:columnas ordenados:ordenados];
+}
+
+-(NSDictionary*)reordenarColumnas:(NSDictionary*)tabla columnas:(NSArray*)columnas ordenados:(NSArray*)ordenados{
+    NSMutableDictionary *salida=[[NSMutableDictionary alloc]init];
+    for (NSString *col in columnas) {
+        NSArray *origen=[tabla objectForKey:col];
+        NSMutableArray *destino=[[NSMutableArray alloc]init];
+        for (NSNumber *idx in ordenados) {
+            NSUInteger i=[idx unsignedIntegerValue];
+            if (origen!=nil && i<[origen count]) {
+                [destino addObject:[origen objectAtIndex:i]];
+            }
+        }
+        [salida setObject:destino forKey:col];
+    }
+    return salida;
+}
+
+#pragma mark - Game Center
+
+-(void)authenticateLocalPlayer{
+    __weak typeof(self) weakSelf = self;
+    GKLocalPlayer *localPlayer=[GKLocalPlayer localPlayer];
+    localPlayer.authenticateHandler=^(UIViewController * _Nullable viewController, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        if (viewController!=nil) {
+            [strongSelf presentViewController:viewController animated:YES completion:nil];
+        }
+        else if (localPlayer.isAuthenticated) {
+            NSLog(@"Game Center: authenticated");
+        }
+        else {
+            NSLog(@"Game Center unavailable: %@",error.localizedDescription);
+        }
+    };
+}
+
+-(void)reportScore{
+    if (![[GKLocalPlayer localPlayer] isAuthenticated]) { return; }
+    NSString *texto=totalcost.text;
+    if ([texto length]>1) {
+        NSInteger puntuacion=(NSInteger)[[texto substringFromIndex:1] floatValue];
+        [GKLeaderboard submitScore:puntuacion
+                            context:0
+                             player:[GKLocalPlayer localPlayer]
+                     leaderboardIDs:@[kCMSimulatorLeaderboardID]
+                  completionHandler:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Game Center score submission failed: %@",error.localizedDescription);
+            }
+        }];
+    }
+}
+
+-(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard{
+    if (![[GKLocalPlayer localPlayer] isAuthenticated]) { return; }
+    GKGameCenterViewController *gc=[[GKGameCenterViewController alloc]initWithState: shouldShowLeaderboard ? GKGameCenterViewControllerStateLeaderboards : GKGameCenterViewControllerStateAchievements];
+    gc.gameCenterDelegate=self;
+    [self presentViewController:gc animated:YES completion:nil];
+}
+
+-(void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -187,7 +390,16 @@
         }
         Temporal=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(progress2) userInfo:nil repeats:YES];
     }
-    
+    else if([touch view]==help){
+        [self presentHelp];
+    }
+    else if([touch view]==scores){
+        [self presentScores];
+    }
+    else if([touch view]==gamecenter){
+        [self showLeaderboardAndAchievements:YES];
+    }
+
 }
 -(void)progress{
 
@@ -228,10 +440,9 @@
         [RP4 pause];
         [RP5 pause];
         [RP6 pause];
+        [self checkForCompletion:ftcost];
     }
-    
-    
-    
+
 }
 -(void)progress2{
     float ftcost=[[RR1.LTotal.text substringFromIndex:1]floatValue]+[[RR2.LTotal.text substringFromIndex:1]floatValue]+[[RR3.LTotal.text substringFromIndex:1]floatValue]+[[RR4.LTotal.text substringFromIndex:1]floatValue]+[[RR5.LTotal.text substringFromIndex:1]floatValue]+[[RR6.LTotal.text substringFromIndex:1]floatValue];
@@ -271,9 +482,22 @@
         [RP4 pause];
         [RP5 pause];
         [RP6 pause];
+        [self checkForCompletion:ftcost];
     }
 
-    
+}
+
+#pragma mark - Simulation completion
+
+-(void)checkForCompletion:(float)ftcost{
+    if (self.resultShown) { return; }
+    self.resultShown=YES;
+    ResultA=[[Result alloc]init];
+    ResultA.deleresult=self;
+    ResultA.fcosto=ftcost;
+    ResultA.ftiempo=fdias;
+    ResultA.modalPresentationStyle=UIModalPresentationFullScreen;
+    [self presentViewController:ResultA animated:YES completion:nil];
 }
 
 - (float)randomFloatBetween:(float)smallNumber and:(float)bigNumber {

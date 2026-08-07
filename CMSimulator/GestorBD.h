@@ -16,6 +16,7 @@
 }
 -(id)initwithdatabases;
 -(void)saveinfo:(NSArray*)info val:(NSString*)val testigo:(NSString*)testigo tabla:(NSString*)tabla campo:(NSString*)campo nombre:(NSString*)nombre;
+-(void)saveinfoalways:(NSArray*)info val:(NSString*)val tabla:(NSString*)tabla;
 -(void)updateinfo:(NSString*)info;
 -(NSDictionary*)getalltb:(NSString*)tabla val:(NSString*)val;
 -(NSDictionary*)getselecteddatatb:(NSString*)tabla val:(NSArray*)val;

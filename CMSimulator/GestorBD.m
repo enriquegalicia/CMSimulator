@@ -35,7 +35,13 @@
     //NSLog(@"Info%@",info);
     [Basedatos revisarBD:[valores objectForKey:val] Valores:info Testigo:testigo Tabla:tabla Campo:campo Nombre:nombre];
 
-    
+
+}
+-(void)saveinfoalways:(NSArray*)info val:(NSString*)val tabla:(NSString*)tabla{
+    // Unlike saveinfo:, this always inserts a new row instead of skipping
+    // when a matching name already exists - needed for a leaderboard where
+    // the same player logs multiple runs.
+    [Basedatos guardarBD:[valores objectForKey:val] Valores:info Tabla:tabla];
 }
 -(void)updateinfo:(NSString*)info{
     [Basedatos update:info];

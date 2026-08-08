@@ -7,6 +7,7 @@
 //
 
 #import "Help.h"
+#import "UIViewController+CanvasFit.h"
 
 @interface Help ()
 
@@ -15,6 +16,11 @@
 
 @implementation Help
 @synthesize delehelpo;
+
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self fitDesignCanvas:CGSizeMake(1024, 768)];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

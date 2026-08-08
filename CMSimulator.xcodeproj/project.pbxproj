@@ -47,7 +47,7 @@
 		3DB3C6961BE0235B005285E9 /* Potenciadores.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6941BE0235B005285E9 /* Potenciadores.xib */; };
 		5296402BB3AF937C169EC808 /* TimeMaster.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE7D1D04BFD4AF29C12343 /* TimeMaster.png */; };
 		5713F0CADCB4704E0C5F2E19 /* Redondeado1C.png in Resources */ = {isa = PBXBuildFile; fileRef = 931F50DA1C0259135BACA5FE /* Redondeado1C.png */; };
-		59B7FBA6BE2A5ED50C093190 /* Logo-MAG.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C725DAB59A055B11E4CDEFD /* Logo-MAG.png */; };
+		59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */; };
 		5F04F7A1B88C330A24A22115 /* Cost-Master.png in Resources */ = {isa = PBXBuildFile; fileRef = A5A4871BB1789BDD4BB276D8 /* Cost-Master.png */; };
 		74B6864D969D2EF81D31E3DB /* RedondeadoBlanco.png in Resources */ = {isa = PBXBuildFile; fileRef = 65356F100205CF39FB951C5C /* RedondeadoBlanco.png */; };
 		7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A687FB91436DF7D483F2D29 /* Procurement.png */; };
@@ -67,6 +67,7 @@
 		D7641D4A05703DF857B5CFF8 /* GestorBD.m in Sources */ = {isa = PBXBuildFile; fileRef = 75A7EB0E63A63F2955ED8F68 /* GestorBD.m */; };
 		DB8E78EFF60D0D11C292EBD7 /* GameCenter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BB928AC3D7E9FA96BFB3139 /* GameCenter.png */; };
 		DF3BA032C53C0C155B2B8ED1 /* ConstructionMaster.png in Resources */ = {isa = PBXBuildFile; fileRef = 813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */; };
+		4E4D29EFA4503F1BBE6F78E9 /* UIViewController+CanvasFit.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,7 +151,7 @@
 		75A7EB0E63A63F2955ED8F68 /* GestorBD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GestorBD.m; sourceTree = "<group>"; };
 		7A2D9F73233EC89F2D33A380 /* DataBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBase.m; sourceTree = "<group>"; };
 		7C3C1D2900B8A1FEA978738F /* TiElA.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TiElA.xib; sourceTree = "<group>"; };
-		7C725DAB59A055B11E4CDEFD /* Logo-MAG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Logo-MAG.png"; sourceTree = "<group>"; };
+		7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-Source.png"; sourceTree = "<group>"; };
 		7EB8064EFB2768826E839C2E /* TiElA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiElA.m; sourceTree = "<group>"; };
 		813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ConstructionMaster.png; sourceTree = "<group>"; };
 		931F50DA1C0259135BACA5FE /* Redondeado1C.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redondeado1C.png; sourceTree = "<group>"; };
@@ -170,6 +171,8 @@
 		EDE6E31140840969AEA8556C /* Intro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intro.h; sourceTree = "<group>"; };
 		EE8F64C85481789A9830DAF8 /* Redondeado4B.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redondeado4B.png; sourceTree = "<group>"; };
 		F8019862DAC96E7B06499E06 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		08F253E0D6C681081F5E38C4 /* UIViewController+CanvasFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+CanvasFit.h"; sourceTree = "<group>"; };
+		B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+CanvasFit.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,7 +290,7 @@
 				3DAD45131BDF1351007E123A /* Construction.jpeg */,
 				813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */,
 				A5A4871BB1789BDD4BB276D8 /* Cost-Master.png */,
-				7C725DAB59A055B11E4CDEFD /* Logo-MAG.png */,
+				7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */,
 				931F50DA1C0259135BACA5FE /* Redondeado1C.png */,
 				3236F926658B85981F86F0C6 /* Redondeado2.png */,
 				EE8F64C85481789A9830DAF8 /* Redondeado4B.png */,
@@ -306,6 +309,8 @@
 				3DB3C67B1BDFA55B005285E9 /* LDProgressView.m */,
 				3DB3C67C1BDFA55B005285E9 /* UIColor+RGBValues.h */,
 				3DB3C67D1BDFA55B005285E9 /* UIColor+RGBValues.m */,
+					08F253E0D6C681081F5E38C4 /* UIViewController+CanvasFit.h */,
+					B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */,
 				3DB3C68D1BDFB064005285E9 /* Recurso.h */,
 				3DB3C68E1BDFB064005285E9 /* Recurso.m */,
 				3DB3C68F1BDFB064005285E9 /* Recurso.xib */,
@@ -488,7 +493,7 @@
 				BF49A90C4B6FB2C3551C16EF /* TiElTaA.xib in Resources */,
 				DF3BA032C53C0C155B2B8ED1 /* ConstructionMaster.png in Resources */,
 				5F04F7A1B88C330A24A22115 /* Cost-Master.png in Resources */,
-				59B7FBA6BE2A5ED50C093190 /* Logo-MAG.png in Resources */,
+				59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */,
 				5713F0CADCB4704E0C5F2E19 /* Redondeado1C.png in Resources */,
 				1DE27E8690AE20319DA569B8 /* Redondeado2.png in Resources */,
 				C0688DF128B21F84212E0AD0 /* Redondeado4B.png in Resources */,
@@ -521,6 +526,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DB3C67F1BDFA55B005285E9 /* UIColor+RGBValues.m in Sources */,
+				4E4D29EFA4503F1BBE6F78E9 /* UIViewController+CanvasFit.m in Sources */,
 				3DB3C6871BDFAB0D005285E9 /* SPIViewController.m in Sources */,
 				3DAD44E11BDEF84B007E123A /* ViewController.m in Sources */,
 				3DB3C6891BDFAB0D005285E9 /* SPI.m in Sources */,

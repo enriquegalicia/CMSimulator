@@ -26,6 +26,7 @@
     float unidadest;
     float costos;
     bool activo;
+    bool activado;
     NSMutableDictionary *valores;
     NSTimer *Temporal;
 }

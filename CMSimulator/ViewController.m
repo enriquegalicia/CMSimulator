@@ -287,14 +287,13 @@ static NSString * const kCMSimulatorLeaderboardID = @"com.magarchitecture.CMSimu
 
 -(void)authenticateLocalPlayer{
     __weak typeof(self) weakSelf = self;
-    GKLocalPlayer *localPlayer=[GKLocalPlayer localPlayer];
-    localPlayer.authenticateHandler=^(UIViewController * _Nullable viewController, NSError * _Nullable error) {
+    [GKLocalPlayer localPlayer].authenticateHandler=^(UIViewController * _Nullable viewController, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         if (viewController!=nil) {
             [strongSelf presentViewController:viewController animated:YES completion:nil];
         }
-        else if (localPlayer.isAuthenticated) {
+        else if ([GKLocalPlayer localPlayer].isAuthenticated) {
             NSLog(@"Game Center: authenticated");
         }
         else {

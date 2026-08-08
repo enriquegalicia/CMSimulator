@@ -10,7 +10,7 @@
 @protocol introA;
 
 @interface Intro : UIViewController{
-    id<introA>delegado;
+    __weak id<introA>delegado;
     IBOutlet UIImageView *playButton;
     IBOutlet UIImageView *helpButton;
     IBOutlet UIImageView *scoresButton;

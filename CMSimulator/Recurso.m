@@ -14,7 +14,7 @@
 
 @implementation Recurso
 
-@synthesize valores,IvImagen,LTitulo,LCosto,LUnidades,LRendimiento,LTotal,LDProgress,LNumero,LStarts,unidadest,activado,delegadoA=_delegadoA;
+@synthesize valores,IvImagen,LTitulo,LCosto,LUnidades,LRendimiento,LTotal,LDProgress,LNumero,LStarts,delegadoA=_delegadoA;
 
 
 

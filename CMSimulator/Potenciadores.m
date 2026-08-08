@@ -13,7 +13,7 @@
 @end
 
 @implementation Potenciadores
-@synthesize valores,IvImagen,LStarts,LTitulo,LCosto,LTotal,LNumero,delA=_delA;
+@synthesize valores,IvImagen,LStarts,LTitulo,LCosto,LTotal,LNumero,activado,delA=_delA;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -27,6 +27,21 @@
     [minus setUserInteractionEnabled:NO];
     activo=TRUE;
     // Do any additional setup after loading the view from its nib.
+}
+-(void)resetpower{
+    IvImagen.alpha=0.3;
+    plus.alpha=0.3;
+    minus.alpha=0.3;
+    LTitulo.alpha=0.3;
+    LCosto.text=@"???";
+    LTotal.text=@"???";
+    LNumero.text=@"0";
+    [plus setUserInteractionEnabled:NO];
+    [minus setUserInteractionEnabled:NO];
+    activo=TRUE;
+    activado=FALSE;
+    contador=0;
+    costos=0;
 }
 -(void)setvalues:(NSString*)imagen titulo:(NSString*)titulo costo:(NSString*)costo total:(NSString*)total start:(NSString*)start affects:(NSString*)affects{
     IvImagen.image=[UIImage imageNamed:imagen];

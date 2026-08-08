@@ -17,7 +17,7 @@
 #import "Intro.h"
 #import "Help.h"
 
-@interface ViewController : UIViewController<recursoA,potA,UIAlertViewDelegate,UIPopoverControllerDelegate,result,scorespro,helpopro,introA,GKGameCenterControllerDelegate>{
+@interface ViewController : UIViewController<recursoA,potA,result,scorespro,helpopro,introA,GKGameCenterControllerDelegate>{
     
     IBOutlet SPI *riesgo;
     IBOutlet SPI *calidad;
@@ -55,14 +55,11 @@
     NSTimer *Eventos;
     int dias;
     float fdias;
-    UIAlertController* alerta;
     GestorBD* gestorbd;
     Scores *ScoresA;
     Result *ResultA;
     Intro *Intro1;
     Help *helpo;
-    UIPopoverController *popo;
-    UIPopoverController *popo2;
     IBOutlet UIImageView *help;
     IBOutlet UIImageView *gamecenter;
     IBOutlet UIImageView *scores;

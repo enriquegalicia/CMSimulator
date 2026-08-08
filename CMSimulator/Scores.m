@@ -7,6 +7,7 @@
 //
 
 #import "Scores.h"
+#import "UIViewController+CanvasFit.h"
 
 @interface Scores ()
 
@@ -15,9 +16,14 @@
 @implementation Scores
 @synthesize delescore=_delescore,valores,TaScores;
 
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self fitDesignCanvas:CGSizeMake(300, 650)];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     TaScores=[[TiElTaA alloc]init];
     TaScores.view.frame=IvTaScores.frame;
     TaScores.delegadores5=self;

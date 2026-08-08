@@ -7,6 +7,7 @@
 //
 
 #import "Intro.h"
+#import "UIViewController+CanvasFit.h"
 
 @interface Intro ()
 
@@ -18,6 +19,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self fitDesignCanvas:CGSizeMake(1024, 768)];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

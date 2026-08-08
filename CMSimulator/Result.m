@@ -7,6 +7,7 @@
 //
 
 #import "Result.h"
+#import "UIViewController+CanvasFit.h"
 
 @interface Result ()
 
@@ -14,6 +15,11 @@
 
 @implementation Result
 @synthesize LCost,LTime,TfNombre,Save,deleresult=_deleresult,fcosto,ftiempo;
+
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self fitDesignCanvas:CGSizeMake(300, 200)];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

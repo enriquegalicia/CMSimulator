@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "UIViewController+CanvasFit.h"
 
 static NSString * const kCMSimulatorLeaderboardID = @"com.magarchitecture.CMSimulator.constructionmaster";
 
@@ -133,6 +134,11 @@ static NSString * const kCMSimulatorLeaderboardID = @"com.magarchitecture.CMSimu
     [self authenticateLocalPlayer];
 
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self fitDesignCanvas:CGSizeMake(1024, 768)];
 }
 
 -(void)viewDidAppear:(BOOL)animated{

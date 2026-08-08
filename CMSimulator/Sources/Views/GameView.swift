@@ -20,24 +20,29 @@ struct GameView: View {
     private var isWide: Bool { horizontalSizeClass == .regular }
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 0) {
             header
+                .padding()
 
-            if isWide {
-                HStack(alignment: .top, spacing: 16) {
-                    packagesColumn
-                    boostersColumn
-                }
-            } else {
-                VStack(spacing: 16) {
-                    packagesColumn
-                    boostersColumn
+            ScrollView {
+                if isWide {
+                    HStack(alignment: .top, spacing: 16) {
+                        packagesColumn
+                        boostersColumn
+                    }
+                    .padding(.horizontal)
+                } else {
+                    VStack(spacing: 16) {
+                        packagesColumn
+                        boostersColumn
+                    }
+                    .padding(.horizontal)
                 }
             }
 
             transportControls
+                .padding()
         }
-        .padding()
         .onChange(of: engine.isComplete) { _, complete in
             if complete { onComplete() }
         }

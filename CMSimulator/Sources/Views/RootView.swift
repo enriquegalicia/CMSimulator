@@ -73,7 +73,9 @@ struct RootView: View {
             }
         }
         .task {
-            gameCenter.authenticate()
+            if ProcessInfo.processInfo.environment["CMS_SKIP_GC"] == nil {
+                gameCenter.authenticate()
+            }
             applyDebugScreen()
         }
         .sheet(item: Binding(

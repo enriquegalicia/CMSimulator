@@ -51,7 +51,6 @@ final class SimulationEngine: ObservableObject {
             WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.jpeg", initialCost: 1800, units: 214, initialRate: 1, startThreshold: 55),
             WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.jpeg", initialCost: 1600, units: 364, initialRate: 1, startThreshold: 60),
         ]
-        workPackages[0].isUnlocked = true
 
         boosters = [
             Booster(kind: .planning, imageName: "Planning.jpeg", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
@@ -61,6 +60,9 @@ final class SimulationEngine: ObservableObject {
             Booster(kind: .training, imageName: "Training.jpeg", initialCost: 1500, startThreshold: 50, affects: "Cumulative labor rates, costs, quality and risk"),
             Booster(kind: .quality, imageName: "Quality.jpeg", initialCost: 800, startThreshold: 25, affects: "Resource cost, labor rates, training and procurement"),
         ]
+
+        // Everything else is set - now it's safe to mutate self.
+        workPackages[0].isUnlocked = true
         boosters[0].isUnlocked = true
     }
 

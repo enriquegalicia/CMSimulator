@@ -16,7 +16,7 @@ struct WorkPackage: Identifiable {
     let units: Double
     let initialRate: Double
     /// 0...100 - the % of overall project progress at which this package unlocks.
-    let startThreshold: Double
+    var startThreshold: Double
 
     var cost: Double
     var rate: Double

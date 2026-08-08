@@ -7,15 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0AA3CA073B98D5ED579114BB /* Result.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EDA9357E4EA67F1BE3856CF /* Result.xib */; };
-		1DE27E8690AE20319DA569B8 /* Redondeado2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3236F926658B85981F86F0C6 /* Redondeado2.png */; };
-		1F9597AB3077AC70CDF89157 /* TiElA.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C3C1D2900B8A1FEA978738F /* TiElA.xib */; };
-		2C0B9A86AB3E01C3FE9C87EB /* DataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D9F73233EC89F2D33A380 /* DataBase.m */; };
 		2F1497E13AECBA02B6EF5175 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E0D99A5CDC8D971A7954A584 /* PrivacyInfo.xcprivacy */; };
-		3DAD44DB1BDEF84B007E123A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44DA1BDEF84B007E123A /* main.m */; };
-		3DAD44DE1BDEF84B007E123A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44DD1BDEF84B007E123A /* AppDelegate.m */; };
-		3DAD44E11BDEF84B007E123A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44E01BDEF84B007E123A /* ViewController.m */; };
-		3DAD44E41BDEF84B007E123A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E21BDEF84B007E123A /* Main.storyboard */; };
 		3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E51BDEF84B007E123A /* Assets.xcassets */; };
 		3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */; };
 		3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */; };
@@ -30,44 +22,27 @@
 		3DAD45341BDF1423007E123A /* Risk.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45331BDF1423007E123A /* Risk.jpeg */; };
 		3DAD453A1BDF1445007E123A /* Structure.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45391BDF1445007E123A /* Structure.jpeg */; };
 		3DAD453C1BDF15CE007E123A /* IHS.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD453B1BDF15CE007E123A /* IHS.jpeg */; };
-		3DB3C6741BDF917F005285E9 /* Plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C66F1BDF917F005285E9 /* Plus.png */; };
-		3DB3C6751BDF917F005285E9 /* Play.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6701BDF917F005285E9 /* Play.png */; };
-		3DB3C6761BDF917F005285E9 /* Pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6711BDF917F005285E9 /* Pause.png */; };
-		3DB3C6771BDF917F005285E9 /* Minus.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6721BDF917F005285E9 /* Minus.png */; };
-		3DB3C6781BDF917F005285E9 /* FF.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6731BDF917F005285E9 /* FF.png */; };
-		3DB3C67E1BDFA55B005285E9 /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C67B1BDFA55B005285E9 /* LDProgressView.m */; };
-		3DB3C67F1BDFA55B005285E9 /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C67D1BDFA55B005285E9 /* UIColor+RGBValues.m */; };
 		3DB3C6811BDFA5EC005285E9 /* Design.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6801BDFA5EC005285E9 /* Design.jpeg */; };
-		3DB3C6871BDFAB0D005285E9 /* SPIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C6831BDFAB0D005285E9 /* SPIViewController.m */; };
-		3DB3C6881BDFAB0D005285E9 /* SPIViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6841BDFAB0D005285E9 /* SPIViewController.xib */; };
-		3DB3C6891BDFAB0D005285E9 /* SPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C6861BDFAB0D005285E9 /* SPI.m */; };
-		3DB3C6901BDFB064005285E9 /* Recurso.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C68E1BDFB064005285E9 /* Recurso.m */; };
-		3DB3C6911BDFB064005285E9 /* Recurso.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C68F1BDFB064005285E9 /* Recurso.xib */; };
-		3DB3C6951BE0235B005285E9 /* Potenciadores.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3C6931BE0235B005285E9 /* Potenciadores.m */; };
-		3DB3C6961BE0235B005285E9 /* Potenciadores.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6941BE0235B005285E9 /* Potenciadores.xib */; };
-		5296402BB3AF937C169EC808 /* TimeMaster.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE7D1D04BFD4AF29C12343 /* TimeMaster.png */; };
-		5713F0CADCB4704E0C5F2E19 /* Redondeado1C.png in Resources */ = {isa = PBXBuildFile; fileRef = 931F50DA1C0259135BACA5FE /* Redondeado1C.png */; };
 		59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */; };
-		5F04F7A1B88C330A24A22115 /* Cost-Master.png in Resources */ = {isa = PBXBuildFile; fileRef = A5A4871BB1789BDD4BB276D8 /* Cost-Master.png */; };
-		74B6864D969D2EF81D31E3DB /* RedondeadoBlanco.png in Resources */ = {isa = PBXBuildFile; fileRef = 65356F100205CF39FB951C5C /* RedondeadoBlanco.png */; };
 		7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A687FB91436DF7D483F2D29 /* Procurement.png */; };
-		80E7CEA978BD5635A1656E93 /* Help.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B86D8C5495DC428964F19B6 /* Help.xib */; };
 		850B7FD2454082BE95A2BA42 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85B18ADFEB21E6F54482C42 /* GameKit.framework */; };
-		87B7DA56B380AEF65B56C5C3 /* Help.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C764E7F3BDADDAB386397 /* Help.m */; };
-		963286031C141B87838A4DF8 /* TiElTaA.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3B0265C4FCFEF7A8040B50 /* TiElTaA.m */; };
-		976E30F986BE1C6D717552D3 /* Scores.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37FF8E9D2F71A43AA772F41 /* Scores.xib */; };
-		AEF08FE02A965FD1B714C5C0 /* TiElA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB8064EFB2768826E839C2E /* TiElA.m */; };
-		AFE5C9CD01B4D8207CD6E177 /* Intro.m in Sources */ = {isa = PBXBuildFile; fileRef = 126E18BD67E028FE34430984 /* Intro.m */; };
-		B5E58C55E0C0303828EA7BF2 /* Scores.m in Sources */ = {isa = PBXBuildFile; fileRef = CCAB44A7D339E759DFB50751 /* Scores.m */; };
-		B9C07574510B4FEFC8506104 /* Result.m in Sources */ = {isa = PBXBuildFile; fileRef = E5684A766B470EAB292CA12B /* Result.m */; };
-		BF49A90C4B6FB2C3551C16EF /* TiElTaA.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1137BF25EB38BBF84E06B4AB /* TiElTaA.xib */; };
-		C0688DF128B21F84212E0AD0 /* Redondeado4B.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8F64C85481789A9830DAF8 /* Redondeado4B.png */; };
-		C8BBE9125A73FDDD21980379 /* Intro.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05D73716E7B683A60D427D74 /* Intro.xib */; };
-		D31B2F841223BC45BA8345E3 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F8019862DAC96E7B06499E06 /* libsqlite3.tbd */; };
-		D7641D4A05703DF857B5CFF8 /* GestorBD.m in Sources */ = {isa = PBXBuildFile; fileRef = 75A7EB0E63A63F2955ED8F68 /* GestorBD.m */; };
-		DB8E78EFF60D0D11C292EBD7 /* GameCenter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BB928AC3D7E9FA96BFB3139 /* GameCenter.png */; };
-		DF3BA032C53C0C155B2B8ED1 /* ConstructionMaster.png in Resources */ = {isa = PBXBuildFile; fileRef = 813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */; };
-		4E4D29EFA4503F1BBE6F78E9 /* UIViewController+CanvasFit.m in Sources */ = {isa = PBXBuildFile; fileRef = B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */; };
+		8E4C2EC0C5B8B2A3E7930CA2 /* WorkPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC1E3D47680310511107479 /* WorkPackage.swift */; };
+		40E48763417D655C2CFDEBF1 /* Booster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388AAEE9B8C6BAADF93788DF /* Booster.swift */; };
+		B67F2E692126F43A2D03A171 /* BoosterEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7468E04362257569228B8535 /* BoosterEffect.swift */; };
+		A1A097645B27F493EE42E5E3 /* ScoreEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */; };
+		0A05680A9CDE5BA70ADD5AAD /* SimulationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378A50C23684A218625CD8C9 /* SimulationEngine.swift */; };
+		9675C555B0B52E3979456995 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A9D8F37A1831C1DC972A12 /* GameCenterManager.swift */; };
+		599BAACFCF84494BDFEF4334 /* BundleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDEAB0903EFA5C19B4DB6 /* BundleImage.swift */; };
+		F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */; };
+		1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */; };
+		FFBD482056E9E5644964A93E /* BoosterCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8685056D2AA0E3E18F0AC3 /* BoosterCardView.swift */; };
+		552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EE31E6C5EE05E2DFD6913C /* GameView.swift */; };
+		77617EF5FDC8BA46207E954A /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AABCA5569B355981C7CE28A /* IntroView.swift */; };
+		AD15FC921304BF858F6FEA6B /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC2B7CC758D040FA71E526A /* ResultView.swift */; };
+		D0686BEDACC10D7CDCC19634 /* ScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE196F477B0F3638FA696F86 /* ScoresView.swift */; };
+		351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02753B52D363181F36E257F /* HelpView.swift */; };
+		08A09CA15BB30E09AA12EA04 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A596F4FA5261466C7BFA31 /* RootView.swift */; };
+		F43AC009259945DEF732AC36 /* CMSimulatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DDA642C987036C1646E29 /* CMSimulatorApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,24 +63,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		05D73716E7B683A60D427D74 /* Intro.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Intro.xib; sourceTree = "<group>"; };
-		0BB928AC3D7E9FA96BFB3139 /* GameCenter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameCenter.png; sourceTree = "<group>"; };
-		0ECE7D1D04BFD4AF29C12343 /* TimeMaster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TimeMaster.png; sourceTree = "<group>"; };
-		0EDA9357E4EA67F1BE3856CF /* Result.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Result.xib; sourceTree = "<group>"; };
-		1137BF25EB38BBF84E06B4AB /* TiElTaA.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TiElTaA.xib; sourceTree = "<group>"; };
-		126E18BD67E028FE34430984 /* Intro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Intro.m; sourceTree = "<group>"; };
 		1A687FB91436DF7D483F2D29 /* Procurement.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Procurement.png; sourceTree = "<group>"; };
-		3236F926658B85981F86F0C6 /* Redondeado2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redondeado2.png; sourceTree = "<group>"; };
-		335DDEB5CEF49FD4AE84CCA1 /* Scores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scores.h; sourceTree = "<group>"; };
-		398DEEB92F4A8876EFF7C6A0 /* Help.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Help.h; sourceTree = "<group>"; };
-		3D8BCDD405DB9C851FCD4C67 /* DataBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBase.h; sourceTree = "<group>"; };
 		3DAD44D61BDEF84B007E123A /* CMSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DAD44DA1BDEF84B007E123A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3DAD44DC1BDEF84B007E123A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		3DAD44DD1BDEF84B007E123A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		3DAD44DF1BDEF84B007E123A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		3DAD44E01BDEF84B007E123A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		3DAD44E31BDEF84B007E123A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3DAD44E51BDEF84B007E123A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DAD44E81BDEF84B007E123A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3DAD44EA1BDEF84B007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -125,54 +84,28 @@
 		3DAD45331BDF1423007E123A /* Risk.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Risk.jpeg; sourceTree = "<group>"; };
 		3DAD45391BDF1445007E123A /* Structure.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Structure.jpeg; sourceTree = "<group>"; };
 		3DAD453B1BDF15CE007E123A /* IHS.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IHS.jpeg; sourceTree = "<group>"; };
-		3DB3C66F1BDF917F005285E9 /* Plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Plus.png; sourceTree = "<group>"; };
-		3DB3C6701BDF917F005285E9 /* Play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Play.png; sourceTree = "<group>"; };
-		3DB3C6711BDF917F005285E9 /* Pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pause.png; sourceTree = "<group>"; };
-		3DB3C6721BDF917F005285E9 /* Minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Minus.png; sourceTree = "<group>"; };
-		3DB3C6731BDF917F005285E9 /* FF.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FF.png; sourceTree = "<group>"; };
-		3DB3C67A1BDFA55B005285E9 /* LDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDProgressView.h; sourceTree = "<group>"; };
-		3DB3C67B1BDFA55B005285E9 /* LDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDProgressView.m; sourceTree = "<group>"; };
-		3DB3C67C1BDFA55B005285E9 /* UIColor+RGBValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RGBValues.h"; sourceTree = "<group>"; };
-		3DB3C67D1BDFA55B005285E9 /* UIColor+RGBValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RGBValues.m"; sourceTree = "<group>"; };
 		3DB3C6801BDFA5EC005285E9 /* Design.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Design.jpeg; sourceTree = "<group>"; };
-		3DB3C6821BDFAB0D005285E9 /* SPIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPIViewController.h; sourceTree = "<group>"; };
-		3DB3C6831BDFAB0D005285E9 /* SPIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPIViewController.m; sourceTree = "<group>"; };
-		3DB3C6841BDFAB0D005285E9 /* SPIViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SPIViewController.xib; sourceTree = "<group>"; };
-		3DB3C6851BDFAB0D005285E9 /* SPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPI.h; sourceTree = "<group>"; };
-		3DB3C6861BDFAB0D005285E9 /* SPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPI.m; sourceTree = "<group>"; };
-		3DB3C68D1BDFB064005285E9 /* Recurso.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recurso.h; sourceTree = "<group>"; };
-		3DB3C68E1BDFB064005285E9 /* Recurso.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Recurso.m; sourceTree = "<group>"; };
-		3DB3C68F1BDFB064005285E9 /* Recurso.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Recurso.xib; sourceTree = "<group>"; };
-		3DB3C6921BE0235B005285E9 /* Potenciadores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Potenciadores.h; sourceTree = "<group>"; };
-		3DB3C6931BE0235B005285E9 /* Potenciadores.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Potenciadores.m; sourceTree = "<group>"; };
-		3DB3C6941BE0235B005285E9 /* Potenciadores.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Potenciadores.xib; sourceTree = "<group>"; };
-		5299F2AB46DC935464294E69 /* GestorBD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GestorBD.h; sourceTree = "<group>"; };
-		65356F100205CF39FB951C5C /* RedondeadoBlanco.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedondeadoBlanco.png; sourceTree = "<group>"; };
-		75A7EB0E63A63F2955ED8F68 /* GestorBD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GestorBD.m; sourceTree = "<group>"; };
-		7A2D9F73233EC89F2D33A380 /* DataBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBase.m; sourceTree = "<group>"; };
-		7C3C1D2900B8A1FEA978738F /* TiElA.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TiElA.xib; sourceTree = "<group>"; };
 		7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-Source.png"; sourceTree = "<group>"; };
-		7EB8064EFB2768826E839C2E /* TiElA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiElA.m; sourceTree = "<group>"; };
-		813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ConstructionMaster.png; sourceTree = "<group>"; };
-		931F50DA1C0259135BACA5FE /* Redondeado1C.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redondeado1C.png; sourceTree = "<group>"; };
-		9A8C764E7F3BDADDAB386397 /* Help.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Help.m; sourceTree = "<group>"; };
-		9B86D8C5495DC428964F19B6 /* Help.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Help.xib; sourceTree = "<group>"; };
-		A37FF8E9D2F71A43AA772F41 /* Scores.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Scores.xib; sourceTree = "<group>"; };
-		A5A4871BB1789BDD4BB276D8 /* Cost-Master.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cost-Master.png"; sourceTree = "<group>"; };
 		A85B18ADFEB21E6F54482C42 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		B27F3022C7733E66932904F5 /* TiElA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiElA.h; sourceTree = "<group>"; };
 		BBA0C1880BA7B3DBD4231B92 /* CMSimulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CMSimulator.entitlements; sourceTree = "<group>"; };
-		CC3B0265C4FCFEF7A8040B50 /* TiElTaA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiElTaA.m; sourceTree = "<group>"; };
-		CCAB44A7D339E759DFB50751 /* Scores.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scores.m; sourceTree = "<group>"; };
 		E0D99A5CDC8D971A7954A584 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		E38B1C5BF2C99CD1BA0537B0 /* Result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Result.h; sourceTree = "<group>"; };
-		E5684A766B470EAB292CA12B /* Result.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Result.m; sourceTree = "<group>"; };
-		ED7DC0B1FBA1B19A08D1F5F2 /* TiElTaA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiElTaA.h; sourceTree = "<group>"; };
-		EDE6E31140840969AEA8556C /* Intro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intro.h; sourceTree = "<group>"; };
-		EE8F64C85481789A9830DAF8 /* Redondeado4B.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redondeado4B.png; sourceTree = "<group>"; };
-		F8019862DAC96E7B06499E06 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		08F253E0D6C681081F5E38C4 /* UIViewController+CanvasFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+CanvasFit.h"; sourceTree = "<group>"; };
-		B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+CanvasFit.m"; sourceTree = "<group>"; };
+		5FC1E3D47680310511107479 /* WorkPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkPackage.swift; sourceTree = "<group>"; };
+		388AAEE9B8C6BAADF93788DF /* Booster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booster.swift; sourceTree = "<group>"; };
+		7468E04362257569228B8535 /* BoosterEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterEffect.swift; sourceTree = "<group>"; };
+		9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEntry.swift; sourceTree = "<group>"; };
+		378A50C23684A218625CD8C9 /* SimulationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationEngine.swift; sourceTree = "<group>"; };
+		00A9D8F37A1831C1DC972A12 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
+		E5DCDEAB0903EFA5C19B4DB6 /* BundleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleImage.swift; sourceTree = "<group>"; };
+		EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
+		7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkPackageCardView.swift; sourceTree = "<group>"; };
+		2C8685056D2AA0E3E18F0AC3 /* BoosterCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterCardView.swift; sourceTree = "<group>"; };
+		61EE31E6C5EE05E2DFD6913C /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		9AABCA5569B355981C7CE28A /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
+		FAC2B7CC758D040FA71E526A /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		FE196F477B0F3638FA696F86 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
+		E02753B52D363181F36E257F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		F1A596F4FA5261466C7BFA31 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		052DDA642C987036C1646E29 /* CMSimulatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/CMSimulatorApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,7 +114,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				850B7FD2454082BE95A2BA42 /* GameKit.framework in Frameworks */,
-				D31B2F841223BC45BA8345E3 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,29 +158,16 @@
 		3DAD44D81BDEF84B007E123A /* CMSimulator */ = {
 			isa = PBXGroup;
 			children = (
-				3DB3C6791BDFA550005285E9 /* Clases */,
 				3DAD450E1BDF1302007E123A /* Iconos */,
-				3DAD44DC1BDEF84B007E123A /* AppDelegate.h */,
-				3DAD44DD1BDEF84B007E123A /* AppDelegate.m */,
-				3DAD44DF1BDEF84B007E123A /* ViewController.h */,
-				3DAD44E01BDEF84B007E123A /* ViewController.m */,
-				3DAD44E21BDEF84B007E123A /* Main.storyboard */,
+				052DDA642C987036C1646E29 /* CMSimulatorApp.swift */,
+				BF57485D7225CDD4F41EADAD /* Sources */,
 				3DAD44E51BDEF84B007E123A /* Assets.xcassets */,
 				3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */,
 				3DAD44EA1BDEF84B007E123A /* Info.plist */,
 				E0D99A5CDC8D971A7954A584 /* PrivacyInfo.xcprivacy */,
 				BBA0C1880BA7B3DBD4231B92 /* CMSimulator.entitlements */,
-				3DAD44D91BDEF84B007E123A /* Supporting Files */,
 			);
 			path = CMSimulator;
-			sourceTree = "<group>";
-		};
-		3DAD44D91BDEF84B007E123A /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				3DAD44DA1BDEF84B007E123A /* main.m */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		3DAD44F21BDEF84C007E123A /* CMSimulatorTests */ = {
@@ -272,11 +191,6 @@
 		3DAD450E1BDF1302007E123A /* Iconos */ = {
 			isa = PBXGroup;
 			children = (
-				3DB3C66F1BDF917F005285E9 /* Plus.png */,
-				3DB3C6701BDF917F005285E9 /* Play.png */,
-				3DB3C6711BDF917F005285E9 /* Pause.png */,
-				3DB3C6721BDF917F005285E9 /* Minus.png */,
-				3DB3C6731BDF917F005285E9 /* FF.png */,
 				3DB3C6801BDFA5EC005285E9 /* Design.jpeg */,
 				3DAD45391BDF1445007E123A /* Structure.jpeg */,
 				3DAD45331BDF1423007E123A /* Risk.jpeg */,
@@ -288,73 +202,65 @@
 				3DAD453B1BDF15CE007E123A /* IHS.jpeg */,
 				3DAD45151BDF1361007E123A /* IES.jpeg */,
 				3DAD45131BDF1351007E123A /* Construction.jpeg */,
-				813A4A8DD8CDC9F8985048D9 /* ConstructionMaster.png */,
-				A5A4871BB1789BDD4BB276D8 /* Cost-Master.png */,
 				7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */,
-				931F50DA1C0259135BACA5FE /* Redondeado1C.png */,
-				3236F926658B85981F86F0C6 /* Redondeado2.png */,
-				EE8F64C85481789A9830DAF8 /* Redondeado4B.png */,
-				65356F100205CF39FB951C5C /* RedondeadoBlanco.png */,
-				0ECE7D1D04BFD4AF29C12343 /* TimeMaster.png */,
-				0BB928AC3D7E9FA96BFB3139 /* GameCenter.png */,
 				1A687FB91436DF7D483F2D29 /* Procurement.png */,
 			);
 			name = Iconos;
-			sourceTree = "<group>";
-		};
-		3DB3C6791BDFA550005285E9 /* Clases */ = {
-			isa = PBXGroup;
-			children = (
-				3DB3C67A1BDFA55B005285E9 /* LDProgressView.h */,
-				3DB3C67B1BDFA55B005285E9 /* LDProgressView.m */,
-				3DB3C67C1BDFA55B005285E9 /* UIColor+RGBValues.h */,
-				3DB3C67D1BDFA55B005285E9 /* UIColor+RGBValues.m */,
-					08F253E0D6C681081F5E38C4 /* UIViewController+CanvasFit.h */,
-					B01E36422A7F7B67364BA965 /* UIViewController+CanvasFit.m */,
-				3DB3C68D1BDFB064005285E9 /* Recurso.h */,
-				3DB3C68E1BDFB064005285E9 /* Recurso.m */,
-				3DB3C68F1BDFB064005285E9 /* Recurso.xib */,
-				3DB3C6921BE0235B005285E9 /* Potenciadores.h */,
-				3DB3C6931BE0235B005285E9 /* Potenciadores.m */,
-				3DB3C6941BE0235B005285E9 /* Potenciadores.xib */,
-				3DB3C6821BDFAB0D005285E9 /* SPIViewController.h */,
-				3DB3C6831BDFAB0D005285E9 /* SPIViewController.m */,
-				3DB3C6841BDFAB0D005285E9 /* SPIViewController.xib */,
-				3DB3C6851BDFAB0D005285E9 /* SPI.h */,
-				3DB3C6861BDFAB0D005285E9 /* SPI.m */,
-				3D8BCDD405DB9C851FCD4C67 /* DataBase.h */,
-				5299F2AB46DC935464294E69 /* GestorBD.h */,
-				EDE6E31140840969AEA8556C /* Intro.h */,
-				E38B1C5BF2C99CD1BA0537B0 /* Result.h */,
-				335DDEB5CEF49FD4AE84CCA1 /* Scores.h */,
-				398DEEB92F4A8876EFF7C6A0 /* Help.h */,
-				B27F3022C7733E66932904F5 /* TiElA.h */,
-				ED7DC0B1FBA1B19A08D1F5F2 /* TiElTaA.h */,
-				7A2D9F73233EC89F2D33A380 /* DataBase.m */,
-				75A7EB0E63A63F2955ED8F68 /* GestorBD.m */,
-				126E18BD67E028FE34430984 /* Intro.m */,
-				E5684A766B470EAB292CA12B /* Result.m */,
-				CCAB44A7D339E759DFB50751 /* Scores.m */,
-				9A8C764E7F3BDADDAB386397 /* Help.m */,
-				7EB8064EFB2768826E839C2E /* TiElA.m */,
-				CC3B0265C4FCFEF7A8040B50 /* TiElTaA.m */,
-				05D73716E7B683A60D427D74 /* Intro.xib */,
-				0EDA9357E4EA67F1BE3856CF /* Result.xib */,
-				A37FF8E9D2F71A43AA772F41 /* Scores.xib */,
-				9B86D8C5495DC428964F19B6 /* Help.xib */,
-				7C3C1D2900B8A1FEA978738F /* TiElA.xib */,
-				1137BF25EB38BBF84E06B4AB /* TiElTaA.xib */,
-			);
-			name = Clases;
 			sourceTree = "<group>";
 		};
 		FD103A778B425710D7F6D6F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				A85B18ADFEB21E6F54482C42 /* GameKit.framework */,
-				F8019862DAC96E7B06499E06 /* libsqlite3.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7390111A66E61CCFABD99438 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5FC1E3D47680310511107479 /* WorkPackage.swift */,
+				388AAEE9B8C6BAADF93788DF /* Booster.swift */,
+				7468E04362257569228B8535 /* BoosterEffect.swift */,
+				9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		079B735383EF7E303C199B88 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				378A50C23684A218625CD8C9 /* SimulationEngine.swift */,
+				00A9D8F37A1831C1DC972A12 /* GameCenterManager.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		E514C0E51D63448C584F9B15 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E5DCDEAB0903EFA5C19B4DB6 /* BundleImage.swift */,
+				EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */,
+				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
+				2C8685056D2AA0E3E18F0AC3 /* BoosterCardView.swift */,
+				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
+				9AABCA5569B355981C7CE28A /* IntroView.swift */,
+				FAC2B7CC758D040FA71E526A /* ResultView.swift */,
+				FE196F477B0F3638FA696F86 /* ScoresView.swift */,
+				E02753B52D363181F36E257F /* HelpView.swift */,
+				F1A596F4FA5261466C7BFA31 /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BF57485D7225CDD4F41EADAD /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7390111A66E61CCFABD99438 /* Models */,
+				079B735383EF7E303C199B88 /* Engine */,
+				E514C0E51D63448C584F9B15 /* Views */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -465,41 +371,18 @@
 				3DAD45261BDF13E3007E123A /* Engineering.jpeg in Resources */,
 				3DAD45141BDF1351007E123A /* Construction.jpeg in Resources */,
 				3DAD453C1BDF15CE007E123A /* IHS.jpeg in Resources */,
-				3DB3C6781BDF917F005285E9 /* FF.png in Resources */,
-				3DB3C6911BDFB064005285E9 /* Recurso.xib in Resources */,
 				3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */,
 				3DAD45341BDF1423007E123A /* Risk.jpeg in Resources */,
 				3DB3C6811BDFA5EC005285E9 /* Design.jpeg in Resources */,
 				3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */,
 				2F1497E13AECBA02B6EF5175 /* PrivacyInfo.xcprivacy in Resources */,
-				3DB3C6961BE0235B005285E9 /* Potenciadores.xib in Resources */,
-				3DB3C6771BDF917F005285E9 /* Minus.png in Resources */,
 				3DAD452A1BDF13F4007E123A /* Planning.jpeg in Resources */,
 				3DAD45161BDF1361007E123A /* IES.jpeg in Resources */,
-				3DB3C6751BDF917F005285E9 /* Play.png in Resources */,
 				3DAD45241BDF13C2007E123A /* Training.jpeg in Resources */,
 				3DAD45281BDF13EC007E123A /* Quality.jpeg in Resources */,
 				3DAD453A1BDF1445007E123A /* Structure.jpeg in Resources */,
 				3DAD451E1BDF13AB007E123A /* Communications.jpeg in Resources */,
-				3DB3C6761BDF917F005285E9 /* Pause.png in Resources */,
-				3DB3C6741BDF917F005285E9 /* Plus.png in Resources */,
-				3DAD44E41BDEF84B007E123A /* Main.storyboard in Resources */,
-				3DB3C6881BDFAB0D005285E9 /* SPIViewController.xib in Resources */,
-				C8BBE9125A73FDDD21980379 /* Intro.xib in Resources */,
-				0AA3CA073B98D5ED579114BB /* Result.xib in Resources */,
-				976E30F986BE1C6D717552D3 /* Scores.xib in Resources */,
-				80E7CEA978BD5635A1656E93 /* Help.xib in Resources */,
-				1F9597AB3077AC70CDF89157 /* TiElA.xib in Resources */,
-				BF49A90C4B6FB2C3551C16EF /* TiElTaA.xib in Resources */,
-				DF3BA032C53C0C155B2B8ED1 /* ConstructionMaster.png in Resources */,
-				5F04F7A1B88C330A24A22115 /* Cost-Master.png in Resources */,
 				59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */,
-				5713F0CADCB4704E0C5F2E19 /* Redondeado1C.png in Resources */,
-				1DE27E8690AE20319DA569B8 /* Redondeado2.png in Resources */,
-				C0688DF128B21F84212E0AD0 /* Redondeado4B.png in Resources */,
-				74B6864D969D2EF81D31E3DB /* RedondeadoBlanco.png in Resources */,
-				5296402BB3AF937C169EC808 /* TimeMaster.png in Resources */,
-				DB8E78EFF60D0D11C292EBD7 /* GameCenter.png in Resources */,
 				7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -525,24 +408,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DB3C67F1BDFA55B005285E9 /* UIColor+RGBValues.m in Sources */,
-				4E4D29EFA4503F1BBE6F78E9 /* UIViewController+CanvasFit.m in Sources */,
-				3DB3C6871BDFAB0D005285E9 /* SPIViewController.m in Sources */,
-				3DAD44E11BDEF84B007E123A /* ViewController.m in Sources */,
-				3DB3C6891BDFAB0D005285E9 /* SPI.m in Sources */,
-				3DAD44DE1BDEF84B007E123A /* AppDelegate.m in Sources */,
-				3DB3C6951BE0235B005285E9 /* Potenciadores.m in Sources */,
-				3DAD44DB1BDEF84B007E123A /* main.m in Sources */,
-				3DB3C67E1BDFA55B005285E9 /* LDProgressView.m in Sources */,
-				3DB3C6901BDFB064005285E9 /* Recurso.m in Sources */,
-				2C0B9A86AB3E01C3FE9C87EB /* DataBase.m in Sources */,
-				D7641D4A05703DF857B5CFF8 /* GestorBD.m in Sources */,
-				AFE5C9CD01B4D8207CD6E177 /* Intro.m in Sources */,
-				B9C07574510B4FEFC8506104 /* Result.m in Sources */,
-				B5E58C55E0C0303828EA7BF2 /* Scores.m in Sources */,
-				87B7DA56B380AEF65B56C5C3 /* Help.m in Sources */,
-				AEF08FE02A965FD1B714C5C0 /* TiElA.m in Sources */,
-				963286031C141B87838A4DF8 /* TiElTaA.m in Sources */,
+				8E4C2EC0C5B8B2A3E7930CA2 /* WorkPackage.swift in Sources */,
+				40E48763417D655C2CFDEBF1 /* Booster.swift in Sources */,
+				B67F2E692126F43A2D03A171 /* BoosterEffect.swift in Sources */,
+				A1A097645B27F493EE42E5E3 /* ScoreEntry.swift in Sources */,
+				0A05680A9CDE5BA70ADD5AAD /* SimulationEngine.swift in Sources */,
+				9675C555B0B52E3979456995 /* GameCenterManager.swift in Sources */,
+				599BAACFCF84494BDFEF4334 /* BundleImage.swift in Sources */,
+				F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */,
+				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
+				FFBD482056E9E5644964A93E /* BoosterCardView.swift in Sources */,
+				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
+				77617EF5FDC8BA46207E954A /* IntroView.swift in Sources */,
+				AD15FC921304BF858F6FEA6B /* ResultView.swift in Sources */,
+				D0686BEDACC10D7CDCC19634 /* ScoresView.swift in Sources */,
+				351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */,
+				08A09CA15BB30E09AA12EA04 /* RootView.swift in Sources */,
+				F43AC009259945DEF732AC36 /* CMSimulatorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,14 +460,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		3DAD44E21BDEF84B007E123A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3DAD44E31BDEF84B007E123A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -633,7 +507,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -671,7 +545,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -683,10 +557,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_ENTITLEMENTS = CMSimulator/CMSimulator.entitlements;
 				DEVELOPMENT_TEAM = M4T54FHTC9;
 				INFOPLIST_FILE = CMSimulator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -697,10 +572,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_ENTITLEMENTS = CMSimulator/CMSimulator.entitlements;
 				DEVELOPMENT_TEAM = M4T54FHTC9;
 				INFOPLIST_FILE = CMSimulator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -16,27 +16,35 @@ struct ResultView: View {
     private var hours: Int { Int((days - Double(wholeDays)) * 8) }
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Simulation Over").font(.title.bold())
+        GeometryReader { geo in
+            ScrollView {
+                VStack(spacing: 20) {
+                    Spacer(minLength: 20)
 
-            VStack(spacing: 6) {
-                Text("Final Cost").font(.caption).foregroundStyle(.secondary)
-                Text(cost, format: .currency(code: "USD")).font(.title2.monospacedDigit())
+                    Text("Simulation Over").font(.title.bold())
+
+                    VStack(spacing: 6) {
+                        Text("Final Cost").font(.caption).foregroundStyle(.secondary)
+                        Text(cost, format: .currency(code: "USD")).font(.title2.monospacedDigit())
+                    }
+                    VStack(spacing: 6) {
+                        Text("Final Time").font(.caption).foregroundStyle(.secondary)
+                        Text("\(wholeDays) Days \(hours) Hours").font(.title2.monospacedDigit())
+                    }
+
+                    TextField("Your name", text: $name)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth: 260)
+
+                    Button("Save") { onSave(name) }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+
+                    Spacer(minLength: 20)
+                }
+                .padding(32)
+                .frame(minWidth: geo.size.width, minHeight: geo.size.height)
             }
-            VStack(spacing: 6) {
-                Text("Final Time").font(.caption).foregroundStyle(.secondary)
-                Text("\(wholeDays) Days \(hours) Hours").font(.title2.monospacedDigit())
-            }
-
-            TextField("Your name", text: $name)
-                .textFieldStyle(.roundedBorder)
-                .frame(maxWidth: 260)
-
-            Button("Save") { onSave(name) }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
         }
-        .padding(32)
-        .frame(maxWidth: 420)
     }
 }

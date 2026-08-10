@@ -83,7 +83,13 @@ struct GameView: View {
     private var packagesColumn: some View {
         VStack(spacing: 8) {
             Text("Work Packages").font(.caption.bold()).frame(maxWidth: .infinity, alignment: .leading)
-            ForEach(engine.workPackages) { WorkPackageCardView(package: $0) }
+            ForEach(engine.workPackages) { package in
+                WorkPackageCardView(
+                    package: package,
+                    onHire: { engine.hireWorker(for: package.id) },
+                    onFire: { engine.fireWorker(for: package.id) }
+                )
+            }
         }
     }
 

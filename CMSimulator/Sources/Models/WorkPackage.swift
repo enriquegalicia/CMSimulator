@@ -22,7 +22,9 @@ struct WorkPackage: Identifiable {
     var rate: Double
     var cumulativeCost: Double = 0
     var cumulativeRateEarned: Double = 0
-    var purchasedCount: Int = 0
+    /// People hired onto this discipline - mirrors the original's "Numero".
+    /// Progress only accrues while headcount > 0.
+    var headcount: Int = 0
     var unitsCompleted: Double = 0
     var isUnlocked: Bool = false
     var totalSpent: Double = 0

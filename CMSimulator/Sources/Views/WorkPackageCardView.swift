@@ -7,6 +7,8 @@ import SwiftUI
 
 struct WorkPackageCardView: View {
     let package: WorkPackage
+    let onHire: () -> Void
+    let onFire: () -> Void
 
     var body: some View {
         HStack(spacing: 10) {
@@ -26,10 +28,32 @@ struct WorkPackageCardView: View {
                 }
                 .font(.caption2)
                 .foregroundStyle(.secondary)
+                if package.headcount == 0 {
+                    Text("Hire someone to start this discipline")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                }
             }
+
+            Spacer(minLength: 4)
+
+            VStack(spacing: 6) {
+                Button(action: onHire) {
+                    Image(systemName: "plus.circle.fill")
+                }
+                Text("\(package.headcount)")
+                    .font(.caption2.monospacedDigit())
+                Button(action: onFire) {
+                    Image(systemName: "minus.circle.fill")
+                }
+                .disabled(package.headcount == 0)
+            }
+            .font(.title3)
+            .buttonStyle(.plain)
         }
         .padding(8)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10))
         .opacity(package.isUnlocked ? 1 : 0.35)
+        .disabled(!package.isUnlocked)
     }
 }

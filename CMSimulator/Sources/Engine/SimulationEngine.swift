@@ -90,7 +90,9 @@ final class SimulationEngine: ObservableObject {
         totalHours = Int((fractionalDays - Double(totalDays)) * 8)
 
         for i in workPackages.indices {
-            guard workPackages[i].isUnlocked else { continue }
+            // Mirrors the original: a discipline only advances - and only
+            // costs money - once someone is actually hired onto it.
+            guard workPackages[i].isUnlocked, workPackages[i].headcount > 0 else { continue }
             let earnedThisTick = workPackages[i].rate * step
             workPackages[i].unitsCompleted += earnedThisTick
             workPackages[i].cumulativeCost += workPackages[i].cost * step
@@ -125,6 +127,36 @@ final class SimulationEngine: ObservableObject {
                 boosters[i].isUnlocked = true
             }
         }
+    }
+
+    // MARK: - Hiring / firing workers on a discipline (ported from Recurso's suma/resta + RPLUS/RMINUS)
+
+    func hireWorker(for packageID: WorkPackage.ID) {
+        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }), workPackages[idx].isUnlocked else { return }
+        workPackages[idx].headcount += 1
+        let spent = workPackages[idx].cost
+        workPackages[idx].totalSpent += spent
+        // Hiring quickly nudges cost up and rate down a touch - and costs
+        // a little risk/quality, same trade-off as buying a booster.
+        workPackages[idx].cost *= Double.random(in: 0.99...1.05)
+        workPackages[idx].rate *= Double.random(in: 0.95...1.01)
+        workPackages[idx].clampCost()
+        workPackages[idx].clampRate()
+        riskGauge = min(max(riskGauge * Double.random(in: 0.90...0.99), 0.5), 1.5)
+        qualityGauge = min(max(qualityGauge * Double.random(in: 0.90...0.99), 0.5), 1.5)
+        recomputeTotals()
+    }
+
+    func fireWorker(for packageID: WorkPackage.ID) {
+        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }), workPackages[idx].headcount > 0 else { return }
+        workPackages[idx].headcount -= 1
+        workPackages[idx].cost *= Double.random(in: 0.95...1.02)
+        workPackages[idx].rate *= Double.random(in: 0.98...1.05)
+        workPackages[idx].clampCost()
+        workPackages[idx].clampRate()
+        riskGauge = min(max(riskGauge * Double.random(in: 1.01...1.05), 0.5), 1.5)
+        qualityGauge = min(max(qualityGauge * Double.random(in: 1.01...1.05), 0.5), 1.5)
+        recomputeTotals()
     }
 
     // MARK: - Buying / selling boosters (ported from Recurso/Potenciadores suma/resta + RPLUSA/RMINUSA)

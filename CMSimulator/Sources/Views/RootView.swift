@@ -24,19 +24,6 @@ struct RootView: View {
     @State private var showScores = false
     @State private var showResult = false
 
-    // TEMP: verification-only, jump to a screen via `defaults write
-    // <bundle-id> CMS_DEBUG_SCREEN game|help|scores|result`. Remove
-    // before shipping.
-    private func applyDebugScreen() {
-        switch UserDefaults.standard.string(forKey: "CMS_DEBUG_SCREEN") {
-        case "game": screen = .game
-        case "help": screen = .game; showHelp = true
-        case "scores": screen = .game; showScores = true
-        case "result": screen = .game; showResult = true
-        default: break
-        }
-    }
-
     var body: some View {
         ZStack {
             switch screen {
@@ -72,12 +59,7 @@ struct RootView: View {
                 showScores = true
             }
         }
-        .task {
-            if ProcessInfo.processInfo.environment["CMS_SKIP_GC"] == nil {
-                gameCenter.authenticate()
-            }
-            applyDebugScreen()
-        }
+        .task { gameCenter.authenticate() }
         .sheet(item: Binding(
             get: { gameCenter.authViewController.map(GameCenterAuthWrapper.init) },
             set: { _ in gameCenter.authViewController = nil }

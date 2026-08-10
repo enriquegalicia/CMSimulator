@@ -21,7 +21,9 @@ struct HelpView: View {
                     points: [
                         "Six disciplines - Design, Structure, Engineering, Construction, IHS & IAA, IES & IEL.",
                         "Each unlocks once overall project progress passes its start threshold.",
-                        "Cost accrues over time at its current rate; the bar fills as units complete."
+                        "Hire (+) people onto a discipline to start it moving - nothing progresses, and nothing costs money, until someone is hired.",
+                        "Cost accrues over time at its current rate; the bar fills as units complete.",
+                        "Hiring quickly costs a little risk and quality; firing (-) recovers some of it back."
                     ]
                 )
 

@@ -22,26 +22,29 @@ struct GameView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
-                .padding()
+                .padding(isWide ? 20 : 16)
 
             ScrollView {
-                if isWide {
-                    HStack(alignment: .top, spacing: 16) {
-                        packagesColumn
-                        boostersColumn
+                Group {
+                    if isWide {
+                        HStack(alignment: .top, spacing: 24) {
+                            packagesColumn
+                            boostersColumn
+                        }
+                    } else {
+                        VStack(spacing: 16) {
+                            packagesColumn
+                            boostersColumn
+                        }
                     }
-                    .padding(.horizontal)
-                } else {
-                    VStack(spacing: 16) {
-                        packagesColumn
-                        boostersColumn
-                    }
-                    .padding(.horizontal)
                 }
+                .padding(.horizontal, isWide ? 24 : 16)
+                .frame(maxWidth: isWide ? 1100 : .infinity)
+                .frame(maxWidth: .infinity)
             }
 
             transportControls
-                .padding()
+                .padding(isWide ? 24 : 16)
         }
         .onChange(of: engine.isComplete) { _, complete in
             if complete { onComplete() }
@@ -49,40 +52,41 @@ struct GameView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: isWide ? 12 : 8) {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Total Cost").font(.caption).foregroundStyle(.secondary)
-                    Text(engine.totalCost, format: .currency(code: "USD")).font(.headline.monospacedDigit())
+                    Text(engine.totalCost, format: .currency(code: "USD")).font(isWide ? .title.bold() : .headline.monospacedDigit())
                 }
                 Spacer()
                 VStack {
                     Text("Time").font(.caption).foregroundStyle(.secondary)
-                    Text("\(engine.totalDays)d \(engine.totalHours)h").font(.headline.monospacedDigit())
+                    Text("\(engine.totalDays)d \(engine.totalHours)h").font(isWide ? .title.bold() : .headline.monospacedDigit())
                 }
                 Spacer()
                 VStack(alignment: .trailing) {
                     Text("Progress").font(.caption).foregroundStyle(.secondary)
-                    Text(engine.totalProgress, format: .number.precision(.fractionLength(1))) .font(.headline.monospacedDigit())
-                        + Text("%").font(.headline)
+                    Text(engine.totalProgress, format: .number.precision(.fractionLength(1))) .font(isWide ? .title.bold() : .headline.monospacedDigit())
+                        + Text("%").font(isWide ? .title.bold() : .headline)
                 }
             }
-            HStack(spacing: 24) {
-                GaugeView(title: "Risk", value: engine.riskGauge).frame(height: 70)
-                GaugeView(title: "Quality", value: engine.qualityGauge).frame(height: 70)
+            HStack(spacing: isWide ? 32 : 24) {
+                GaugeView(title: "Risk", value: engine.riskGauge).frame(height: isWide ? 90 : 70)
+                GaugeView(title: "Quality", value: engine.qualityGauge).frame(height: isWide ? 90 : 70)
                 Spacer()
                 Button(action: onShowHelp) { Label("Help", systemImage: "questionmark.circle") }
                 Button(action: onShowScores) { Label("Scores", systemImage: "trophy") }
                 Button(action: onGameCenter) { Label("Game Center", systemImage: "gamecontroller") }
             }
             .labelStyle(.iconOnly)
-            .font(.title3)
+            .font(isWide ? .title : .title3)
         }
+        .frame(maxWidth: isWide ? 1100 : .infinity)
     }
 
     private var packagesColumn: some View {
-        VStack(spacing: 8) {
-            Text("Work Packages").font(.caption.bold()).frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: isWide ? 12 : 8) {
+            Text("Work Packages").font(isWide ? .headline : .caption.bold()).frame(maxWidth: .infinity, alignment: .leading)
             ForEach(engine.workPackages) { package in
                 WorkPackageCardView(
                     package: package,
@@ -94,8 +98,8 @@ struct GameView: View {
     }
 
     private var boostersColumn: some View {
-        VStack(spacing: 8) {
-            Text("Boosters").font(.caption.bold()).frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: isWide ? 12 : 8) {
+            Text("Boosters").font(isWide ? .headline : .caption.bold()).frame(maxWidth: .infinity, alignment: .leading)
             ForEach(engine.boosters) { booster in
                 BoosterCardView(
                     booster: booster,

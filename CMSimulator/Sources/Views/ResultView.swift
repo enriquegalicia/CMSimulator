@@ -11,6 +11,8 @@ struct ResultView: View {
     let onSave: (String) -> Void
 
     @State private var name: String = ""
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    private var isWide: Bool { horizontalSizeClass == .regular }
 
     private var wholeDays: Int { Int(days) }
     private var hours: Int { Int((days - Double(wholeDays)) * 8) }
@@ -21,24 +23,7 @@ struct ResultView: View {
                 VStack(spacing: 20) {
                     Spacer(minLength: 20)
 
-                    Text("Simulation Over").font(.title.bold())
-
-                    VStack(spacing: 6) {
-                        Text("Final Cost").font(.caption).foregroundStyle(.secondary)
-                        Text(cost, format: .currency(code: "USD")).font(.title2.monospacedDigit())
-                    }
-                    VStack(spacing: 6) {
-                        Text("Final Time").font(.caption).foregroundStyle(.secondary)
-                        Text("\(wholeDays) Days \(hours) Hours").font(.title2.monospacedDigit())
-                    }
-
-                    TextField("Your name", text: $name)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 260)
-
-                    Button("Save") { onSave(name) }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
+                    card
 
                     Spacer(minLength: 20)
                 }
@@ -46,5 +31,32 @@ struct ResultView: View {
                 .frame(minWidth: geo.size.width, minHeight: geo.size.height)
             }
         }
+    }
+
+    private var card: some View {
+        VStack(spacing: isWide ? 28 : 20) {
+            Text("Simulation Over").font(isWide ? .system(size: 40, weight: .bold) : .title.bold())
+
+            VStack(spacing: 6) {
+                Text("Final Cost").font(isWide ? .body : .caption).foregroundStyle(.secondary)
+                Text(cost, format: .currency(code: "USD")).font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
+            }
+            VStack(spacing: 6) {
+                Text("Final Time").font(isWide ? .body : .caption).foregroundStyle(.secondary)
+                Text("\(wholeDays) Days \(hours) Hours").font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
+            }
+
+            TextField("Your name", text: $name)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 280)
+                .controlSize(isWide ? .large : .regular)
+
+            Button("Save") { onSave(name) }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+        }
+        .padding(isWide ? 48 : 32)
+        .frame(maxWidth: isWide ? 480 : 420)
+        .background(isWide ? AnyShapeStyle(.thinMaterial) : AnyShapeStyle(.clear), in: RoundedRectangle(cornerRadius: 24))
     }
 }

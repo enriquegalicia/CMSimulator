@@ -12,6 +12,7 @@ struct ResultView: View {
 
     @State private var name: String = ""
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     private var isWide: Bool { horizontalSizeClass == .regular }
 
     private var wholeDays: Int { Int(days) }
@@ -39,7 +40,7 @@ struct ResultView: View {
 
             VStack(spacing: 6) {
                 Text("Final Cost").font(isWide ? .body : .caption).foregroundStyle(.secondary)
-                Text(cost, format: .currency(code: "USD")).font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
+                Text(cost, format: .currency(code: currencyCode)).font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
             }
             VStack(spacing: 6) {
                 Text("Final Time").font(isWide ? .body : .caption).foregroundStyle(.secondary)

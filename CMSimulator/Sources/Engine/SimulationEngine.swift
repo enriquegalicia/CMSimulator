@@ -11,16 +11,18 @@ import Foundation
 import Combine
 
 enum SimSpeed {
-    case paused, normal, fast
+    case paused, normal, fast, superFast
 
     var tickInterval: TimeInterval { 0.1 }
     /// Fraction of a "day" simulated per tick - matches the original's
-    /// fdias += .01 (normal) / += .1 (fast forward).
+    /// fdias += .01 (normal) / += .1 (fast forward); superFast doubles
+    /// fast-forward again for a genuinely-faster third gear.
     var dayStep: Double {
         switch self {
         case .paused: return 0
         case .normal: return 0.01
         case .fast: return 0.1
+        case .superFast: return 0.2
         }
     }
 }
@@ -43,22 +45,30 @@ final class SimulationEngine: ObservableObject {
     private var timerCancellable: AnyCancellable?
 
     init() {
+        // Units and thresholds are retuned from the original's (which
+        // summed to ~1000 units with thresholds up to 60% and no headcount
+        // scaling - a solo hire took literal tens of minutes to finish one
+        // discipline). Smaller totals plus headcount now actually scaling
+        // speed together get a full run into a few minutes at Play, well
+        // under a minute at Fast/Super-Fast - and later disciplines unlock
+        // early enough to actually be seen and played with, not just
+        // stared at behind a slow weighted average.
         workPackages = [
-            WorkPackage(id: "design", title: "Design", imageName: "Design.jpeg", initialCost: 700, units: 48, initialRate: 1, startThreshold: 0),
-            WorkPackage(id: "structure", title: "Structure", imageName: "Structure.jpeg", initialCost: 900, units: 48, initialRate: 1, startThreshold: 20),
-            WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.jpeg", initialCost: 1200, units: 62, initialRate: 1, startThreshold: 30),
-            WorkPackage(id: "construction", title: "Construction", imageName: "Construction.jpeg", initialCost: 2500, units: 264, initialRate: 1, startThreshold: 50),
-            WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.jpeg", initialCost: 1800, units: 214, initialRate: 1, startThreshold: 55),
-            WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.jpeg", initialCost: 1600, units: 364, initialRate: 1, startThreshold: 60),
+            WorkPackage(id: "design", title: "Design", imageName: "Design.jpeg", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
+            WorkPackage(id: "structure", title: "Structure", imageName: "Structure.jpeg", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
+            WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.jpeg", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
+            WorkPackage(id: "construction", title: "Construction", imageName: "Construction.jpeg", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
+            WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.jpeg", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
+            WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.jpeg", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
         ]
 
         boosters = [
             Booster(kind: .planning, imageName: "Planning.jpeg", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
-            Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 15, affects: "Resource cost, support costs, planning and risk"),
-            Booster(kind: .risk, imageName: "Risk.jpeg", initialCost: 1000, startThreshold: 35, affects: "Resource cost, labor rates, planning and communications"),
-            Booster(kind: .communications, imageName: "Communications.jpeg", initialCost: 600, startThreshold: 45, affects: "Labor rates, procurement and training"),
-            Booster(kind: .training, imageName: "Training.jpeg", initialCost: 1500, startThreshold: 50, affects: "Cumulative labor rates, costs, quality and risk"),
-            Booster(kind: .quality, imageName: "Quality.jpeg", initialCost: 800, startThreshold: 25, affects: "Resource cost, labor rates, training and procurement"),
+            Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: "Resource cost, support costs, planning and risk"),
+            Booster(kind: .quality, imageName: "Quality.jpeg", initialCost: 800, startThreshold: 12, affects: "Resource cost, labor rates, training and procurement"),
+            Booster(kind: .risk, imageName: "Risk.jpeg", initialCost: 1000, startThreshold: 18, affects: "Resource cost, labor rates, planning and communications"),
+            Booster(kind: .communications, imageName: "Communications.jpeg", initialCost: 600, startThreshold: 22, affects: "Labor rates, procurement and training"),
+            Booster(kind: .training, imageName: "Training.jpeg", initialCost: 1500, startThreshold: 25, affects: "Cumulative labor rates, costs, quality and risk"),
         ]
 
         // Everything else is set - now it's safe to mutate self.
@@ -70,6 +80,7 @@ final class SimulationEngine: ObservableObject {
 
     func play() { setSpeed(.normal) }
     func fastForward() { setSpeed(.fast) }
+    func superFastForward() { setSpeed(.superFast) }
     func pause() { setSpeed(.paused) }
 
     private func setSpeed(_ newSpeed: SimSpeed) {
@@ -91,11 +102,15 @@ final class SimulationEngine: ObservableObject {
 
         for i in workPackages.indices {
             // Mirrors the original: a discipline only advances - and only
-            // costs money - once someone is actually hired onto it.
+            // costs money - once someone is actually hired onto it. Unlike
+            // the original, headcount scales *how fast* too, not just
+            // on/off, so hiring more people has a visible effect and isn't
+            // identical to hiring just one.
             guard workPackages[i].isUnlocked, workPackages[i].headcount > 0 else { continue }
-            let earnedThisTick = workPackages[i].rate * step
+            let crew = Double(workPackages[i].headcount)
+            let earnedThisTick = workPackages[i].rate * crew * step
             workPackages[i].unitsCompleted += earnedThisTick
-            workPackages[i].cumulativeCost += workPackages[i].cost * step
+            workPackages[i].cumulativeCost += workPackages[i].cost * crew * step
         }
 
         recomputeTotals()

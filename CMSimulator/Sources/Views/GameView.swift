@@ -12,6 +12,7 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var engine: SimulationEngine
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     let onShowHelp: () -> Void
     let onShowScores: () -> Void
     let onGameCenter: () -> Void
@@ -56,7 +57,7 @@ struct GameView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Total Cost").font(.caption).foregroundStyle(.secondary)
-                    Text(engine.totalCost, format: .currency(code: "USD")).font(isWide ? .title.bold() : .headline.monospacedDigit())
+                    Text(engine.totalCost, format: .currency(code: currencyCode)).font(isWide ? .title.bold() : .headline.monospacedDigit())
                 }
                 Spacer()
                 VStack {
@@ -111,7 +112,7 @@ struct GameView: View {
     }
 
     private var transportControls: some View {
-        HStack(spacing: 32) {
+        HStack(spacing: isWide ? 32 : 24) {
             Button(action: engine.pause) {
                 Image(systemName: "pause.circle.fill")
             }
@@ -121,8 +122,11 @@ struct GameView: View {
             Button(action: engine.fastForward) {
                 Image(systemName: "forward.circle.fill")
             }
+            Button(action: engine.superFastForward) {
+                Image(systemName: "forward.end.circle.fill")
+            }
         }
-        .font(.system(size: 44))
+        .font(.system(size: isWide ? 50 : 40))
         .buttonStyle(.plain)
     }
 }

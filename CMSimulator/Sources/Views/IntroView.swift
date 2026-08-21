@@ -9,6 +9,7 @@ struct IntroView: View {
     let onPlay: () -> Void
     let onHelp: () -> Void
     let onScores: () -> Void
+    let onSettings: () -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private var isWide: Bool { horizontalSizeClass == .regular }
@@ -80,6 +81,13 @@ struct IntroView: View {
                 }
                 .padding()
                 .frame(minWidth: geo.size.width, minHeight: geo.size.height)
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            Button(action: onSettings) {
+                Image(systemName: "gearshape.fill")
+                    .font(isWide ? .title : .title2)
+                    .padding()
             }
         }
     }

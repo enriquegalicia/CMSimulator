@@ -43,6 +43,8 @@
 		351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02753B52D363181F36E257F /* HelpView.swift */; };
 		08A09CA15BB30E09AA12EA04 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A596F4FA5261466C7BFA31 /* RootView.swift */; };
 		F43AC009259945DEF732AC36 /* CMSimulatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DDA642C987036C1646E29 /* CMSimulatorApp.swift */; };
+		03DACFCF87AAED24DFA5805C /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B64288F7D4F8CA8B5B68619 /* AppSettings.swift */; };
+		F390C3FC1E45F2F61C01A68F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +108,8 @@
 		E02753B52D363181F36E257F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		F1A596F4FA5261466C7BFA31 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		052DDA642C987036C1646E29 /* CMSimulatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/CMSimulatorApp.swift; sourceTree = "<group>"; };
+		6B64288F7D4F8CA8B5B68619 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +227,7 @@
 				388AAEE9B8C6BAADF93788DF /* Booster.swift */,
 				7468E04362257569228B8535 /* BoosterEffect.swift */,
 				9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */,
+				6B64288F7D4F8CA8B5B68619 /* AppSettings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 				FE196F477B0F3638FA696F86 /* ScoresView.swift */,
 				E02753B52D363181F36E257F /* HelpView.swift */,
 				F1A596F4FA5261466C7BFA31 /* RootView.swift */,
+				5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -408,6 +414,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03DACFCF87AAED24DFA5805C /* AppSettings.swift in Sources */,
+				F390C3FC1E45F2F61C01A68F /* SettingsView.swift in Sources */,
 				8E4C2EC0C5B8B2A3E7930CA2 /* WorkPackage.swift in Sources */,
 				40E48763417D655C2CFDEBF1 /* Booster.swift in Sources */,
 				B67F2E692126F43A2D03A171 /* BoosterEffect.swift in Sources */,

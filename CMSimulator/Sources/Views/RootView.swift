@@ -23,6 +23,7 @@ struct RootView: View {
     @State private var showHelp = false
     @State private var showScores = false
     @State private var showResult = false
+    @State private var showSettings = false
 
     var body: some View {
         ZStack {
@@ -31,14 +32,15 @@ struct RootView: View {
                 IntroView(
                     onPlay: { screen = .game },
                     onHelp: { showHelp = true },
-                    onScores: { showScores = true }
+                    onScores: { showScores = true },
+                    onSettings: { showSettings = true }
                 )
             case .game:
                 GameView(
                     engine: engine,
                     onShowHelp: { showHelp = true },
                     onShowScores: { showScores = true },
-                    onGameCenter: { gameCenter.authenticate() },
+                    onGameCenter: { gameCenter.showDashboard() },
                     onComplete: { showResult = true }
                 )
             }
@@ -49,32 +51,45 @@ struct RootView: View {
         .sheet(isPresented: $showScores) {
             ScoresView(onExit: { showScores = false })
         }
+        .sheet(isPresented: $showSettings) {
+            SettingsView(onExit: { showSettings = false })
+        }
         .fullScreenCover(isPresented: $showResult) {
             ResultView(cost: engine.finalCost, days: engine.finalDays) { name in
                 let finalName = name.isEmpty ? "Player" : name
                 let entry = ScoreEntry(playerName: finalName, cost: engine.finalCost, days: engine.finalDays)
                 modelContext.insert(entry)
-                gameCenter.reportScore(cost: engine.finalCost)
+                gameCenter.reportScore(
+                    cost: engine.finalCost,
+                    days: engine.finalDays,
+                    combined: engine.finalCost + engine.finalDays * 1000
+                )
                 showResult = false
                 showScores = true
             }
         }
         .task { gameCenter.authenticate() }
         .sheet(item: Binding(
-            get: { gameCenter.authViewController.map(GameCenterAuthWrapper.init) },
+            get: { gameCenter.authViewController.map(GameCenterControllerWrapper.init) },
             set: { _ in gameCenter.authViewController = nil }
         )) { wrapper in
-            GameCenterAuthView(viewController: wrapper.viewController)
+            GameCenterControllerHost(viewController: wrapper.viewController)
+        }
+        .sheet(item: Binding(
+            get: { gameCenter.dashboardViewController.map(GameCenterControllerWrapper.init) },
+            set: { _ in gameCenter.dashboardViewController = nil }
+        )) { wrapper in
+            GameCenterControllerHost(viewController: wrapper.viewController)
         }
     }
 }
 
-private struct GameCenterAuthWrapper: Identifiable {
+private struct GameCenterControllerWrapper: Identifiable {
     let viewController: UIViewController
     var id: ObjectIdentifier { ObjectIdentifier(viewController) }
 }
 
-private struct GameCenterAuthView: UIViewControllerRepresentable {
+private struct GameCenterControllerHost: UIViewControllerRepresentable {
     let viewController: UIViewController
     func makeUIViewController(context: Context) -> UIViewController { viewController }
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

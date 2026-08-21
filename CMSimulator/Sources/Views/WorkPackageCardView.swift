@@ -10,6 +10,8 @@ struct WorkPackageCardView: View {
     let onHire: () -> Void
     let onFire: () -> Void
 
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
+
     var body: some View {
         HStack(spacing: 10) {
             Image(bundleResource: package.imageName)
@@ -22,7 +24,7 @@ struct WorkPackageCardView: View {
                 Text(package.title).font(.subheadline.bold())
                 ProgressView(value: package.progress)
                 HStack {
-                    Text(package.cost, format: .currency(code: "USD"))
+                    Text(package.cost, format: .currency(code: currencyCode))
                     Spacer()
                     Text("Rate \(package.rate, specifier: "%.2f")")
                 }

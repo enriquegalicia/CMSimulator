@@ -10,6 +10,8 @@ struct BoosterCardView: View {
     let onBuy: () -> Void
     let onSell: () -> Void
 
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
+
     var body: some View {
         HStack(spacing: 10) {
             Image(bundleResource: booster.imageName)
@@ -24,7 +26,7 @@ struct BoosterCardView: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
-                Text(booster.cost, format: .currency(code: "USD"))
+                Text(booster.cost, format: .currency(code: currencyCode))
                     .font(.caption2.monospacedDigit())
             }
 

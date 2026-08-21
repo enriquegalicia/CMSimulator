@@ -28,6 +28,7 @@ struct ScoresView: View {
     let onExit: () -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     private var isWide: Bool { horizontalSizeClass == .regular }
 
     @State private var board: ScoreBoard = .combined
@@ -77,7 +78,7 @@ struct ScoresView: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing) {
-                                Text(entry.cost, format: .currency(code: "USD")).font(isWide ? .body.monospacedDigit() : .caption.monospacedDigit())
+                                Text(entry.cost, format: .currency(code: currencyCode)).font(isWide ? .body.monospacedDigit() : .caption.monospacedDigit())
                                 Text("\(Int(entry.days))d").font(isWide ? .caption : .caption2).monospacedDigit().foregroundStyle(.secondary)
                             }
                         }

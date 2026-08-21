@@ -130,6 +130,7 @@ final class SimulationEngine: ObservableObject {
             workPackages[i].cumulativeCost += workPackages[i].cost * crew * step
         }
 
+        applyBoosterProtection(step: step)
         recomputeTotals()
         updateUnlocks()
         checkForEvent(step: step)
@@ -224,6 +225,45 @@ final class SimulationEngine: ObservableObject {
                 boosters[i].isUnlocked = true
             }
         }
+    }
+
+    /// Owning boosters isn't just a one-time nudge at purchase - the more
+    /// you've hired into Risk/Training/etc, the more they keep actively
+    /// pulling the gauges toward 1.5 every tick, for as long as you own
+    /// them. This is what makes boosters a genuine ongoing defense against
+    /// disasters instead of a single small bump that decays away.
+    private func applyBoosterProtection(step: Double) {
+        let pullPerOwnedPerDay = 0.01
+        let riskProtection = gaugeProtectionLevel(for: .riskGauge)
+        let qualityProtection = gaugeProtectionLevel(for: .qualityGauge)
+
+        if riskProtection > 0 {
+            riskGauge = min(riskGauge + riskProtection * pullPerOwnedPerDay * step, 1.5)
+        }
+        if qualityProtection > 0 {
+            qualityGauge = min(qualityGauge + qualityProtection * pullPerOwnedPerDay * step, 1.5)
+        }
+    }
+
+    /// Sums purchasedCount across whichever boosters actually target this
+    /// gauge in BoosterEffect.table, so the passive pull always matches
+    /// what buying that booster is documented to do - nothing to keep in
+    /// sync by hand if the table changes.
+    private func gaugeProtectionLevel(for target: EffectTarget) -> Double {
+        var total = 0.0
+        for booster in boosters {
+            guard let effects = BoosterEffect.table[booster.id] else { continue }
+            let matches: (EffectTarget) -> Bool = {
+                switch ($0, target) {
+                case (.riskGauge, .riskGauge), (.qualityGauge, .qualityGauge): return true
+                default: return false
+                }
+            }
+            if effects.contains(where: { matches($0.target) }) {
+                total += Double(booster.purchasedCount)
+            }
+        }
+        return total
     }
 
     // MARK: - Hiring / firing workers on a discipline (ported from Recurso's suma/resta + RPLUS/RMINUS)

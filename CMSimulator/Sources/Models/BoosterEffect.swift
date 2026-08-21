@@ -34,7 +34,7 @@ struct BoosterEffect {
         .planning: [
             BoosterEffect(target: .workPackageStart, buyRange: 0.94...0.99),   // unlocks work sooner
             BoosterEffect(target: .workPackageRate, buyRange: 1.00...1.03),
-            BoosterEffect(target: .qualityGauge, buyRange: 1.00...1.02),
+            BoosterEffect(target: .qualityGauge, buyRange: 1.03...1.08),
             BoosterEffect(target: .boosterCost(.communications), buyRange: 0.98...1.00),
         ],
         .procurement: [
@@ -45,7 +45,7 @@ struct BoosterEffect {
         .risk: [
             BoosterEffect(target: .workPackageCost, buyRange: 1.00...1.03),    // riskier, costs more...
             BoosterEffect(target: .workPackageRate, buyRange: 0.98...1.00),
-            BoosterEffect(target: .riskGauge, buyRange: 1.00...1.02),          // ...but improves the risk score
+            BoosterEffect(target: .riskGauge, buyRange: 1.03...1.08),          // ...but improves the risk score
             BoosterEffect(target: .boosterCost(.planning), buyRange: 0.98...1.00),
             BoosterEffect(target: .boosterCost(.communications), buyRange: 0.98...1.00),
         ],
@@ -56,12 +56,12 @@ struct BoosterEffect {
         ],
         .training: [
             BoosterEffect(target: .workPackageCost, buyRange: 0.97...0.995),
-            BoosterEffect(target: .qualityGauge, buyRange: 1.00...1.02),
-            BoosterEffect(target: .riskGauge, buyRange: 1.00...1.02),
+            BoosterEffect(target: .qualityGauge, buyRange: 1.03...1.08),
+            BoosterEffect(target: .riskGauge, buyRange: 1.03...1.08),
         ],
         .quality: [
             BoosterEffect(target: .workPackageRate, buyRange: 1.00...1.03),
-            BoosterEffect(target: .qualityGauge, buyRange: 1.00...1.02),
+            BoosterEffect(target: .qualityGauge, buyRange: 1.03...1.08),
             BoosterEffect(target: .boosterCost(.training), buyRange: 0.98...1.00),
             BoosterEffect(target: .boosterCost(.procurement), buyRange: 0.98...1.00),
         ],

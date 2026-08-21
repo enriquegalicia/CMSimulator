@@ -40,9 +40,25 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var totalProgress: Double = 0
     @Published private(set) var speed: SimSpeed = .paused
     @Published private(set) var isComplete: Bool = false
+    /// Set when a disaster/clash event fires; the view shows a banner and
+    /// clears it. Finishes the original's abandoned Eventos/eventoriesgo/
+    /// eventocalidad mechanic - see SimEvent.swift.
+    @Published private(set) var activeEvent: SimEvent?
 
     private var fractionalDays: Double = 0
+    private var lastEventDay: Double = -Double.greatestFiniteMagnitude
+    private var disasterCost: Double = 0
     private var timerCancellable: AnyCancellable?
+
+    /// Gauges below this (of the 0.5...1.5 range) count as "in the red" -
+    /// matches GaugeView's own red cutoff.
+    private let redZoneThreshold = 0.9
+    /// Roughly this fraction of the time a gauge spends in the red zone
+    /// produces an event within a simulated day - independent of how fast
+    /// the player is running the clock.
+    private let dailyEventChance = 0.4
+    /// Minimum simulated days between events so they can't stack up.
+    private let eventCooldownDays = 3.0
 
     init() {
         // Units and thresholds are retuned from the original's (which
@@ -116,6 +132,7 @@ final class SimulationEngine: ObservableObject {
 
         recomputeTotals()
         updateUnlocks()
+        checkForEvent(step: step)
 
         if totalProgress >= 100, !isComplete {
             isComplete = true
@@ -123,8 +140,63 @@ final class SimulationEngine: ObservableObject {
         }
     }
 
+    private func checkForEvent(step: Double) {
+        guard activeEvent == nil, fractionalDays - lastEventDay >= eventCooldownDays else { return }
+
+        let riskInRedZone = riskGauge < redZoneThreshold
+        let qualityInRedZone = qualityGauge < redZoneThreshold
+        guard riskInRedZone || qualityInRedZone else { return }
+
+        // Same probability-per-simulated-day regardless of playback speed:
+        // superFast covers more days per tick, so it gets a proportionally
+        // bigger per-tick roll, not a flat one - the expected time to an
+        // event (in simulated days) stays the same whether you're at Play
+        // or Super-Fast.
+        let pTrigger = 1 - pow(1 - dailyEventChance, step)
+        guard Double.random(in: 0...1) < pTrigger else { return }
+
+        // If both gauges are in the red, whichever is worse decides which
+        // event fires.
+        let kind: SimEventKind = (riskGauge <= qualityGauge) ? .hurricane : .designClash
+        trigger(kind)
+    }
+
+    private func trigger(_ kind: SimEventKind) {
+        lastEventDay = fractionalDays
+        let extraCost = max(200, totalCost * Double.random(in: 0.05...0.15))
+        let setback = Double.random(in: 1...3)
+        disasterCost += extraCost
+
+        var message: String
+        switch kind {
+        case .hurricane:
+            message = "High winds damaged the site. Cleanup and repairs added cost to the project."
+            riskGauge = min(max(riskGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
+        case .designClash:
+            message = "A coordination clash between disciplines was found and needs rework."
+            qualityGauge = min(max(qualityGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
+        }
+
+        // Set back whichever unlocked, in-progress package has the most
+        // to lose - the one furthest along, so the hit is felt but can't
+        // erase a package that's barely started.
+        if let idx = workPackages.indices
+            .filter({ workPackages[$0].isUnlocked && workPackages[$0].unitsCompleted > 0 })
+            .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
+            workPackages[idx].unitsCompleted = max(0, workPackages[idx].unitsCompleted - setback)
+            message += " \(workPackages[idx].title) lost some progress."
+        }
+
+        activeEvent = SimEvent(kind: kind, message: message, extraCost: extraCost, setbackUnits: setback)
+        recomputeTotals()
+    }
+
+    func dismissEvent() {
+        activeEvent = nil
+    }
+
     private func recomputeTotals() {
-        totalCost = workPackages.reduce(0) { $0 + $1.cumulativeCost } + boosters.reduce(0) { $0 + $1.totalSpent }
+        totalCost = workPackages.reduce(0) { $0 + $1.cumulativeCost } + boosters.reduce(0) { $0 + $1.totalSpent } + disasterCost
 
         // Weighted only across *unlocked* packages, not all six. Weighting
         // against every package's units regardless of lock state made

@@ -50,6 +50,45 @@ struct GameView: View {
         .onChange(of: engine.isComplete) { _, complete in
             if complete { onComplete() }
         }
+        .overlay(alignment: .top) {
+            if let event = engine.activeEvent {
+                eventBanner(event)
+                    .padding(.top, isWide ? 12 : 4)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .zIndex(1)
+            }
+        }
+        .animation(.spring(duration: 0.35), value: engine.activeEvent?.id)
+    }
+
+    private func eventBanner(_ event: SimEvent) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: event.kind.symbolName)
+                .font(isWide ? .largeTitle : .title2)
+                .foregroundStyle(.white)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(event.kind.title).font(isWide ? .title3.bold() : .headline).foregroundStyle(.white)
+                Text(event.message).font(isWide ? .body : .caption).foregroundStyle(.white.opacity(0.9))
+                Text("+\(event.extraCost, format: .currency(code: currencyCode)) to the project")
+                    .font(isWide ? .body.bold() : .caption.bold())
+                    .foregroundStyle(.white)
+            }
+
+            Spacer(minLength: 8)
+
+            Button(action: engine.dismissEvent) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.white.opacity(0.8))
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(isWide ? 20 : 12)
+        .background(.red.gradient, in: RoundedRectangle(cornerRadius: 16))
+        .padding(.horizontal, isWide ? 40 : 12)
+        .frame(maxWidth: isWide ? 700 : .infinity)
+        .shadow(radius: 8, y: 4)
     }
 
     private var header: some View {

@@ -156,33 +156,34 @@ final class SimulationEngine: ObservableObject {
         guard Double.random(in: 0...1) < pTrigger else { return }
 
         // If both gauges are in the red, whichever is worse decides which
-        // event fires.
-        let kind: SimEventKind = (riskGauge <= qualityGauge) ? .hurricane : .designClash
-        trigger(kind)
+        // *category* fires; the specific kind within that category is
+        // random, so a bad risk streak might be a hurricane one time and
+        // a site fire the next, each with its own cost/setback severity.
+        let category: SimEventCategory = (riskGauge <= qualityGauge) ? .risk : .quality
+        trigger(.random(for: category))
     }
 
     private func trigger(_ kind: SimEventKind) {
         lastEventDay = fractionalDays
-        let extraCost = max(200, totalCost * Double.random(in: 0.05...0.15))
-        let setback = Double.random(in: 1...3)
+        let extraCost = max(150, totalCost * Double.random(in: kind.costFractionRange))
         disasterCost += extraCost
 
-        var message: String
-        switch kind {
-        case .hurricane:
-            message = "High winds damaged the site. Cleanup and repairs added cost to the project."
+        switch kind.category {
+        case .risk:
             riskGauge = min(max(riskGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
-        case .designClash:
-            message = "A coordination clash between disciplines was found and needs rework."
+        case .quality:
             qualityGauge = min(max(qualityGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
         }
 
-        // Set back whichever unlocked, in-progress package has the most
-        // to lose - the one furthest along, so the hit is felt but can't
-        // erase a package that's barely started.
-        if let idx = workPackages.indices
-            .filter({ workPackages[$0].isUnlocked && workPackages[$0].unitsCompleted > 0 })
-            .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
+        var message = kind.message
+        var setback: Double = 0
+        // Not every event costs physical progress - theft and change
+        // orders are cost-only hits.
+        if let setbackRange = kind.setbackRange,
+           let idx = workPackages.indices
+               .filter({ workPackages[$0].isUnlocked && workPackages[$0].unitsCompleted > 0 })
+               .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
+            setback = Double.random(in: setbackRange)
             workPackages[idx].unitsCompleted = max(0, workPackages[idx].unitsCompleted - setback)
             message += " \(workPackages[idx].title) lost some progress."
         }

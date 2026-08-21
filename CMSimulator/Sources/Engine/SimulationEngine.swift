@@ -107,9 +107,10 @@ final class SimulationEngine: ObservableObject {
             // on/off, so hiring more people has a visible effect and isn't
             // identical to hiring just one.
             guard workPackages[i].isUnlocked, workPackages[i].headcount > 0 else { continue }
+            guard workPackages[i].unitsCompleted < workPackages[i].units else { continue }
             let crew = Double(workPackages[i].headcount)
             let earnedThisTick = workPackages[i].rate * crew * step
-            workPackages[i].unitsCompleted += earnedThisTick
+            workPackages[i].unitsCompleted = min(workPackages[i].unitsCompleted + earnedThisTick, workPackages[i].units)
             workPackages[i].cumulativeCost += workPackages[i].cost * crew * step
         }
 
@@ -125,9 +126,17 @@ final class SimulationEngine: ObservableObject {
     private func recomputeTotals() {
         totalCost = workPackages.reduce(0) { $0 + $1.cumulativeCost } + boosters.reduce(0) { $0 + $1.totalSpent }
 
-        let totalUnits = workPackages.reduce(0) { $0 + $1.units }
+        // Weighted only across *unlocked* packages, not all six. Weighting
+        // against every package's units regardless of lock state made
+        // this a hard ceiling: Design alone (6 of 126 total units) could
+        // never exceed ~4.8% progress even at 100% done, but Structure
+        // needed 10% to unlock - mathematically unreachable, a permanent
+        // soft-lock. Locked packages simply aren't "in scope" yet, so they
+        // shouldn't count against the denominator until they unlock.
+        let unlocked = workPackages.filter { $0.isUnlocked }
+        let totalUnits = unlocked.reduce(0) { $0 + $1.units }
         guard totalUnits > 0 else { totalProgress = 0; return }
-        let weighted = workPackages.reduce(0.0) { $0 + ($1.units / totalUnits) * $1.progress }
+        let weighted = unlocked.reduce(0.0) { $0 + ($1.units / totalUnits) * $1.progress }
         totalProgress = weighted * 100
     }
 

@@ -17,17 +17,17 @@
 		3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */; };
 		3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */; };
 		3DAD44FF1BDEF84C007E123A /* CMSimulatorUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */; };
-		3DAD45141BDF1351007E123A /* Construction.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45131BDF1351007E123A /* Construction.jpeg */; };
-		3DAD45161BDF1361007E123A /* IES.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45151BDF1361007E123A /* IES.jpeg */; };
-		3DAD451E1BDF13AB007E123A /* Communications.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD451D1BDF13AB007E123A /* Communications.jpeg */; };
-		3DAD45241BDF13C2007E123A /* Training.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45231BDF13C2007E123A /* Training.jpeg */; };
-		3DAD45261BDF13E3007E123A /* Engineering.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45251BDF13E3007E123A /* Engineering.jpeg */; };
-		3DAD45281BDF13EC007E123A /* Quality.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45271BDF13EC007E123A /* Quality.jpeg */; };
-		3DAD452A1BDF13F4007E123A /* Planning.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45291BDF13F4007E123A /* Planning.jpeg */; };
-		3DAD45341BDF1423007E123A /* Risk.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45331BDF1423007E123A /* Risk.jpeg */; };
-		3DAD453A1BDF1445007E123A /* Structure.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45391BDF1445007E123A /* Structure.jpeg */; };
-		3DAD453C1BDF15CE007E123A /* IHS.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD453B1BDF15CE007E123A /* IHS.jpeg */; };
-		3DB3C6811BDFA5EC005285E9 /* Design.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6801BDFA5EC005285E9 /* Design.jpeg */; };
+		3DAD45141BDF1351007E123A /* Construction.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45131BDF1351007E123A /* Construction.png */; };
+		3DAD45161BDF1361007E123A /* IES.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45151BDF1361007E123A /* IES.png */; };
+		3DAD451E1BDF13AB007E123A /* Communications.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD451D1BDF13AB007E123A /* Communications.png */; };
+		3DAD45241BDF13C2007E123A /* Training.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45231BDF13C2007E123A /* Training.png */; };
+		3DAD45261BDF13E3007E123A /* Engineering.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45251BDF13E3007E123A /* Engineering.png */; };
+		3DAD45281BDF13EC007E123A /* Quality.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45271BDF13EC007E123A /* Quality.png */; };
+		3DAD452A1BDF13F4007E123A /* Planning.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45291BDF13F4007E123A /* Planning.png */; };
+		3DAD45341BDF1423007E123A /* Risk.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45331BDF1423007E123A /* Risk.png */; };
+		3DAD453A1BDF1445007E123A /* Structure.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45391BDF1445007E123A /* Structure.png */; };
+		3DAD453C1BDF15CE007E123A /* IHS.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD453B1BDF15CE007E123A /* IHS.png */; };
+		3DB3C6811BDFA5EC005285E9 /* Design.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DB3C6801BDFA5EC005285E9 /* Design.png */; };
 		40E48763417D655C2CFDEBF1 /* Booster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388AAEE9B8C6BAADF93788DF /* Booster.swift */; };
 		552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EE31E6C5EE05E2DFD6913C /* GameView.swift */; };
 		599BAACFCF84494BDFEF4334 /* BundleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDEAB0903EFA5C19B4DB6 /* BundleImage.swift */; };
@@ -86,17 +86,17 @@
 		3DAD44FA1BDEF84C007E123A /* CMSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMSimulatorUITests.m; sourceTree = "<group>"; };
 		3DAD45001BDEF84C007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3DAD45131BDF1351007E123A /* Construction.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Construction.jpeg; sourceTree = "<group>"; };
-		3DAD45151BDF1361007E123A /* IES.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IES.jpeg; sourceTree = "<group>"; };
-		3DAD451D1BDF13AB007E123A /* Communications.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Communications.jpeg; sourceTree = "<group>"; };
-		3DAD45231BDF13C2007E123A /* Training.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Training.jpeg; sourceTree = "<group>"; };
-		3DAD45251BDF13E3007E123A /* Engineering.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Engineering.jpeg; sourceTree = "<group>"; };
-		3DAD45271BDF13EC007E123A /* Quality.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Quality.jpeg; sourceTree = "<group>"; };
-		3DAD45291BDF13F4007E123A /* Planning.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Planning.jpeg; sourceTree = "<group>"; };
-		3DAD45331BDF1423007E123A /* Risk.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Risk.jpeg; sourceTree = "<group>"; };
-		3DAD45391BDF1445007E123A /* Structure.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Structure.jpeg; sourceTree = "<group>"; };
-		3DAD453B1BDF15CE007E123A /* IHS.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IHS.jpeg; sourceTree = "<group>"; };
-		3DB3C6801BDFA5EC005285E9 /* Design.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Design.jpeg; sourceTree = "<group>"; };
+		3DAD45131BDF1351007E123A /* Construction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Construction.png; sourceTree = "<group>"; };
+		3DAD45151BDF1361007E123A /* IES.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IES.png; sourceTree = "<group>"; };
+		3DAD451D1BDF13AB007E123A /* Communications.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Communications.png; sourceTree = "<group>"; };
+		3DAD45231BDF13C2007E123A /* Training.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Training.png; sourceTree = "<group>"; };
+		3DAD45251BDF13E3007E123A /* Engineering.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Engineering.png; sourceTree = "<group>"; };
+		3DAD45271BDF13EC007E123A /* Quality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Quality.png; sourceTree = "<group>"; };
+		3DAD45291BDF13F4007E123A /* Planning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Planning.png; sourceTree = "<group>"; };
+		3DAD45331BDF1423007E123A /* Risk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Risk.png; sourceTree = "<group>"; };
+		3DAD45391BDF1445007E123A /* Structure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Structure.png; sourceTree = "<group>"; };
+		3DAD453B1BDF15CE007E123A /* IHS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IHS.png; sourceTree = "<group>"; };
+		3DB3C6801BDFA5EC005285E9 /* Design.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Design.png; sourceTree = "<group>"; };
 		5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5FC1E3D47680310511107479 /* WorkPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkPackage.swift; sourceTree = "<group>"; };
 		61EE31E6C5EE05E2DFD6913C /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -214,17 +214,17 @@
 		3DAD450E1BDF1302007E123A /* Iconos */ = {
 			isa = PBXGroup;
 			children = (
-				3DB3C6801BDFA5EC005285E9 /* Design.jpeg */,
-				3DAD45391BDF1445007E123A /* Structure.jpeg */,
-				3DAD45331BDF1423007E123A /* Risk.jpeg */,
-				3DAD45291BDF13F4007E123A /* Planning.jpeg */,
-				3DAD45271BDF13EC007E123A /* Quality.jpeg */,
-				3DAD45251BDF13E3007E123A /* Engineering.jpeg */,
-				3DAD45231BDF13C2007E123A /* Training.jpeg */,
-				3DAD451D1BDF13AB007E123A /* Communications.jpeg */,
-				3DAD453B1BDF15CE007E123A /* IHS.jpeg */,
-				3DAD45151BDF1361007E123A /* IES.jpeg */,
-				3DAD45131BDF1351007E123A /* Construction.jpeg */,
+				3DB3C6801BDFA5EC005285E9 /* Design.png */,
+				3DAD45391BDF1445007E123A /* Structure.png */,
+				3DAD45331BDF1423007E123A /* Risk.png */,
+				3DAD45291BDF13F4007E123A /* Planning.png */,
+				3DAD45271BDF13EC007E123A /* Quality.png */,
+				3DAD45251BDF13E3007E123A /* Engineering.png */,
+				3DAD45231BDF13C2007E123A /* Training.png */,
+				3DAD451D1BDF13AB007E123A /* Communications.png */,
+				3DAD453B1BDF15CE007E123A /* IHS.png */,
+				3DAD45151BDF1361007E123A /* IES.png */,
+				3DAD45131BDF1351007E123A /* Construction.png */,
 				7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */,
 				1A687FB91436DF7D483F2D29 /* Procurement.png */,
 			);
@@ -390,20 +390,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DAD45261BDF13E3007E123A /* Engineering.jpeg in Resources */,
-				3DAD45141BDF1351007E123A /* Construction.jpeg in Resources */,
-				3DAD453C1BDF15CE007E123A /* IHS.jpeg in Resources */,
+				3DAD45261BDF13E3007E123A /* Engineering.png in Resources */,
+				3DAD45141BDF1351007E123A /* Construction.png in Resources */,
+				3DAD453C1BDF15CE007E123A /* IHS.png in Resources */,
 				3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */,
-				3DAD45341BDF1423007E123A /* Risk.jpeg in Resources */,
-				3DB3C6811BDFA5EC005285E9 /* Design.jpeg in Resources */,
+				3DAD45341BDF1423007E123A /* Risk.png in Resources */,
+				3DB3C6811BDFA5EC005285E9 /* Design.png in Resources */,
 				3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */,
 				2F1497E13AECBA02B6EF5175 /* PrivacyInfo.xcprivacy in Resources */,
-				3DAD452A1BDF13F4007E123A /* Planning.jpeg in Resources */,
-				3DAD45161BDF1361007E123A /* IES.jpeg in Resources */,
-				3DAD45241BDF13C2007E123A /* Training.jpeg in Resources */,
-				3DAD45281BDF13EC007E123A /* Quality.jpeg in Resources */,
-				3DAD453A1BDF1445007E123A /* Structure.jpeg in Resources */,
-				3DAD451E1BDF13AB007E123A /* Communications.jpeg in Resources */,
+				3DAD452A1BDF13F4007E123A /* Planning.png in Resources */,
+				3DAD45161BDF1361007E123A /* IES.png in Resources */,
+				3DAD45241BDF13C2007E123A /* Training.png in Resources */,
+				3DAD45281BDF13EC007E123A /* Quality.png in Resources */,
+				3DAD453A1BDF1445007E123A /* Structure.png in Resources */,
+				3DAD451E1BDF13AB007E123A /* Communications.png in Resources */,
 				59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */,
 				7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */,
 			);

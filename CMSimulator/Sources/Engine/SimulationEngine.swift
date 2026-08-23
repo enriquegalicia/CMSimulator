@@ -76,21 +76,21 @@ final class SimulationEngine: ObservableObject {
         // early enough to actually be seen and played with, not just
         // stared at behind a slow weighted average.
         workPackages = [
-            WorkPackage(id: "design", title: "Design", imageName: "Design.jpeg", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
-            WorkPackage(id: "structure", title: "Structure", imageName: "Structure.jpeg", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
-            WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.jpeg", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
-            WorkPackage(id: "construction", title: "Construction", imageName: "Construction.jpeg", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
-            WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.jpeg", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
-            WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.jpeg", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
+            WorkPackage(id: "design", title: "Design", imageName: "Design.png", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
+            WorkPackage(id: "structure", title: "Structure", imageName: "Structure.png", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
+            WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.png", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
+            WorkPackage(id: "construction", title: "Construction", imageName: "Construction.png", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
+            WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.png", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
+            WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.png", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
         ]
 
         boosters = [
-            Booster(kind: .planning, imageName: "Planning.jpeg", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
+            Booster(kind: .planning, imageName: "Planning.png", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
             Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: "Resource cost, support costs, planning and risk"),
-            Booster(kind: .quality, imageName: "Quality.jpeg", initialCost: 800, startThreshold: 12, affects: "Resource cost, labor rates, training and procurement"),
-            Booster(kind: .risk, imageName: "Risk.jpeg", initialCost: 1000, startThreshold: 18, affects: "Resource cost, labor rates, planning and communications"),
-            Booster(kind: .communications, imageName: "Communications.jpeg", initialCost: 600, startThreshold: 22, affects: "Labor rates, procurement and training"),
-            Booster(kind: .training, imageName: "Training.jpeg", initialCost: 1500, startThreshold: 25, affects: "Cumulative labor rates, costs, quality and risk"),
+            Booster(kind: .quality, imageName: "Quality.png", initialCost: 800, startThreshold: 12, affects: "Resource cost, labor rates, training and procurement"),
+            Booster(kind: .risk, imageName: "Risk.png", initialCost: 1000, startThreshold: 18, affects: "Resource cost, labor rates, planning and communications"),
+            Booster(kind: .communications, imageName: "Communications.png", initialCost: 600, startThreshold: 22, affects: "Labor rates, procurement and training"),
+            Booster(kind: .training, imageName: "Training.png", initialCost: 1500, startThreshold: 25, affects: "Cumulative labor rates, costs, quality and risk"),
         ]
 
         // Everything else is set - now it's safe to mutate self.

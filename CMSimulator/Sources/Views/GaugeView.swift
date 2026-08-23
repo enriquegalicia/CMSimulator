@@ -57,6 +57,9 @@ struct GaugeView: View {
                 .font(.caption2.monospacedDigit())
                 .foregroundStyle(.secondary)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue(String(format: "%.2f", value))
     }
 }
 

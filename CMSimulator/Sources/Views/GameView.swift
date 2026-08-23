@@ -15,8 +15,11 @@ struct GameView: View {
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     let onShowHelp: () -> Void
     let onShowScores: () -> Void
+    let onShowSettings: () -> Void
     let onGameCenter: () -> Void
     let onComplete: () -> Void
+
+    @State private var showRestartConfirm = false
 
     private var isWide: Bool { horizontalSizeClass == .regular }
 
@@ -59,6 +62,12 @@ struct GameView: View {
             }
         }
         .animation(.spring(duration: 0.35), value: engine.activeEvent?.id)
+        .confirmationDialog("Restart the simulation?", isPresented: $showRestartConfirm, titleVisibility: .visible) {
+            Button("Restart", role: .destructive) { engine.restart() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This discards your current cost, progress, and hires and starts a fresh run.")
+        }
         .sheet(item: Binding(get: { engine.hiringRequest }, set: { if $0 == nil { engine.cancelHiring() } })) { request in
             CandidatePickerView(
                 request: request,
@@ -128,9 +137,11 @@ struct GameView: View {
                 GaugeView(title: "Risk", value: engine.riskGauge).frame(height: isWide ? 90 : 70)
                 GaugeView(title: "Quality", value: engine.qualityGauge).frame(height: isWide ? 90 : 70)
                 Spacer()
+                Button(role: .destructive, action: { showRestartConfirm = true }) { Label("Restart", systemImage: "arrow.counterclockwise") }
                 Button(action: onShowHelp) { Label("Help", systemImage: "questionmark.circle") }
                 Button(action: onShowScores) { Label("Scores", systemImage: "trophy") }
                 Button(action: onGameCenter) { Label("Game Center", systemImage: "gamecontroller") }
+                Button(action: onShowSettings) { Label("Settings", systemImage: "gearshape") }
             }
             .labelStyle(.iconOnly)
             .font(isWide ? .title : .title3)
@@ -169,15 +180,19 @@ struct GameView: View {
             Button(action: engine.pause) {
                 Image(systemName: "pause.circle.fill")
             }
+            .accessibilityLabel("Pause")
             Button(action: engine.play) {
                 Image(systemName: "play.circle.fill")
             }
+            .accessibilityLabel("Play")
             Button(action: engine.fastForward) {
                 Image(systemName: "forward.circle.fill")
             }
+            .accessibilityLabel("Fast-forward")
             Button(action: engine.superFastForward) {
                 Image(systemName: "forward.end.circle.fill")
             }
+            .accessibilityLabel("Super fast-forward")
         }
         .font(.system(size: isWide ? 50 : 40))
         .buttonStyle(.plain)

@@ -15,7 +15,7 @@
 		351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02753B52D363181F36E257F /* HelpView.swift */; };
 		3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E51BDEF84B007E123A /* Assets.xcassets */; };
 		3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD44E71BDEF84B007E123A /* LaunchScreen.storyboard */; };
-		3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */; };
+		3DAD44F41BDEF84C007E123A /* CMSimulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44F31BDEF84C007E123A /* CMSimulatorTests.swift */; };
 		3DAD44FF1BDEF84C007E123A /* CMSimulatorUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */; };
 		3DAD45141BDF1351007E123A /* Construction.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45131BDF1351007E123A /* Construction.png */; };
 		3DAD45161BDF1361007E123A /* IES.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DAD45151BDF1361007E123A /* IES.png */; };
@@ -32,7 +32,6 @@
 		552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EE31E6C5EE05E2DFD6913C /* GameView.swift */; };
 		599BAACFCF84494BDFEF4334 /* BundleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDEAB0903EFA5C19B4DB6 /* BundleImage.swift */; };
 		59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */; };
-		77617EF5FDC8BA46207E954A /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AABCA5569B355981C7CE28A /* IntroView.swift */; };
 		7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A687FB91436DF7D483F2D29 /* Procurement.png */; };
 		850B7FD2454082BE95A2BA42 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85B18ADFEB21E6F54482C42 /* GameKit.framework */; };
 		8E4C2EC0C5B8B2A3E7930CA2 /* WorkPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC1E3D47680310511107479 /* WorkPackage.swift */; };
@@ -81,7 +80,7 @@
 		3DAD44E81BDEF84B007E123A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3DAD44EA1BDEF84B007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DAD44EF1BDEF84C007E123A /* CMSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMSimulatorTests.m; sourceTree = "<group>"; };
+		3DAD44F31BDEF84C007E123A /* CMSimulatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMSimulatorTests.swift; sourceTree = "<group>"; };
 		3DAD44F51BDEF84C007E123A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DAD44FA1BDEF84C007E123A /* CMSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DAD44FE1BDEF84C007E123A /* CMSimulatorUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMSimulatorUITests.m; sourceTree = "<group>"; };
@@ -104,7 +103,6 @@
 		7468E04362257569228B8535 /* BoosterEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterEffect.swift; sourceTree = "<group>"; };
 		7C725DAB59A055B11E4CDEFD /* AppIcon-Source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-Source.png"; sourceTree = "<group>"; };
 		7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkPackageCardView.swift; sourceTree = "<group>"; };
-		9AABCA5569B355981C7CE28A /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEntry.swift; sourceTree = "<group>"; };
 		A85B18ADFEB21E6F54482C42 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		BBA0C1880BA7B3DBD4231B92 /* CMSimulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CMSimulator.entitlements; sourceTree = "<group>"; };
@@ -196,7 +194,7 @@
 		3DAD44F21BDEF84C007E123A /* CMSimulatorTests */ = {
 			isa = PBXGroup;
 			children = (
-				3DAD44F31BDEF84C007E123A /* CMSimulatorTests.m */,
+				3DAD44F31BDEF84C007E123A /* CMSimulatorTests.swift */,
 				3DAD44F51BDEF84C007E123A /* Info.plist */,
 			);
 			path = CMSimulatorTests;
@@ -264,7 +262,6 @@
 				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
 				2C8685056D2AA0E3E18F0AC3 /* BoosterCardView.swift */,
 				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
-				9AABCA5569B355981C7CE28A /* IntroView.swift */,
 				FAC2B7CC758D040FA71E526A /* ResultView.swift */,
 				FE196F477B0F3638FA696F86 /* ScoresView.swift */,
 				E02753B52D363181F36E257F /* HelpView.swift */,
@@ -444,7 +441,6 @@
 				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
 				FFBD482056E9E5644964A93E /* BoosterCardView.swift in Sources */,
 				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
-				77617EF5FDC8BA46207E954A /* IntroView.swift in Sources */,
 				AD15FC921304BF858F6FEA6B /* ResultView.swift in Sources */,
 				D0686BEDACC10D7CDCC19634 /* ScoresView.swift in Sources */,
 				351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */,
@@ -461,7 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DAD44F41BDEF84C007E123A /* CMSimulatorTests.m in Sources */,
+				3DAD44F41BDEF84C007E123A /* CMSimulatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,6 +655,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
 			};
 			name = Debug;
@@ -675,6 +672,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
 			};
 			name = Release;

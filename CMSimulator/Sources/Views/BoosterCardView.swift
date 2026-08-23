@@ -36,11 +36,13 @@ struct BoosterCardView: View {
                 Button(action: onBuy) {
                     Image(systemName: "plus.circle.fill")
                 }
+                .accessibilityLabel("Buy \(booster.title)")
                 Text("\(booster.purchasedCount)")
                     .font(.caption2.monospacedDigit())
                 Button(action: onSell) {
                     Image(systemName: "minus.circle.fill")
                 }
+                .accessibilityLabel("Sell \(booster.title)")
                 .disabled(booster.purchasedCount == 0)
             }
             .font(.title3)

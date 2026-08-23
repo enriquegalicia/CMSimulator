@@ -67,15 +67,48 @@ final class SimulationEngine: ObservableObject {
     private let eventCooldownDays = 3.0
 
     init() {
-        // Units and thresholds are retuned from the original's (which
-        // summed to ~1000 units with thresholds up to 60% and no headcount
-        // scaling - a solo hire took literal tens of minutes to finish one
-        // discipline). Smaller totals plus headcount now actually scaling
-        // speed together get a full run into a few minutes at Play, well
-        // under a minute at Fast/Super-Fast - and later disciplines unlock
-        // early enough to actually be seen and played with, not just
-        // stared at behind a slow weighted average.
-        workPackages = [
+        workPackages = Self.freshWorkPackages()
+        boosters = Self.freshBoosters()
+        // Everything else is set - now it's safe to mutate self.
+        workPackages[0].isUnlocked = true
+        boosters[0].isUnlocked = true
+    }
+
+    /// Resets every piece of run state back to a fresh start, so the player
+    /// can redo the simulation without relaunching the app. Shares the
+    /// exact same starting data as init() via freshWorkPackages/Boosters,
+    /// so a restart is indistinguishable from a first launch.
+    func restart() {
+        setSpeed(.paused)
+        fractionalDays = 0
+        lastEventDay = -Double.greatestFiniteMagnitude
+        disasterCost = 0
+        activeEvent = nil
+        hiringRequest = nil
+        vendorBidRequest = nil
+        isComplete = false
+        riskGauge = 1.0
+        qualityGauge = 1.0
+        totalCost = 0
+        totalDays = 0
+        totalHours = 0
+        totalProgress = 0
+        workPackages = Self.freshWorkPackages()
+        boosters = Self.freshBoosters()
+        workPackages[0].isUnlocked = true
+        boosters[0].isUnlocked = true
+    }
+
+    // Units and thresholds are retuned from the original's (which summed
+    // to ~1000 units with thresholds up to 60% and no headcount scaling -
+    // a solo hire took literal tens of minutes to finish one discipline).
+    // Smaller totals plus headcount now actually scaling speed together
+    // get a full run into a few minutes at Play, well under a minute at
+    // Fast/Super-Fast - and later disciplines unlock early enough to
+    // actually be seen and played with, not just stared at behind a slow
+    // weighted average.
+    private static func freshWorkPackages() -> [WorkPackage] {
+        [
             WorkPackage(id: "design", title: "Design", imageName: "Design.png", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
             WorkPackage(id: "structure", title: "Structure", imageName: "Structure.png", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
             WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.png", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
@@ -83,8 +116,10 @@ final class SimulationEngine: ObservableObject {
             WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.png", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
             WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.png", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
         ]
+    }
 
-        boosters = [
+    private static func freshBoosters() -> [Booster] {
+        [
             Booster(kind: .planning, imageName: "Planning.png", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
             Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: "Resource cost, support costs, planning and risk"),
             Booster(kind: .quality, imageName: "Quality.png", initialCost: 800, startThreshold: 12, affects: "Resource cost, labor rates, training and procurement"),
@@ -92,10 +127,6 @@ final class SimulationEngine: ObservableObject {
             Booster(kind: .communications, imageName: "Communications.png", initialCost: 600, startThreshold: 22, affects: "Labor rates, procurement and training"),
             Booster(kind: .training, imageName: "Training.png", initialCost: 1500, startThreshold: 25, affects: "Cumulative labor rates, costs, quality and risk"),
         ]
-
-        // Everything else is set - now it's safe to mutate self.
-        workPackages[0].isUnlocked = true
-        boosters[0].isUnlocked = true
     }
 
     // MARK: - Transport controls
@@ -147,6 +178,17 @@ final class SimulationEngine: ObservableObject {
         }
     }
 
+    /// Same probability-per-simulated-day regardless of playback speed:
+    /// superFast covers more days per tick, so it gets a proportionally
+    /// bigger per-tick roll, not a flat one - the expected time to an event
+    /// (in simulated days) stays the same whether you're at Play or
+    /// Super-Fast. Pulled out as its own pure function so the compounding
+    /// property is directly testable instead of only reachable by driving
+    /// the whole engine through real time.
+    nonisolated static func eventTriggerProbability(dailyChance: Double, step: Double) -> Double {
+        1 - pow(1 - dailyChance, step)
+    }
+
     private func checkForEvent(step: Double) {
         guard activeEvent == nil, fractionalDays - lastEventDay >= eventCooldownDays else { return }
 
@@ -154,12 +196,7 @@ final class SimulationEngine: ObservableObject {
         let qualityInRedZone = qualityGauge < redZoneThreshold
         guard riskInRedZone || qualityInRedZone else { return }
 
-        // Same probability-per-simulated-day regardless of playback speed:
-        // superFast covers more days per tick, so it gets a proportionally
-        // bigger per-tick roll, not a flat one - the expected time to an
-        // event (in simulated days) stays the same whether you're at Play
-        // or Super-Fast.
-        let pTrigger = 1 - pow(1 - dailyEventChance, step)
+        let pTrigger = Self.eventTriggerProbability(dailyChance: dailyEventChance, step: step)
         guard Double.random(in: 0...1) < pTrigger else { return }
 
         // If both gauges are in the red, whichever is worse decides which

@@ -43,11 +43,13 @@ struct WorkPackageCardView: View {
                 Button(action: onRequestHire) {
                     Image(systemName: "plus.circle.fill")
                 }
+                .accessibilityLabel("Hire for \(package.title)")
                 Text("\(package.headcount)")
                     .font(.caption2.monospacedDigit())
                 Button(action: onFire) {
                     Image(systemName: "minus.circle.fill")
                 }
+                .accessibilityLabel("Fire from \(package.title)")
                 .disabled(package.headcount == 0)
             }
             .font(.title3)

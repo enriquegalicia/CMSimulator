@@ -2,49 +2,34 @@
 //  RootView.swift
 //  CMSimulator
 //
-//  Navigation coordinator - replaces the Objective-C ViewController's
-//  presentViewController: chain (Intro -> Game -> Result -> Scores,
-//  Help as an overlay) with plain SwiftUI state.
+//  Navigation coordinator - launches straight into GameView (no start
+//  screen to tap through) and replaces the Objective-C ViewController's
+//  presentViewController: chain for everything else (Result -> Scores,
+//  Help/Settings as sheets) with plain SwiftUI state.
 //
 
 import SwiftUI
 import SwiftData
-
-private enum Screen {
-    case intro, game
-}
 
 struct RootView: View {
     @StateObject private var engine = SimulationEngine()
     @StateObject private var gameCenter = GameCenterManager()
     @Environment(\.modelContext) private var modelContext
 
-    @State private var screen: Screen = .intro
     @State private var showHelp = false
     @State private var showScores = false
     @State private var showResult = false
     @State private var showSettings = false
 
     var body: some View {
-        ZStack {
-            switch screen {
-            case .intro:
-                IntroView(
-                    onPlay: { screen = .game },
-                    onHelp: { showHelp = true },
-                    onScores: { showScores = true },
-                    onSettings: { showSettings = true }
-                )
-            case .game:
-                GameView(
-                    engine: engine,
-                    onShowHelp: { showHelp = true },
-                    onShowScores: { showScores = true },
-                    onGameCenter: { gameCenter.showDashboard() },
-                    onComplete: { showResult = true }
-                )
-            }
-        }
+        GameView(
+            engine: engine,
+            onShowHelp: { showHelp = true },
+            onShowScores: { showScores = true },
+            onShowSettings: { showSettings = true },
+            onGameCenter: { gameCenter.showDashboard() },
+            onComplete: { showResult = true }
+        )
         .sheet(isPresented: $showHelp) {
             HelpView(onExit: { showHelp = false })
         }

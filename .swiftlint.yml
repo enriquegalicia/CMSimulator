@@ -1,0 +1,27 @@
+included:
+  - CMSimulator/Sources
+  - CMSimulatorTests
+
+disabled_rules:
+  - todo
+  - trailing_whitespace
+
+opt_in_rules:
+  - force_unwrapping
+  - empty_count
+
+line_length:
+  warning: 160
+  error: 220
+
+function_body_length:
+  warning: 80
+  error: 120
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 400
+  error: 600

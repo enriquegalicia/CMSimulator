@@ -37,11 +37,10 @@ struct BoosterEffect {
             BoosterEffect(target: .qualityGauge, buyRange: 1.03...1.08),
             BoosterEffect(target: .boosterCost(.communications), buyRange: 0.98...1.00),
         ],
-        .procurement: [
-            BoosterEffect(target: .workPackageCost, buyRange: 0.97...0.995),
-            BoosterEffect(target: .boosterCost(.planning), buyRange: 0.98...1.00),
-            BoosterEffect(target: .boosterCost(.risk), buyRange: 0.98...1.00),
-        ],
+        // .procurement isn't here - buying it now opens a VendorBid choice
+        // (see VendorBid.swift / SimulationEngine.confirmBid) instead of
+        // applying one fixed random nudge, so its effects are bespoke per
+        // bid rather than a static table entry.
         .risk: [
             BoosterEffect(target: .workPackageCost, buyRange: 1.00...1.03),    // riskier, costs more...
             BoosterEffect(target: .workPackageRate, buyRange: 0.98...1.00),

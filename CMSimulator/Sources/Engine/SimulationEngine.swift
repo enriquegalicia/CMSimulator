@@ -44,6 +44,12 @@ final class SimulationEngine: ObservableObject {
     /// clears it. Finishes the original's abandoned Eventos/eventoriesgo/
     /// eventocalidad mechanic - see SimEvent.swift.
     @Published private(set) var activeEvent: SimEvent?
+    /// Set by requestHire(for:); the view presents a candidate-picker sheet
+    /// and calls back into confirmHire/cancelHiring. See Candidate.swift.
+    @Published private(set) var hiringRequest: HiringRequest?
+    /// Set by requestProcurementBid(); the view presents a vendor-bid-picker
+    /// sheet and calls back into confirmBid/cancelBid. See VendorBid.swift.
+    @Published private(set) var vendorBidRequest: VendorBidRequest?
 
     private var fractionalDays: Double = 0
     private var lastEventDay: Double = -Double.greatestFiniteMagnitude
@@ -266,22 +272,35 @@ final class SimulationEngine: ObservableObject {
         return total
     }
 
-    // MARK: - Hiring / firing workers on a discipline (ported from Recurso's suma/resta + RPLUS/RMINUS)
+    // MARK: - Hiring / firing workers on a discipline
 
-    func hireWorker(for packageID: WorkPackage.ID) {
-        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }), workPackages[idx].isUnlocked else { return }
+    /// Opens the candidate-picker: three named, distinctly-traited hires
+    /// instead of one blind dice roll. Firing stays a single instant
+    /// action (ported from Recurso's resta/RMINUS) - there's no symmetric
+    /// "unhire" decision to make.
+    func requestHire(for packageID: WorkPackage.ID) {
+        guard let package = workPackages.first(where: { $0.id == packageID }), package.isUnlocked else { return }
+        hiringRequest = HiringRequest(id: packageID, packageTitle: package.title, candidates: Candidate.randomPool())
+    }
+
+    func confirmHire(_ candidate: Candidate) {
+        guard let request = hiringRequest,
+              let idx = workPackages.firstIndex(where: { $0.id == request.id }) else { return }
         workPackages[idx].headcount += 1
         let spent = workPackages[idx].cost
         workPackages[idx].totalSpent += spent
-        // Hiring quickly nudges cost up and rate down a touch - and costs
-        // a little risk/quality, same trade-off as buying a booster.
-        workPackages[idx].cost *= Double.random(in: 0.99...1.05)
-        workPackages[idx].rate *= Double.random(in: 0.95...1.01)
+        workPackages[idx].cost *= candidate.costFactor
+        workPackages[idx].rate *= candidate.rateFactor
         workPackages[idx].clampCost()
         workPackages[idx].clampRate()
-        riskGauge = min(max(riskGauge * Double.random(in: 0.90...0.99), 0.5), 1.5)
-        qualityGauge = min(max(qualityGauge * Double.random(in: 0.90...0.99), 0.5), 1.5)
+        riskGauge = min(max(riskGauge * candidate.riskFactor, 0.5), 1.5)
+        qualityGauge = min(max(qualityGauge * candidate.qualityFactor, 0.5), 1.5)
         recomputeTotals()
+        hiringRequest = nil
+    }
+
+    func cancelHiring() {
+        hiringRequest = nil
     }
 
     func fireWorker(for packageID: WorkPackage.ID) {
@@ -298,7 +317,13 @@ final class SimulationEngine: ObservableObject {
 
     // MARK: - Buying / selling boosters (ported from Recurso/Potenciadores suma/resta + RPLUSA/RMINUSA)
 
+    /// Every booster except Procurement still buys instantly. Procurement
+    /// opens the vendor-bid picker instead - see requestProcurementBid().
     func buyBooster(_ kind: BoosterKind) {
+        guard kind != .procurement else {
+            requestProcurementBid()
+            return
+        }
         guard let idx = boosters.firstIndex(where: { $0.id == kind }), boosters[idx].isUnlocked else { return }
         let spend = boosters[idx].cost
         boosters[idx].purchasedCount += 1
@@ -307,6 +332,40 @@ final class SimulationEngine: ObservableObject {
         boosters[idx].cost *= Double.random(in: 0.98...1.05)
         applyEffects(for: kind, buying: true)
         recomputeTotals()
+    }
+
+    /// Opens the vendor-bid picker: lowest-bid-vs-best-value instead of
+    /// one fixed random nudge. See VendorBid.swift.
+    func requestProcurementBid() {
+        guard let procurement = boosters.first(where: { $0.id == .procurement }), procurement.isUnlocked else { return }
+        vendorBidRequest = VendorBidRequest(bids: VendorBid.randomPool())
+    }
+
+    func confirmBid(_ bid: VendorBid) {
+        guard let idx = boosters.firstIndex(where: { $0.id == .procurement }) else { return }
+        let spend = boosters[idx].cost
+        boosters[idx].purchasedCount += 1
+        boosters[idx].totalSpent += spend
+        boosters[idx].cumulativeCost += spend
+        boosters[idx].cost *= Double.random(in: 0.98...1.05)
+
+        for i in workPackages.indices {
+            workPackages[i].cost *= bid.costFactor
+            workPackages[i].clampCost()
+        }
+        for alliedKind in [BoosterKind.planning, .risk] {
+            if let i = boosters.firstIndex(where: { $0.id == alliedKind }) {
+                boosters[i].cost = min(max(boosters[i].cost * bid.alliedDiscountFactor, boosters[i].initialCost / 2), boosters[i].initialCost * 3)
+            }
+        }
+        qualityGauge = min(max(qualityGauge * bid.qualityFactor, 0.5), 1.5)
+
+        recomputeTotals()
+        vendorBidRequest = nil
+    }
+
+    func cancelBid() {
+        vendorBidRequest = nil
     }
 
     func sellBooster(_ kind: BoosterKind) {

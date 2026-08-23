@@ -46,6 +46,10 @@
 		F43AC009259945DEF732AC36 /* Sources/CMSimulatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DDA642C987036C1646E29 /* Sources/CMSimulatorApp.swift */; };
 		FFBD482056E9E5644964A93E /* BoosterCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8685056D2AA0E3E18F0AC3 /* BoosterCardView.swift */; };
 		6EC91AC1B4F4DDFA56C18F78 /* SimEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9828AEFBC846F66C0876C730 /* SimEvent.swift */; };
+		6F790E08F3CD40CAB88CB94B /* Candidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61E0D0A2462426DA3B2C530 /* Candidate.swift */; };
+		BF7F5E78B2C14D45B143D645 /* VendorBid.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5811529188341569D305E67 /* VendorBid.swift */; };
+		D0C4E7FE5ABE48F1A1588F0A /* CandidatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */; };
+		9B62B0ADC7BE444B868DB1AC /* VendorBidPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5D979070904F6E8E991AB8 /* VendorBidPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +116,10 @@
 		FAC2B7CC758D040FA71E526A /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		FE196F477B0F3638FA696F86 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
 		9828AEFBC846F66C0876C730 /* SimEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimEvent.swift; sourceTree = "<group>"; };
+		E61E0D0A2462426DA3B2C530 /* Candidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Candidate.swift; sourceTree = "<group>"; };
+		A5811529188341569D305E67 /* VendorBid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorBid.swift; sourceTree = "<group>"; };
+		59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidatePickerView.swift; sourceTree = "<group>"; };
+		7A5D979070904F6E8E991AB8 /* VendorBidPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorBidPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +240,8 @@
 				9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */,
 				6B64288F7D4F8CA8B5B68619 /* AppSettings.swift */,
 				9828AEFBC846F66C0876C730 /* SimEvent.swift */,
+				E61E0D0A2462426DA3B2C530 /* Candidate.swift */,
+				A5811529188341569D305E67 /* VendorBid.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,6 +270,8 @@
 				E02753B52D363181F36E257F /* HelpView.swift */,
 				F1A596F4FA5261466C7BFA31 /* RootView.swift */,
 				5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */,
+				59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */,
+				7A5D979070904F6E8E991AB8 /* VendorBidPickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -438,6 +450,10 @@
 				351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */,
 				08A09CA15BB30E09AA12EA04 /* RootView.swift in Sources */,
 				F43AC009259945DEF732AC36 /* Sources/CMSimulatorApp.swift in Sources */,
+				6F790E08F3CD40CAB88CB94B /* Candidate.swift in Sources */,
+				BF7F5E78B2C14D45B143D645 /* VendorBid.swift in Sources */,
+				D0C4E7FE5ABE48F1A1588F0A /* CandidatePickerView.swift in Sources */,
+				9B62B0ADC7BE444B868DB1AC /* VendorBidPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

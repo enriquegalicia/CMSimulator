@@ -59,6 +59,20 @@ struct GameView: View {
             }
         }
         .animation(.spring(duration: 0.35), value: engine.activeEvent?.id)
+        .sheet(item: Binding(get: { engine.hiringRequest }, set: { if $0 == nil { engine.cancelHiring() } })) { request in
+            CandidatePickerView(
+                request: request,
+                onSelect: { engine.confirmHire($0) },
+                onCancel: { engine.cancelHiring() }
+            )
+        }
+        .sheet(item: Binding(get: { engine.vendorBidRequest }, set: { if $0 == nil { engine.cancelBid() } })) { request in
+            VendorBidPickerView(
+                request: request,
+                onSelect: { engine.confirmBid($0) },
+                onCancel: { engine.cancelBid() }
+            )
+        }
     }
 
     private func eventBanner(_ event: SimEvent) -> some View {
@@ -130,7 +144,7 @@ struct GameView: View {
             ForEach(engine.workPackages) { package in
                 WorkPackageCardView(
                     package: package,
-                    onHire: { engine.hireWorker(for: package.id) },
+                    onRequestHire: { engine.requestHire(for: package.id) },
                     onFire: { engine.fireWorker(for: package.id) }
                 )
             }

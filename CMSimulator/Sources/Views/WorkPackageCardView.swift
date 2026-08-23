@@ -7,7 +7,7 @@ import SwiftUI
 
 struct WorkPackageCardView: View {
     let package: WorkPackage
-    let onHire: () -> Void
+    let onRequestHire: () -> Void
     let onFire: () -> Void
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
@@ -40,7 +40,7 @@ struct WorkPackageCardView: View {
             Spacer(minLength: 4)
 
             VStack(spacing: 6) {
-                Button(action: onHire) {
+                Button(action: onRequestHire) {
                     Image(systemName: "plus.circle.fill")
                 }
                 Text("\(package.headcount)")

@@ -26,13 +26,14 @@ struct HelpView: View {
             "Six disciplines - Design, Structure, Engineering, Construction, IHS & IAA, IES & IEL.",
             "Each unlocks once overall project progress passes its start threshold.",
             "Hire (+) people onto a discipline to start it moving - nothing progresses, and nothing costs money, until someone is hired.",
+            "Hiring opens a choice of three named candidates, each with a real tradeoff (cost, speed, risk, quality) - the highlighted number on each row is the best of the three on that axis.",
             "Cost accrues over time at its current rate; the bar fills as units complete.",
-            "Hiring quickly costs a little risk and quality; firing (-) recovers some of it back."
+            "Firing (-) removes one hire and recovers some risk and quality back."
         ]),
         Section(title: "Boosters", points: [
             "Six knowledge areas - Planning, Procurement, Risk, Communications, Training, Quality.",
-            "Hiring (+) costs money now but nudges other systems the way its \"affects\" line describes.",
-            "Selling (-) refunds and reverses that nudge."
+            "Buying (+) costs money now but nudges other systems the way its \"affects\" line describes; selling (-) refunds and reverses it.",
+            "Procurement is different: buying it opens a choice between three vendor bids - lowest bid saves money now, premium/reliable costs more but improves quality and future booster pricing."
         ]),
         Section(title: "Risk & Quality Gauges", points: [
             "Move as boosters are bought and sold - green is healthy, red needs attention."

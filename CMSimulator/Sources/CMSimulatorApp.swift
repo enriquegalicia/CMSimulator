@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct CMSimulatorApp: App {
+struct CriticalPathSimApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()

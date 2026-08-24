@@ -9,7 +9,7 @@
 //
 
 import XCTest
-@testable import CMSimulator
+@testable import CriticalPathSim
 
 final class WorkPackageClampTests: XCTestCase {
     func testCostClampsToInitialBounds() {

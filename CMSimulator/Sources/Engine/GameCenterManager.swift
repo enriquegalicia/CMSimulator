@@ -13,9 +13,9 @@ final class GameCenterManager: NSObject, ObservableObject {
     // (App ▸ Features ▸ Game Center) before scores will actually post or
     // show up - see documentation/GameCenter_Setup.md. All three should be
     // configured there with ascending sort order (lower is better).
-    static let costLeaderboardID = "com.aguach1leLabs.CMSimulator.costmaster"
-    static let timeLeaderboardID = "com.aguach1leLabs.CMSimulator.timemaster"
-    static let combinedLeaderboardID = "com.aguach1leLabs.CMSimulator.constructionmaster"
+    static let costLeaderboardID = "com.aguach1leLabs.CriticalPathSim.costmaster"
+    static let timeLeaderboardID = "com.aguach1leLabs.CriticalPathSim.timemaster"
+    static let combinedLeaderboardID = "com.aguach1leLabs.CriticalPathSim.constructionmaster"
 
     @Published var isAuthenticated = false
     @Published var authViewController: UIViewController?

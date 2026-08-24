@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3DAD44D51BDEF84B007E123A"
-               BuildableName = "CMSimulator.app"
-               BlueprintName = "CMSimulator"
+               BuildableName = "CriticalPathSim.app"
+               BlueprintName = "CriticalPathSim"
                ReferencedContainer = "container:CMSimulator.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

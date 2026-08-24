@@ -1,12 +1,15 @@
 # Game Center setup — what's left to do in App Store Connect
 
-> **Bundle ID changed** (2026-08-23): from `com.magarchitecture.CMSimulator`
-> to `com.aguach1leLabs.CMSimulator`, to match the Aguach1leLabs naming
-> convention used by your other apps. If leaderboards were ever registered
-> in App Store Connect under the old bundle ID, they belong to a different
-> app record and won't carry over — this app needs a fresh App Store
-> Connect record under the new ID, with the three leaderboards below
-> created there from scratch.
+> **Bundle ID changed twice** (2026-08-23): first from
+> `com.magarchitecture.CMSimulator` to `com.aguach1leLabs.CMSimulator` (to
+> match the Aguach1leLabs naming convention used by your other apps), then
+> to `com.aguach1leLabs.CriticalPathSim` (to match the app's product name,
+> "Critical Path", after the Xcode target itself was renamed from
+> CMSimulator to CriticalPathSim). If leaderboards were ever registered in
+> App Store Connect under either older bundle ID, they belong to a
+> different app record and won't carry over — this app needs a fresh App
+> Store Connect record under the current ID, with the three leaderboards
+> below created there from scratch.
 
 The app-side code is done: authentication, three leaderboard submissions
 per completed run, and a working "view leaderboard" button. What's *not*
@@ -18,9 +21,9 @@ Developer account and this app's bundle ID.
 
 Already wired in code (`CMSimulator.entitlements` has
 `com.apple.developer.game-center = true`, `GameKit.framework` is linked).
-In App Store Connect: **App ▸ [CMSimulator] ▸ Features ▸ Game Center**,
+In App Store Connect: **App ▸ [Critical Path] ▸ Features ▸ Game Center**,
 turn it on if it isn't already, for the same bundle ID
-(`com.aguach1leLabs.CMSimulator`) this Xcode project uses.
+(`com.aguach1leLabs.CriticalPathSim`) this Xcode project uses.
 
 ## 2. Create three leaderboards with these exact IDs
 
@@ -31,9 +34,9 @@ Leaderboards ▸ +**.
 
 | Leaderboard ID | Matches | Sort order |
 |---|---|---|
-| `com.aguach1leLabs.CMSimulator.costmaster` | Cost Master board | **Low to High** (lower cost wins) |
-| `com.aguach1leLabs.CMSimulator.timemaster` | Time Master board | **Low to High** (fewer days wins) |
-| `com.aguach1leLabs.CMSimulator.constructionmaster` | Construction Master (combined) board | **Low to High** |
+| `com.aguach1leLabs.CriticalPathSim.costmaster` | Cost Master board | **Low to High** (lower cost wins) |
+| `com.aguach1leLabs.CriticalPathSim.timemaster` | Time Master board | **Low to High** (fewer days wins) |
+| `com.aguach1leLabs.CriticalPathSim.constructionmaster` | Construction Master (combined) board | **Low to High** |
 
 For each: give it a **Reference Name** (internal, e.g. "Cost Master") and
 at least one **Leaderboard Localization** (display name + score format —

@@ -4,840 +4,1947 @@
     "%" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%"
+          }
+        }
+      }
+    },
+    "%@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ (%@)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
       }
     },
     "%@ %.2f" : {
       "comment" : "Stat badge, e.g. 'Cost 1.02' - title is already localized text",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ %2$.2f" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ %2$.2f" } }
-      }
-    },
-    "%@ (%@)" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ (%2$@)" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ (%2$@)" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$.2f"
+          }
+        }
       }
     },
     "%@ Days %@ Hours" : {
       "comment" : "Final elapsed time on the results screen",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ Days %2$@ Hours" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ Días %2$@ Horas" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ Days %2$@ Hours"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ Días %2$@ Horas"
+          }
+        }
       }
     },
     "%@ lost some progress." : {
       "comment" : "Appended to a disaster event's message when it also sets back a work package's progress",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ lost some progress." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%@ perdió algo de progreso." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ lost some progress."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ perdió algo de progreso."
+          }
+        }
       }
     },
     "%@d" : {
       "comment" : "Days abbreviation on the leaderboard, e.g. '5d'",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@d" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%@d" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@d"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@d"
+          }
+        }
       }
     },
     "%@d %@h" : {
       "comment" : "Elapsed days/hours readout, e.g. '5d 3h' - d/h abbreviations for day/hour",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@d %2$@h" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@d %2$@h" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@d %2$@h"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@d %2$@h"
+          }
+        }
       }
     },
     "+%@ to the project" : {
       "comment" : "Extra cost added to the project by a disaster event",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "+%@ to the project" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "+%@ al proyecto" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%@ to the project"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%@ al proyecto"
+          }
+        }
       }
     },
     "A coordination clash between disciplines was found and needs rework." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "A coordination clash between disciplines was found and needs rework." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se encontró un conflicto de coordinación entre disciplinas que requiere retrabajo." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A coordination clash between disciplines was found and needs rework."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se encontró un conflicto de coordinación entre disciplinas que requiere retrabajo."
+          }
+        }
       }
     },
     "A site fire destroyed materials and equipment before it was contained." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "A site fire destroyed materials and equipment before it was contained." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Un incendio en el sitio destruyó materiales y equipo antes de ser controlado." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A site fire destroyed materials and equipment before it was contained."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un incendio en el sitio destruyó materiales y equipo antes de ser controlado."
+          }
+        }
       }
     },
     "Balanced value" : {
       "comment" : "Vendor bid pitch",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Balanced value" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Valor equilibrado" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balanced value"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valor equilibrado"
+          }
+        }
       }
     },
     "Boosters" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Boosters" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Potenciadores" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boosters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potenciadores"
+          }
+        }
       }
     },
     "Budget hire" : {
       "comment" : "Candidate hiring trait",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Budget hire" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contratación económica" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Budget hire"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contratación económica"
+          }
+        }
       }
     },
     "Buy %@" : {
       "comment" : "Accessibility label for a booster's buy button",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Buy %@" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comprar %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar %@"
+          }
+        }
       }
     },
     "Buying (+) costs money now but nudges other systems the way its \"affects\" line describes; selling (-) refunds and reverses it." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Buying (+) costs money now but nudges other systems the way its \"affects\" line describes; selling (-) refunds and reverses it." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comprar (+) cuesta dinero ahora pero influye en otros sistemas según lo describe su línea de \"efectos\"; vender (-) reembolsa y revierte ese efecto." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buying (+) costs money now but nudges other systems the way its \"affects\" line describes; selling (-) refunds and reverses it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar (+) cuesta dinero ahora pero influye en otros sistemas según lo describe su línea de \"efectos\"; vender (-) reembolsa y revierte ese efecto."
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
       }
     },
     "Choose a Vendor" : {
       "comment" : "Vendor bid picker sheet title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose a Vendor" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige un Proveedor" } }
-      }
-    },
-    "Cancel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a Vendor"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un Proveedor"
+          }
+        }
       }
     },
     "Client change order" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Client change order" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Orden de cambio del cliente" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client change order"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orden de cambio del cliente"
+          }
+        }
       }
     },
     "Close" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerrar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        }
       }
     },
     "Communications" : {
       "comment" : "Booster name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Communications" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comunicaciones" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Communications"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comunicaciones"
+          }
+        }
       }
     },
     "Construction" : {
       "comment" : "Work package name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Construction" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Construcción" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Construction"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Construcción"
+          }
+        }
       }
     },
     "Construction Leaderboard" : {
       "comment" : "Leaderboard screen title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Construction Leaderboard" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tabla de Construcción" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Construction Leaderboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de Construcción"
+          }
+        }
       }
     },
     "Controls" : {
       "comment" : "Help screen section title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Controls" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Controles" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controls"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles"
+          }
+        }
       }
     },
     "Cost" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cost" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo" } }
-      }
-    },
-    "Cost Leaderboard" : {
-      "comment" : "Leaderboard screen title",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cost Leaderboard" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tabla de Costo" } }
-      }
-    },
-    "Costs throughout the simulator display in this currency. Defaults to your device's own currency." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Costs throughout the simulator display in this currency. Defaults to your device's own currency." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Los costos en todo el simulador se muestran en esta moneda. Por defecto, se usa la moneda de tu dispositivo." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cost"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo"
+          }
+        }
       }
     },
     "Cost accrues over time at its current rate; the bar fills as units complete." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cost accrues over time at its current rate; the bar fills as units complete." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El costo se acumula con el tiempo a su tasa actual; la barra se llena a medida que se completan unidades." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cost accrues over time at its current rate; the bar fills as units complete."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El costo se acumula con el tiempo a su tasa actual; la barra se llena a medida que se completan unidades."
+          }
+        }
+      }
+    },
+    "Cost Leaderboard" : {
+      "comment" : "Leaderboard screen title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cost Leaderboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de Costo"
+          }
+        }
+      }
+    },
+    "Costs throughout the simulator display in this currency. Defaults to your device's own currency." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costs throughout the simulator display in this currency. Defaults to your device's own currency."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los costos en todo el simulador se muestran en esta moneda. Por defecto, se usa la moneda de tu dispositivo."
+          }
+        }
       }
     },
     "Cumulative labor rates, costs, quality and risk" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cumulative labor rates, costs, quality and risk" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tarifas acumuladas de mano de obra, costos, calidad y riesgo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumulative labor rates, costs, quality and risk"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarifas acumuladas de mano de obra, costos, calidad y riesgo"
+          }
+        }
       }
     },
     "Currency" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Currency" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Moneda" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currency"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moneda"
+          }
+        }
       }
     },
     "Design" : {
       "comment" : "Work package name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Design" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Diseño" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Design"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diseño"
+          }
+        }
       }
     },
     "Design clash discovered" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Design clash discovered" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se descubrió un conflicto de diseño" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Design clash discovered"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se descubrió un conflicto de diseño"
+          }
+        }
       }
     },
     "Done" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        }
       }
     },
     "Each unlocks once overall project progress passes its start threshold." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Each unlocks once overall project progress passes its start threshold." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cada una se desbloquea cuando el progreso general del proyecto supera su umbral de inicio." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each unlocks once overall project progress passes its start threshold."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada una se desbloquea cuando el progreso general del proyecto supera su umbral de inicio."
+          }
+        }
       }
     },
     "Engineering" : {
       "comment" : "Work package name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Engineering" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ingeniería" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engineering"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingeniería"
+          }
+        }
       }
     },
     "Exit" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Exit" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Salir" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir"
+          }
+        }
       }
     },
     "Fast-forward" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fast-forward" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Avance rápido" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast-forward"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avance rápido"
+          }
+        }
       }
     },
     "Fast, but cuts corners" : {
       "comment" : "Candidate hiring trait",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fast, but cuts corners" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Rápido, pero descuidado" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast, but cuts corners"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rápido, pero descuidado"
+          }
+        }
       }
     },
     "Final Cost" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Final Cost" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo Final" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Final Cost"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo Final"
+          }
+        }
       }
     },
     "Final Time" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Final Time" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tiempo Final" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Final Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo Final"
+          }
+        }
       }
     },
     "Fire from %@" : {
       "comment" : "Accessibility label for a work package's fire button",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fire from %@" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despedir de %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fire from %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Despedir de %@"
+          }
+        }
       }
     },
     "Fire on site" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fire on site" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Incendio en el sitio" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fire on site"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incendio en el sitio"
+          }
+        }
       }
     },
     "Firing (-) removes one hire and recovers some risk and quality back." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Firing (-) removes one hire and recovers some risk and quality back." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despedir (-) elimina una contratación y recupera algo de riesgo y calidad." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Firing (-) removes one hire and recovers some risk and quality back."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Despedir (-) elimina una contratación y recupera algo de riesgo y calidad."
+          }
+        }
       }
     },
     "Game Center" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Game Center" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Game Center" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center"
+          }
+        }
       }
     },
     "Help" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Help" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ayuda" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuda"
+          }
+        }
       }
     },
     "High winds damaged the site. Cleanup and repairs added cost to the project." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "High winds damaged the site. Cleanup and repairs added cost to the project." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vientos fuertes dañaron el sitio. La limpieza y las reparaciones aumentaron el costo del proyecto." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High winds damaged the site. Cleanup and repairs added cost to the project."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vientos fuertes dañaron el sitio. La limpieza y las reparaciones aumentaron el costo del proyecto."
+          }
+        }
       }
     },
     "Hire (+) people onto a discipline to start it moving - nothing progresses, and nothing costs money, until someone is hired." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hire (+) people onto a discipline to start it moving - nothing progresses, and nothing costs money, until someone is hired." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contrata (+) personas en una disciplina para que avance - nada progresa, y nada cuesta dinero, hasta que se contrata a alguien." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hire (+) people onto a discipline to start it moving - nothing progresses, and nothing costs money, until someone is hired."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contrata (+) personas en una disciplina para que avance - nada progresa, y nada cuesta dinero, hasta que se contrata a alguien."
+          }
+        }
       }
     },
     "Hire for %@" : {
       "comment" : "Candidate picker sheet title / accessibility label for a work package's hire button",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hire for %@" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contratar para %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hire for %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contratar para %@"
+          }
+        }
       }
     },
     "Hire someone to start this discipline" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hire someone to start this discipline" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contrata a alguien para iniciar esta disciplina" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hire someone to start this discipline"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contrata a alguien para iniciar esta disciplina"
+          }
+        }
       }
     },
     "Hiring opens a choice of three named candidates, each with a real tradeoff (cost, speed, risk, quality) - the highlighted number on each row is the best of the three on that axis." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hiring opens a choice of three named candidates, each with a real tradeoff (cost, speed, risk, quality) - the highlighted number on each row is the best of the three on that axis." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contratar abre una elección entre tres candidatos con nombre, cada uno con una decisión real (costo, velocidad, riesgo, calidad) - el número resaltado en cada fila es el mejor de los tres en ese aspecto." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiring opens a choice of three named candidates, each with a real tradeoff (cost, speed, risk, quality) - the highlighted number on each row is the best of the three on that axis."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contratar abre una elección entre tres candidatos con nombre, cada uno con una decisión real (costo, velocidad, riesgo, calidad) - el número resaltado en cada fila es el mejor de los tres en ese aspecto."
+          }
+        }
       }
     },
     "How to Play" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "How to Play" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cómo Jugar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo Jugar"
+          }
+        }
       }
     },
     "Hurricane hits the site" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hurricane hits the site" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Un huracán golpea el sitio" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hurricane hits the site"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un huracán golpea el sitio"
+          }
+        }
       }
     },
     "IES & IEL" : {
       "comment" : "Work package name - Electrical & Lighting installations",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "IES & IEL" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "IES & IEL" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IES & IEL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IES & IEL"
+          }
+        }
       }
     },
     "IHS & IAA" : {
       "comment" : "Work package name - Hydro-sanitary & Air conditioning installations",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "IHS & IAA" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "IHS & IAA" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IHS & IAA"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IHS & IAA"
+          }
+        }
       }
     },
     "Labor rates, procurement and training" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Labor rates, procurement and training" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tarifas de mano de obra, adquisiciones y capacitación" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Labor rates, procurement and training"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarifas de mano de obra, adquisiciones y capacitación"
+          }
+        }
       }
     },
     "Labor rates, starts, quality and communications" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Labor rates, starts, quality and communications" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tarifas de mano de obra, inicios, calidad y comunicaciones" } }
-      }
-    },
-    "Lowest bid" : {
-      "comment" : "Vendor bid pitch",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lowest bid" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Oferta más baja" } }
-      }
-    },
-    "Materials stolen" : {
-      "comment" : "Disaster event title",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Materials stolen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Materiales robados" } }
-      }
-    },
-    "Materials went missing from the laydown yard overnight." : {
-      "comment" : "Disaster event description",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Materials went missing from the laydown yard overnight." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desaparecieron materiales del patio de acopio durante la noche." } }
-      }
-    },
-    "Meticulous" : {
-      "comment" : "Candidate hiring trait",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meticulous" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Meticuloso" } }
-      }
-    },
-    "Move as boosters are bought and sold - green is healthy, red needs attention." : {
-      "comment" : "Help screen bullet",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Move as boosters are bought and sold - green is healthy, red needs attention." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se mueven a medida que se compran y venden potenciadores - verde es saludable, rojo necesita atención." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Labor rates, starts, quality and communications"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarifas de mano de obra, inicios, calidad y comunicaciones"
+          }
+        }
       }
     },
     "Leaderboard" : {
       "comment" : "Accessibility label for the leaderboard segmented picker",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Leaderboard" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tabla de Clasificación" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaderboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de Clasificación"
+          }
+        }
+      }
+    },
+    "Lowest bid" : {
+      "comment" : "Vendor bid pitch",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lowest bid"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oferta más baja"
+          }
+        }
+      }
+    },
+    "Materials stolen" : {
+      "comment" : "Disaster event title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Materials stolen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Materiales robados"
+          }
+        }
+      }
+    },
+    "Materials went missing from the laydown yard overnight." : {
+      "comment" : "Disaster event description",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Materials went missing from the laydown yard overnight."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desaparecieron materiales del patio de acopio durante la noche."
+          }
+        }
+      }
+    },
+    "Meticulous" : {
+      "comment" : "Candidate hiring trait",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meticulous"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meticuloso"
+          }
+        }
+      }
+    },
+    "Move as boosters are bought and sold - green is healthy, red needs attention." : {
+      "comment" : "Help screen bullet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move as boosters are bought and sold - green is healthy, red needs attention."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se mueven a medida que se compran y venden potenciadores - verde es saludable, rojo necesita atención."
+          }
+        }
       }
     },
     "No runs yet - finish a simulation to appear here." : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "No runs yet - finish a simulation to appear here." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay partidas - termina una simulación para aparecer aquí." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No runs yet - finish a simulation to appear here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay partidas - termina una simulación para aparecer aquí."
+          }
+        }
       }
     },
     "Overall" : {
       "comment" : "Leaderboard segmented control option",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Overall" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "General" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overall"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
       }
     },
     "Pause" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausar"
+          }
+        }
       }
     },
     "Pause / Play / Fast-Forward control the simulation clock." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause / Play / Fast-Forward control the simulation clock." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausar / Reproducir / Avance rápido controlan el reloj de la simulación." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause / Play / Fast-Forward control the simulation clock."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausar / Reproducir / Avance rápido controlan el reloj de la simulación."
+          }
+        }
       }
     },
     "Permit rejected" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Permit rejected" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Permiso rechazado" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permit rejected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permiso rechazado"
+          }
+        }
       }
     },
     "Planning" : {
       "comment" : "Booster name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Planning" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Planificación" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planning"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planificación"
+          }
+        }
       }
     },
     "Play" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproducir" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducir"
+          }
+        }
       }
     },
     "Player" : {
       "comment" : "Default score entry name when the player leaves the name field blank",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Player" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Jugador" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugador"
+          }
+        }
       }
     },
     "Premium & reliable" : {
       "comment" : "Vendor bid pitch",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Premium & reliable" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Premium y confiable" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium & reliable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium y confiable"
+          }
+        }
       }
     },
     "Procurement" : {
       "comment" : "Booster name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Procurement" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Adquisiciones" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procurement"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adquisiciones"
+          }
+        }
       }
     },
     "Procurement is different: buying it opens a choice between three vendor bids - lowest bid saves money now, premium/reliable costs more but improves quality and future booster pricing." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Procurement is different: buying it opens a choice between three vendor bids - lowest bid saves money now, premium/reliable costs more but improves quality and future booster pricing." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Adquisiciones es diferente: comprarlo abre una elección entre tres ofertas de proveedores - la oferta más baja ahorra dinero ahora, la premium/confiable cuesta más pero mejora la calidad y el precio futuro de los potenciadores." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procurement is different: buying it opens a choice between three vendor bids - lowest bid saves money now, premium/reliable costs more but improves quality and future booster pricing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adquisiciones es diferente: comprarlo abre una elección entre tres ofertas de proveedores - la oferta más baja ahorra dinero ahora, la premium/confiable cuesta más pero mejora la calidad y el precio futuro de los potenciadores."
+          }
+        }
       }
     },
     "Progress" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Progress" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Progreso" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso"
+          }
+        }
       }
     },
     "Quality" : {
       "comment" : "Booster name / Gauge label / stat label",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quality" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Calidad" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quality"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calidad"
+          }
+        }
       }
     },
     "Quality control caught a defect that has to be fixed before continuing." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quality control caught a defect that has to be fixed before continuing." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Control de calidad detectó un defecto que debe corregirse antes de continuar." } }
-      }
-    },
-    "Rate %.2f" : {
-      "comment" : "Work package card rate readout",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate %.2f" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tasa %.2f" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quality control caught a defect that has to be fixed before continuing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control de calidad detectó un defecto que debe corregirse antes de continuar."
+          }
+        }
       }
     },
     "Rate" : {
       "comment" : "Candidate stat label",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tasa" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasa"
+          }
+        }
+      }
+    },
+    "Rate %.2f" : {
+      "comment" : "Work package card rate readout",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate %.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasa %.2f"
+          }
+        }
       }
     },
     "Relationship" : {
       "comment" : "Vendor bid stat label",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Relationship" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Relación" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relationship"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relación"
+          }
+        }
       }
     },
     "Resource cost, labor rates, planning and communications" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resource cost, labor rates, planning and communications" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo de recursos, tarifas de mano de obra, planificación y comunicaciones" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource cost, labor rates, planning and communications"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo de recursos, tarifas de mano de obra, planificación y comunicaciones"
+          }
+        }
       }
     },
     "Resource cost, labor rates, training and procurement" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resource cost, labor rates, training and procurement" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo de recursos, tarifas de mano de obra, capacitación y adquisiciones" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource cost, labor rates, training and procurement"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo de recursos, tarifas de mano de obra, capacitación y adquisiciones"
+          }
+        }
       }
     },
     "Resource cost, support costs, planning and risk" : {
       "comment" : "Booster effect summary",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resource cost, support costs, planning and risk" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo de recursos, costos de soporte, planificación y riesgo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource cost, support costs, planning and risk"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo de recursos, costos de soporte, planificación y riesgo"
+          }
+        }
       }
     },
     "Restart" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restart" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reiniciar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        }
       }
     },
     "Restart the simulation?" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restart the simulation?" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Reiniciar la simulación?" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart the simulation?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reiniciar la simulación?"
+          }
+        }
       }
     },
     "Risk" : {
       "comment" : "Booster name / Gauge label / stat label",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Risk" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Riesgo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risk"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riesgo"
+          }
+        }
       }
     },
     "Risk & Quality Gauges" : {
       "comment" : "Help screen section title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Risk & Quality Gauges" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Medidores de Riesgo y Calidad" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risk & Quality Gauges"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medidores de Riesgo y Calidad"
+          }
+        }
       }
     },
     "Safety incident" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Safety incident" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Incidente de seguridad" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safety incident"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incidente de seguridad"
+          }
+        }
       }
     },
     "Safety-first" : {
       "comment" : "Candidate hiring trait",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Safety-first" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Prioriza la seguridad" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safety-first"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prioriza la seguridad"
+          }
+        }
       }
     },
     "Save" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        }
       }
     },
     "Scores" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Scores" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puntuaciones" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scores"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuaciones"
+          }
+        }
       }
     },
     "Sell %@" : {
       "comment" : "Accessibility label for a booster's sell button",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sell %@" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vender %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sell %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vender %@"
+          }
+        }
       }
     },
     "Settings" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        }
       }
     },
     "Simulation Over" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Simulation Over" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Simulación Terminada" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulation Over"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulación Terminada"
+          }
+        }
       }
     },
     "Six disciplines - Design, Structure, Engineering, Construction, IHS & IAA, IES & IEL." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Six disciplines - Design, Structure, Engineering, Construction, IHS & IAA, IES & IEL." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seis disciplinas: Diseño, Estructura, Ingeniería, Construcción, IHS & IAA, IES & IEL." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Six disciplines - Design, Structure, Engineering, Construction, IHS & IAA, IES & IEL."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seis disciplinas: Diseño, Estructura, Ingeniería, Construcción, IHS & IAA, IES & IEL."
+          }
+        }
       }
     },
     "Six knowledge areas - Planning, Procurement, Risk, Communications, Training, Quality." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Six knowledge areas - Planning, Procurement, Risk, Communications, Training, Quality." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seis áreas de conocimiento: Planificación, Adquisiciones, Riesgo, Comunicaciones, Capacitación, Calidad." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Six knowledge areas - Planning, Procurement, Risk, Communications, Training, Quality."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seis áreas de conocimiento: Planificación, Adquisiciones, Riesgo, Comunicaciones, Capacitación, Calidad."
+          }
+        }
       }
     },
     "Steady all-rounder" : {
       "comment" : "Candidate hiring trait",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Steady all-rounder" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todoterreno constante" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steady all-rounder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todoterreno constante"
+          }
+        }
       }
     },
     "Structural defect found" : {
       "comment" : "Disaster event title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Structural defect found" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se encontró un defecto estructural" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Structural defect found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se encontró un defecto estructural"
+          }
+        }
       }
     },
     "Structure" : {
       "comment" : "Work package name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Structure" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estructura" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Structure"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estructura"
+          }
+        }
       }
     },
     "Super fast-forward" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Super fast-forward" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Avance súper rápido" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Super fast-forward"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avance súper rápido"
+          }
+        }
       }
     },
     "The client requested a scope change mid-build." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "The client requested a scope change mid-build." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El cliente solicitó un cambio de alcance a mitad de la construcción." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The client requested a scope change mid-build."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El cliente solicitó un cambio de alcance a mitad de la construcción."
+          }
+        }
       }
     },
     "The inspector rejected the current submittal - revise and resubmit." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "The inspector rejected the current submittal - revise and resubmit." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El inspector rechazó el envío actual - revísalo y vuelve a enviarlo." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The inspector rejected the current submittal - revise and resubmit."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El inspector rechazó el envío actual - revísalo y vuelve a enviarlo."
+          }
+        }
       }
     },
     "The run ends automatically at 100% progress and takes you to the results screen." : {
       "comment" : "Help screen bullet",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "The run ends automatically at 100% progress and takes you to the results screen." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "La partida termina automáticamente al llegar al 100% de progreso y te lleva a la pantalla de resultados." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The run ends automatically at 100% progress and takes you to the results screen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La partida termina automáticamente al llegar al 100% de progreso y te lleva a la pantalla de resultados."
+          }
+        }
       }
     },
     "This discards your current cost, progress, and hires and starts a fresh run." : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "This discards your current cost, progress, and hires and starts a fresh run." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Esto descarta el costo, el progreso y las contrataciones actuales, y comienza una simulación nueva." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This discards your current cost, progress, and hires and starts a fresh run."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto descarta el costo, el progreso y las contrataciones actuales, y comienza una simulación nueva."
+          }
+        }
       }
     },
     "Time" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tiempo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo"
+          }
+        }
       }
     },
     "Time Leaderboard" : {
       "comment" : "Leaderboard screen title",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time Leaderboard" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tabla de Tiempo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Leaderboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabla de Tiempo"
+          }
+        }
       }
     },
     "Total Cost" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Total Cost" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Costo Total" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Cost"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Costo Total"
+          }
+        }
       }
     },
     "Training" : {
       "comment" : "Booster name",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Training" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Capacitación" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capacitación"
+          }
+        }
       }
     },
     "Work halted for a safety review after an on-site incident." : {
       "comment" : "Disaster event description",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Work halted for a safety review after an on-site incident." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El trabajo se detuvo para una revisión de seguridad tras un incidente en el sitio." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work halted for a safety review after an on-site incident."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El trabajo se detuvo para una revisión de seguridad tras un incidente en el sitio."
+          }
+        }
       }
     },
     "Work Packages" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Work Packages" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Paquetes de Trabajo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Packages"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paquetes de Trabajo"
+          }
+        }
       }
     },
     "Your name" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your name" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu nombre" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu nombre"
+          }
+        }
       }
     }
   },

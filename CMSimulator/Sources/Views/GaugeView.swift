@@ -30,7 +30,8 @@ struct GaugeView: View {
             Text(title)
                 .font(.caption.bold())
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.5)
+                .allowsTightening(true)
             ZStack {
                 Canvas { context, size in
                     let rect = CGRect(origin: .zero, size: size)

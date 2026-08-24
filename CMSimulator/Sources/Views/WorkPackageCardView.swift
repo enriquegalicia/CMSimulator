@@ -26,7 +26,7 @@ struct WorkPackageCardView: View {
                 HStack {
                     Text(package.cost, format: .currency(code: currencyCode))
                     Spacer()
-                    Text("Rate \(package.rate, specifier: "%.2f")")
+                    Text(String(localized: "Rate \(package.rate, specifier: "%.2f")", comment: "Work package card rate readout"))
                 }
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -43,13 +43,13 @@ struct WorkPackageCardView: View {
                 Button(action: onRequestHire) {
                     Image(systemName: "plus.circle.fill")
                 }
-                .accessibilityLabel("Hire for \(package.title)")
+                .accessibilityLabel(String(localized: "Hire for \(package.title)", comment: "Accessibility label for a work package's hire button"))
                 Text("\(package.headcount)")
                     .font(.caption2.monospacedDigit())
                 Button(action: onFire) {
                     Image(systemName: "minus.circle.fill")
                 }
-                .accessibilityLabel("Fire from \(package.title)")
+                .accessibilityLabel(String(localized: "Fire from \(package.title)", comment: "Accessibility label for a work package's fire button"))
                 .disabled(package.headcount == 0)
             }
             .font(.title3)

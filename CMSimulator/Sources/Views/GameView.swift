@@ -93,7 +93,7 @@ struct GameView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(event.kind.title).font(isWide ? .title3.bold() : .headline).foregroundStyle(.white)
                 Text(event.message).font(isWide ? .body : .caption).foregroundStyle(.white.opacity(0.9))
-                Text("+\(event.extraCost, format: .currency(code: currencyCode)) to the project")
+                Text(String(localized: "+\(event.extraCost, format: .currency(code: currencyCode)) to the project", comment: "Extra cost added to the project by a disaster event"))
                     .font(isWide ? .body.bold() : .caption.bold())
                     .foregroundStyle(.white)
             }
@@ -124,7 +124,7 @@ struct GameView: View {
                 Spacer()
                 VStack {
                     Text("Time").font(.caption).foregroundStyle(.secondary)
-                    Text("\(engine.totalDays)d \(engine.totalHours)h").font(isWide ? .title.bold() : .headline.monospacedDigit())
+                    Text(String(localized: "\(engine.totalDays)d \(engine.totalHours)h", comment: "Elapsed days/hours readout, e.g. '5d 3h' - d/h abbreviations for day/hour")).font(isWide ? .title.bold() : .headline.monospacedDigit())
                 }
                 Spacer()
                 VStack(alignment: .trailing) {
@@ -134,8 +134,8 @@ struct GameView: View {
                 }
             }
             HStack(spacing: isWide ? 32 : 24) {
-                GaugeView(title: "Risk", value: engine.riskGauge).frame(height: isWide ? 90 : 70)
-                GaugeView(title: "Quality", value: engine.qualityGauge).frame(height: isWide ? 90 : 70)
+                GaugeView(title: String(localized: "Risk", comment: "Gauge label"), value: engine.riskGauge).frame(height: isWide ? 90 : 70)
+                GaugeView(title: String(localized: "Quality", comment: "Gauge label"), value: engine.qualityGauge).frame(height: isWide ? 90 : 70)
                 Spacer()
                 Button(role: .destructive, action: { showRestartConfirm = true }) { Label("Restart", systemImage: "arrow.counterclockwise") }
                 Button(action: onShowHelp) { Label("Help", systemImage: "questionmark.circle") }

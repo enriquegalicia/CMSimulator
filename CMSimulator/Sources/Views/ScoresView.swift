@@ -12,13 +12,25 @@ enum ScoreBoard: String, CaseIterable, Identifiable {
     case combined = "Construction Master"
     var id: String { rawValue }
 
+    /// Localized "<board> Leaderboard" title, built as one format string
+    /// rather than concatenating a translated name with a translated
+    /// "Leaderboard" suffix - word order isn't guaranteed to match across
+    /// languages.
+    var leaderboardTitle: String {
+        switch self {
+        case .cost: return String(localized: "Cost Leaderboard", comment: "Leaderboard screen title")
+        case .time: return String(localized: "Time Leaderboard", comment: "Leaderboard screen title")
+        case .combined: return String(localized: "Construction Leaderboard", comment: "Leaderboard screen title")
+        }
+    }
+
     /// Short form for the segmented control, which truncates full names
     /// awkwardly on narrow screens - the full name still shows as the title.
     var shortTitle: String {
         switch self {
-        case .cost: return "Cost"
-        case .time: return "Time"
-        case .combined: return "Overall"
+        case .cost: return String(localized: "Cost", comment: "Leaderboard segmented control option")
+        case .time: return String(localized: "Time", comment: "Leaderboard segmented control option")
+        case .combined: return String(localized: "Overall", comment: "Leaderboard segmented control option")
         }
     }
 }
@@ -50,7 +62,7 @@ struct ScoresView: View {
     var body: some View {
         VStack(spacing: isWide ? 20 : 12) {
             HStack {
-                Text(board.rawValue + " Leaderboard").font(isWide ? .largeTitle.bold() : .title2.bold())
+                Text(board.leaderboardTitle).font(isWide ? .largeTitle.bold() : .title2.bold())
                 Spacer()
                 Button("Exit", action: onExit)
                     .controlSize(isWide ? .large : .regular)
@@ -79,7 +91,7 @@ struct ScoresView: View {
                             Spacer()
                             VStack(alignment: .trailing) {
                                 Text(entry.cost, format: .currency(code: currencyCode)).font(isWide ? .body.monospacedDigit() : .caption.monospacedDigit())
-                                Text("\(Int(entry.days))d").font(isWide ? .caption : .caption2).monospacedDigit().foregroundStyle(.secondary)
+                                Text(String(localized: "\(Int(entry.days))d", comment: "Days abbreviation on the leaderboard, e.g. '5d'")).font(isWide ? .caption : .caption2).monospacedDigit().foregroundStyle(.secondary)
                             }
                         }
                         .padding(.vertical, isWide ? 6 : 0)

@@ -19,6 +19,20 @@ enum BoosterKind: String, CaseIterable, Identifiable {
     case quality = "Quality"
 
     var id: String { rawValue }
+
+    /// Localized display text - kept separate from `rawValue` since the raw
+    /// value is also used as a stable identifier (BoosterEffect.table keys,
+    /// image lookups) that must never change with the device's language.
+    var displayName: String {
+        switch self {
+        case .planning: return String(localized: "Planning", comment: "Booster name")
+        case .procurement: return String(localized: "Procurement", comment: "Booster name")
+        case .risk: return String(localized: "Risk", comment: "Booster name")
+        case .communications: return String(localized: "Communications", comment: "Booster name")
+        case .training: return String(localized: "Training", comment: "Booster name")
+        case .quality: return String(localized: "Quality", comment: "Booster name")
+        }
+    }
 }
 
 struct Booster: Identifiable {
@@ -34,7 +48,7 @@ struct Booster: Identifiable {
     var purchasedCount: Int = 0
     var isUnlocked: Bool = false
 
-    var title: String { id.rawValue }
+    var title: String { id.displayName }
 
     init(kind: BoosterKind, imageName: String, initialCost: Double, startThreshold: Double, affects: String) {
         self.id = kind

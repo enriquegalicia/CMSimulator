@@ -47,27 +47,27 @@ extension Candidate {
 
     private static let archetypes = [
         CandidateArchetype(
-            trait: "Fast, but cuts corners",
+            trait: String(localized: "Fast, but cuts corners", comment: "Candidate hiring trait"),
             costRange: 1.02...1.05, rateRange: 1.00...1.01,
             riskRange: 0.90...0.94, qualityRange: 0.90...0.94
         ),
         CandidateArchetype(
-            trait: "Meticulous",
+            trait: String(localized: "Meticulous", comment: "Candidate hiring trait"),
             costRange: 1.01...1.05, rateRange: 0.95...0.97,
             riskRange: 0.95...0.99, qualityRange: 0.97...0.99
         ),
         CandidateArchetype(
-            trait: "Budget hire",
+            trait: String(localized: "Budget hire", comment: "Candidate hiring trait"),
             costRange: 0.99...1.01, rateRange: 0.95...0.98,
             riskRange: 0.92...0.96, qualityRange: 0.92...0.96
         ),
         CandidateArchetype(
-            trait: "Steady all-rounder",
+            trait: String(localized: "Steady all-rounder", comment: "Candidate hiring trait"),
             costRange: 1.00...1.03, rateRange: 0.97...1.00,
             riskRange: 0.94...0.97, qualityRange: 0.94...0.97
         ),
         CandidateArchetype(
-            trait: "Safety-first",
+            trait: String(localized: "Safety-first", comment: "Candidate hiring trait"),
             costRange: 1.01...1.04, rateRange: 0.95...0.98,
             riskRange: 0.97...0.99, qualityRange: 0.92...0.96
         ),

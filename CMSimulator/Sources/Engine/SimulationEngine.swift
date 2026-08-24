@@ -109,23 +109,23 @@ final class SimulationEngine: ObservableObject {
     // weighted average.
     private static func freshWorkPackages() -> [WorkPackage] {
         [
-            WorkPackage(id: "design", title: "Design", imageName: "Design.png", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
-            WorkPackage(id: "structure", title: "Structure", imageName: "Structure.png", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
-            WorkPackage(id: "engineering", title: "Engineering", imageName: "Engineering.png", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
-            WorkPackage(id: "construction", title: "Construction", imageName: "Construction.png", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
-            WorkPackage(id: "ihs", title: "IHS & IAA", imageName: "IHS.png", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
-            WorkPackage(id: "ies", title: "IES & IEL", imageName: "IES.png", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
+            WorkPackage(id: "design", title: String(localized: "Design", comment: "Work package name"), imageName: "Design.png", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
+            WorkPackage(id: "structure", title: String(localized: "Structure", comment: "Work package name"), imageName: "Structure.png", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
+            WorkPackage(id: "engineering", title: String(localized: "Engineering", comment: "Work package name"), imageName: "Engineering.png", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
+            WorkPackage(id: "construction", title: String(localized: "Construction", comment: "Work package name"), imageName: "Construction.png", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
+            WorkPackage(id: "ihs", title: String(localized: "IHS & IAA", comment: "Work package name - Hydro-sanitary & Air conditioning installations"), imageName: "IHS.png", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
+            WorkPackage(id: "ies", title: String(localized: "IES & IEL", comment: "Work package name - Electrical & Lighting installations"), imageName: "IES.png", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
         ]
     }
 
     private static func freshBoosters() -> [Booster] {
         [
-            Booster(kind: .planning, imageName: "Planning.png", initialCost: 600, startThreshold: 0, affects: "Labor rates, starts, quality and communications"),
-            Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: "Resource cost, support costs, planning and risk"),
-            Booster(kind: .quality, imageName: "Quality.png", initialCost: 800, startThreshold: 12, affects: "Resource cost, labor rates, training and procurement"),
-            Booster(kind: .risk, imageName: "Risk.png", initialCost: 1000, startThreshold: 18, affects: "Resource cost, labor rates, planning and communications"),
-            Booster(kind: .communications, imageName: "Communications.png", initialCost: 600, startThreshold: 22, affects: "Labor rates, procurement and training"),
-            Booster(kind: .training, imageName: "Training.png", initialCost: 1500, startThreshold: 25, affects: "Cumulative labor rates, costs, quality and risk"),
+            Booster(kind: .planning, imageName: "Planning.png", initialCost: 600, startThreshold: 0, affects: String(localized: "Labor rates, starts, quality and communications", comment: "Booster effect summary")),
+            Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: String(localized: "Resource cost, support costs, planning and risk", comment: "Booster effect summary")),
+            Booster(kind: .quality, imageName: "Quality.png", initialCost: 800, startThreshold: 12, affects: String(localized: "Resource cost, labor rates, training and procurement", comment: "Booster effect summary")),
+            Booster(kind: .risk, imageName: "Risk.png", initialCost: 1000, startThreshold: 18, affects: String(localized: "Resource cost, labor rates, planning and communications", comment: "Booster effect summary")),
+            Booster(kind: .communications, imageName: "Communications.png", initialCost: 600, startThreshold: 22, affects: String(localized: "Labor rates, procurement and training", comment: "Booster effect summary")),
+            Booster(kind: .training, imageName: "Training.png", initialCost: 1500, startThreshold: 25, affects: String(localized: "Cumulative labor rates, costs, quality and risk", comment: "Booster effect summary")),
         ]
     }
 
@@ -229,7 +229,10 @@ final class SimulationEngine: ObservableObject {
                .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
             setback = Double.random(in: setbackRange)
             workPackages[idx].unitsCompleted = max(0, workPackages[idx].unitsCompleted - setback)
-            message += " \(workPackages[idx].title) lost some progress."
+            // A single localized format string, not string concatenation -
+            // word order and spacing between two independently-translated
+            // sentences isn't guaranteed to read correctly in every language.
+            message += " " + String(localized: "\(workPackages[idx].title) lost some progress.", comment: "Appended to a disaster event's message when it also sets back a work package's progress")
         }
 
         activeEvent = SimEvent(kind: kind, message: message, extraCost: extraCost, setbackUnits: setback)

@@ -49,6 +49,7 @@
 		BF7F5E78B2C14D45B143D645 /* VendorBid.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5811529188341569D305E67 /* VendorBid.swift */; };
 		D0C4E7FE5ABE48F1A1588F0A /* CandidatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */; };
 		9B62B0ADC7BE444B868DB1AC /* VendorBidPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5D979070904F6E8E991AB8 /* VendorBidPickerView.swift */; };
+		EC1A1B4E8CEE4B5092978CAC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 790985F08AA449E7A53C869F /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +115,7 @@
 		FAC2B7CC758D040FA71E526A /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		FE196F477B0F3638FA696F86 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
 		9828AEFBC846F66C0876C730 /* SimEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimEvent.swift; sourceTree = "<group>"; };
+		790985F08AA449E7A53C869F /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E61E0D0A2462426DA3B2C530 /* Candidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Candidate.swift; sourceTree = "<group>"; };
 		A5811529188341569D305E67 /* VendorBid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorBid.swift; sourceTree = "<group>"; };
 		59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidatePickerView.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				7390111A66E61CCFABD99438 /* Models */,
 				079B735383EF7E303C199B88 /* Engine */,
 				E514C0E51D63448C584F9B15 /* Views */,
+				790985F08AA449E7A53C869F /* Localizable.xcstrings */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 			knownRegions = (
 				English,
 				en,
+				es,
 				Base,
 			);
 			mainGroup = 3DAD44CD1BDEF84B007E123A;
@@ -403,6 +407,7 @@
 				3DAD451E1BDF13AB007E123A /* Communications.png in Resources */,
 				59B7FBA6BE2A5ED50C093190 /* AppIcon-Source.png in Resources */,
 				7ED11F509101CB407B5B78A0 /* Procurement.png in Resources */,
+				EC1A1B4E8CEE4B5092978CAC /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,7 +554,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -600,7 +605,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -619,7 +624,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -637,7 +642,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulator;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -653,7 +658,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
@@ -670,7 +675,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CMSimulator.app/CMSimulator";
@@ -686,7 +691,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_TARGET_NAME = CMSimulator;
 				USES_XCTRUNNER = YES;
@@ -702,7 +707,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.magarchitecture.CMSimulatorUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_TARGET_NAME = CMSimulator;
 				USES_XCTRUNNER = YES;

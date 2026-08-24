@@ -28,7 +28,7 @@ struct CandidatePickerView: View {
                 }
                 .buttonStyle(.plain)
             }
-            .navigationTitle("Hire for \(request.packageTitle)")
+            .navigationTitle(String(localized: "Hire for \(request.packageTitle)", comment: "Candidate picker sheet title"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", action: onCancel)
@@ -48,16 +48,16 @@ struct CandidatePickerView: View {
 
     private func statLine(_ candidate: Candidate) -> some View {
         HStack(spacing: 12) {
-            statBadge("Cost", candidate.costFactor, isBest: candidate.costFactor == bestCost)
-            statBadge("Rate", candidate.rateFactor, isBest: candidate.rateFactor == bestRate)
-            statBadge("Risk", candidate.riskFactor, isBest: candidate.riskFactor == bestRisk)
-            statBadge("Quality", candidate.qualityFactor, isBest: candidate.qualityFactor == bestQuality)
+            statBadge(String(localized: "Cost", comment: "Candidate stat label"), candidate.costFactor, isBest: candidate.costFactor == bestCost)
+            statBadge(String(localized: "Rate", comment: "Candidate stat label"), candidate.rateFactor, isBest: candidate.rateFactor == bestRate)
+            statBadge(String(localized: "Risk", comment: "Candidate stat label"), candidate.riskFactor, isBest: candidate.riskFactor == bestRisk)
+            statBadge(String(localized: "Quality", comment: "Candidate stat label"), candidate.qualityFactor, isBest: candidate.qualityFactor == bestQuality)
         }
         .font(.caption2.monospacedDigit())
     }
 
     private func statBadge(_ title: String, _ factor: Double, isBest: Bool) -> some View {
-        Text("\(title) \(factor, specifier: "%.2f")")
+        Text(String(localized: "\(title) \(factor, specifier: "%.2f")", comment: "Stat badge, e.g. 'Cost 1.02' - title is already localized text"))
             .foregroundStyle(isBest ? .green : .secondary)
             .fontWeight(isBest ? .semibold : .regular)
     }

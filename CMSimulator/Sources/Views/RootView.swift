@@ -41,7 +41,7 @@ struct RootView: View {
         }
         .fullScreenCover(isPresented: $showResult) {
             ResultView(cost: engine.finalCost, days: engine.finalDays) { name in
-                let finalName = name.isEmpty ? "Player" : name
+                let finalName = name.isEmpty ? String(localized: "Player", comment: "Default score entry name when the player leaves the name field blank") : name
                 let entry = ScoreEntry(playerName: finalName, cost: engine.finalCost, days: engine.finalDays)
                 modelContext.insert(entry)
                 gameCenter.reportScore(

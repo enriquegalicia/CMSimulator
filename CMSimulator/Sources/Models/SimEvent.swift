@@ -39,27 +39,27 @@ enum SimEventKind: CaseIterable {
 
     var title: String {
         switch self {
-        case .hurricane: return "Hurricane hits the site"
-        case .fire: return "Fire on site"
-        case .safetyIncident: return "Safety incident"
-        case .materialTheft: return "Materials stolen"
-        case .designClash: return "Design clash discovered"
-        case .permitRejection: return "Permit rejected"
-        case .structuralDefect: return "Structural defect found"
-        case .changeOrder: return "Client change order"
+        case .hurricane: return String(localized: "Hurricane hits the site", comment: "Disaster event title")
+        case .fire: return String(localized: "Fire on site", comment: "Disaster event title")
+        case .safetyIncident: return String(localized: "Safety incident", comment: "Disaster event title")
+        case .materialTheft: return String(localized: "Materials stolen", comment: "Disaster event title")
+        case .designClash: return String(localized: "Design clash discovered", comment: "Disaster event title")
+        case .permitRejection: return String(localized: "Permit rejected", comment: "Disaster event title")
+        case .structuralDefect: return String(localized: "Structural defect found", comment: "Disaster event title")
+        case .changeOrder: return String(localized: "Client change order", comment: "Disaster event title")
         }
     }
 
     var message: String {
         switch self {
-        case .hurricane: return "High winds damaged the site. Cleanup and repairs added cost to the project."
-        case .fire: return "A site fire destroyed materials and equipment before it was contained."
-        case .safetyIncident: return "Work halted for a safety review after an on-site incident."
-        case .materialTheft: return "Materials went missing from the laydown yard overnight."
-        case .designClash: return "A coordination clash between disciplines was found and needs rework."
-        case .permitRejection: return "The inspector rejected the current submittal - revise and resubmit."
-        case .structuralDefect: return "Quality control caught a defect that has to be fixed before continuing."
-        case .changeOrder: return "The client requested a scope change mid-build."
+        case .hurricane: return String(localized: "High winds damaged the site. Cleanup and repairs added cost to the project.", comment: "Disaster event description")
+        case .fire: return String(localized: "A site fire destroyed materials and equipment before it was contained.", comment: "Disaster event description")
+        case .safetyIncident: return String(localized: "Work halted for a safety review after an on-site incident.", comment: "Disaster event description")
+        case .materialTheft: return String(localized: "Materials went missing from the laydown yard overnight.", comment: "Disaster event description")
+        case .designClash: return String(localized: "A coordination clash between disciplines was found and needs rework.", comment: "Disaster event description")
+        case .permitRejection: return String(localized: "The inspector rejected the current submittal - revise and resubmit.", comment: "Disaster event description")
+        case .structuralDefect: return String(localized: "Quality control caught a defect that has to be fixed before continuing.", comment: "Disaster event description")
+        case .changeOrder: return String(localized: "The client requested a scope change mid-build.", comment: "Disaster event description")
         }
     }
 

@@ -44,7 +44,7 @@ struct ResultView: View {
             }
             VStack(spacing: 6) {
                 Text("Final Time").font(isWide ? .body : .caption).foregroundStyle(.secondary)
-                Text("\(wholeDays) Days \(hours) Hours").font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
+                Text(String(localized: "\(wholeDays) Days \(hours) Hours", comment: "Final elapsed time on the results screen")).font(isWide ? .system(size: 34, weight: .semibold) : .title2.monospacedDigit())
             }
 
             TextField("Your name", text: $name)

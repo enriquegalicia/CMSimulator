@@ -47,17 +47,17 @@ extension VendorBid {
 
     private static let archetypes = [
         BidArchetype(
-            pitch: "Lowest bid",
+            pitch: String(localized: "Lowest bid", comment: "Vendor bid pitch"),
             costRange: 0.94...0.97, alliedDiscountRange: 0.99...1.00,
             qualityRange: 0.97...0.99
         ),
         BidArchetype(
-            pitch: "Balanced value",
+            pitch: String(localized: "Balanced value", comment: "Vendor bid pitch"),
             costRange: 0.97...0.995, alliedDiscountRange: 0.98...1.00,
             qualityRange: 0.995...1.005
         ),
         BidArchetype(
-            pitch: "Premium & reliable",
+            pitch: String(localized: "Premium & reliable", comment: "Vendor bid pitch"),
             costRange: 0.99...1.00, alliedDiscountRange: 0.96...0.98,
             qualityRange: 1.01...1.04
         ),

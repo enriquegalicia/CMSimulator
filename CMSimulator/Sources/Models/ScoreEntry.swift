@@ -2,9 +2,13 @@
 //  ScoreEntry.swift
 //  CMSimulator
 //
-//  Swift port of the GestorBD/DataBase SQLite leaderboard - replaced
-//  with SwiftData, matching the Aguach1leLabs apps' persistence style.
-//  One row per completed simulation run.
+//  One completed run. Now scored on profit rather than on the old
+//  normalized cost + days sum, which could not express "finished cheap
+//  but the building is defective" and, more importantly, does not
+//  generalize: a cafe or an import business has no "days on site" in
+//  common with a building, but every scenario has a P&L. Keeping the
+//  leaderboard on profit is what will let the planned scenarios share
+//  one Operator Rating later.
 //
 
 import Foundation
@@ -13,22 +17,40 @@ import SwiftData
 @Model
 final class ScoreEntry {
     var playerName: String
-    var cost: Double
+    /// The leaderboard number: difficulty-scaled profit.
+    var score: Double
+    var profit: Double
+    var revenue: Double
     var days: Double
+    var deadlineDays: Double
+    var wasOnTime: Bool
+    var openDefects: Double
+    var idleCrewDays: Double
+    /// Difficulty and client persona raw values, kept as strings so the
+    /// stored schema does not break if the enums gain cases.
+    var difficultyRaw: String
+    var personaRaw: String
+    var scenarioName: String
+    var seed: String
     var completedAt: Date
 
-    init(playerName: String, cost: Double, days: Double, completedAt: Date = Date()) {
+    init(playerName: String, result: RunResult, scenarioName: String, completedAt: Date = Date()) {
         self.playerName = playerName
-        self.cost = cost
-        self.days = days
+        self.score = result.score
+        self.profit = result.profit
+        self.revenue = result.revenue
+        self.days = result.days
+        self.deadlineDays = result.deadlineDays
+        self.wasOnTime = result.wasOnTime
+        self.openDefects = result.openDefects
+        self.idleCrewDays = result.idleCrewDays
+        self.difficultyRaw = result.difficulty.rawValue
+        self.personaRaw = result.persona.rawValue
+        self.scenarioName = scenarioName
+        self.seed = String(result.seed)
         self.completedAt = completedAt
     }
 
-    /// Lower is better on both axes, so a simple normalized sum ranks
-    /// "did well on cost and time" runs above one-sided ones.
-    static func combinedScore(_ entry: ScoreEntry, maxCost: Double, maxDays: Double) -> Double {
-        let c = maxCost > 0 ? entry.cost / maxCost : 0
-        let d = maxDays > 0 ? entry.days / maxDays : 0
-        return c + d
-    }
+    var difficulty: Difficulty? { Difficulty(rawValue: difficultyRaw) }
+    var persona: ClientPersona? { ClientPersona(rawValue: personaRaw) }
 }

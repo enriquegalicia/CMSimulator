@@ -2,9 +2,24 @@
 //  SimulationEngine.swift
 //  CMSimulator
 //
-//  The whole game loop, ported from ViewController.m's play/pause/
-//  fastforward timers and progress/progress2 methods. One engine owns
-//  every work package and booster and is observed directly by the views.
+//  The rebuilt game loop.
+//
+//  What changed, and why:
+//
+//  The old engine had no binding constraint anywhere in it. `totalCost`
+//  was an accumulator nothing checked, so at the moment of every decision
+//  everything was free. Worse, headcount cancelled out of total cost
+//  exactly - `rate * crew * step` earned against `cost * crew * step`
+//  charged meant a package always cost `units * cost / rate` no matter
+//  how many people worked it. Fifty workers finished fifty times faster
+//  for the same money, so "hire everyone immediately" was strictly
+//  dominant and there was no decision left to make.
+//
+//  Now: cash is finite and payroll runs every day whether or not anyone
+//  produces anything; the client pays in lumps behind the work; crowding
+//  and onboarding make extra bodies genuinely worse per head; materials
+//  are physical and arrive late; defects are a debt that comes due at
+//  handover; and running out of money ends the run.
 //
 
 import Foundation
@@ -14,122 +29,156 @@ enum SimSpeed {
     case paused, normal, fast, superFast
 
     var tickInterval: TimeInterval { 0.1 }
-    /// Fraction of a "day" simulated per tick - matches the original's
-    /// fdias += .01 (normal) / += .1 (fast forward); superFast doubles
-    /// fast-forward again for a genuinely-faster third gear.
+
+    /// Simulated days per tick. At `normal` a day takes five seconds,
+    /// which is about the pace at which a player can actually react to a
+    /// delivery landing or morale sliding.
     var dayStep: Double {
         switch self {
         case .paused: return 0
-        case .normal: return 0.01
+        case .normal: return 0.02
         case .fast: return 0.1
-        case .superFast: return 0.2
+        case .superFast: return 0.3
         }
     }
+}
+
+enum RunOutcome: Equatable {
+    case delivered
+    case insolvent
+}
+
+/// A transient line for the activity feed - deliveries, resignations,
+/// payments. The old build had no way to tell the player that something
+/// happened unless it was a full-screen disaster banner.
+struct SiteLogEntry: Identifiable {
+    enum Tone { case neutral, good, bad }
+    let id = UUID()
+    let day: Int
+    let text: String
+    let symbol: String
+    let tone: Tone
 }
 
 @MainActor
 final class SimulationEngine: ObservableObject {
 
+    // MARK: Published run state
+
+    @Published private(set) var brief: ProjectBrief
+    @Published private(set) var ledger: Ledger
     @Published private(set) var workPackages: [WorkPackage]
-    @Published private(set) var boosters: [Booster]
-    @Published private(set) var riskGauge: Double = 1.0
-    @Published private(set) var qualityGauge: Double = 1.0
-    @Published private(set) var totalCost: Double = 0
-    @Published private(set) var totalDays: Int = 0
-    @Published private(set) var totalHours: Int = 0
+    @Published private(set) var workers: [Worker] = []
+    @Published private(set) var capabilities: [Capability]
+    @Published private(set) var market: MaterialMarket
+    @Published private(set) var vendors: [Vendor]
+    @Published private(set) var orders: [MaterialOrder] = []
+    @Published private(set) var mitigationsHeld: Set<MitigationClass> = []
+
     @Published private(set) var totalProgress: Double = 0
+    @Published private(set) var elapsedDays: Double = 0
+    @Published private(set) var deadlineDays: Double
+    @Published private(set) var clientTrust: Double = 0.55
+    @Published private(set) var reputation: Double = 0.75
     @Published private(set) var speed: SimSpeed = .paused
-    @Published private(set) var isComplete: Bool = false
-    /// Set when a disaster/clash event fires; the view shows a banner and
-    /// clears it. Finishes the original's abandoned Eventos/eventoriesgo/
-    /// eventocalidad mechanic - see SimEvent.swift.
+    @Published private(set) var outcome: RunOutcome?
+
     @Published private(set) var activeEvent: SimEvent?
-    /// Set by requestHire(for:); the view presents a candidate-picker sheet
-    /// and calls back into confirmHire/cancelHiring. See Candidate.swift.
     @Published private(set) var hiringRequest: HiringRequest?
-    /// Set by requestProcurementBid(); the view presents a vendor-bid-picker
-    /// sheet and calls back into confirmBid/cancelBid. See VendorBid.swift.
-    @Published private(set) var vendorBidRequest: VendorBidRequest?
+    @Published private(set) var orderRequest: MaterialOrderRequest?
+    @Published private(set) var forecast: RiskForecast?
+    @Published private(set) var siteLog: [SiteLogEntry] = []
+    @Published private(set) var extensionUsed = false
 
-    private var fractionalDays: Double = 0
-    private var lastEventDay: Double = -Double.greatestFiniteMagnitude
-    private var disasterCost: Double = 0
+    // MARK: Private run state
+
     private var timerCancellable: AnyCancellable?
+    private var pendingPayments: [(net: Double, retainage: Double, dueDay: Double)] = []
+    private var penalizedThroughDay: Double = 0
+    private var nextIncidentDay: Double = .greatestFiniteMagnitude
+    private var nextIncidentClass: MitigationClass = .weather
+    private var nextIncidentSeverity: Double = 0.5
+    private var logDayAccumulator: Double = 0
+    /// Consecutive simulated days with no work happening and no means to
+    /// restart it. Without this a project that sheds its whole crew never
+    /// misses payroll (there is none to miss) and so never ends - it just
+    /// accrues late penalties for ever.
+    private var stalledDays: Double = 0
+    /// Extra contract value earned from client change orders.
+    private var scopeRevenue: Double = 0
 
-    /// Gauges below this (of the 0.5...1.5 range) count as "in the red" -
-    /// matches GaugeView's own red cutoff.
-    private let redZoneThreshold = 0.9
-    /// Roughly this fraction of the time a gauge spends in the red zone
-    /// produces an event within a simulated day - independent of how fast
-    /// the player is running the clock.
-    private let dailyEventChance = 0.4
-    /// Minimum simulated days between events so they can't stack up.
-    private let eventCooldownDays = 3.0
+    private let baseIncidentIntervalDays: Double = 17
 
-    init() {
-        workPackages = Self.freshWorkPackages()
-        boosters = Self.freshBoosters()
-        // Everything else is set - now it's safe to mutate self.
-        workPackages[0].isUnlocked = true
-        boosters[0].isUnlocked = true
+    // MARK: Init
+
+    init(brief: ProjectBrief = .construction()) {
+        self.brief = brief
+        self.ledger = Ledger(startingCash: brief.startingCash,
+                             creditLimit: brief.creditLimit,
+                             dailyInterestRate: brief.dailyInterestRate)
+        self.deadlineDays = brief.deadlineDays
+        self.market = MaterialMarket(volatility: brief.marketVolatility)
+        self.vendors = Vendor.standingPanel()
+        self.workPackages = brief.streams.map { WorkPackage(spec: $0) }
+        self.capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
+        configureFreshRun()
     }
 
-    /// Resets every piece of run state back to a fresh start, so the player
-    /// can redo the simulation without relaunching the app. Shares the
-    /// exact same starting data as init() via freshWorkPackages/Boosters,
-    /// so a restart is indistinguishable from a first launch.
-    func restart() {
+    private func configureFreshRun() {
+        workPackages[0].isUnlocked = true
+        // Mobilization stock, procured under the contract's advance. Enough
+        // to start without an order, not enough to coast.
+        for i in workPackages.indices {
+            workPackages[i].materialStock = workPackages[i].units * workPackages[i].spec.materialUnitsPerWorkUnit * 0.15
+        }
+        for i in capabilities.indices where capabilities[i].kind.unlockThreshold <= 0 {
+            capabilities[i].isUnlocked = true
+        }
+        scheduleNextIncident()
+        let advance = brief.contractValue * brief.advanceRate
+        ledger.receive(advance * (1 - brief.retainageRate), retainage: advance * brief.retainageRate)
+        log(String(localized: "Contract signed with \(brief.clientPersona.name). \(Int(deadlineDays)) days to hand over.", comment: "Site log: run start"),
+            symbol: "signature", tone: .neutral)
+        log(String(localized: "Mobilisation advance of \(Int(advance).formatted()) received.", comment: "Site log: advance payment"),
+            symbol: "banknote.fill", tone: .good)
+        recomputeProgress()
+    }
+
+    func restart(with newBrief: ProjectBrief? = nil) {
         setSpeed(.paused)
-        fractionalDays = 0
-        lastEventDay = -Double.greatestFiniteMagnitude
-        disasterCost = 0
+        let next = newBrief ?? .construction(difficulty: brief.difficulty)
+        brief = next
+        ledger = Ledger(startingCash: next.startingCash,
+                        creditLimit: next.creditLimit,
+                        dailyInterestRate: next.dailyInterestRate)
+        deadlineDays = next.deadlineDays
+        market = MaterialMarket(volatility: next.marketVolatility)
+        vendors = Vendor.standingPanel()
+        workPackages = next.streams.map { WorkPackage(spec: $0) }
+        capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
+        workers = []
+        orders = []
+        mitigationsHeld = []
+        pendingPayments = []
+        siteLog = []
+        totalProgress = 0
+        elapsedDays = 0
+        clientTrust = 0.55
+        reputation = 0.75
+        penalizedThroughDay = 0
+        scopeRevenue = 0
+        stalledDays = 0
+        logDayAccumulator = 0
+        extensionUsed = false
+        outcome = nil
         activeEvent = nil
         hiringRequest = nil
-        vendorBidRequest = nil
-        isComplete = false
-        riskGauge = 1.0
-        qualityGauge = 1.0
-        totalCost = 0
-        totalDays = 0
-        totalHours = 0
-        totalProgress = 0
-        workPackages = Self.freshWorkPackages()
-        boosters = Self.freshBoosters()
-        workPackages[0].isUnlocked = true
-        boosters[0].isUnlocked = true
+        orderRequest = nil
+        forecast = nil
+        configureFreshRun()
     }
 
-    // Units and thresholds are retuned from the original's (which summed
-    // to ~1000 units with thresholds up to 60% and no headcount scaling -
-    // a solo hire took literal tens of minutes to finish one discipline).
-    // Smaller totals plus headcount now actually scaling speed together
-    // get a full run into a few minutes at Play, well under a minute at
-    // Fast/Super-Fast - and later disciplines unlock early enough to
-    // actually be seen and played with, not just stared at behind a slow
-    // weighted average.
-    private static func freshWorkPackages() -> [WorkPackage] {
-        [
-            WorkPackage(id: "design", title: String(localized: "Design", comment: "Work package name"), imageName: "Design.png", initialCost: 700, units: 6, initialRate: 1, startThreshold: 0),
-            WorkPackage(id: "structure", title: String(localized: "Structure", comment: "Work package name"), imageName: "Structure.png", initialCost: 900, units: 6, initialRate: 1, startThreshold: 10),
-            WorkPackage(id: "engineering", title: String(localized: "Engineering", comment: "Work package name"), imageName: "Engineering.png", initialCost: 1200, units: 8, initialRate: 1, startThreshold: 15),
-            WorkPackage(id: "construction", title: String(localized: "Construction", comment: "Work package name"), imageName: "Construction.png", initialCost: 2500, units: 33, initialRate: 1, startThreshold: 25),
-            WorkPackage(id: "ihs", title: String(localized: "IHS & IAA", comment: "Work package name - Hydro-sanitary & Air conditioning installations"), imageName: "IHS.png", initialCost: 1800, units: 27, initialRate: 1, startThreshold: 30),
-            WorkPackage(id: "ies", title: String(localized: "IES & IEL", comment: "Work package name - Electrical & Lighting installations"), imageName: "IES.png", initialCost: 1600, units: 46, initialRate: 1, startThreshold: 35),
-        ]
-    }
-
-    private static func freshBoosters() -> [Booster] {
-        [
-            Booster(kind: .planning, imageName: "Planning.png", initialCost: 600, startThreshold: 0, affects: String(localized: "Labor rates, starts, quality and communications", comment: "Booster effect summary")),
-            Booster(kind: .procurement, imageName: "Procurement.png", initialCost: 800, startThreshold: 8, affects: String(localized: "Resource cost, support costs, planning and risk", comment: "Booster effect summary")),
-            Booster(kind: .quality, imageName: "Quality.png", initialCost: 800, startThreshold: 12, affects: String(localized: "Resource cost, labor rates, training and procurement", comment: "Booster effect summary")),
-            Booster(kind: .risk, imageName: "Risk.png", initialCost: 1000, startThreshold: 18, affects: String(localized: "Resource cost, labor rates, planning and communications", comment: "Booster effect summary")),
-            Booster(kind: .communications, imageName: "Communications.png", initialCost: 600, startThreshold: 22, affects: String(localized: "Labor rates, procurement and training", comment: "Booster effect summary")),
-            Booster(kind: .training, imageName: "Training.png", initialCost: 1500, startThreshold: 25, affects: String(localized: "Cumulative labor rates, costs, quality and risk", comment: "Booster effect summary")),
-        ]
-    }
-
-    // MARK: - Transport controls
+    // MARK: - Transport
 
     func play() { setSpeed(.normal) }
     func fastForward() { setSpeed(.fast) }
@@ -139,321 +188,893 @@ final class SimulationEngine: ObservableObject {
     private func setSpeed(_ newSpeed: SimSpeed) {
         speed = newSpeed
         timerCancellable?.cancel()
-        guard newSpeed != .paused, !isComplete else { return }
+        guard newSpeed != .paused, outcome == nil else { return }
         timerCancellable = Timer.publish(every: newSpeed.tickInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in self?.tick() }
     }
 
+    // MARK: - The day
+
     private func tick() {
-        let step = speed.dayStep
-        guard step > 0 else { return }
+        advance(byDays: speed.dayStep)
+    }
 
-        fractionalDays += step
-        totalDays = Int(fractionalDays)
-        totalHours = Int((fractionalDays - Double(totalDays)) * 8)
+    /// One simulated slice. Split out from `tick()` so the whole
+    /// simulation can be driven deterministically from tests without
+    /// waiting on a wall-clock timer.
+    func advance(byDays step: Double) {
+        guard step > 0, outcome == nil else { return }
 
-        for i in workPackages.indices {
-            // Mirrors the original: a discipline only advances - and only
-            // costs money - once someone is actually hired onto it. Unlike
-            // the original, headcount scales *how fast* too, not just
-            // on/off, so hiring more people has a visible effect and isn't
-            // identical to hiring just one.
-            guard workPackages[i].isUnlocked, workPackages[i].headcount > 0 else { continue }
-            guard workPackages[i].unitsCompleted < workPackages[i].units else { continue }
-            let crew = Double(workPackages[i].headcount)
-            let earnedThisTick = workPackages[i].rate * crew * step
-            workPackages[i].unitsCompleted = min(workPackages[i].unitsCompleted + earnedThisTick, workPackages[i].units)
-            workPackages[i].cumulativeCost += workPackages[i].cost * crew * step
-        }
+        elapsedDays += step
 
-        applyBoosterProtection(step: step)
-        recomputeTotals()
+        market.advance(days: step)
+        receiveDeliveries()
+        advanceWork(step: step)
+        advanceRoster(step: step)
+        payPayroll(step: step)
+        payUpkeep(step: step)
+        runInspections(step: step)
+        ledger.accrueInterest(days: step)
+        advanceTrust(step: step)
+        releaseDuePayments()
+        accrueLatePenalties()
+        recomputeProgress()
         updateUnlocks()
-        checkForEvent(step: step)
+        raisePaymentMilestones()
+        advanceIncidentClock(step: step)
+        updateForecast()
 
-        if totalProgress >= 100, !isComplete {
-            isComplete = true
-            setSpeed(.paused)
+        if workPackages.allSatisfy(\.isComplete) {
+            performHandover()
+            return
+        }
+        if ledger.daysInArrears >= 4 {
+            finish(.insolvent)
+            return
+        }
+        updateStall(step: step)
+        if stalledDays >= 10 {
+            finish(.insolvent)
         }
     }
 
-    /// Same probability-per-simulated-day regardless of playback speed:
-    /// superFast covers more days per tick, so it gets a proportionally
-    /// bigger per-tick roll, not a flat one - the expected time to an event
-    /// (in simulated days) stays the same whether you're at Play or
-    /// Super-Fast. Pulled out as its own pure function so the compounding
-    /// property is directly testable instead of only reachable by driving
-    /// the whole engine through real time.
-    nonisolated static func eventTriggerProbability(dailyChance: Double, step: Double) -> Double {
-        1 - pow(1 - dailyChance, step)
-    }
-
-    private func checkForEvent(step: Double) {
-        guard activeEvent == nil, fractionalDays - lastEventDay >= eventCooldownDays else { return }
-
-        let riskInRedZone = riskGauge < redZoneThreshold
-        let qualityInRedZone = qualityGauge < redZoneThreshold
-        guard riskInRedZone || qualityInRedZone else { return }
-
-        let pTrigger = Self.eventTriggerProbability(dailyChance: dailyEventChance, step: step)
-        guard Double.random(in: 0...1) < pTrigger else { return }
-
-        // If both gauges are in the red, whichever is worse decides which
-        // *category* fires; the specific kind within that category is
-        // random, so a bad risk streak might be a hurricane one time and
-        // a site fire the next, each with its own cost/setback severity.
-        let category: SimEventCategory = (riskGauge <= qualityGauge) ? .risk : .quality
-        trigger(.random(for: category))
-    }
-
-    private func trigger(_ kind: SimEventKind) {
-        lastEventDay = fractionalDays
-        let extraCost = max(150, totalCost * Double.random(in: kind.costFractionRange))
-        disasterCost += extraCost
-
-        switch kind.category {
-        case .risk:
-            riskGauge = min(max(riskGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
-        case .quality:
-            qualityGauge = min(max(qualityGauge * Double.random(in: 0.85...0.95), 0.5), 1.5)
+    /// A project is finished - just not delivered - when nothing is being
+    /// built and there is no money to start it again. Checked separately
+    /// from payroll arrears because a site with no crew has no payroll to
+    /// miss.
+    private func updateStall(step: Double) {
+        let building = currentThroughput > 0.001
+        // Enough to sign one cheap hire and buy them something to build with.
+        let escapeCost = 6_000.0
+        if building || ledger.spendingPower > escapeCost {
+            stalledDays = 0
+        } else {
+            stalledDays += step
         }
+    }
 
-        var message = kind.message
-        var setback: Double = 0
-        // Not every event costs physical progress - theft and change
-        // orders are cost-only hits.
-        if let setbackRange = kind.setbackRange,
-           let idx = workPackages.indices
-               .filter({ workPackages[$0].isUnlocked && workPackages[$0].unitsCompleted > 0 })
-               .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
-            setback = Double.random(in: setbackRange)
-            workPackages[idx].unitsCompleted = max(0, workPackages[idx].unitsCompleted - setback)
-            // A single localized format string, not string concatenation -
-            // word order and spacing between two independently-translated
-            // sentences isn't guaranteed to read correctly in every language.
-            message += " " + String(localized: "\(workPackages[idx].title) lost some progress.", comment: "Appended to a disaster event's message when it also sets back a work package's progress")
+    // MARK: Work
+
+    private func advanceWork(step: Double) {
+        for i in workPackages.indices {
+            guard workPackages[i].isUnlocked, !workPackages[i].isComplete else { continue }
+            let crew = workers.filter { $0.packageID == workPackages[i].id && !$0.isInTraining }
+            guard !crew.isEmpty else { continue }
+
+            // Crew waiting on materials are still on full pay. This is the
+            // single clearest lesson in the game about lead times, so it is
+            // tracked explicitly and reported at the end.
+            if workPackages[i].isStarvedOfMaterials {
+                workPackages[i].idleCrewDays += Double(crew.count) * step
+                continue
+            }
+
+            let overtime = workPackages[i].overtime
+            let rawOutput = crew.reduce(0) { $0 + $1.effectiveOutput }
+            let congestion = WorkPackage.congestionFactor(crewSize: crew.count, optimalCrew: workPackages[i].optimalCrew)
+            let drag = WorkPackage.mentoringDrag(greenCount: crew.filter(\.isOnboarding).count)
+            let otFactor = WorkPackage.overtimeFactor(overtime)
+
+            var produced = rawOutput * congestion * drag * otFactor * step
+            let materialCap = workPackages[i].materialStock / workPackages[i].spec.materialUnitsPerWorkUnit
+            produced = min(produced, workPackages[i].unitsRemaining, materialCap)
+            guard produced > 0 else { continue }
+
+            workPackages[i].unitsCompleted += produced
+            workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
+
+            var defectPerUnit = crew.reduce(0) { $0 + $1.defectRate(overtime: overtime) } / Double(crew.count)
+            if workPackages[i].isFastTracked { defectPerUnit += CapabilityEffects.fastTrackDefectPenalty }
+            defectPerUnit += workPackages[i].materialDefectPerUnit
+            workPackages[i].defectDebt += produced * defectPerUnit
+
+            if workPackages[i].isComplete {
+                log(String(localized: "\(workPackages[i].title) complete.", comment: "Site log: package finished"),
+                    symbol: "checkmark.seal.fill", tone: .good)
+                demobilise(packageID: workPackages[i].id, title: workPackages[i].title)
+            }
         }
-
-        activeEvent = SimEvent(kind: kind, message: message, extraCost: extraCost, setbackUnits: setback)
-        recomputeTotals()
     }
 
-    func dismissEvent() {
-        activeEvent = nil
+    // MARK: Roster
+
+    private func advanceRoster(step: Double) {
+        var resignations: [(id: Worker.ID, name: String)] = []
+        for i in workers.indices {
+            let overtime = workPackages.first { $0.id == workers[i].packageID }?.overtime ?? 0
+            let package = workPackages.first { $0.id == workers[i].packageID }
+            let isWorking = (package?.isUnlocked ?? false)
+                && !(package?.isComplete ?? true)
+                && !(package?.isStarvedOfMaterials ?? true)
+            let wasTraining = workers[i].isInTraining
+            workers[i].advance(days: step, overtime: overtime, isWorking: isWorking)
+            if wasTraining, !workers[i].isInTraining {
+                log(String(localized: "\(workers[i].name) returned from training.", comment: "Site log: training complete"),
+                    symbol: "graduationcap.fill", tone: .good)
+            }
+        }
+        for worker in workers where Double.random(in: 0...1) < worker.quitProbability(over: step) {
+            resignations.append((id: worker.id, name: worker.name))
+        }
+        guard !resignations.isEmpty else { return }
+        let leaving = Set(resignations.map(\.id))
+        workers.removeAll { leaving.contains($0.id) }
+        reputation = max(0, reputation - 0.03 * Double(resignations.count))
+        for resignation in resignations {
+            log(String(localized: "\(resignation.name) resigned. Morale was too low.", comment: "Site log: worker quit"),
+                symbol: "figure.walk.departure", tone: .bad)
+        }
     }
 
-    private func recomputeTotals() {
-        totalCost = workPackages.reduce(0) { $0 + $1.cumulativeCost } + boosters.reduce(0) { $0 + $1.totalSpent } + disasterCost
+    /// Releases a crew once their scope is finished. No severance: this is
+    /// a trade leaving at the end of its works, not a layoff. Without it,
+    /// finished crews would draw full pay to the end of the job and no
+    /// amount of good play could turn a profit.
+    private func demobilise(packageID: WorkPackage.ID, title: String) {
+        let leaving = workers.filter { $0.packageID == packageID }
+        guard !leaving.isEmpty else { return }
+        workers.removeAll { $0.packageID == packageID }
+        log(String(localized: "\(leaving.count) released from \(title) — scope complete.", comment: "Site log: crew demobilised"),
+            symbol: "figure.walk.motion", tone: .neutral)
+    }
 
-        // Weighted only across *unlocked* packages, not all six. Weighting
-        // against every package's units regardless of lock state made
-        // this a hard ceiling: Design alone (6 of 126 total units) could
-        // never exceed ~4.8% progress even at 100% done, but Structure
-        // needed 10% to unlock - mathematically unreachable, a permanent
-        // soft-lock. Locked packages simply aren't "in scope" yet, so they
-        // shouldn't count against the denominator until they unlock.
-        let unlocked = workPackages.filter { $0.isUnlocked }
-        let totalUnits = unlocked.reduce(0) { $0 + $1.units }
+    private func payPayroll(step: Double) {
+        let payroll = workers.reduce(0) { $0 + $1.dailyWage } * step
+        guard payroll > 0 else { ledger.daysInArrears = 0; return }
+        let shortfall = ledger.forceSpend(payroll, into: \.wages)
+        if shortfall > 0.5 {
+            let wasSolvent = ledger.daysInArrears <= 0
+            ledger.daysInArrears += step
+            // Once per episode, not once per tick.
+            if wasSolvent {
+                log(String(localized: "Payroll missed. Crews walk if this is not fixed.", comment: "Site log: payroll missed"),
+                    symbol: "exclamationmark.octagon.fill", tone: .bad)
+            }
+        } else {
+            ledger.daysInArrears = 0
+        }
+    }
+
+    private func payUpkeep(step: Double) {
+        let capabilityUpkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep }
+        let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep }
+        ledger.forceSpend((capabilityUpkeep + mitigationUpkeep) * step, into: \.capabilities)
+
+        let riskLevel = level(of: .risk)
+        if riskLevel > 0 {
+            let premium = brief.contractValue * 0.00022 * Double(riskLevel) * step
+            ledger.forceSpend(premium, into: \.insurance)
+        }
+    }
+
+    private func runInspections(step: Double) {
+        let rate = CapabilityEffects.inspectionRatePerDay(level: level(of: .quality))
+        guard rate > 0 else { return }
+        var budget = rate * step
+        for i in workPackages.indices where workPackages[i].defectDebt > 0 {
+            guard budget > 0 else { break }
+            let fixable = min(workPackages[i].defectDebt, budget)
+            let cost = fixable * CapabilityEffects.inspectionCostPerDefect
+            guard ledger.spend(cost, into: \.inspections) else { return }
+            workPackages[i].defectDebt -= fixable
+            workPackages[i].defectsResolved += fixable
+            budget -= fixable
+        }
+    }
+
+    private func advanceTrust(step: Double) {
+        let gain = CapabilityEffects.trustGainPerDay(level: level(of: .communications))
+        // Trust decays on its own: a client left alone assumes the worst.
+        var delta = (gain - 0.004) * step
+        if elapsedDays > deadlineDays { delta -= 0.010 * step }
+        clientTrust = min(1, max(0, clientTrust + delta))
+    }
+
+    // MARK: Money in
+
+    private func raisePaymentMilestones() {
+        for milestone in brief.milestones where !ledger.milestonesPaid.contains(milestone.id) {
+            guard totalProgress >= milestone.progressThreshold else { continue }
+            ledger.milestonesPaid.insert(milestone.id)
+            let gross = (brief.contractValue + scopeRevenue) * milestone.share
+            let retainage = gross * brief.retainageRate
+            let delay = max(1, brief.clientPersona.basePaymentDelayDays
+                - CapabilityEffects.paymentSpeedUpDays(level: level(of: .communications))
+                - clientTrust * 4)
+            pendingPayments.append((net: gross - retainage, retainage: retainage, dueDay: elapsedDays + delay))
+            reputation = min(1, reputation + 0.03)
+            log(String(localized: "Milestone certified. Payment due in \(Int(delay)) days.", comment: "Site log: milestone reached"),
+                symbol: "checkmark.circle.fill", tone: .good)
+        }
+    }
+
+    private func releaseDuePayments() {
+        let due = pendingPayments.filter { $0.dueDay <= elapsedDays }
+        guard !due.isEmpty else { return }
+        pendingPayments.removeAll { $0.dueDay <= elapsedDays }
+        for payment in due {
+            ledger.receive(payment.net, retainage: payment.retainage)
+            log(String(localized: "Client paid \(Int(payment.net).formatted()).", comment: "Site log: payment received"),
+                symbol: "banknote.fill", tone: .good)
+        }
+    }
+
+    private func accrueLatePenalties() {
+        guard elapsedDays > deadlineDays else { return }
+        let from = max(deadlineDays, penalizedThroughDay)
+        let newLateDays = elapsedDays - from
+        guard newLateDays > 0 else { return }
+        penalizedThroughDay = elapsedDays
+        ledger.forceSpend(newLateDays * brief.latePenaltyPerDay, into: \.liquidatedDamages)
+    }
+
+    // MARK: Materials
+
+    private func receiveDeliveries() {
+        let landed = orders.filter { $0.arrivalDay <= elapsedDays }
+        guard !landed.isEmpty else { return }
+        orders.removeAll { $0.arrivalDay <= elapsedDays }
+        for order in landed {
+            guard let i = workPackages.firstIndex(where: { $0.id == order.packageID }) else { continue }
+            // Blend the incoming batch's quality into what is already on
+            // site, so a cheap vendor shows up as rework only on the work
+            // actually built from their material.
+            let existing = workPackages[i].materialStock
+            let total = existing + order.quantity
+            if total > 0 {
+                workPackages[i].materialDefectPerUnit =
+                    (workPackages[i].materialDefectPerUnit * existing + order.vendorDefectPerUnit * order.quantity) / total
+            }
+            workPackages[i].materialStock += order.quantity
+            log(String(localized: "\(Int(order.quantity)) units delivered to \(workPackages[i].title).", comment: "Site log: delivery arrived"),
+                symbol: "shippingbox.fill", tone: .good)
+        }
+    }
+
+    // MARK: Progress and unlocks
+
+    private func recomputeProgress() {
+        // Weighted across *all* packages, not just unlocked ones. The old
+        // build weighted only unlocked packages, so unlocking one enlarged
+        // the denominator and the headline percentage visibly fell while
+        // the player was doing well.
+        let totalUnits = workPackages.reduce(0) { $0 + $1.units }
         guard totalUnits > 0 else { totalProgress = 0; return }
-        let weighted = unlocked.reduce(0.0) { $0 + ($1.units / totalUnits) * $1.progress }
-        totalProgress = weighted * 100
+        let completed = workPackages.reduce(0) { $0 + $1.unitsCompleted }
+        totalProgress = min(100, completed / totalUnits * 100)
     }
 
     private func updateUnlocks() {
         for i in workPackages.indices where !workPackages[i].isUnlocked {
-            if totalProgress >= workPackages[i].startThreshold {
+            if totalProgress >= workPackages[i].spec.startThreshold {
                 workPackages[i].isUnlocked = true
+                log(String(localized: "\(workPackages[i].title) can now start.", comment: "Site log: package unlocked"),
+                    symbol: "lock.open.fill", tone: .neutral)
             }
         }
-        for i in boosters.indices where !boosters[i].isUnlocked {
-            if totalProgress >= boosters[i].startThreshold {
-                boosters[i].isUnlocked = true
+        for i in capabilities.indices where !capabilities[i].isUnlocked {
+            if totalProgress >= capabilities[i].kind.unlockThreshold {
+                capabilities[i].isUnlocked = true
             }
         }
     }
 
-    /// Owning boosters isn't just a one-time nudge at purchase - the more
-    /// you've hired into Risk/Training/etc, the more they keep actively
-    /// pulling the gauges toward 1.5 every tick, for as long as you own
-    /// them. This is what makes boosters a genuine ongoing defense against
-    /// disasters instead of a single small bump that decays away.
-    private func applyBoosterProtection(step: Double) {
-        let pullPerOwnedPerDay = 0.01
-        let riskProtection = gaugeProtectionLevel(for: .riskGauge)
-        let qualityProtection = gaugeProtectionLevel(for: .qualityGauge)
+    // MARK: Incidents
 
-        if riskProtection > 0 {
-            riskGauge = min(riskGauge + riskProtection * pullPerOwnedPerDay * step, 1.5)
+    /// How exposed the site is right now. Overtime, crowding, low morale
+    /// and a shortage of safety-minded people all make incidents both
+    /// likelier and sooner. Unlike the old build - where owning five
+    /// boosters pinned the gauges and switched disasters off entirely -
+    /// this can be reduced but never eliminated.
+    var siteExposure: Double {
+        let activeCrew = workers.filter { !$0.isInTraining }
+        guard !activeCrew.isEmpty else { return 0.6 }
+        let avgMorale = activeCrew.reduce(0) { $0 + $1.morale } / Double(activeCrew.count)
+        var crowding = 0.0
+        for package in workPackages where package.isUnlocked && !package.isComplete {
+            let crew = activeCrew.filter { $0.packageID == package.id }.count
+            if crew > package.optimalCrew {
+                crowding += Double(crew - package.optimalCrew) / Double(max(1, package.optimalCrew))
+            }
         }
-        if qualityProtection > 0 {
-            qualityGauge = min(qualityGauge + qualityProtection * pullPerOwnedPerDay * step, 1.5)
-        }
+        let overtimeLoad = workPackages.filter { $0.isUnlocked && !$0.isComplete }
+            .reduce(0) { $0 + $1.overtime }
+        let safety = activeCrew.reduce(0) { $0 + $1.archetype.safetyContribution }
+
+        var exposure = 1.0
+        exposure += 0.55 * overtimeLoad
+        exposure += 0.40 * crowding
+        exposure += 0.70 * (1 - avgMorale)
+        exposure -= min(0.45, safety)
+        return min(3.0, max(0.3, exposure))
     }
 
-    /// Sums purchasedCount across whichever boosters actually target this
-    /// gauge in BoosterEffect.table, so the passive pull always matches
-    /// what buying that booster is documented to do - nothing to keep in
-    /// sync by hand if the table changes.
-    private func gaugeProtectionLevel(for target: EffectTarget) -> Double {
+    private func scheduleNextIncident() {
+        let riskDamping = 1 / CapabilityEffects.incidentProbabilityMultiplier(level: level(of: .risk))
+        let interval = baseIncidentIntervalDays
+            / brief.difficulty.eventFrequencyFactor
+            / max(0.3, siteExposure)
+            * riskDamping
+        nextIncidentDay = elapsedDays + Double.random(in: interval * 0.55...interval * 1.55)
+        nextIncidentClass = weightedIncidentClass()
+        nextIncidentSeverity = Double.random(in: 0.2...1.0)
+    }
+
+    private func weightedIncidentClass() -> MitigationClass {
+        var weights: [MitigationClass: Double] = [
+            .weather: 1.0, .security: 1.0, .safety: 1.0, .technical: 1.0, .client: 1.0,
+        ]
+        // Bad practice pulls specific categories toward you, so incidents
+        // read as consequences rather than as arbitrary punishment.
+        let overtimeLoad = workPackages.reduce(0) { $0 + $1.overtime }
+        weights[.safety]! += overtimeLoad * 1.6
+        weights[.technical]! += Double(workPackages.filter(\.isFastTracked).count) * 1.4
+        weights[.client]! += (1 - clientTrust) * 1.8
+        weights[.security]! += market.trend > 0.05 ? 0.8 : 0
+        let total = weights.values.reduce(0, +)
+        var roll = Double.random(in: 0...total)
+        for (kind, weight) in weights {
+            roll -= weight
+            if roll <= 0 { return kind }
+        }
+        return .weather
+    }
+
+    private func advanceIncidentClock(step: Double) {
+        // A dangerous site pulls the next incident closer rather than
+        // only affecting the roll, so the schedule stays responsive to
+        // what the player is doing right now.
+        let exposure = siteExposure
+        if exposure > 1.15 {
+            nextIncidentDay -= (exposure - 1.15) * 0.2 * step
+        }
+        guard elapsedDays >= nextIncidentDay, activeEvent == nil else { return }
+
+        let mitigationClass = nextIncidentClass
+        if mitigationsHeld.contains(mitigationClass),
+           Double.random(in: 0...1) < mitigationClass.probabilityReduction {
+            log(String(localized: "\(mitigationClass.name) prevented an incident.", comment: "Site log: mitigation worked"),
+                symbol: "shield.lefthalf.filled", tone: .good)
+            scheduleNextIncident()
+            return
+        }
+        fire(SimEventKind.random(in: mitigationClass), severity: nextIncidentSeverity)
+        scheduleNextIncident()
+    }
+
+    private func fire(_ kind: SimEventKind, severity: Double) {
+        var consequences: [String] = []
+        let mitigated = mitigationsHeld.contains(kind.mitigationClass)
+        let severityScale = severity * (mitigated ? kind.mitigationClass.severityReduction : 1)
+
+        // Direct cost, anchored to contract value rather than to
+        // spend-to-date, so late incidents cannot compound into a spiral.
+        var gross = 0.0
+        if kind.costFractionRange.upperBound > 0 {
+            let fraction = kind.costFractionRange.lowerBound
+                + (kind.costFractionRange.upperBound - kind.costFractionRange.lowerBound) * severityScale
+            gross = brief.contractValue * fraction
+        }
+
+        var covered = 0.0
+        let coverage = CapabilityEffects.insuranceCoverage(level: level(of: .risk))
+        if coverage > 0, gross > CapabilityEffects.insuranceDeductible {
+            covered = (gross - CapabilityEffects.insuranceDeductible) * coverage
+            consequences.append(String(localized: "Insurance covered \(Int(covered).formatted()).", comment: "Incident consequence: insurance"))
+        }
+        if gross > 0 {
+            ledger.forceSpend(gross - covered, into: \.incidents)
+        }
+
+        if let range = kind.setbackRange,
+           let idx = workPackages.indices
+               .filter({ workPackages[$0].isUnlocked && workPackages[$0].unitsCompleted > 0 })
+               .max(by: { workPackages[$0].unitsCompleted < workPackages[$1].unitsCompleted }) {
+            let setback = scaled(range, severityScale)
+            workPackages[idx].unitsCompleted = max(0, workPackages[idx].unitsCompleted - setback)
+            consequences.append(String(localized: "\(workPackages[idx].title) lost \(Int(setback)) units of work.", comment: "Incident consequence: progress lost"))
+        }
+
+        if let range = kind.materialLossRange,
+           let idx = workPackages.indices
+               .filter({ workPackages[$0].materialStock > 0 })
+               .max(by: { workPackages[$0].materialStock < workPackages[$1].materialStock }) {
+            let lost = min(workPackages[idx].materialStock, scaled(range, severityScale))
+            workPackages[idx].materialStock -= lost
+            consequences.append(String(localized: "\(Int(lost)) units of material lost.", comment: "Incident consequence: material lost"))
+        }
+
+        if let range = kind.deliveryDelayRange, !orders.isEmpty {
+            let delay = scaled(range, severityScale)
+            for i in orders.indices {
+                orders[i].arrivalDay += delay
+                orders[i].hasSlipped = true
+            }
+            consequences.append(String(localized: "Deliveries slipped \(Int(delay)) days.", comment: "Incident consequence: deliveries delayed"))
+        }
+
+        if let range = kind.moraleHitRange, !workers.isEmpty {
+            let hit = scaled(range, severityScale)
+            for i in workers.indices { workers[i].morale = max(0, workers[i].morale - hit) }
+            consequences.append(String(localized: "Morale fell across the site.", comment: "Incident consequence: morale"))
+        }
+
+        if let range = kind.trustHitRange {
+            clientTrust = max(0, clientTrust - scaled(range, severityScale))
+            consequences.append(String(localized: "Client confidence took a hit.", comment: "Incident consequence: trust"))
+        }
+
+        if let range = kind.defectInjectionRange,
+           let idx = workPackages.indices.filter({ workPackages[$0].unitsCompleted > 0 }).randomElement() {
+            let defects = scaled(range, severityScale)
+            workPackages[idx].defectDebt += defects
+            consequences.append(String(localized: "Latent defects added to \(workPackages[idx].title).", comment: "Incident consequence: defects"))
+        }
+
+        if let range = kind.priceShockRange {
+            let magnitude = scaled(range, severityScale)
+            market.applyShock(magnitude: magnitude, isSpike: true)
+            consequences.append(String(localized: "Materials index jumped \(Int(magnitude * 100))%.", comment: "Incident consequence: price shock"))
+        }
+
+        if let range = kind.scopeAddedRange {
+            let extra = scaled(range, severityScale)
+            let factor = brief.clientPersona.changeOrderFactor
+            if let idx = workPackages.indices.filter({ workPackages[$0].isUnlocked && !workPackages[$0].isComplete }).randomElement() {
+                // Real extra work, and the client pays for it - a change
+                // order is a schedule problem, not free punishment and not
+                // a windfall either.
+                workPackages[idx].addedScope += extra
+                let value = brief.contractValue * 0.012 * extra / 8 * factor
+                scopeRevenue += value
+                consequences.append(String(localized: "\(workPackages[idx].title) grew by \(Int(extra)) units, contract value up \(Int(value).formatted()).", comment: "Incident consequence: change order"))
+            }
+        }
+
+        if mitigated {
+            consequences.append(String(localized: "\(kind.mitigationClass.name) limited the damage.", comment: "Incident consequence: mitigation softened it"))
+        }
+
+        activeEvent = SimEvent(kind: kind, message: kind.message, grossCost: gross,
+                               insuranceCovered: covered, consequences: consequences)
+        // Incidents fire after this tick's recompute, so refresh the
+        // headline figures here - otherwise destroyed work and added scope
+        // do not show up until the following tick and the banner appears to
+        // contradict the progress bar.
+        recomputeProgress()
+        log(kind.title, symbol: kind.symbolName, tone: .bad)
+    }
+
+    private func scaled(_ range: ClosedRange<Double>, _ t: Double) -> Double {
+        range.lowerBound + (range.upperBound - range.lowerBound) * min(max(t, 0), 1)
+    }
+
+    func dismissEvent() { activeEvent = nil }
+
+    // MARK: Forecast (Planning)
+
+    private func updateForecast() {
+        let horizon = CapabilityEffects.forecastHorizonDays(level: level(of: .planning))
+        guard horizon > 0 else { forecast = nil; return }
+        let daysAway = nextIncidentDay - elapsedDays
+        guard daysAway <= horizon, daysAway >= 0 else { forecast = nil; return }
+        forecast = RiskForecast(mitigationClass: nextIncidentClass,
+                                daysAway: daysAway,
+                                severity: nextIncidentSeverity)
+    }
+
+    /// Current throughput in units per day, used for the completion
+    /// estimate. Only meaningful once Planning is staffed.
+    var currentThroughput: Double {
         var total = 0.0
-        for booster in boosters {
-            guard let effects = BoosterEffect.table[booster.id] else { continue }
-            let matches: (EffectTarget) -> Bool = {
-                switch ($0, target) {
-                case (.riskGauge, .riskGauge), (.qualityGauge, .qualityGauge): return true
-                default: return false
-                }
-            }
-            if effects.contains(where: { matches($0.target) }) {
-                total += Double(booster.purchasedCount)
-            }
+        for package in workPackages where package.isUnlocked && !package.isComplete && !package.isStarvedOfMaterials {
+            let crew = workers.filter { $0.packageID == package.id && !$0.isInTraining }
+            guard !crew.isEmpty else { continue }
+            let raw = crew.reduce(0) { $0 + $1.effectiveOutput }
+            total += raw
+                * WorkPackage.congestionFactor(crewSize: crew.count, optimalCrew: package.optimalCrew)
+                * WorkPackage.mentoringDrag(greenCount: crew.filter(\.isOnboarding).count)
+                * WorkPackage.overtimeFactor(package.overtime)
         }
         return total
     }
 
-    // MARK: - Hiring / firing workers on a discipline
+    /// Estimated completion day with a confidence band, or nil when
+    /// Planning is not staffed. Buying certainty is Planning's whole job.
+    var completionEstimate: (day: Double, low: Double, high: Double)? {
+        let planningLevel = level(of: .planning)
+        guard planningLevel > 0 else { return nil }
+        let throughput = currentThroughput
+        guard throughput > 0.01 else { return nil }
+        let remaining = workPackages.reduce(0) { $0 + $1.unitsRemaining }
+        let eta = elapsedDays + remaining / throughput
+        let band = (eta - elapsedDays) * CapabilityEffects.forecastUncertainty(level: planningLevel)
+        return (day: eta, low: eta - band, high: eta + band)
+    }
 
-    /// Opens the candidate-picker: three named, distinctly-traited hires
-    /// instead of one blind dice roll. Firing stays a single instant
-    /// action (ported from Recurso's resta/RMINUS) - there's no symmetric
-    /// "unhire" decision to make.
+    // MARK: - Player actions: hiring
+
     func requestHire(for packageID: WorkPackage.ID) {
         guard let package = workPackages.first(where: { $0.id == packageID }), package.isUnlocked else { return }
-        hiringRequest = HiringRequest(id: packageID, packageTitle: package.title, candidates: Candidate.randomPool())
+        // A tight labour market and a bad reputation both show up here as
+        // worse people asking for more money.
+        let tightness = brief.labourMarketFactor * (1 + max(0, 0.75 - reputation) * 0.5)
+        hiringRequest = HiringRequest(
+            id: packageID,
+            packageTitle: package.title,
+            candidates: Candidate.pool(for: packageID, marketWageFactor: tightness, poolQuality: reputation),
+            marketWageFactor: tightness
+        )
     }
 
     func confirmHire(_ candidate: Candidate) {
-        guard let request = hiringRequest,
-              let idx = workPackages.firstIndex(where: { $0.id == request.id }) else { return }
-        workPackages[idx].headcount += 1
-        let spent = workPackages[idx].cost
-        workPackages[idx].totalSpent += spent
-        workPackages[idx].cost *= candidate.costFactor
-        workPackages[idx].rate *= candidate.rateFactor
-        workPackages[idx].clampCost()
-        workPackages[idx].clampRate()
-        riskGauge = min(max(riskGauge * candidate.riskFactor, 0.5), 1.5)
-        qualityGauge = min(max(qualityGauge * candidate.qualityFactor, 0.5), 1.5)
-        recomputeTotals()
-        hiringRequest = nil
-    }
-
-    func cancelHiring() {
-        hiringRequest = nil
-    }
-
-    func fireWorker(for packageID: WorkPackage.ID) {
-        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }), workPackages[idx].headcount > 0 else { return }
-        workPackages[idx].headcount -= 1
-        workPackages[idx].cost *= Double.random(in: 0.95...1.02)
-        workPackages[idx].rate *= Double.random(in: 0.98...1.05)
-        workPackages[idx].clampCost()
-        workPackages[idx].clampRate()
-        riskGauge = min(max(riskGauge * Double.random(in: 1.01...1.05), 0.5), 1.5)
-        qualityGauge = min(max(qualityGauge * Double.random(in: 1.01...1.05), 0.5), 1.5)
-        recomputeTotals()
-    }
-
-    // MARK: - Buying / selling boosters (ported from Recurso/Potenciadores suma/resta + RPLUSA/RMINUSA)
-
-    /// Every booster except Procurement still buys instantly. Procurement
-    /// opens the vendor-bid picker instead - see requestProcurementBid().
-    func buyBooster(_ kind: BoosterKind) {
-        guard kind != .procurement else {
-            requestProcurementBid()
+        defer { hiringRequest = nil }
+        guard ledger.spend(candidate.worker.signingCost, into: \.signing) else {
+            log(String(localized: "Not enough funds to hire \(candidate.name).", comment: "Site log: hire failed"),
+                symbol: "xmark.circle.fill", tone: .bad)
             return
         }
-        guard let idx = boosters.firstIndex(where: { $0.id == kind }), boosters[idx].isUnlocked else { return }
-        let spend = boosters[idx].cost
-        boosters[idx].purchasedCount += 1
-        boosters[idx].totalSpent += spend
-        boosters[idx].cumulativeCost += spend
-        boosters[idx].cost *= Double.random(in: 0.98...1.05)
-        applyEffects(for: kind, buying: true)
-        recomputeTotals()
+        workers.append(candidate.worker)
+        log(String(localized: "\(candidate.name) hired to \(workPackages.first { $0.id == candidate.worker.packageID }?.title ?? "").", comment: "Site log: hired"),
+            symbol: "person.badge.plus", tone: .neutral)
     }
 
-    /// Opens the vendor-bid picker: lowest-bid-vs-best-value instead of
-    /// one fixed random nudge. See VendorBid.swift.
-    func requestProcurementBid() {
-        guard let procurement = boosters.first(where: { $0.id == .procurement }), procurement.isUnlocked else { return }
-        vendorBidRequest = VendorBidRequest(bids: VendorBid.randomPool())
-    }
+    func cancelHiring() { hiringRequest = nil }
 
-    func confirmBid(_ bid: VendorBid) {
-        guard let idx = boosters.firstIndex(where: { $0.id == .procurement }) else { return }
-        let spend = boosters[idx].cost
-        boosters[idx].purchasedCount += 1
-        boosters[idx].totalSpent += spend
-        boosters[idx].cumulativeCost += spend
-        boosters[idx].cost *= Double.random(in: 0.98...1.05)
-
-        for i in workPackages.indices {
-            workPackages[i].cost *= bid.costFactor
-            workPackages[i].clampCost()
+    /// Firing costs cash now, destroys the experience that worker built
+    /// up, dents morale across the whole company, and makes the next
+    /// candidate pool worse. In the old build firing *improved* both
+    /// gauges, which made churn a repair mechanic.
+    func fire(workerID: Worker.ID) {
+        guard let idx = workers.firstIndex(where: { $0.id == workerID }) else { return }
+        let worker = workers[idx]
+        ledger.forceSpend(worker.severanceCost, into: \.severance)
+        workers.remove(at: idx)
+        // Company-wide, not just that crew - a layoff on Structure slows
+        // Construction too.
+        for i in workers.indices {
+            workers[i].morale = max(0, workers[i].morale - 0.07)
         }
-        for alliedKind in [BoosterKind.planning, .risk] {
-            if let i = boosters.firstIndex(where: { $0.id == alliedKind }) {
-                boosters[i].cost = min(max(boosters[i].cost * bid.alliedDiscountFactor, boosters[i].initialCost / 2), boosters[i].initialCost * 3)
-            }
+        reputation = max(0, reputation - 0.06)
+        clientTrust = max(0, clientTrust - 0.01)
+        log(String(localized: "\(worker.name) let go. Severance \(Int(worker.severanceCost).formatted()).", comment: "Site log: fired"),
+            symbol: "person.badge.minus", tone: .bad)
+    }
+
+    func crew(for packageID: WorkPackage.ID) -> [Worker] {
+        workers.filter { $0.packageID == packageID }
+    }
+
+    func setOvertime(_ value: Double, for packageID: WorkPackage.ID) {
+        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }) else { return }
+        workPackages[idx].overtime = min(1, max(0, value))
+    }
+
+    // MARK: - Player actions: capabilities
+
+    func level(of kind: CapabilityKind) -> Int {
+        capabilities.first { $0.kind == kind }?.level ?? 0
+    }
+
+    func upgrade(_ kind: CapabilityKind) {
+        guard let idx = capabilities.firstIndex(where: { $0.kind == kind }),
+              capabilities[idx].isUnlocked, !capabilities[idx].isMaxed else { return }
+        let cost = capabilities[idx].nextLevelCost
+        guard ledger.spend(cost, into: \.capabilities) else {
+            log(String(localized: "Not enough funds to staff \(kind.displayName).", comment: "Site log: capability unaffordable"),
+                symbol: "xmark.circle.fill", tone: .bad)
+            return
         }
-        qualityGauge = min(max(qualityGauge * bid.qualityFactor, 0.5), 1.5)
-
-        recomputeTotals()
-        vendorBidRequest = nil
+        capabilities[idx].level += 1
+        capabilities[idx].invested += cost
+        log(String(localized: "\(kind.displayName) staffed to level \(capabilities[idx].level).", comment: "Site log: capability upgraded"),
+            symbol: "arrow.up.circle.fill", tone: .good)
     }
 
-    func cancelBid() {
-        vendorBidRequest = nil
+    /// Stepping a capability back down. Refunds nothing - you are standing
+    /// a team down, not returning a purchase. The old build refunded the
+    /// full price and re-rolled the effect, which made buy/sell an
+    /// arbitrage loop with positive expected value.
+    func standDown(_ kind: CapabilityKind) {
+        guard let idx = capabilities.firstIndex(where: { $0.kind == kind }), capabilities[idx].level > 0 else { return }
+        capabilities[idx].level -= 1
+        log(String(localized: "\(kind.displayName) stood down to level \(capabilities[idx].level).", comment: "Site log: capability reduced"),
+            symbol: "arrow.down.circle", tone: .neutral)
     }
 
-    func sellBooster(_ kind: BoosterKind) {
-        guard let idx = boosters.firstIndex(where: { $0.id == kind }), boosters[idx].purchasedCount > 0 else { return }
-        boosters[idx].purchasedCount -= 1
-        let refund = boosters[idx].cost
-        boosters[idx].totalSpent = max(0, boosters[idx].totalSpent - refund)
-        boosters[idx].cost *= Double.random(in: 0.95...1.02)
-        applyEffects(for: kind, buying: false)
-        recomputeTotals()
+    // MARK: - Player actions: risk portfolio
+
+    func buyMitigation(_ mitigationClass: MitigationClass) {
+        guard level(of: .risk) > 0, !mitigationsHeld.contains(mitigationClass) else { return }
+        guard ledger.spend(mitigationClass.purchaseCost, into: \.capabilities) else { return }
+        mitigationsHeld.insert(mitigationClass)
+        log(String(localized: "\(mitigationClass.name) in place.", comment: "Site log: mitigation bought"),
+            symbol: mitigationClass.symbolName, tone: .good)
     }
 
-    private func applyEffects(for kind: BoosterKind, buying: Bool) {
-        guard let effects = BoosterEffect.table[kind] else { return }
-        for effect in effects {
-            let factor = buying
-                ? Double.random(in: effect.buyRange)
-                : 1.0 / Double.random(in: effect.buyRange)
+    // MARK: - Player actions: materials
 
-            switch effect.target {
-            case .workPackageRate:
-                for i in workPackages.indices {
-                    workPackages[i].rate *= factor
-                    workPackages[i].clampRate()
-                }
-            case .workPackageCost:
-                for i in workPackages.indices {
-                    workPackages[i].cost *= factor
-                    workPackages[i].clampCost()
-                }
-            case .workPackageStart:
-                for i in workPackages.indices {
-                    workPackages[i].startThreshold = min(max(workPackages[i].startThreshold * factor, 0), 100)
-                }
-            case .riskGauge:
-                riskGauge = min(max(riskGauge * factor, 0.5), 1.5)
-            case .qualityGauge:
-                qualityGauge = min(max(qualityGauge * factor, 0.5), 1.5)
-            case .boosterCost(let target):
-                if let i = boosters.firstIndex(where: { $0.id == target }) {
-                    boosters[i].cost = min(max(boosters[i].cost * factor, boosters[i].initialCost / 2), boosters[i].initialCost * 3)
-                }
-            }
+    func requestMaterialOrder(for packageID: WorkPackage.ID) {
+        guard let package = workPackages.first(where: { $0.id == packageID }) else { return }
+        let inFlight = orders.filter { $0.packageID == packageID }.reduce(0) { $0 + $1.quantity }
+        let needed = package.unitsRemaining * package.spec.materialUnitsPerWorkUnit
+        let suggested = max(0, needed - package.materialStock - inFlight)
+        let discount = 1 - CapabilityEffects.materialDiscount(level: level(of: .procurement))
+        orderRequest = MaterialOrderRequest(
+            id: packageID,
+            packageTitle: package.title,
+            vendors: vendors,
+            suggestedQuantity: suggested > 0 ? suggested.rounded(.up) : 0,
+            baseCostPerUnit: package.spec.materialCostPerUnit * discount,
+            baseLeadTimeDays: package.spec.baseLeadTimeDays
+                * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
+            marketIndex: market.effectiveIndex,
+            isLocked: market.isLocked
+        )
+    }
+
+    func cancelMaterialOrder() { orderRequest = nil }
+
+    func placeOrder(vendor: Vendor, quantity: Double) {
+        defer { orderRequest = nil }
+        guard let request = orderRequest, quantity > 0 else { return }
+        let unitPrice = request.baseCostPerUnit * market.effectiveIndex * vendor.priceFactor
+        let total = unitPrice * quantity
+        guard ledger.spend(total, into: \.materials) else {
+            log(String(localized: "Not enough funds for that order.", comment: "Site log: order unaffordable"),
+                symbol: "xmark.circle.fill", tone: .bad)
+            return
+        }
+        var leadTime = request.baseLeadTimeDays * vendor.leadTimeFactor
+        var slipped = false
+        if Double.random(in: 0...1) < vendor.unreliability {
+            leadTime += Double.random(in: 4...11)
+            slipped = true
+        }
+        var order = MaterialOrder(packageID: request.id, vendorName: vendor.name, quantity: quantity,
+                                  pricePaid: total, arrivalDay: elapsedDays + leadTime,
+                                  orderedDay: elapsedDays, vendorDefectPerUnit: vendor.defectPerUnit)
+        order.hasSlipped = slipped
+        orders.append(order)
+
+        log(String(localized: "Ordered \(Int(quantity)) units from \(vendor.name), \(Int(leadTime)) days out.", comment: "Site log: order placed"),
+            symbol: "cart.fill", tone: .neutral)
+    }
+
+    /// Locks the materials index for 30 days at a premium. Needs a real
+    /// procurement desk (Acquisitions level 2) behind it.
+    func hedgeMaterialPrice() {
+        guard CapabilityEffects.canHedge(level: level(of: .procurement)), !market.isLocked else { return }
+        let exposure = workPackages.reduce(0) { partial, package in
+            partial + package.unitsRemaining * package.spec.materialUnitsPerWorkUnit * package.spec.materialCostPerUnit
+        }
+        let premium = exposure * market.lockPremiumRate * 0.35
+        guard ledger.spend(premium, into: \.materials) else { return }
+        market.lockPrice(for: 30)
+        log(String(localized: "Price locked for 30 days at \(String(format: "%.2f", market.lockedIndex)).", comment: "Site log: hedge placed"),
+            symbol: "lock.fill", tone: .good)
+    }
+
+    // MARK: - Player actions: planning and training
+
+    var fastTrackablePackages: [WorkPackage] {
+        let allowance = CapabilityEffects.fastTrackAllowance(level: level(of: .planning))
+        guard allowance > 0 else { return [] }
+        return workPackages.filter {
+            !$0.isUnlocked && totalProgress >= $0.spec.startThreshold - allowance
         }
     }
 
-    // MARK: - Result
+    func fastTrack(_ packageID: WorkPackage.ID) {
+        guard fastTrackablePackages.contains(where: { $0.id == packageID }),
+              let idx = workPackages.firstIndex(where: { $0.id == packageID }) else { return }
+        workPackages[idx].isUnlocked = true
+        workPackages[idx].isFastTracked = true
+        log(String(localized: "\(workPackages[idx].title) fast-tracked. Expect rework.", comment: "Site log: fast-tracked"),
+            symbol: "bolt.fill", tone: .neutral)
+    }
 
-    var finalCost: Double { totalCost }
-    var finalDays: Double { fractionalDays }
+    func enrollInTraining(_ workerID: Worker.ID) {
+        let trainingLevel = level(of: .training)
+        guard trainingLevel > 0, let idx = workers.firstIndex(where: { $0.id == workerID }),
+              !workers[idx].isInTraining else { return }
+        guard ledger.spend(CapabilityEffects.courseCostPerWorker, into: \.training) else { return }
+        workers[idx].trainingDaysRemaining = CapabilityEffects.courseDays(level: trainingLevel)
+        workers[idx].pendingSkillGain = CapabilityEffects.courseSkillGain(level: trainingLevel)
+        workers[idx].pendingExperienceGain = CapabilityEffects.courseExperienceGain(level: trainingLevel)
+        log(String(localized: "\(workers[idx].name) sent on a course.", comment: "Site log: training started"),
+            symbol: "graduationcap", tone: .neutral)
+    }
+
+    /// Asks the client for more time. Only granted with real trust behind
+    /// it, and only once - Communications buying you a deadline extension
+    /// is the clearest possible payoff for a capability that otherwise
+    /// only shows up as faster payments.
+    var canRequestExtension: Bool {
+        !extensionUsed && clientTrust >= CapabilityEffects.extensionTrustThreshold && outcome == nil
+    }
+
+    func requestExtension() {
+        guard canRequestExtension else { return }
+        extensionUsed = true
+        deadlineDays += CapabilityEffects.extensionDaysGranted
+        clientTrust = max(0, clientTrust - 0.18)
+        log(String(localized: "Client granted \(Int(CapabilityEffects.extensionDaysGranted)) more days.", comment: "Site log: extension granted"),
+            symbol: "calendar.badge.plus", tone: .good)
+    }
+
+    // MARK: - Handover
+
+    private func performHandover() {
+        let openDefects = workPackages.reduce(0) { $0 + $1.defectDebt }
+        if openDefects > 0.01 {
+            // Everything Quality did not catch during the build comes due
+            // here, at four and a half times the price, plus delay.
+            ledger.forceSpend(openDefects * CapabilityEffects.reworkCostPerDefect, into: \.rework)
+            elapsedDays += openDefects * CapabilityEffects.reworkDaysPerDefect
+            accrueLatePenalties()
+        }
+        // Close out anything the client still owed.
+        for payment in pendingPayments { ledger.receive(payment.net, retainage: payment.retainage) }
+        pendingPayments = []
+
+        let deduction = openDefects * CapabilityEffects.reworkCostPerDefect
+            * 0.5 * brief.clientPersona.defectWithholdingFactor
+        ledger.releaseRetainage(deduction: deduction)
+
+        if elapsedDays < deadlineDays {
+            let bonus = (deadlineDays - elapsedDays) * brief.earlyBonusPerDay
+            ledger.receive(bonus, retainage: 0)
+            log(String(localized: "Early completion bonus \(Int(bonus).formatted()).", comment: "Site log: early bonus"),
+                symbol: "star.fill", tone: .good)
+        }
+        finish(.delivered)
+    }
+
+    private func finish(_ result: RunOutcome) {
+        outcome = result
+        setSpeed(.paused)
+        log(result == .delivered
+            ? String(localized: "Project handed over.", comment: "Site log: delivered")
+            : String(localized: "Insolvent. The project is over.", comment: "Site log: insolvent"),
+            symbol: result == .delivered ? "flag.checkered" : "xmark.octagon.fill",
+            tone: result == .delivered ? .good : .bad)
+    }
+
+    // MARK: - Derived readouts
+
+    var dailyBurn: Double {
+        let payroll = workers.reduce(0) { $0 + $1.dailyWage }
+        let upkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep }
+            + mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep }
+        let lateCost = elapsedDays > deadlineDays ? brief.latePenaltyPerDay : 0
+        return payroll + upkeep + lateCost
+    }
+
+    var runwayDays: Double { ledger.runwayDays(dailyBurn: dailyBurn) }
+
+    var averageMorale: Double {
+        guard !workers.isEmpty else { return 1 }
+        return workers.reduce(0) { $0 + $1.morale } / Double(workers.count)
+    }
+
+    /// Defects the player can actually see. Without Quality staffed this
+    /// is deliberately hidden - not knowing is the cost of not inspecting.
+    var visibleDefectDebt: Double? {
+        guard level(of: .quality) > 0 else { return nil }
+        return workPackages.reduce(0) { $0 + $1.defectDebt }
+    }
+
+    var totalIdleCrewDays: Double {
+        workPackages.reduce(0) { $0 + $1.idleCrewDays }
+    }
+
+    var daysRemaining: Double { deadlineDays - elapsedDays }
+
+    var result: RunResult {
+        RunResult(
+            outcome: outcome ?? .insolvent,
+            profit: ledger.profit,
+            revenue: ledger.revenueReceived + ledger.retainageHeld,
+            costs: ledger.costs,
+            days: elapsedDays,
+            deadlineDays: deadlineDays,
+            progress: totalProgress,
+            openDefects: workPackages.reduce(0) { $0 + $1.defectDebt },
+            resolvedDefects: workPackages.reduce(0) { $0 + $1.defectsResolved },
+            idleCrewDays: totalIdleCrewDays,
+            finalCrewSize: workers.count,
+            clientTrust: clientTrust,
+            reputation: reputation,
+            difficulty: brief.difficulty,
+            persona: brief.clientPersona,
+            seed: brief.seed
+        )
+    }
+
+    // MARK: - Test support
+    //
+    // Deliberately narrow hooks for forcing the states that are hard to
+    // reach by playing normally - a stranded crew, an empty bank. Not
+    // reachable from the UI.
+
+    /// Strands or resupplies a package, to exercise the idle-crew path.
+    func debugSetMaterialStock(_ quantity: Double, for packageID: WorkPackage.ID) {
+        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }) else { return }
+        workPackages[idx].materialStock = max(0, quantity)
+    }
+
+    /// Forces a package's built quantity, to exercise end-of-package edges.
+    func debugSetUnitsCompleted(_ units: Double, for packageID: WorkPackage.ID) {
+        guard let idx = workPackages.firstIndex(where: { $0.id == packageID }) else { return }
+        workPackages[idx].unitsCompleted = max(0, min(units, workPackages[idx].units))
+    }
+
+    /// Empties the bank and the credit line, to exercise insolvency.
+    func debugDrainCash() {
+        ledger.debugDrain()
+    }
+
+    // MARK: - Site log
+
+    private func log(_ text: String, symbol: String, tone: SiteLogEntry.Tone) {
+        siteLog.insert(SiteLogEntry(day: Int(elapsedDays), text: text, symbol: symbol, tone: tone), at: 0)
+        if siteLog.count > 60 { siteLog.removeLast(siteLog.count - 60) }
+    }
+}
+
+// MARK: - Result
+
+struct RunResult {
+    let outcome: RunOutcome
+    let profit: Double
+    let revenue: Double
+    let costs: CostBreakdown
+    let days: Double
+    let deadlineDays: Double
+    let progress: Double
+    let openDefects: Double
+    let resolvedDefects: Double
+    let idleCrewDays: Double
+    let finalCrewSize: Int
+    let clientTrust: Double
+    let reputation: Double
+    let difficulty: Difficulty
+    let persona: ClientPersona
+    let seed: UInt64
+
+    var wasOnTime: Bool { days <= deadlineDays }
+    var margin: Double { revenue > 0 ? profit / revenue : 0 }
+
+    /// The leaderboard number. Profit is the only metric that generalizes
+    /// across every planned scenario - a café and an import business have
+    /// no "days" or "quality gauge" in common with a building, but they
+    /// all have a P&L. Difficulty scales it so a Tight win outranks a
+    /// Steady one.
+    var score: Double {
+        guard outcome == .delivered else { return 0 }
+        let onTimeBonus = wasOnTime ? 1.1 : 1.0
+        return max(0, profit) * difficulty.scoreMultiplier * onTimeBonus
+    }
 }

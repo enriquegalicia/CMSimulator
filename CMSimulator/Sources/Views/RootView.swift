@@ -2,10 +2,9 @@
 //  RootView.swift
 //  CMSimulator
 //
-//  Navigation coordinator - launches straight into GameView (no start
-//  screen to tap through) and replaces the Objective-C ViewController's
-//  presentViewController: chain for everything else (Result -> Scores,
-//  Help/Settings as sheets) with plain SwiftUI state.
+//  Navigation coordinator. Launches straight into the board and presents
+//  the debrief as a full-screen cover when the run ends - either handed
+//  over or insolvent, since the rebuild added a way to actually lose.
 //
 
 import SwiftUI
@@ -40,18 +39,25 @@ struct RootView: View {
             SettingsView(onExit: { showSettings = false })
         }
         .fullScreenCover(isPresented: $showResult) {
-            ResultView(cost: engine.finalCost, days: engine.finalDays) { name in
-                let finalName = name.isEmpty ? String(localized: "Player", comment: "Default score entry name when the player leaves the name field blank") : name
-                let entry = ScoreEntry(playerName: finalName, cost: engine.finalCost, days: engine.finalDays)
-                modelContext.insert(entry)
-                gameCenter.reportScore(
-                    cost: engine.finalCost,
-                    days: engine.finalDays,
-                    combined: engine.finalCost + engine.finalDays * 1000
-                )
-                showResult = false
-                showScores = true
-            }
+            ResultView(
+                result: engine.result,
+                onSave: { name in
+                    let result = engine.result
+                    let finalName = name.isEmpty
+                        ? String(localized: "Player", comment: "Default score entry name when the player leaves the name field blank")
+                        : name
+                    modelContext.insert(ScoreEntry(playerName: finalName,
+                                                   result: result,
+                                                   scenarioName: engine.brief.scenarioName))
+                    gameCenter.report(result)
+                    showResult = false
+                    showScores = true
+                },
+                onRestart: {
+                    engine.restart()
+                    showResult = false
+                }
+            )
         }
         .task { gameCenter.authenticate() }
         .sheet(item: Binding(

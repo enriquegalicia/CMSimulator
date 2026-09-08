@@ -16,6 +16,12 @@ final class GameCenterManager: NSObject, ObservableObject {
     static let costLeaderboardID = "com.aguach1leLabs.CriticalPathSim.costmaster"
     static let timeLeaderboardID = "com.aguach1leLabs.CriticalPathSim.timemaster"
     static let combinedLeaderboardID = "com.aguach1leLabs.CriticalPathSim.constructionmaster"
+    /// New for the profit-based scoring. Must be created in App Store
+    /// Connect with *descending* sort (higher is better) before it will
+    /// accept scores - the other three are ascending and cannot be reused
+    /// for profit. Submissions to a leaderboard that does not exist fail
+    /// silently and are logged, so shipping before it exists is safe.
+    static let profitLeaderboardID = "com.aguach1leLabs.CriticalPathSim.profit"
 
     @Published var isAuthenticated = false
     @Published var authViewController: UIViewController?
@@ -39,23 +45,26 @@ final class GameCenterManager: NSObject, ObservableObject {
         }
     }
 
-    /// Reports a completed run to all three leaderboards at once. Cost and
-    /// days both need "lower is better" ascending sort configured on the
-    /// leaderboard itself in App Store Connect - this just submits the raw
-    /// values, it can't set that sort order from the client.
-    func reportScore(cost: Double, days: Double, combined: Double) {
-        guard GKLocalPlayer.local.isAuthenticated else { return }
-        let costScore = Int(cost.rounded())
-        // Submitted in tenths of a day so the leaderboard has integer
-        // precision finer than whole days (e.g. 12.3 days -> 123).
-        let timeScore = Int((days * 10).rounded())
-        let combinedScore = Int((combined * 1000).rounded())
+    /// Reports a completed run. Only deliveries are submitted - an
+    /// insolvent run has no meaningful profit to rank.
+    ///
+    /// Total cost and elapsed days still go to the two existing ascending
+    /// boards, where "lower is better" remains the right reading. The old
+    /// combined board is deliberately not submitted to any more: it was an
+    /// ascending normalized cost+days sum, and posting profit to it would
+    /// rank the worst runs first.
+    func report(_ result: RunResult) {
+        guard GKLocalPlayer.local.isAuthenticated, result.outcome == .delivered else { return }
+        let costScore = Int(result.costs.total.rounded())
+        // Tenths of a day, so the board has finer precision than whole days.
+        let timeScore = Int((result.days * 10).rounded())
+        let profitScore = Int(result.score.rounded())
 
         Task {
             async let costResult: Void = submit(costScore, to: Self.costLeaderboardID)
             async let timeResult: Void = submit(timeScore, to: Self.timeLeaderboardID)
-            async let combinedResultTask: Void = submit(combinedScore, to: Self.combinedLeaderboardID)
-            _ = await (costResult, timeResult, combinedResultTask)
+            async let profitResult: Void = submit(profitScore, to: Self.profitLeaderboardID)
+            _ = await (costResult, timeResult, profitResult)
         }
     }
 

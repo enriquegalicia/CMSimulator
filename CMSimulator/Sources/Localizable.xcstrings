@@ -36,6 +36,24 @@
         }
       }
     },
+    "%@ already sold will never be paid.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ already sold will never be paid."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ya vendidos que nunca te pagarán."
+          }
+        }
+      },
+      "comment": "Incident consequence: receivable written off"
+    },
     "%@ can now start.": {
       "extractionState": "manual",
       "localizations": {
@@ -431,6 +449,60 @@
         }
       },
       "comment": "Site log: capability reduced"
+    },
+    "%@ units are old enough to be charged a penalty storage rate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ units are old enough to be charged a penalty storage rate."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ unidades ya tienen edad para pagar tarifa de almacenaje penalizada."
+          }
+        }
+      },
+      "comment": "Trading panel: aged stock warning"
+    },
+    "%@ units cleared customs and are sellable.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ units cleared customs and are sellable."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ unidades liberaron aduana y ya se pueden vender."
+          }
+        }
+      },
+      "comment": "Site log: stock arrived"
+    },
+    "%@ units of stock lost.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ units of stock lost."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ unidades de existencias perdidas."
+          }
+        }
+      },
+      "comment": "Incident consequence: stock lost"
     },
     "%@ · %@": {
       "extractionState": "manual",
@@ -881,6 +953,78 @@
       },
       "comment": "Per month suffix"
     },
+    "A bad batch ships": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bad batch ships"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se embarca un lote defectuoso"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "A broker who knows the paperwork. Blunts holds and duty disputes.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A broker who knows the paperwork. Blunts holds and duty disputes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un agente que domina el papeleo. Reduce retenciones y disputas por aranceles."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
+    "A buyer does not pay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A buyer does not pay"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un comprador no paga"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "A competitor undercuts you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A competitor undercuts you"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un competidor te baja el precio"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "A coordination clash between disciplines needs rework.": {
       "extractionState": "manual",
       "localizations": {
@@ -916,6 +1060,24 @@
         }
       },
       "comment": "Incident title"
+    },
+    "A production run came out badly and is already on the water.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A production run came out badly and is already on the water."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una corrida de producción salió mal y ya va en el barco."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "A signing cost comes out of cash today. The wage comes out every day after that, whether or not there is work for them to do.": {
       "extractionState": "manual",
@@ -1025,6 +1187,24 @@
       },
       "comment": "Incident title"
     },
+    "About %lld days of cover at the current rate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About %lld days of cover at the current rate."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unos %lld días de cobertura al ritmo actual."
+          }
+        }
+      },
+      "comment": "Trading panel: days of cover"
+    },
     "Acquired for %@. Your share: %@.": {
       "extractionState": "manual",
       "localizations": {
@@ -1115,6 +1295,42 @@
       },
       "comment": "Help bullet"
     },
+    "Advertising": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advertising"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publicidad"
+          }
+        }
+      },
+      "comment": "Cost breakdown line"
+    },
+    "Advertising paused - not enough cash.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advertising paused - not enough cash."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publicidad pausada: no hay efectivo suficiente."
+          }
+        }
+      },
+      "comment": "Site log: ad spend halted"
+    },
     "Allocates cover": {
       "extractionState": "manual",
       "localizations": {
@@ -1150,6 +1366,24 @@
         }
       },
       "comment": "Order sheet note when nothing is outstanding"
+    },
+    "An account went under owing you money you had already counted.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An account went under owing you money you had already counted."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un cliente quebró debiéndote dinero que ya habías contado."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "An exposed credential was found. Everything stopped for the response.": {
       "extractionState": "manual",
@@ -1349,6 +1583,24 @@
       },
       "comment": "Locked capability hint"
     },
+    "Backup carriers and booked capacity. Cuts losses when freight seizes up.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup carriers and booked capacity. Cuts losses when freight seizes up."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transportistas de respaldo y capacidad reservada. Reduce pérdidas cuando el flete se traba."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
     "Balanced terms": {
       "extractionState": "manual",
       "localizations": {
@@ -1366,6 +1618,42 @@
         }
       },
       "comment": "Vendor pitch"
+    },
+    "Berthing delays. Everything on the water arrives later than promised.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berthing delays. Everything on the water arrives later than promised."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retrasos de atraque. Todo lo que va en el mar llega más tarde de lo prometido."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "Better factory terms and faster shipping. Lower landed cost and a shorter wait between paying and selling.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Better factory terms and faster shipping. Lower landed cost and a shorter wait between paying and selling."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mejores condiciones de fábrica y envíos más rápidos. Menor costo puesto en destino y menos espera entre pagar y vender."
+          }
+        }
+      },
+      "comment": "Capability summary"
     },
     "Board": {
       "extractionState": "manual",
@@ -1420,6 +1708,24 @@
         }
       },
       "comment": "Cost of running past the deadline"
+    },
+    "Builds buyer relationships, which decide how fast you are paid and how much of the market you get.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Builds buyer relationships, which decide how fast you are paid and how much of the market you get."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Construye relación con los compradores, que deciden qué tan rápido te pagan y cuánto mercado te toca."
+          }
+        }
+      },
+      "comment": "Capability summary"
     },
     "Builds client trust, which decides how fast you get paid and whether they grant an extension.": {
       "extractionState": "manual",
@@ -1493,6 +1799,78 @@
       },
       "comment": "Incident title"
     },
+    "Buy goods abroad, sell them on a marketplace, and find out where the margin really goes.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy goods abroad, sell them on a marketplace, and find out where the margin really goes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra mercancía en el extranjero, véndela en un marketplace y descubre a dónde se va de verdad el margen."
+          }
+        }
+      },
+      "comment": "Scenario tagline"
+    },
+    "Buy stock": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy stock"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar mercancía"
+          }
+        }
+      },
+      "comment": "Button: buy more of the consumable"
+    },
+    "Buyer relations": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buyer relations"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relación con compradores"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
+    "Buyers": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buyers"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compradores"
+          }
+        }
+      },
+      "comment": "Who pays the player"
+    },
     "Buys information": {
       "extractionState": "manual",
       "localizations": {
@@ -1511,6 +1889,24 @@
       },
       "comment": "Capability verb"
     },
+    "Buys on price alone and pays late, but will take volume and is not fussy about finish.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buys on price alone and pays late, but will take volume and is not fussy about finish."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra solo por precio y paga tarde, pero se lleva volumen y no es exigente con el acabado."
+          }
+        }
+      },
+      "comment": "Counterparty description"
+    },
     "Buys roughly %@ customers a day at today's price.": {
       "extractionState": "manual",
       "localizations": {
@@ -1528,6 +1924,24 @@
         }
       },
       "comment": "Acquisition spend effect"
+    },
+    "Buys visibility at roughly %@ per extra unit sold. On a crowded marketplace, nobody finds you without it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buys visibility at roughly %@ per extra unit sold. On a crowded marketplace, nobody finds you without it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra visibilidad a unos %@ por unidad extra vendida. En un marketplace saturado, nadie te encuentra sin ella."
+          }
+        }
+      },
+      "comment": "Trading control: advertising explanation"
     },
     "Cancel": {
       "extractionState": "manual",
@@ -1582,6 +1996,24 @@
       },
       "comment": "Cost breakdown line"
     },
+    "Cargo insurance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cargo insurance"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguro de carga"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
     "Cash": {
       "extractionState": "manual",
       "localizations": {
@@ -1618,6 +2050,24 @@
       },
       "comment": "Result lesson: defects"
     },
+    "Certification & labelling": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certification & labelling"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certificación y etiquetado"
+          }
+        }
+      },
+      "comment": "Import work stream name"
+    },
     "Change scenario": {
       "extractionState": "manual",
       "localizations": {
@@ -1653,6 +2103,24 @@
         }
       },
       "comment": "Worker archetype description"
+    },
+    "Checks goods at the factory. Catches bad stock before you have paid to ship it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checks goods at the factory. Catches bad stock before you have paid to ship it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisa la mercancía en la fábrica. Detecta lo defectuoso antes de pagar por embarcarlo."
+          }
+        }
+      },
+      "comment": "Mitigation description"
     },
     "Clean work": {
       "extractionState": "manual",
@@ -1960,6 +2428,42 @@
       },
       "comment": "Scenario name"
     },
+    "Container held at customs": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Container held at customs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contenedor retenido en aduana"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "Container rates jumped. The next shipment costs materially more.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Container rates jumped. The next shipment costs materially more."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las tarifas de contenedor se dispararon. El siguiente embarque cuesta bastante más."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "Contract management": {
       "extractionState": "manual",
       "localizations": {
@@ -2085,6 +2589,42 @@
         }
       },
       "comment": "Training effect summary"
+    },
+    "Cover against customs holds, cargo loss, tariff changes and a buyer who does not pay.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cover against customs holds, cargo loss, tariff changes and a buyer who does not pay."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobertura contra retenciones aduanales, pérdida de carga, cambios arancelarios y un comprador que no paga."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Covers goods in transit. Stops a lost container becoming a lost season.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers goods in transit. Stops a lost container becoming a lost season."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cubre la mercancía en tránsito. Evita que un contenedor perdido sea una temporada perdida."
+          }
+        }
+      },
+      "comment": "Mitigation description"
     },
     "Crash": {
       "extractionState": "manual",
@@ -2246,6 +2786,24 @@
         }
       },
       "comment": "Exit line"
+    },
+    "Customs brokerage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Customs brokerage"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agencia aduanal"
+          }
+        }
+      },
+      "comment": "Mitigation name"
     },
     "Cuts delivery lead times and unlocks price hedging, so crews stop standing idle waiting on materials.": {
       "extractionState": "manual",
@@ -2499,6 +3057,60 @@
       },
       "comment": "Leaderboard screen title"
     },
+    "Demand looks like it peaks around day %lld.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demand looks like it peaks around day %lld."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La demanda parece llegar a su punto máximo cerca del día %lld."
+          }
+        }
+      },
+      "comment": "Trading panel: sharp season forecast"
+    },
+    "Demand might peak somewhere near day %lld — this is a rough guess.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demand might peak somewhere near day %lld — this is a rough guess."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La demanda podría llegar a su máximo cerca del día %lld — es una estimación burda."
+          }
+        }
+      },
+      "comment": "Trading panel: vague season forecast"
+    },
+    "Demand planning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demand planning"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planeación de demanda"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
     "Dependable": {
       "extractionState": "manual",
       "localizations": {
@@ -2661,6 +3273,24 @@
       },
       "comment": "Site log: diligence haircut"
     },
+    "Discount chain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discount chain"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cadena de descuento"
+          }
+        }
+      },
+      "comment": "Counterparty name"
+    },
     "Discovery": {
       "extractionState": "manual",
       "localizations": {
@@ -2713,6 +3343,42 @@
           }
         }
       }
+    },
+    "Dumped %@ unsold units for %@ — they cost %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dumped %@ unsold units for %@ — they cost %@."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rematadas %@ unidades sin vender por %@ — te costaron %@."
+          }
+        }
+      },
+      "comment": "Site log: liquidation"
+    },
+    "Duty on this category was raised. Everything still in transit costs more to land.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duty on this category was raised. Everything still in transit costs more to land."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subió el arancel de esta categoría. Todo lo que sigue en tránsito cuesta más de internar."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "ETA day %lld": {
       "extractionState": "manual",
@@ -3110,6 +3776,24 @@
       },
       "comment": "Startup work stream name"
     },
+    "Fees were restructured. Every sale from here earns a little less.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fees were restructured. Every sale from here earns a little less."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reestructuraron las comisiones. Cada venta de aquí en adelante deja un poco menos."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "Fencing, lighting, night watch. Stops material walking off site.": {
       "extractionState": "manual",
       "localizations": {
@@ -3145,6 +3829,24 @@
         }
       },
       "comment": "Growth panel: pre-launch explanation"
+    },
+    "Finish the first product line to go on sale. Stock ordered before then still has to be paid for, shipped and stored — it just cannot sell.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish the first product line to go on sale. Stock ordered before then still has to be paid for, shipped and stored — it just cannot sell."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termina la primera línea de producto para salir a la venta. La mercancía pedida antes igual se paga, se embarca y se almacena — solo que no se puede vender."
+          }
+        }
+      },
+      "comment": "Trading panel: pre-launch explanation"
     },
     "Finished on day %lld against a %lld-day contract.": {
       "extractionState": "manual",
@@ -3218,6 +3920,24 @@
       },
       "comment": "Help bullet"
     },
+    "First product line": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First product line"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primera línea de producto"
+          }
+        }
+      },
+      "comment": "Import work stream name"
+    },
     "Fixed in place instead of at handover.": {
       "extractionState": "manual",
       "localizations": {
@@ -3271,6 +3991,42 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Freight contingency": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freight contingency"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contingencia de flete"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
+    "Freight rates spike": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freight rates spike"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se disparan las tarifas de flete"
+          }
+        }
+      },
+      "comment": "Incident title"
     },
     "Frugal and hands-off. Wires slowly and haggles, but forgives a rough product.": {
       "extractionState": "manual",
@@ -3704,6 +4460,24 @@
       },
       "comment": "Diagnostics empty state explanation"
     },
+    "Import & resale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import & resale"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importación y reventa"
+          }
+        }
+      },
+      "comment": "Scenario name"
+    },
     "In place — %@/day": {
       "extractionState": "manual",
       "localizations": {
@@ -3794,6 +4568,24 @@
       },
       "comment": "Mitigation name"
     },
+    "Injury in the warehouse": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Injury in the warehouse"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesión en el almacén"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "Insolvent": {
       "extractionState": "manual",
       "localizations": {
@@ -3830,6 +4622,24 @@
       },
       "comment": "Site log: insolvent"
     },
+    "Inspection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspección"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
     "Inspections": {
       "extractionState": "manual",
       "localizations": {
@@ -3865,6 +4675,24 @@
         }
       },
       "comment": "Counterparty description"
+    },
+    "Inspects goods before they ship. Bad stock comes back as refunds and a rating that suppresses every future sale.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspects goods before they ship. Bad stock comes back as refunds and a rating that suppresses every future sale."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisa la mercancía antes de embarcarla. Lo defectuoso vuelve como reembolsos y una calificación que frena toda venta futura."
+          }
+        }
+      },
+      "comment": "Capability summary"
     },
     "Inspects work in progress. Defects caught now cost a fraction of what they cost at handover.": {
       "extractionState": "manual",
@@ -4298,6 +5126,24 @@
       },
       "comment": "Candidate stat"
     },
+    "Left before storage, ads and returns": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left before storage, ads and returns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Queda antes de almacenaje, publicidad y devoluciones"
+          }
+        }
+      },
+      "comment": "Margin line"
+    },
     "Let %@ go?": {
       "extractionState": "manual",
       "localizations": {
@@ -4369,6 +5215,42 @@
         }
       },
       "comment": "Board tab"
+    },
+    "List price": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List price"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Precio de lista"
+          }
+        }
+      },
+      "comment": "Trading control"
+    },
+    "Listings are live. Stock can start selling.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listings are live. Stock can start selling."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las publicaciones están activas. La mercancía ya puede venderse."
+          }
+        }
+      },
+      "comment": "Site log: trading opens"
     },
     "Load outgrew the architecture. Parts of it have to be rebuilt.": {
       "extractionState": "manual",
@@ -4567,6 +5449,42 @@
         }
       },
       "comment": "Unit economics line"
+    },
+    "Marketplace fees": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marketplace fees"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comisiones del marketplace"
+          }
+        }
+      },
+      "comment": "Cost breakdown line"
+    },
+    "Marketplace referral fee": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marketplace referral fee"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comisión por venta del marketplace"
+          }
+        }
+      },
+      "comment": "Margin line"
     },
     "Material prices spike": {
       "extractionState": "manual",
@@ -4928,23 +5846,23 @@
       },
       "comment": "Exit line"
     },
-    "Negotiates vendor contracts down and shortens provisioning, so engineers stop waiting on capacity.": {
+    "National retailer": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negotiates vendor contracts down and shortens provisioning, so engineers stop waiting on capacity."
+            "value": "National retailer"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negocia a la baja los contratos con proveedores y acorta el aprovisionamiento, para que los ingenieros dejen de esperar capacidad."
+            "value": "Cadena nacional"
           }
         }
       },
-      "comment": "Capability summary"
+      "comment": "Counterparty name"
     },
     "New hires start at a quarter speed and slow down everyone already on that crew while they learn. Adding people to a late package makes it later.": {
       "extractionState": "manual",
@@ -5180,6 +6098,24 @@
       },
       "comment": "Growth panel: pre-launch title"
     },
+    "Not listed yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not listed yet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aún sin publicar"
+          }
+        }
+      },
+      "comment": "Trading panel: pre-launch title"
+    },
     "Nothing has gone wrong yet.": {
       "extractionState": "manual",
       "localizations": {
@@ -5288,6 +6224,24 @@
       },
       "comment": "Worker status: onboarding"
     },
+    "Operation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Operation"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Operación"
+          }
+        }
+      },
+      "comment": "Board tab: work streams"
+    },
     "Order": {
       "extractionState": "manual",
       "localizations": {
@@ -5378,6 +6332,24 @@
       },
       "comment": "Candidate stat"
     },
+    "Overrun": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overrun"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sobrecosto"
+          }
+        }
+      },
+      "comment": "Cost of running past the deadline"
+    },
     "Overtime": {
       "extractionState": "manual",
       "localizations": {
@@ -5449,6 +6421,24 @@
         }
       },
       "comment": "Communications effect summary"
+    },
+    "Paperwork queries. The goods sit in a bonded warehouse, paid for and unsellable.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paperwork queries. The goods sit in a bonded warehouse, paid for and unsellable."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Observaciones al papeleo. La mercancía queda en recinto fiscal, ya pagada y sin poder venderse."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "Part of every payment is held back until handover, and released only if the work is sound.": {
       "extractionState": "manual",
@@ -5612,6 +6602,24 @@
       },
       "comment": "Incident title"
     },
+    "Pick, pack and ship": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick, pack and ship"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparación y envío"
+          }
+        }
+      },
+      "comment": "Margin line"
+    },
     "Planning": {
       "extractionState": "manual",
       "localizations": {
@@ -5701,6 +6709,24 @@
         }
       },
       "comment": "Work package name - Hydro-sanitary & Air conditioning installations"
+    },
+    "Pre-shipment inspection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre-shipment inspection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspección previa al embarque"
+          }
+        }
+      },
+      "comment": "Mitigation name"
     },
     "Premium, fast and dependable": {
       "extractionState": "manual",
@@ -5972,6 +6998,24 @@
       },
       "comment": "Capability summary"
     },
+    "Puts the team on focused learning. They handle nothing while away and come back permanently better.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puts the team on focused learning. They handle nothing while away and come back permanently better."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pone al equipo a formarse a fondo. No atienden nada mientras están fuera y vuelven mejores para siempre."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
     "Quality": {
       "extractionState": "manual",
       "localizations": {
@@ -6062,6 +7106,60 @@
       },
       "comment": "Worker archetype description"
     },
+    "Range extension": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Range extension"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ampliación de catálogo"
+          }
+        }
+      },
+      "comment": "Import work stream name"
+    },
+    "Rating": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rating"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calificación"
+          }
+        }
+      },
+      "comment": "Meter label"
+    },
+    "Rating %@ — a poor one throttles every future sale.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rating %@ — a poor one throttles every future sale."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calificación %@ — una mala frena todas las ventas futuras."
+          }
+        }
+      },
+      "comment": "Trading panel: rating"
+    },
     "Recorded problems": {
       "extractionState": "manual",
       "localizations": {
@@ -6134,6 +7232,24 @@
       },
       "comment": "Candidate stat"
     },
+    "Retail accounts": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retail accounts"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuentas minoristas"
+          }
+        }
+      },
+      "comment": "Import work stream name"
+    },
     "Retail chain": {
       "extractionState": "manual",
       "localizations": {
@@ -6169,6 +7285,60 @@
         }
       },
       "comment": "Capability verb"
+    },
+    "Returns": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Returns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devoluciones"
+          }
+        }
+      },
+      "comment": "Hidden quality debt"
+    },
+    "Returns & refunds": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Returns & refunds"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devoluciones y reembolsos"
+          }
+        }
+      },
+      "comment": "Cost breakdown line"
+    },
+    "Returns are running at %@, and each one costs the refund and the shipping again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Returns are running at %@, and each one costs the refund and the shipping again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las devoluciones van en %@, y cada una cuesta el reembolso más el envío otra vez."
+          }
+        }
+      },
+      "comment": "Trading panel: returns explanation"
     },
     "Revenue": {
       "extractionState": "manual",
@@ -6368,6 +7538,24 @@
       },
       "comment": "Worker archetype name"
     },
+    "Sane hours and real time off. Fewer burnouts, fewer resignations.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sane hours and real time off. Fewer burnouts, fewer resignations."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Horarios razonables y descanso de verdad. Menos desgaste y menos renuncias."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
     "Sane on-call and real time off. Fewer burnouts, fewer resignations.": {
       "extractionState": "manual",
       "localizations": {
@@ -6511,6 +7699,42 @@
         }
       },
       "comment": "Help section title"
+    },
+    "Season close": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Season close"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cierre de temporada"
+          }
+        }
+      },
+      "comment": "End of the run"
+    },
+    "Seasonal specialist": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seasonal specialist"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Especialista de temporada"
+          }
+        }
+      },
+      "comment": "Counterparty name"
     },
     "Security & compliance": {
       "extractionState": "manual",
@@ -6746,6 +7970,60 @@
       },
       "comment": "Diagnostics share button"
     },
+    "Sharpens go-to-market. Lowers what each new customer costs to acquire and keeps the channel working as you scale.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpens go-to-market. Lowers what each new customer costs to acquire and keeps the channel working as you scale."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afina la salida al mercado. Baja lo que cuesta captar cada cliente y mantiene el canal funcionando conforme creces."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Sharpens your read of the season - when demand peaks and how big it gets. Without it you are buying stock on a guess.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpens your read of the season - when demand peaks and how big it gets. Without it you are buying stock on a guess."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afina tu lectura de la temporada: cuándo llega el pico y qué tan grande es. Sin ella compras mercancía a ciegas."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Shoppers expect about %@. Undercut and you shift more units on a thinner margin; charge more and volume falls away.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoppers expect about %@. Undercut and you shift more units on a thinner margin; charge more and volume falls away."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los compradores esperan alrededor de %@. Si bajas el precio mueves más unidades con menos margen; si lo subes cae el volumen."
+          }
+        }
+      },
+      "comment": "Trading control: price explanation"
+    },
     "Signing %@": {
       "extractionState": "manual",
       "localizations": {
@@ -6818,6 +8096,42 @@
       },
       "comment": "Vendor reliability label"
     },
+    "Someone else listed the same goods cheaper. Your volume drops unless you follow them down.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone else listed the same goods cheaper. Your volume drops unless you follow them down."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alguien publicó la misma mercancía más barata. Tu volumen cae si no lo sigues."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "Someone was hurt handling stock. Work stopped for the investigation.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone was hurt handling stock. Work stopped for the investigation."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alguien se lastimó manejando mercancía. El trabajo se detuvo por la investigación."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "Someone who held a lot of context in their head handed in their notice.": {
       "extractionState": "manual",
       "localizations": {
@@ -6853,6 +8167,24 @@
         }
       },
       "comment": "Incident description"
+    },
+    "Sourcing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sourcing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abastecimiento"
+          }
+        }
+      },
+      "comment": "Capability name"
     },
     "Specialist": {
       "extractionState": "manual",
@@ -7088,6 +8420,42 @@
       },
       "comment": "Button to raise a capability level"
     },
+    "Stock": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stock"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mercancía"
+          }
+        }
+      },
+      "comment": "Consumable resource name"
+    },
+    "Storage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almacenaje"
+          }
+        }
+      },
+      "comment": "Cost breakdown line"
+    },
     "Storm hits the site": {
       "extractionState": "manual",
       "localizations": {
@@ -7141,6 +8509,24 @@
         }
       },
       "comment": "Counterparty name"
+    },
+    "Strict on quality and returns you anything sub-standard, but pays reliably and on time.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strict on quality and returns you anything sub-standard, but pays reliably and on time."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estricto con la calidad y te devuelve todo lo que no cumple, pero paga puntual y sin falta."
+          }
+        }
+      },
+      "comment": "Counterparty description"
     },
     "Structural defect found": {
       "extractionState": "manual",
@@ -7214,6 +8600,24 @@
       },
       "comment": "Incident title"
     },
+    "Supplier vetting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supplier vetting"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evaluación de proveedores"
+          }
+        }
+      },
+      "comment": "Import work stream name"
+    },
     "System": {
       "extractionState": "manual",
       "localizations": {
@@ -7250,6 +8654,24 @@
       },
       "comment": "Capability verb"
     },
+    "Tariffs go up": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tariffs go up"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suben los aranceles"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "Team": {
       "extractionState": "manual",
       "localizations": {
@@ -7267,6 +8689,24 @@
         }
       },
       "comment": "Collective noun for hired staff"
+    },
+    "Team development": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Team development"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desarrollo del equipo"
+          }
+        }
+      },
+      "comment": "Capability name"
     },
     "Team health": {
       "extractionState": "manual",
@@ -7430,6 +8870,42 @@
       },
       "comment": "Help section title"
     },
+    "The currency moves against you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The currency moves against you"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El tipo de cambio se mueve en tu contra"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "The exchange rate moved the wrong way between ordering and paying.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The exchange rate moved the wrong way between ordering and paying."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El tipo de cambio se movió al revés entre el pedido y el pago."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "The inspector rejected the submittal. Revise and resubmit.": {
       "extractionState": "manual",
       "localizations": {
@@ -7502,6 +8978,24 @@
       },
       "comment": "Counterparty description"
     },
+    "The marketplace changes its fees": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The marketplace changes its fees"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El marketplace cambia sus comisiones"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "The offer": {
       "extractionState": "manual",
       "localizations": {
@@ -7537,6 +9031,24 @@
         }
       },
       "comment": "Incident description"
+    },
+    "The port is backed up": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The port is backed up"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El puerto está saturado"
+          }
+        }
+      },
+      "comment": "Incident title"
     },
     "The previous session ended without reaching the background and without a crash signal. This usually means the system terminated the app for using too much memory, or it stopped responding.": {
       "extractionState": "manual",
@@ -7700,6 +9212,24 @@
       },
       "comment": "Warning when replacing an active run"
     },
+    "Tied up in stock": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tied up in stock"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inmovilizado en mercancía"
+          }
+        }
+      },
+      "comment": "Trading panel stat"
+    },
     "Tight": {
       "extractionState": "manual",
       "localizations": {
@@ -7789,6 +9319,24 @@
         }
       },
       "comment": "P&L line"
+    },
+    "Trade compliance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trade compliance"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cumplimiento aduanero"
+          }
+        }
+      },
+      "comment": "Capability name"
     },
     "Trades now for later": {
       "extractionState": "manual",
@@ -7916,6 +9464,24 @@
       },
       "comment": "Growth panel section"
     },
+    "Units on hand": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Units on hand"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unidades en existencia"
+          }
+        }
+      },
+      "comment": "Trading panel stat"
+    },
     "Use": {
       "extractionState": "manual",
       "localizations": {
@@ -7969,6 +9535,42 @@
         }
       },
       "comment": "Cost breakdown line"
+    },
+    "Wants stock on the shelf for the season. Pays well if you land in time, walks away if you do not.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wants stock on the shelf for the season. Pays well if you land in time, walks away if you do not."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiere mercancía en anaquel para la temporada. Paga bien si llegas a tiempo y se va si no."
+          }
+        }
+      },
+      "comment": "Counterparty description"
+    },
+    "Warehousing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warehousing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almacén"
+          }
+        }
+      },
+      "comment": "Import work stream name"
     },
     "Weather protection": {
       "extractionState": "manual",
@@ -8024,6 +9626,42 @@
       },
       "comment": "Site exposure level"
     },
+    "What one sale actually earns": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What one sale actually earns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo que deja realmente una venta"
+          }
+        }
+      },
+      "comment": "Trading panel section"
+    },
+    "What the goods cost you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What the goods cost you"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo que te costó la mercancía"
+          }
+        }
+      },
+      "comment": "Margin line"
+    },
     "What you would sell for today": {
       "extractionState": "manual",
       "localizations": {
@@ -8059,6 +9697,24 @@
         }
       },
       "comment": "Result section header"
+    },
+    "Which supplier": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which supplier"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qué proveedor"
+          }
+        }
+      },
+      "comment": "Order sheet: suppliers section"
     },
     "Who provides it": {
       "extractionState": "manual",
@@ -8203,6 +9859,78 @@
         }
       },
       "comment": "Help bullet"
+    },
+    "You can sell every unit at a profit and still miss payroll, because the money is on a ship.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can sell every unit at a profit and still miss payroll, because the money is on a ship."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puedes vender cada unidad con ganancia y aun así no cubrir la nómina, porque el dinero va en un barco."
+          }
+        }
+      },
+      "comment": "Scenario signature lesson"
+    },
+    "You had to drop your price to %lld.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You had to drop your price to %lld."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuviste que bajar tu precio a %lld."
+          }
+        }
+      },
+      "comment": "Incident consequence: forced price cut"
+    },
+    "You have no read on the season. Staff Demand planning or buy blind.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have no read on the season. Staff Demand planning or buy blind."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tienes lectura de la temporada. Contrata Planeación de demanda o compra a ciegas."
+          }
+        }
+      },
+      "comment": "Trading panel: no forecast"
+    },
+    "You list at": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You list at"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publicas a"
+          }
+        }
+      },
+      "comment": "Margin line"
     },
     "You ran out of money on day %lld with %@%% built.": {
       "extractionState": "manual",

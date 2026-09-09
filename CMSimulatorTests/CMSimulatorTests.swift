@@ -890,3 +890,159 @@ final class StartupEconomicsTests: XCTestCase {
         XCTAssertEqual(result.score, 0, accuracy: 1e-9)
     }
 }
+
+// MARK: - Import & resale economics
+//
+// This scenario exists to be honest about a business people are sold a
+// fantasy about. These lock in the parts of that honesty that are easy to
+// accidentally tune away.
+
+@MainActor
+final class ImportEconomicsTests: XCTestCase {
+
+    private func tradingEngine(seed: UInt64 = 5) -> SimulationEngine {
+        SimulationEngine(brief: .importBusiness(difficulty: .steady, persona: .institution, seed: seed))
+    }
+
+    /// Its work streams build the ability to trade and consume nothing;
+    /// the goods are bought separately. Conflating "has a supplier panel"
+    /// with "streams consume a lead-timed input" once left every import
+    /// stream permanently starved, so nothing was ever built or sold.
+    func testWorkStreamsConsumeNothingButTheSupplierPanelStillExists() {
+        let brief = ProjectBrief.importBusiness()
+        XCTAssertTrue(brief.usesSupplyChain, "stock is still bought through suppliers")
+        for stream in brief.streams {
+            XCTAssertEqual(stream.materialUnitsPerWorkUnit, 0, "\(stream.id) should consume nothing")
+        }
+        let engine = tradingEngine()
+        for package in engine.workPackages {
+            XCTAssertFalse(package.isStarvedOfMaterials,
+                           "\(package.id) must never count as starved - it consumes nothing")
+        }
+    }
+
+    /// A sale is not cash. The payout arrives on the marketplace's
+    /// schedule, which is the whole cash-conversion lesson.
+    func testSalesBecomeCashOnlyAfterThePayoutDelay() {
+        var trading = TradingModel(spec: .onlineMarketplace)
+        trading.beginTrading(onDay: 0)
+        trading.receive(units: 5_000, landedCostPerUnit: 9.40, defectRate: 0, onDay: 0)
+
+        let day = trading.advance(days: 1, demand: 400, currentDay: 1)
+        XCTAssertGreaterThan(day.sold, 0)
+        XCTAssertEqual(day.payoutsReceived, 0, accuracy: 1e-9,
+                       "money must not arrive the same day the sale happens")
+        XCTAssertGreaterThan(trading.receivables, 0)
+
+        let later = trading.advance(days: 1, demand: 0,
+                                    currentDay: 1 + trading.spec.payoutDelayDays)
+        XCTAssertGreaterThan(later.payoutsReceived, 0, "the payout must eventually land")
+    }
+
+    /// The fee stack is the point. A unit that lists at 39 does not earn
+    /// 39, and if that ever stops being true the scenario is a fantasy.
+    func testTheMarketplaceTakesASubstantialCutOfEverySale() {
+        var trading = TradingModel(spec: .onlineMarketplace)
+        trading.listPrice = 39
+        let fees = trading.feesPerUnit
+        XCTAssertGreaterThan(fees / trading.listPrice, 0.20,
+                             "referral plus fulfilment should be a serious share of the price")
+        XCTAssertEqual(trading.netPerUnitBeforeCost, 39 - fees, accuracy: 1e-9)
+    }
+
+    /// Stock that sits gets more expensive, and eventually has to be
+    /// dumped below what it cost. This is the answer to "what if it gets
+    /// very old".
+    func testOldStockCostsMoreToHoldAndIsDumpedBelowCost() {
+        var fresh = TradingModel(spec: .onlineMarketplace)
+        fresh.receive(units: 1_000, landedCostPerUnit: 10, defectRate: 0, onDay: 0)
+        let freshDay = fresh.advance(days: 1, demand: 0, currentDay: 1)
+
+        var stale = TradingModel(spec: .onlineMarketplace)
+        stale.receive(units: 1_000, landedCostPerUnit: 10, defectRate: 0, onDay: 0)
+        let staleDay = stale.advance(days: 1, demand: 0,
+                                     currentDay: stale.spec.longTermAfterDays + 1)
+
+        XCTAssertGreaterThan(staleDay.storage, freshDay.storage * 3,
+                             "long-held stock must cost materially more to store")
+
+        let dump = stale.liquidate()
+        XCTAssertLessThan(dump.recovered, dump.costWritten,
+                          "unsold stock must be dumped for less than it cost")
+    }
+
+    /// Bad goods come back, and the rating they leave behind suppresses
+    /// future sales. This is the answer to "what if the stock is not the
+    /// best".
+    func testPoorQualityStockRaisesReturnsAndSuppressesDemand() {
+        var good = TradingModel(spec: .onlineMarketplace)
+        good.beginTrading(onDay: 0)
+        good.receive(units: 20_000, landedCostPerUnit: 10, defectRate: 0.002, onDay: 0)
+
+        var bad = TradingModel(spec: .onlineMarketplace)
+        bad.beginTrading(onDay: 0)
+        bad.receive(units: 20_000, landedCostPerUnit: 10, defectRate: 0.12, onDay: 0)
+
+        for day in 1...40 {
+            _ = good.advance(days: 1, demand: 300, currentDay: Double(day))
+            _ = bad.advance(days: 1, demand: 300, currentDay: Double(day))
+        }
+        XCTAssertGreaterThan(bad.unitsReturned / max(bad.unitsSold, 1),
+                             good.unitsReturned / max(good.unitsSold, 1),
+                             "worse goods must come back more often")
+        XCTAssertLessThan(bad.rating, good.rating, "returns must damage the rating")
+        XCTAssertLessThan(bad.ratingDemandFactor, good.ratingDemandFactor,
+                          "a poor rating must throttle demand")
+    }
+
+    /// Undercutting shifts more units at a thinner margin, and charging
+    /// above the going rate costs volume. Both directions must be real.
+    func testPriceMovesVolumeInBothDirections() {
+        var cheap = TradingModel(spec: .onlineMarketplace)
+        cheap.listPrice = 30
+        var dear = TradingModel(spec: .onlineMarketplace)
+        dear.listPrice = 48
+
+        XCTAssertGreaterThan(cheap.priceDemandFactor, 1, "undercutting must lift volume")
+        XCTAssertLessThan(dear.priceDemandFactor, 1, "charging more must cost volume")
+        XCTAssertGreaterThan(dear.netPerUnitBeforeCost, cheap.netPerUnitBeforeCost,
+                             "the higher price must still earn more per unit")
+    }
+
+    /// Season demand has to actually have a season, or timing a buy is
+    /// meaningless.
+    func testDemandPeaksAndFallsAway() {
+        guard let spec = ProjectBrief.importBusiness(seed: 4).trade else {
+            return XCTFail("no trade spec")
+        }
+        let atPeak = spec.demand(on: spec.seasonPeakDay, breadth: 1)
+        let early = spec.demand(on: max(0, spec.seasonPeakDay - 90), breadth: 1)
+        let late = spec.demand(on: spec.seasonPeakDay + 90, breadth: 1)
+        XCTAssertGreaterThan(atPeak, early * 2)
+        XCTAssertGreaterThan(atPeak, late * 2)
+        XCTAssertEqual(spec.demand(on: spec.seasonPeakDay, breadth: 0), 0, accuracy: 1e-9,
+                       "with no product range there is nothing to sell")
+    }
+
+    /// A buyer going under takes money you had already counted.
+    func testABuyerDefaultTakesMoneyAlreadyEarned() {
+        var trading = TradingModel(spec: .onlineMarketplace)
+        trading.beginTrading(onDay: 0)
+        trading.receive(units: 5_000, landedCostPerUnit: 10, defectRate: 0, onDay: 0)
+        _ = trading.advance(days: 1, demand: 500, currentDay: 1)
+
+        let before = trading.receivables
+        XCTAssertGreaterThan(before, 0)
+        let lost = trading.loseReceivable(fraction: 0.5)
+        XCTAssertGreaterThan(lost, 0)
+        XCTAssertLessThan(trading.receivables, before)
+    }
+
+    /// A trading operation cannot carry a building site's overheads. This
+    /// guards the scenario-scaled capability costs - without them,
+    /// ignoring every lever was the optimal strategy.
+    func testOverheadsAreScaledPerScenario() {
+        XCTAssertLessThan(ProjectBrief.importBusiness().capabilityCostFactor, 1.0)
+        XCTAssertEqual(ProjectBrief.construction().capabilityCostFactor, 1.0, accuracy: 1e-9)
+    }
+}

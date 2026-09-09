@@ -33,10 +33,13 @@ enum ClientPersona: String, CaseIterable, Identifiable {
         switch (self, scenario) {
         case (.developer, .construction):   return String(localized: "Private developer", comment: "Counterparty name")
         case (.developer, .startup):        return String(localized: "Angel syndicate", comment: "Counterparty name")
+        case (.developer, .importing):      return String(localized: "Discount chain", comment: "Counterparty name")
         case (.institution, .construction): return String(localized: "Public institution", comment: "Counterparty name")
         case (.institution, .startup):      return String(localized: "Institutional fund", comment: "Counterparty name")
+        case (.institution, .importing):    return String(localized: "National retailer", comment: "Counterparty name")
         case (.retailer, .construction):    return String(localized: "Retail chain", comment: "Counterparty name")
         case (.retailer, .startup):         return String(localized: "Strategic partner", comment: "Counterparty name")
+        case (.retailer, .importing):       return String(localized: "Seasonal specialist", comment: "Counterparty name")
         }
     }
 
@@ -46,14 +49,20 @@ enum ClientPersona: String, CaseIterable, Identifiable {
             return String(localized: "Margin is everything. Pays slowly, haggles, but tolerates a rough finish.", comment: "Counterparty description")
         case (.developer, .startup):
             return String(localized: "Frugal and hands-off. Wires slowly and haggles, but forgives a rough product.", comment: "Counterparty description")
+        case (.developer, .importing):
+            return String(localized: "Buys on price alone and pays late, but will take volume and is not fussy about finish.", comment: "Counterparty description")
         case (.institution, .construction):
             return String(localized: "Inspects everything. Withholds hard on defects, but pays reliably and on time.", comment: "Counterparty description")
         case (.institution, .startup):
             return String(localized: "Serious diligence. Holds back hard on tech debt, but wires reliably and on time.", comment: "Counterparty description")
+        case (.institution, .importing):
+            return String(localized: "Strict on quality and returns you anything sub-standard, but pays reliably and on time.", comment: "Counterparty description")
         case (.retailer, .construction):
             return String(localized: "The store opens on the date on the contract. Brutal late penalties, generous early bonus.", comment: "Counterparty description")
         case (.retailer, .startup):
             return String(localized: "The launch date is contractual. Brutal if you slip, generous if you land early.", comment: "Counterparty description")
+        case (.retailer, .importing):
+            return String(localized: "Wants stock on the shelf for the season. Pays well if you land in time, walks away if you do not.", comment: "Counterparty description")
         }
     }
 
@@ -276,9 +285,16 @@ struct ProjectBrief {
     /// Daily volatility of the materials price index.
     let marketVolatility: Double
 
+    /// Scales what the six levers cost to staff and run. A small trading
+    /// operation cannot carry a building site's overheads, and charging it
+    /// the same made ignoring every capability the optimal strategy.
+    let capabilityCostFactor: Double
     /// The market this scenario sells into. Nil for scenarios that have no
     /// customers - a building has a client, not a user base.
     let growth: GrowthSpec?
+    /// The resale market this scenario trades into. Nil unless the
+    /// business is buying goods to sell on.
+    let trade: TradeSpec?
     /// Whether work consumes a physical, lead-timed supply. False for
     /// software: engineers are the constraint, not a warehouse. Turning
     /// the system off rather than relabelling it is the honest answer, and
@@ -367,7 +383,9 @@ struct ProjectBrief {
             streams: constructionStreams,
             labourMarketFactor: Double.random(in: 0.88...1.22, using: &rng),
             marketVolatility: Double.random(in: 0.012...0.026, using: &rng) * difficulty.marketVolatilityFactor,
+            capabilityCostFactor: 1.0,
             growth: nil,
+            trade: nil,
             usesSupplyChain: true,
             launchStreamID: nil
         )
@@ -457,9 +475,98 @@ struct ProjectBrief {
             // Engineers price harder than trades, and more variably.
             labourMarketFactor: Double.random(in: 0.95...1.35, using: &rng),
             marketVolatility: Double.random(in: 0.014...0.030, using: &rng) * difficulty.marketVolatilityFactor,
+            capabilityCostFactor: 1.0,
             growth: .seedStageSaaS,
+            trade: nil,
             usesSupplyChain: false,
             launchStreamID: "mvp"
+        )
+    }
+
+    // MARK: Import & resale scenario
+
+    /// Deliberately small. A trading operation is a handful of people
+    /// moving a lot of volume - the money is made in the buying, not in
+    /// headcount, and sizing this like a building site made payroll
+    /// several times the entire season's sales.
+    ///
+    /// Work streams here build the *ability to trade*, not the goods.
+    /// Nothing consumes a lead-timed input, because the goods themselves
+    /// are bought separately and go straight to inventory - the crew's job
+    /// is opening lines, getting them certified, and building the demand
+    /// you are allowed to address.
+    static let importStreams: [WorkStreamSpec] = [
+        WorkStreamSpec(id: "vetting", title: String(localized: "Supplier vetting", comment: "Import work stream name"),
+                       imageName: "Sourcing.png", units: 40, optimalCrew: 2, startThreshold: 0,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "firstline", title: String(localized: "First product line", comment: "Import work stream name"),
+                       imageName: "Listing.png", units: 60, optimalCrew: 3, startThreshold: 4,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "compliance", title: String(localized: "Certification & labelling", comment: "Import work stream name"),
+                       imageName: "Compliance.png", units: 70, optimalCrew: 3, startThreshold: 13,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "range", title: String(localized: "Range extension", comment: "Import work stream name"),
+                       imageName: "Range.png", units: 130, optimalCrew: 5, startThreshold: 24,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "warehouse", title: String(localized: "Warehousing", comment: "Import work stream name"),
+                       imageName: "Warehouse.png", units: 85, optimalCrew: 3, startThreshold: 42,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "accounts", title: String(localized: "Retail accounts", comment: "Import work stream name"),
+                       imageName: "Accounts.png", units: 110, optimalCrew: 4, startThreshold: 60,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+    ]
+
+    /// A trader is not venture funded and has no client paying milestones.
+    /// Every peso comes from selling stock, so there are no scheduled
+    /// payments at all - which is precisely what makes the cash cycle the
+    /// whole game.
+    static let importMilestones: [PaymentMilestone] = []
+
+    /// Buying goods abroad to resell on a marketplace.
+    static func importBusiness(
+        difficulty: Difficulty = .standard,
+        persona: ClientPersona? = nil,
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+    ) -> ProjectBrief {
+        var rng = SeededGenerator(seed: seed)
+        let chosenPersona = persona ?? ClientPersona.allCases.randomElement(using: &rng)!
+
+        // The season is drawn from the seed and is not shown accurately
+        // without Demand planning - buying blind is the default state.
+        let peak = Double.random(in: 78...104, using: &rng)
+        let amplitude = Double.random(in: 0.85...1.30, using: &rng)
+
+        return ProjectBrief(
+            scenario: .importing,
+            scenarioName: String(localized: "Import & resale", comment: "Scenario name"),
+            clientPersona: chosenPersona,
+            difficulty: difficulty,
+            seed: seed,
+            contractValue: 1_000_000,
+            startingCash: (900_000 * difficulty.startingCashFactor).rounded(),
+            creditLimit: (400_000 * difficulty.creditLimitFactor).rounded(),
+            dailyInterestRate: 0.00065,
+            deadlineDays: (140 * difficulty.deadlineFactor).rounded(),
+            baseLatePenaltyPerDay: 0,
+            retainageRate: 0,
+            advanceRate: 0,
+            milestones: importMilestones,
+            streams: importStreams,
+            labourMarketFactor: Double.random(in: 0.85...1.15, using: &rng),
+            marketVolatility: Double.random(in: 0.018...0.038, using: &rng) * difficulty.marketVolatilityFactor,
+            capabilityCostFactor: 0.42,
+            growth: nil,
+            trade: TradeSpec(
+                marketplace: .onlineMarketplace,
+                seasonPeakDay: peak,
+                seasonWidth: 34,
+                peakDailyDemand: 1_450 * amplitude,
+                baselineDailyDemand: 210,
+                landedCostPerUnit: 9.40,
+                tradingStreamID: "firstline"
+            ),
+            usesSupplyChain: true,
+            launchStreamID: "firstline"
         )
     }
 
@@ -474,6 +581,7 @@ struct ProjectBrief {
         switch scenario {
         case .construction: return .construction(difficulty: difficulty, persona: persona, seed: seed)
         case .startup:      return .startup(difficulty: difficulty, persona: persona, seed: seed)
+        case .importing:    return .importBusiness(difficulty: difficulty, persona: persona, seed: seed)
         }
     }
 }

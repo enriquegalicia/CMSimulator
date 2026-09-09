@@ -30,6 +30,10 @@ struct CostBreakdown {
     var inspections: Double = 0
     var rework: Double = 0
     var incidents: Double = 0
+    var marketplaceFees: Double = 0
+    var advertising: Double = 0
+    var storage: Double = 0
+    var returns: Double = 0
     var insurance: Double = 0
     var interest: Double = 0
     var liquidatedDamages: Double = 0
@@ -37,6 +41,7 @@ struct CostBreakdown {
     var total: Double {
         wages + signing + severance + materials + capabilities + training
             + inspections + rework + incidents + insurance + interest + liquidatedDamages
+            + marketplaceFees + advertising + storage + returns
     }
 
     /// Ordered for display, skipping lines that never fired.
@@ -51,6 +56,10 @@ struct CostBreakdown {
             (String(localized: "Inspections", comment: "Cost breakdown line"), inspections),
             (String(localized: "Rework", comment: "Cost breakdown line"), rework),
             (String(localized: "Incidents", comment: "Cost breakdown line"), incidents),
+            (String(localized: "Marketplace fees", comment: "Cost breakdown line"), marketplaceFees),
+            (String(localized: "Advertising", comment: "Cost breakdown line"), advertising),
+            (String(localized: "Storage", comment: "Cost breakdown line"), storage),
+            (String(localized: "Returns & refunds", comment: "Cost breakdown line"), returns),
             (String(localized: "Insurance", comment: "Cost breakdown line"), insurance),
             (String(localized: "Interest", comment: "Cost breakdown line"), interest),
             (String(localized: "Late penalties", comment: "Cost breakdown line"), liquidatedDamages),

@@ -26,12 +26,13 @@ struct GameView: View {
     let onComplete: () -> Void
 
     enum Board: String, CaseIterable, Identifiable {
-        case site, growth, levers, log
+        case site, growth, trading, levers, log
         var id: String { rawValue }
         func title(in scenario: ScenarioKind) -> String {
             switch self {
             case .site: return scenario.boardName
             case .growth: return scenario.supplyName
+            case .trading: return scenario.supplyName
             case .levers: return String(localized: "Levers", comment: "Board tab")
             case .log: return String(localized: "Log", comment: "Board tab")
             }
@@ -51,7 +52,10 @@ struct GameView: View {
 
             Picker(String(localized: "Board", comment: "Accessibility label for the board switcher"), selection: $board) {
                 // The market board only exists for scenarios with customers.
-                ForEach(Board.allCases.filter { $0 != .growth || engine.growth != nil }) {
+                // Each scenario shows only the boards its own model needs.
+                ForEach(Board.allCases.filter {
+                    ($0 != .growth || engine.growth != nil) && ($0 != .trading || engine.trading != nil)
+                }) {
                     Text($0.title(in: engine.brief.scenario)).tag($0)
                 }
             }
@@ -63,6 +67,7 @@ struct GameView: View {
                     switch board {
                     case .site: siteBoard
                     case .growth: growthBoard
+                    case .trading: tradingBoard
                     case .levers: leversBoard
                     case .log: logBoard
                     }
@@ -223,7 +228,10 @@ struct GameView: View {
                           value: engine.averageMorale, icon: "figure.2")
                 MeterView(title: String(localized: "Trust", comment: "Meter label"),
                           value: engine.clientTrust, icon: "person.crop.circle.badge.checkmark")
-                if let growth = engine.growth {
+                if let trading = engine.trading {
+                    MeterView(title: String(localized: "Rating", comment: "Meter label"),
+                              value: trading.rating, icon: "star.fill")
+                } else if let growth = engine.growth {
                     MeterView(title: String(localized: "Launched", comment: "Meter label"),
                               value: growth.isLaunched ? 1 : 0,
                               icon: growth.isLaunched ? "paperplane.fill" : "paperplane")
@@ -321,6 +329,19 @@ struct GameView: View {
                             dailyBurn: engine.dailyBurn,
                             elapsedDays: engine.elapsedDays,
                             onSetSpend: { engine.setGrowthSpend($0) })
+        }
+    }
+
+    @ViewBuilder
+    private var tradingBoard: some View {
+        if let trading = engine.trading {
+            TradingPanelView(trading: trading,
+                             elapsedDays: engine.elapsedDays,
+                             seasonEstimate: engine.seasonEstimate,
+                             dailyBurn: engine.dailyBurn,
+                             onSetPrice: { engine.setListPrice($0) },
+                             onSetAdSpend: { engine.setAdSpend($0) },
+                             onBuyStock: { engine.requestStockOrder() })
         }
     }
 

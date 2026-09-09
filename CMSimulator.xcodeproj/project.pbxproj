@@ -64,6 +64,14 @@
 		28909552386D4B0998605426 /* Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = A2F2CCCB1BB3498AA3267EE8 /* Launch.png */; };
 		7757D72C868D49DDBA81A757 /* GrowthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */; };
 		86E278180B8740BB8FD38637 /* GrowthPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */; };
+		AD6D1057BA684482B981111F /* TradingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8746D47D934D40A3B644B567 /* TradingModel.swift */; };
+		3EBC65CC8A564ACAAC9C1D96 /* TradingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B66FA568D437BB6A88CED /* TradingPanelView.swift */; };
+		0B7664A2F32B42CEA4860A48 /* Sourcing.png in Resources */ = {isa = PBXBuildFile; fileRef = 020C4F9A036446C2BF83F3DC /* Sourcing.png */; };
+		342FEA3C410D4304A99137F2 /* Listing.png in Resources */ = {isa = PBXBuildFile; fileRef = CE22C708A9B14A3BAA78AE69 /* Listing.png */; };
+		DA394D4397CE4318AE5A75DC /* Compliance.png in Resources */ = {isa = PBXBuildFile; fileRef = 321D7001B140486A8FC7FC1E /* Compliance.png */; };
+		EB3EDA06F18C44DCA775470E /* Range.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D9E0C2D96C94F50840B44E5 /* Range.png */; };
+		5A7FA9B1ADEB44FABB209E9B /* Warehouse.png in Resources */ = {isa = PBXBuildFile; fileRef = A40DC5B85F16486C844EEB1D /* Warehouse.png */; };
+		5B6804B7DF6E4C53B80196BF /* Accounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 6489618908314E8E9174A78F /* Accounts.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +156,14 @@
 		A2F2CCCB1BB3498AA3267EE8 /* Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Launch.png; sourceTree = "<group>"; };
 		97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthModel.swift; sourceTree = "<group>"; };
 		F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthPanelView.swift; sourceTree = "<group>"; };
+		8746D47D934D40A3B644B567 /* TradingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingModel.swift; sourceTree = "<group>"; };
+		302B66FA568D437BB6A88CED /* TradingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingPanelView.swift; sourceTree = "<group>"; };
+		020C4F9A036446C2BF83F3DC /* Sourcing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sourcing.png; sourceTree = "<group>"; };
+		CE22C708A9B14A3BAA78AE69 /* Listing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Listing.png; sourceTree = "<group>"; };
+		321D7001B140486A8FC7FC1E /* Compliance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Compliance.png; sourceTree = "<group>"; };
+		9D9E0C2D96C94F50840B44E5 /* Range.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Range.png; sourceTree = "<group>"; };
+		A40DC5B85F16486C844EEB1D /* Warehouse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Warehouse.png; sourceTree = "<group>"; };
+		6489618908314E8E9174A78F /* Accounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Accounts.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +260,12 @@
 			isa = PBXGroup;
 			children = (
 				3DB3C6801BDFA5EC005285E9 /* Design.png */,
+				020C4F9A036446C2BF83F3DC /* Sourcing.png */,
+				CE22C708A9B14A3BAA78AE69 /* Listing.png */,
+				321D7001B140486A8FC7FC1E /* Compliance.png */,
+				9D9E0C2D96C94F50840B44E5 /* Range.png */,
+				A40DC5B85F16486C844EEB1D /* Warehouse.png */,
+				6489618908314E8E9174A78F /* Accounts.png */,
 				69C5447AAF1B4A7A86BC953C /* Discovery.png */,
 				006C8D48BC6A4E5EBA80999D /* Platform.png */,
 				594F1EEA6DFC41E198551452 /* API.png */,
@@ -269,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				5FC1E3D47680310511107479 /* WorkPackage.swift */,
+				8746D47D934D40A3B644B567 /* TradingModel.swift */,
 				97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */,
 				888E24CE241D476797D81FCE /* Scenario.swift */,
 				6E8495D0F8C84AD6A0B177A3 /* Worker.swift */,
@@ -301,6 +324,7 @@
 				EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */,
 				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
 				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
+				302B66FA568D437BB6A88CED /* TradingPanelView.swift */,
 				F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */,
 				F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */,
 				F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */,
@@ -439,6 +463,12 @@
 				3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */,
 				3DAD45341BDF1423007E123A /* Risk.png in Resources */,
 				3DB3C6811BDFA5EC005285E9 /* Design.png in Resources */,
+				0B7664A2F32B42CEA4860A48 /* Sourcing.png in Resources */,
+				342FEA3C410D4304A99137F2 /* Listing.png in Resources */,
+				DA394D4397CE4318AE5A75DC /* Compliance.png in Resources */,
+				EB3EDA06F18C44DCA775470E /* Range.png in Resources */,
+				5A7FA9B1ADEB44FABB209E9B /* Warehouse.png in Resources */,
+				5B6804B7DF6E4C53B80196BF /* Accounts.png in Resources */,
 				804E4FC24C4F410BBA4F4DA4 /* Discovery.png in Resources */,
 				909F6679A5E44C5AAD4DD28C /* Platform.png in Resources */,
 				06B4CDC6885E42B8979EFFAE /* API.png in Resources */,
@@ -490,6 +520,8 @@
 				F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */,
 				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
 				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
+				3EBC65CC8A564ACAAC9C1D96 /* TradingPanelView.swift in Sources */,
+				AD6D1057BA684482B981111F /* TradingModel.swift in Sources */,
 				7757D72C868D49DDBA81A757 /* GrowthModel.swift in Sources */,
 				86E278180B8740BB8FD38637 /* GrowthPanelView.swift in Sources */,
 				E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */,

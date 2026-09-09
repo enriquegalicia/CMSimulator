@@ -54,9 +54,15 @@ struct WorkPackage: Identifiable {
     var isComplete: Bool { unitsCompleted >= units - 0.0001 }
     var unitsRemaining: Double { max(0, units - unitsCompleted) }
 
-    /// True when there is work left and nothing to build it out of.
+    /// Whether this stream consumes a physical input at all. A trading
+    /// business buys goods through the same supplier panel, but its work
+    /// streams are people opening product lines and consume nothing.
+    var consumesMaterials: Bool { spec.materialUnitsPerWorkUnit > 0 }
+
+    /// True when there is work left and nothing to build it out of. Only
+    /// meaningful for streams that actually consume something.
     var isStarvedOfMaterials: Bool {
-        !isComplete && materialStock < 0.01
+        consumesMaterials && !isComplete && materialStock < 0.01
     }
 
     /// Crowding: beyond the optimal crew size, output per head falls

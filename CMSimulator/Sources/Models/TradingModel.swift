@@ -1,0 +1,434 @@
+//
+//  TradingModel.swift
+//  CMSimulator
+//
+//  Buying goods abroad and reselling them on a marketplace.
+//
+//  This scenario exists to answer a question honestly: is importing and
+//  reselling actually a business, or is it the thing people sell courses
+//  about? The model is built from the real fee stack rather than from the
+//  fantasy, because the fee stack is where the fantasy dies.
+//
+//  A unit that sells for 34 does not earn 34. The marketplace takes a
+//  referral cut of every sale, charges a flat fee to pick and ship it,
+//  bills storage for every day it sits, and bills *more* once it has sat
+//  too long. Some of it comes back as returns, and a return costs the
+//  refund and the shipping again. What is left over is the margin, and it
+//  is thin - real benchmarks put a good net margin at 15-20%, and more
+//  than half of active sellers now earn less year over year as fees and
+//  advertising eat the difference.
+//
+//  Three things kill a run here, all of them true to life:
+//    - the cash conversion cycle: money is paid to a factory months
+//      before a customer ever pays you
+//    - aged stock: storage escalates, and unsold goods eventually have to
+//      be dumped below cost
+//    - quality: bad goods come back, and the rating they leave behind
+//      suppresses every future sale
+//
+
+import Foundation
+
+// MARK: - Marketplace terms
+
+/// The platform's cut. Modelled on a real marketplace's published fee
+/// structure, with the calendar compressed to a single trading season -
+/// the aged-stock cliffs arrive in weeks here rather than months, but
+/// they arrive in the same shape and for the same reason.
+struct MarketplaceSpec {
+    /// Share of the sale price the platform takes. 15% is the common case.
+    let referralFeeRate: Double
+    /// Flat per-unit charge to pick, pack and ship.
+    let fulfilmentFeePerUnit: Double
+    /// Storage, per unit per day, while it sits unsold.
+    let storagePerUnitPerDay: Double
+    /// Days after which stock counts as aged and storage multiplies.
+    let agedAfterDays: Double
+    let agedStorageMultiplier: Double
+    /// Days after which it counts as long-term and multiplies again. This
+    /// is the cliff that turns slow stock into a liability.
+    let longTermAfterDays: Double
+    let longTermStorageMultiplier: Double
+    /// Share of sold units that come back, before quality effects.
+    let baseReturnRate: Double
+    /// Days between a sale and the money actually landing.
+    let payoutDelayDays: Double
+    /// The price shoppers expect. Pricing above it costs volume.
+    let referencePrice: Double
+    /// How sharply volume responds to price. Above 1 means undercutting
+    /// wins share faster than it loses margin.
+    let priceElasticity: Double
+    /// Fraction of landed cost recovered when dumping unsold stock at the
+    /// end of the season.
+    let liquidationRecovery: Double
+    /// Ad spend needed per unit of organic demand to stay visible.
+    let adCostPerIncrementalUnit: Double
+
+    static let onlineMarketplace = MarketplaceSpec(
+        referralFeeRate: 0.15,
+        fulfilmentFeePerUnit: 4.50,
+        storagePerUnitPerDay: 0.015,
+        agedAfterDays: 60,
+        agedStorageMultiplier: 3,
+        longTermAfterDays: 100,
+        longTermStorageMultiplier: 8,
+        baseReturnRate: 0.07,
+        payoutDelayDays: 14,
+        referencePrice: 39,
+        priceElasticity: 2.7,
+        liquidationRecovery: 0.40,
+        adCostPerIncrementalUnit: 3.10
+    )
+}
+
+// MARK: - Inventory
+
+/// One shipment's worth of goods, tracked separately because what matters
+/// about stock is how old it is and what it cost.
+struct InventoryLot: Identifiable {
+    let id = UUID()
+    var units: Double
+    let landedCostPerUnit: Double
+    let arrivedDay: Double
+    /// Return rate this batch carries, set by the supplier's quality.
+    let defectRate: Double
+
+    func age(on day: Double) -> Double { max(0, day - arrivedDay) }
+}
+
+/// A sale that has happened but has not been paid out yet.
+struct Payout: Identifiable {
+    let id = UUID()
+    let amount: Double
+    let dueDay: Double
+}
+
+// MARK: - Run state
+
+struct TradingModel {
+    let spec: MarketplaceSpec
+
+    fileprivate(set) var lots: [InventoryLot] = []
+    fileprivate(set) var pendingPayouts: [Payout] = []
+
+    /// The price the player lists at. The one lever that trades margin
+    /// against volume directly.
+    var listPrice: Double
+
+    /// Player-set daily advertising spend. Buys visibility, and on a
+    /// crowded marketplace visibility is most of the battle.
+    var dailyAdSpend: Double = 0
+
+    /// 0...1. Driven by how much comes back. A bad rating suppresses
+    /// every future sale, which is why cheap goods are a trap rather than
+    /// a saving.
+    private(set) var rating: Double = 0.75
+
+    /// True once the first product line is live and selling.
+    private(set) var isTrading = false
+    private(set) var firstSaleDay: Double?
+
+    private(set) var unitsSold: Double = 0
+    private(set) var unitsReturned: Double = 0
+    private(set) var unitsLiquidated: Double = 0
+    private(set) var grossSales: Double = 0
+    private(set) var marketplaceFees: Double = 0
+    private(set) var storagePaid: Double = 0
+    private(set) var refundsPaid: Double = 0
+    private(set) var history: [Double] = []
+
+    private var dayAccumulator: Double = 0
+
+    init(spec: MarketplaceSpec) {
+        self.spec = spec
+        self.listPrice = spec.referencePrice
+    }
+
+    // MARK: Derived
+
+    var unitsOnHand: Double { lots.reduce(0) { $0 + $1.units } }
+    var inventoryValueAtCost: Double { lots.reduce(0) { $0 + $1.units * $1.landedCostPerUnit } }
+    var receivables: Double { pendingPayouts.reduce(0) { $0 + $1.amount } }
+
+    /// Stock old enough to be costing a penalty rate.
+    func agedUnits(on day: Double) -> Double {
+        lots.filter { $0.age(on: day) >= spec.agedAfterDays }.reduce(0) { $0 + $1.units }
+    }
+
+    /// What the platform takes out of one sale before any cost of goods.
+    var feesPerUnit: Double {
+        listPrice * spec.referralFeeRate + spec.fulfilmentFeePerUnit
+    }
+
+    /// What a sale actually leaves you, before storage, ads and returns.
+    var netPerUnitBeforeCost: Double { listPrice - feesPerUnit }
+
+    /// Contribution per unit against the average cost of stock on hand.
+    /// Negative means every sale makes things worse.
+    var contributionPerUnit: Double {
+        let avgCost = unitsOnHand > 0 ? inventoryValueAtCost / unitsOnHand : 0
+        return netPerUnitBeforeCost - avgCost
+    }
+
+    /// Cheaper listings sell faster, dearer ones slower.
+    var priceDemandFactor: Double {
+        guard listPrice > 0 else { return 0 }
+        return pow(spec.referencePrice / listPrice, spec.priceElasticity)
+    }
+
+    /// A poor rating does not just embarrass you, it throttles sales.
+    var ratingDemandFactor: Double { 0.25 + 0.75 * min(max(rating, 0), 1) }
+
+    // MARK: Ticking
+
+    mutating func beginTrading(onDay day: Double) {
+        guard !isTrading else { return }
+        isTrading = true
+        firstSaleDay = day
+    }
+
+    mutating func receive(units: Double, landedCostPerUnit: Double, defectRate: Double, onDay day: Double) {
+        guard units > 0 else { return }
+        lots.append(InventoryLot(units: units, landedCostPerUnit: landedCostPerUnit,
+                                 arrivedDay: day, defectRate: defectRate))
+    }
+
+    /// The result of a day's trading, itemised so the player can see
+    /// exactly where a thin margin went.
+    struct DayResult {
+        var sold: Double = 0
+        var returned: Double = 0
+        var grossSales: Double = 0
+        var platformFees: Double = 0
+        var refunds: Double = 0
+        var storage: Double = 0
+        var adSpend: Double = 0
+        var costOfGoodsSold: Double = 0
+        /// Cash actually landing today from earlier sales.
+        var payoutsReceived: Double = 0
+
+        /// What today really made, after everything.
+        var contribution: Double {
+            grossSales - platformFees - refunds - storage - adSpend - costOfGoodsSold
+        }
+    }
+
+    mutating func advance(days: Double, demand: Double, currentDay: Double) -> DayResult {
+        var result = DayResult()
+
+        // Storage is billed on everything sitting there, at a rate that
+        // escalates the longer it has sat. This is what makes buying too
+        // much quietly expensive.
+        for lot in lots {
+            let age = lot.age(on: currentDay)
+            var rate = spec.storagePerUnitPerDay
+            if age >= spec.longTermAfterDays { rate *= spec.longTermStorageMultiplier }
+            else if age >= spec.agedAfterDays { rate *= spec.agedStorageMultiplier }
+            result.storage += lot.units * rate * days
+        }
+        storagePaid += result.storage
+
+        result.adSpend = dailyAdSpend * days
+
+        if isTrading, unitsOnHand > 0 {
+            // Advertising buys incremental visibility on top of organic
+            // demand; the first units are cheap and it gets dearer.
+            let advertisedUnits = spec.adCostPerIncrementalUnit > 0
+                ? result.adSpend / spec.adCostPerIncrementalUnit : 0
+            let wanted = demand * priceDemandFactor * ratingDemandFactor * days + advertisedUnits
+            let sold = min(wanted, unitsOnHand)
+
+            if sold > 0 {
+                result.sold = sold
+                result.costOfGoodsSold = consume(units: sold)
+                result.grossSales = sold * listPrice
+                result.platformFees = sold * feesPerUnit
+
+                // Returns come back at a rate set by the goods themselves.
+                let returnRate = min(0.6, spec.baseReturnRate + averageDefectRate)
+                let returned = sold * returnRate
+                result.returned = returned
+                // A return costs the refund and the shipping you already paid.
+                result.refunds = returned * (listPrice + spec.fulfilmentFeePerUnit)
+
+                unitsSold += sold
+                unitsReturned += returned
+                grossSales += result.grossSales
+                marketplaceFees += result.platformFees
+                refundsPaid += result.refunds
+
+                // Money arrives on the platform's schedule, not yours.
+                // Queued gross: the fees and refunds are charged as their
+                // own costs, so the player can see the whole stack rather
+                // than a single netted-off number.
+                if result.grossSales > 0 {
+                    pendingPayouts.append(Payout(amount: result.grossSales,
+                                                 dueDay: currentDay + spec.payoutDelayDays))
+                }
+                driftRating(towards: 1 - returnRate * 3.6, days: days)
+            }
+        }
+
+        let due = pendingPayouts.filter { $0.dueDay <= currentDay }
+        result.payoutsReceived = due.reduce(0) { $0 + $1.amount }
+        pendingPayouts.removeAll { $0.dueDay <= currentDay }
+
+        recordHistory(days: days)
+        return result
+    }
+
+    /// Sells oldest stock first, and reports what it cost you.
+    private mutating func consume(units: Double) -> Double {
+        var remaining = units
+        var cost = 0.0
+        lots.sort { $0.arrivedDay < $1.arrivedDay }
+        for i in lots.indices {
+            guard remaining > 0 else { break }
+            let take = min(lots[i].units, remaining)
+            lots[i].units -= take
+            cost += take * lots[i].landedCostPerUnit
+            remaining -= take
+        }
+        lots.removeAll { $0.units <= 0.0001 }
+        return cost
+    }
+
+    var averageDefectRate: Double {
+        let total = unitsOnHand
+        guard total > 0 else { return 0 }
+        return lots.reduce(0) { $0 + $1.units * $1.defectRate } / total
+    }
+
+    private mutating func driftRating(towards target: Double, days: Double) {
+        let clamped = min(max(target, 0), 1)
+        // Ratings fall faster than they recover, as they do in life.
+        let speed = clamped < rating ? 0.06 : 0.02
+        rating += (clamped - rating) * min(1, speed * days)
+    }
+
+    private mutating func recordHistory(days: Double) {
+        dayAccumulator += days
+        while dayAccumulator >= 1 {
+            dayAccumulator -= 1
+            history.append(unitsSold)
+            if history.count > 200 { history.removeFirst() }
+        }
+    }
+
+    /// Units shifted over the last fortnight - the number that tells you
+    /// whether stock is actually moving.
+    var recentDailyVelocity: Double {
+        guard history.count >= 14 else { return 0 }
+        return (history[history.count - 1] - history[history.count - 14]) / 14
+    }
+
+    /// Days of stock left at the current rate. The other half of the
+    /// buying decision.
+    var daysOfCover: Double? {
+        let velocity = recentDailyVelocity
+        guard velocity > 0.01 else { return nil }
+        return unitsOnHand / velocity
+    }
+
+    // MARK: Season close
+
+    /// Whatever is left has to go somewhere. It goes cheap.
+    mutating func liquidate() -> (units: Double, recovered: Double, costWritten: Double) {
+        let units = unitsOnHand
+        let cost = inventoryValueAtCost
+        let recovered = cost * spec.liquidationRecovery
+        unitsLiquidated = units
+        lots.removeAll()
+        return (units, recovered, cost)
+    }
+
+    /// Any sales still awaiting payout at the close.
+    mutating func settleOutstandingPayouts() -> Double {
+        let total = receivables
+        pendingPayouts.removeAll()
+        return total
+    }
+}
+
+// MARK: - Scenario parameters
+
+/// Everything a brief needs to describe a resale market.
+struct TradeSpec {
+    let marketplace: MarketplaceSpec
+    /// Day the selling season peaks. Drawn from the run's seed, and not
+    /// shown accurately unless Demand planning is staffed.
+    let seasonPeakDay: Double
+    /// How broad the peak is, in days.
+    let seasonWidth: Double
+    /// Units a day the market will absorb at the peak, at full range.
+    let peakDailyDemand: Double
+    /// Units a day outside the season.
+    let baselineDailyDemand: Double
+    /// Factory price plus freight and duty, before the currency index.
+    let landedCostPerUnit: Double
+    /// Completing this stream is what puts you on sale.
+    let tradingStreamID: String
+
+    /// Demand on a given day at a given range breadth. A bell around the
+    /// peak on top of a baseline - the shape every seasonal trade has.
+    func demand(on day: Double, breadth: Double) -> Double {
+        let z = (day - seasonPeakDay) / seasonWidth
+        let seasonal = peakDailyDemand * exp(-0.5 * z * z)
+        return (baselineDailyDemand + seasonal) * min(1, max(0, breadth))
+    }
+}
+
+/// What a season actually came to, itemised. The whole point of the
+/// scenario is that this breakdown is rarely what people expect.
+struct SeasonClose {
+    let unitsSold: Double
+    let unitsReturned: Double
+    let unitsDumped: Double
+    let grossSales: Double
+    let marketplaceFees: Double
+    let refunds: Double
+    let storage: Double
+    let liquidationRecovered: Double
+    let liquidationCost: Double
+    let finalRating: Double
+
+    /// What the marketplace took, as a share of everything you sold.
+    var feeShareOfSales: Double { grossSales > 0 ? marketplaceFees / grossSales : 0 }
+    var returnRate: Double { unitsSold > 0 ? unitsReturned / unitsSold : 0 }
+    /// Money lost by buying stock that never sold.
+    var deadStockLoss: Double { max(0, liquidationCost - liquidationRecovered) }
+}
+
+extension TradingModel {
+    /// Stock lost to theft, damage or a container that never arrived.
+    mutating func loseStock(fraction: Double) -> Double {
+        let share = min(max(fraction, 0), 1)
+        var lost = 0.0
+        for i in lots.indices {
+            let take = lots[i].units * share
+            lots[i].units -= take
+            lost += take
+        }
+        lots.removeAll { $0.units <= 0.0001 }
+        return lost
+    }
+
+    /// A buyer defaulting takes a payout that had already been counted.
+    mutating func loseReceivable(fraction: Double) -> Double {
+        let share = min(max(fraction, 0), 1)
+        let lost = receivables * share
+        guard lost > 0 else { return 0 }
+        var remaining = lost
+        pendingPayouts.sort { $0.dueDay > $1.dueDay }
+        var kept: [Payout] = []
+        for payout in pendingPayouts {
+            if remaining >= payout.amount { remaining -= payout.amount }
+            else if remaining > 0 {
+                kept.append(Payout(amount: payout.amount - remaining, dueDay: payout.dueDay))
+                remaining = 0
+            } else { kept.append(payout) }
+        }
+        pendingPayouts = kept
+        return lost
+    }
+}

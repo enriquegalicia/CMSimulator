@@ -78,6 +78,11 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var growth: GrowthModel?
     /// The offer on the table once the run ends, for the debrief.
     @Published private(set) var exitOffer: ExitOffer?
+    /// Inventory, sales and the marketplace's cut. Nil unless the business
+    /// buys goods to resell.
+    @Published private(set) var trading: TradingModel?
+    /// Season-close accounting, for the debrief.
+    @Published private(set) var seasonClose: SeasonClose?
 
     @Published private(set) var totalProgress: Double = 0
     @Published private(set) var elapsedDays: Double = 0
@@ -126,6 +131,7 @@ final class SimulationEngine: ObservableObject {
         self.workPackages = brief.streams.map { WorkPackage(spec: $0) }
         self.capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         self.growth = brief.growth.map(GrowthModel.init(spec:))
+        self.trading = brief.trade.map { TradingModel(spec: $0.marketplace) }
         configureFreshRun()
     }
 
@@ -133,10 +139,8 @@ final class SimulationEngine: ObservableObject {
         workPackages[0].isUnlocked = true
         // Mobilization stock, procured under the contract's advance. Enough
         // to start without an order, not enough to coast.
-        if brief.usesSupplyChain {
-            for i in workPackages.indices {
-                workPackages[i].materialStock = workPackages[i].units * workPackages[i].spec.materialUnitsPerWorkUnit * 0.15
-            }
+        for i in workPackages.indices where workPackages[i].consumesMaterials {
+            workPackages[i].materialStock = workPackages[i].units * workPackages[i].spec.materialUnitsPerWorkUnit * 0.15
         }
         for i in capabilities.indices where capabilities[i].kind.unlockThreshold <= 0 {
             capabilities[i].isUnlocked = true
@@ -164,7 +168,9 @@ final class SimulationEngine: ObservableObject {
         workPackages = next.streams.map { WorkPackage(spec: $0) }
         capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         growth = next.growth.map(GrowthModel.init(spec:))
+        trading = next.trade.map { TradingModel(spec: $0.marketplace) }
         exitOffer = nil
+        seasonClose = nil
         workers = []
         orders = []
         mitigationsHeld = []
@@ -231,11 +237,20 @@ final class SimulationEngine: ObservableObject {
         recomputeProgress()
         updateUnlocks()
         advanceGrowth(step: step)
+        advanceTrading(step: step)
         raisePaymentMilestones()
         advanceIncidentClock(step: step)
         updateForecast()
 
-        if brief.growth != nil {
+        if brief.trade != nil {
+            // A trader's run ends when the selling season does. There is
+            // no handover and no acquirer - just whatever the books say
+            // once the leftovers have been dumped.
+            if elapsedDays >= deadlineDays {
+                closeSeason()
+                return
+            }
+        } else if brief.growth != nil {
             // A startup does not stop when the backlog is empty - that is
             // the point at which it is finally free to just grow. The run
             // ends at the exit horizon.
@@ -283,7 +298,7 @@ final class SimulationEngine: ObservableObject {
             // Crew waiting on materials are still on full pay. This is the
             // single clearest lesson in the game about lead times, so it is
             // tracked explicitly and reported at the end.
-            if brief.usesSupplyChain, workPackages[i].isStarvedOfMaterials {
+            if workPackages[i].isStarvedOfMaterials {
                 workPackages[i].idleCrewDays += Double(crew.count) * step
                 continue
             }
@@ -295,7 +310,7 @@ final class SimulationEngine: ObservableObject {
             let otFactor = WorkPackage.overtimeFactor(overtime)
 
             var produced = rawOutput * congestion * drag * otFactor * step
-            if brief.usesSupplyChain {
+            if workPackages[i].consumesMaterials {
                 let materialCap = workPackages[i].materialStock / workPackages[i].spec.materialUnitsPerWorkUnit
                 produced = min(produced, workPackages[i].unitsRemaining, materialCap)
             } else {
@@ -304,7 +319,7 @@ final class SimulationEngine: ObservableObject {
             guard produced > 0 else { continue }
 
             workPackages[i].unitsCompleted += produced
-            if brief.usesSupplyChain {
+            if workPackages[i].consumesMaterials {
                 workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
             }
 
@@ -330,7 +345,7 @@ final class SimulationEngine: ObservableObject {
             let package = workPackages.first { $0.id == workers[i].packageID }
             let isWorking = (package?.isUnlocked ?? false)
                 && !(package?.isComplete ?? true)
-                && !(brief.usesSupplyChain && (package?.isStarvedOfMaterials ?? true))
+                && !(package?.isStarvedOfMaterials ?? true)
             let wasTraining = workers[i].isInTraining
             workers[i].advance(days: step, overtime: overtime, isWorking: isWorking)
             if wasTraining, !workers[i].isInTraining {
@@ -381,8 +396,8 @@ final class SimulationEngine: ObservableObject {
     }
 
     private func payUpkeep(step: Double) {
-        let capabilityUpkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep }
-        let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep }
+        let capabilityUpkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep } * brief.capabilityCostFactor
+        let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep } * brief.capabilityCostFactor
         ledger.forceSpend((capabilityUpkeep + mitigationUpkeep) * step, into: \.capabilities)
 
         let riskLevel = level(of: .risk)
@@ -481,6 +496,21 @@ final class SimulationEngine: ObservableObject {
         guard !landed.isEmpty else { return }
         orders.removeAll { $0.arrivalDay <= elapsedDays }
         for order in landed {
+            if let spec = brief.trade, order.packageID == Self.stockOrderID {
+                // Landed cost is what you paid, spread over the units that
+                // actually arrived - that is the number every later
+                // calculation is measured against.
+                let landedCost = order.quantity > 0 ? order.pricePaid / order.quantity : spec.landedCostPerUnit
+                // Pre-shipment inspection catches bad batches at the
+                // factory, before you have paid to ship and store them.
+                let inspection = [1.0, 0.62, 0.40, 0.24][min(level(of: .quality), 3)]
+                trading?.receive(units: order.quantity, landedCostPerUnit: landedCost,
+                                 defectRate: order.vendorDefectPerUnit * 15 * inspection,
+                                 onDay: elapsedDays)
+                log(String(localized: "\(Int(order.quantity).formatted()) units cleared customs and are sellable.", comment: "Site log: stock arrived"),
+                    symbol: "shippingbox.fill", tone: .good)
+                continue
+            }
             guard let i = workPackages.firstIndex(where: { $0.id == order.packageID }) else { continue }
             // Blend the incoming batch's quality into what is already on
             // site, so a cheap vendor shows up as rework only on the work
@@ -535,6 +565,92 @@ final class SimulationEngine: ObservableObject {
                     symbol: "exclamationmark.triangle.fill", tone: .bad)
             }
         }
+    }
+
+    // MARK: Trading
+
+    /// Sells stock into the season, and bills every fee the marketplace
+    /// charges for the privilege.
+    private func advanceTrading(step: Double) {
+        guard trading != nil, let spec = brief.trade else { return }
+
+        if let gate = workPackages.first(where: { $0.id == spec.tradingStreamID }),
+           gate.isComplete, trading?.isTrading == false {
+            trading?.beginTrading(onDay: elapsedDays)
+            log(String(localized: "Listings are live. Stock can start selling.", comment: "Site log: trading opens"),
+                symbol: "storefront.fill", tone: .good)
+        }
+
+        let totalUnits = workPackages.reduce(0) { $0 + $1.units }
+        let built = totalUnits > 0 ? workPackages.reduce(0) { $0 + $1.unitsCompleted } / totalUnits : 0
+        let demand = spec.demand(on: elapsedDays, breadth: built)
+
+        let day = trading!.advance(days: step, demand: demand, currentDay: elapsedDays)
+
+        // Every one of these is a real line on a real seller's statement.
+        if day.platformFees > 0 { ledger.forceSpend(day.platformFees, into: \.marketplaceFees) }
+        if day.refunds > 0      { ledger.forceSpend(day.refunds, into: \.returns) }
+        if day.storage > 0      { ledger.forceSpend(day.storage, into: \.storage) }
+        if day.adSpend > 0 {
+            if !ledger.spend(day.adSpend, into: \.advertising) {
+                trading?.dailyAdSpend = 0
+                log(String(localized: "Advertising paused - not enough cash.", comment: "Site log: ad spend halted"),
+                    symbol: "exclamationmark.triangle.fill", tone: .bad)
+            }
+        }
+        // Sales money arrives on the platform's payout schedule, not the
+        // day the customer buys.
+        if day.payoutsReceived > 0 { ledger.receive(day.payoutsReceived, retainage: 0) }
+    }
+
+    /// What the player believes about the season. Without Demand planning
+    /// there is no read at all; with it, the estimate tightens toward the
+    /// truth. Buying stock is the decision this information is for.
+    var seasonEstimate: (peakDay: Double, confidence: Double)? {
+        guard let spec = brief.trade else { return nil }
+        let planning = level(of: .planning)
+        guard planning > 0 else { return nil }
+        let confidence = [0, 0.45, 0.72, 0.93][min(planning, 3)]
+        // A deterministic offset from the seed, so the same run always
+        // misleads you the same way rather than shimmering each tick.
+        var rng = SeededGenerator(seed: brief.seed &+ 977)
+        let bias = Double.random(in: -1...1, using: &rng) * (1 - confidence) * 26
+        return (peakDay: spec.seasonPeakDay + bias, confidence: confidence)
+    }
+
+    func setListPrice(_ price: Double) {
+        trading?.listPrice = max(1, price)
+    }
+
+    func setAdSpend(_ perDay: Double) {
+        trading?.dailyAdSpend = max(0, perDay)
+    }
+
+    /// What the season really cost, once the stock nobody wanted is dumped.
+    private func closeSeason() {
+        guard trading != nil else { return finish(.insolvent) }
+        let outstanding = trading!.settleOutstandingPayouts()
+        if outstanding > 0 { ledger.receive(outstanding, retainage: 0) }
+
+        let dump = trading!.liquidate()
+        if dump.units > 0.5 {
+            ledger.receive(dump.recovered, retainage: 0)
+            log(String(localized: "Dumped \(Int(dump.units).formatted()) unsold units for \(Int(dump.recovered).formatted()) — they cost \(Int(dump.costWritten).formatted()).", comment: "Site log: liquidation"),
+                symbol: "arrow.down.circle.fill", tone: .bad)
+        }
+        seasonClose = SeasonClose(
+            unitsSold: trading!.unitsSold,
+            unitsReturned: trading!.unitsReturned,
+            unitsDumped: dump.units,
+            grossSales: trading!.grossSales,
+            marketplaceFees: trading!.marketplaceFees,
+            refunds: trading!.refundsPaid,
+            storage: trading!.storagePaid,
+            liquidationRecovered: dump.recovered,
+            liquidationCost: dump.costWritten,
+            finalRating: trading!.rating
+        )
+        finish(.delivered)
     }
 
     /// Player control over acquisition spend.
@@ -622,6 +738,13 @@ final class SimulationEngine: ObservableObject {
         weights[.technical]! += Double(workPackages.filter(\.isFastTracked).count) * 1.4
         weights[.client]! += (1 - clientTrust) * 1.8
         weights[.security]! += market.trend > 0.05 ? 0.8 : 0
+        // Sitting well above the going rate is an invitation: somebody
+        // will list the same goods cheaper. Pricing for margin is a real
+        // strategy, not a free one.
+        if let trading, trading.listPrice > trading.spec.referencePrice {
+            let over = (trading.listPrice / trading.spec.referencePrice) - 1
+            weights[.technical]! += over * 9.0
+        }
         let total = weights.values.reduce(0, +)
         var roll = Double.random(in: 0...total)
         for (kind, weight) in weights {
@@ -686,7 +809,13 @@ final class SimulationEngine: ObservableObject {
             consequences.append(String(localized: "\(workPackages[idx].title) lost \(Int(setback)) units of work.", comment: "Incident consequence: progress lost"))
         }
 
-        if let range = kind.materialLossRange,
+        if let range = kind.materialLossRange, brief.trade != nil, trading != nil {
+            // Stolen or damaged goods come straight off the shelf.
+            let lost = trading!.loseStock(fraction: min(0.5, scaled(range, severityScale) / 40))
+            if lost > 1 {
+                consequences.append(String(localized: "\(Int(lost).formatted()) units of stock lost.", comment: "Incident consequence: stock lost"))
+            }
+        } else if let range = kind.materialLossRange,
            let idx = workPackages.indices
                .filter({ workPackages[$0].materialStock > 0 })
                .max(by: { workPackages[$0].materialStock < workPackages[$1].materialStock }) {
@@ -710,9 +839,23 @@ final class SimulationEngine: ObservableObject {
             consequences.append(String(localized: "Morale fell across the site.", comment: "Incident consequence: morale"))
         }
 
+        if let range = kind.receivableLossRange, trading != nil {
+            let lost = trading!.loseReceivable(fraction: scaled(range, severityScale))
+            if lost > 1 {
+                consequences.append(String(localized: "\(Int(lost).formatted()) already sold will never be paid.", comment: "Incident consequence: receivable written off"))
+            }
+        }
+
         if let range = kind.trustHitRange {
             clientTrust = max(0, clientTrust - scaled(range, severityScale))
             consequences.append(String(localized: "Client confidence took a hit.", comment: "Incident consequence: trust"))
+        }
+
+        if kind == .competitorUndercut, trading != nil {
+            // You either follow them down or watch the volume go.
+            let drop = 1 - scaled(0.04...0.12, severityScale)
+            trading!.listPrice = max(trading!.spec.referencePrice * 0.6, trading!.listPrice * drop)
+            consequences.append(String(localized: "You had to drop your price to \(Int(trading!.listPrice)).", comment: "Incident consequence: forced price cut"))
         }
 
         if let range = kind.defectInjectionRange,
@@ -789,7 +932,7 @@ final class SimulationEngine: ObservableObject {
     var currentThroughput: Double {
         var total = 0.0
         for package in workPackages where package.isUnlocked && !package.isComplete
-            && !(brief.usesSupplyChain && package.isStarvedOfMaterials) {
+            && !package.isStarvedOfMaterials {
             let crew = workers.filter { $0.packageID == package.id && !$0.isInTraining }
             guard !crew.isEmpty else { continue }
             let raw = crew.reduce(0) { $0 + $1.effectiveOutput }
@@ -881,7 +1024,7 @@ final class SimulationEngine: ObservableObject {
     func upgrade(_ kind: CapabilityKind) {
         guard let idx = capabilities.firstIndex(where: { $0.kind == kind }),
               capabilities[idx].isUnlocked, !capabilities[idx].isMaxed else { return }
-        let cost = capabilities[idx].nextLevelCost
+        let cost = capabilities[idx].nextLevelCost * brief.capabilityCostFactor
         guard ledger.spend(cost, into: \.capabilities) else {
             log(String(localized: "Not enough funds to staff \(kind.displayName(in: brief.scenario)).", comment: "Site log: capability unaffordable"),
                 symbol: "xmark.circle.fill", tone: .bad)
@@ -915,6 +1058,44 @@ final class SimulationEngine: ObservableObject {
     }
 
     // MARK: - Player actions: materials
+
+    /// Sentinel package id for a purchase that goes to inventory rather
+    /// than to a work stream.
+    static let stockOrderID = "__stock__"
+
+    /// Opens the supplier panel to buy goods for resale. Same suppliers,
+    /// same trade-off between price, lead time and reliability - but here
+    /// what arrives is the thing you sell, not an input to labour.
+    func requestStockOrder() {
+        guard let spec = brief.trade else { return }
+        let discount = 1 - CapabilityEffects.materialDiscount(level: level(of: .procurement))
+        orderRequest = MaterialOrderRequest(
+            id: Self.stockOrderID,
+            packageTitle: String(localized: "Stock", comment: "Order sheet title for a stock purchase"),
+            vendors: vendors,
+            suggestedQuantity: suggestedStockQuantity,
+            baseCostPerUnit: spec.landedCostPerUnit * discount,
+            baseLeadTimeDays: 26 * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
+            marketIndex: market.effectiveIndex,
+            isLocked: market.isLocked
+        )
+    }
+
+    /// Enough to cover the next stretch of selling at the current rate,
+    /// which is a starting point rather than an answer - the whole skill
+    /// is deciding how far ahead to commit.
+    private var suggestedStockQuantity: Double {
+        guard let trading, let spec = brief.trade else { return 0 }
+        let inFlight = orders.filter { $0.packageID == Self.stockOrderID }.reduce(0) { $0 + $1.quantity }
+        let totalUnits = workPackages.reduce(0) { $0 + $1.units }
+        let breadth = totalUnits > 0 ? workPackages.reduce(0) { $0 + $1.unitsCompleted } / totalUnits : 0
+        let horizon = 30.0
+        var expected = 0.0
+        for d in 0..<Int(horizon) {
+            expected += spec.demand(on: elapsedDays + 26 + Double(d), breadth: max(breadth, 0.4))
+        }
+        return max(0, (expected - trading.unitsOnHand - inFlight)).rounded()
+    }
 
     func requestMaterialOrder(for packageID: WorkPackage.ID) {
         guard let package = workPackages.first(where: { $0.id == packageID }) else { return }

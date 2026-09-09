@@ -89,6 +89,17 @@ enum SimEventKind: CaseIterable {
     case investorPushback
     case pivotRequest
     case vendorRepricing
+    // Import deck.
+    case customsHold
+    case tariffHike
+    case freightSpike
+    case currencySwing
+    case factoryQualityFailure
+    case buyerDefault
+    case marketplacePolicyChange
+    case competitorUndercut
+    case portCongestion
+    case warehouseInjury
 
     var mitigationClass: MitigationClass {
         switch self {
@@ -102,6 +113,11 @@ enum SimEventKind: CaseIterable {
         case .keyDeparture, .burnoutWave: return .safety
         case .criticalBug, .scalingFailure: return .technical
         case .investorPushback, .pivotRequest: return .client
+        case .freightSpike, .portCongestion: return .weather
+        case .currencySwing, .buyerDefault: return .security
+        case .factoryQualityFailure, .competitorUndercut: return .technical
+        case .customsHold, .tariffHike, .marketplacePolicyChange: return .client
+        case .warehouseInjury: return .safety
         }
     }
 
@@ -114,6 +130,10 @@ enum SimEventKind: CaseIterable {
             return [.hurricane, .fire, .safetyIncident, .materialTheft, .designClash,
                     .permitRejection, .structuralDefect, .changeOrder, .supplierFailure,
                     .priceSpike, .laborWalkout]
+        case .importing:
+            return [.customsHold, .tariffHike, .freightSpike, .currencySwing,
+                    .factoryQualityFailure, .buyerDefault, .marketplacePolicyChange,
+                    .competitorUndercut, .portCongestion, .warehouseInjury]
         case .startup:
             return [.cloudOutage, .dataBreach, .keyDeparture, .burnoutWave, .criticalBug,
                     .scalingFailure, .investorPushback, .pivotRequest, .vendorRepricing]
@@ -133,6 +153,16 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return String(localized: "Supplier default", comment: "Incident title")
         case .priceSpike: return String(localized: "Material prices spike", comment: "Incident title")
         case .laborWalkout: return String(localized: "Crew walks off", comment: "Incident title")
+        case .portCongestion: return String(localized: "The port is backed up", comment: "Incident title")
+        case .warehouseInjury: return String(localized: "Injury in the warehouse", comment: "Incident title")
+        case .competitorUndercut: return String(localized: "A competitor undercuts you", comment: "Incident title")
+        case .marketplacePolicyChange: return String(localized: "The marketplace changes its fees", comment: "Incident title")
+        case .buyerDefault: return String(localized: "A buyer does not pay", comment: "Incident title")
+        case .factoryQualityFailure: return String(localized: "A bad batch ships", comment: "Incident title")
+        case .currencySwing: return String(localized: "The currency moves against you", comment: "Incident title")
+        case .freightSpike: return String(localized: "Freight rates spike", comment: "Incident title")
+        case .tariffHike: return String(localized: "Tariffs go up", comment: "Incident title")
+        case .customsHold: return String(localized: "Container held at customs", comment: "Incident title")
         case .cloudOutage: return String(localized: "Cloud provider outage", comment: "Incident title")
         case .dataBreach: return String(localized: "Security incident", comment: "Incident title")
         case .keyDeparture: return String(localized: "A key engineer resigns", comment: "Incident title")
@@ -158,6 +188,16 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return String(localized: "A supplier defaulted. Deliveries in transit are delayed.", comment: "Incident description")
         case .priceSpike: return String(localized: "A supply shock sent the materials index sharply higher.", comment: "Incident description")
         case .laborWalkout: return String(localized: "Morale broke down and part of the crew walked off the job.", comment: "Incident description")
+        case .portCongestion: return String(localized: "Berthing delays. Everything on the water arrives later than promised.", comment: "Incident description")
+        case .warehouseInjury: return String(localized: "Someone was hurt handling stock. Work stopped for the investigation.", comment: "Incident description")
+        case .competitorUndercut: return String(localized: "Someone else listed the same goods cheaper. Your volume drops unless you follow them down.", comment: "Incident description")
+        case .marketplacePolicyChange: return String(localized: "Fees were restructured. Every sale from here earns a little less.", comment: "Incident description")
+        case .buyerDefault: return String(localized: "An account went under owing you money you had already counted.", comment: "Incident description")
+        case .factoryQualityFailure: return String(localized: "A production run came out badly and is already on the water.", comment: "Incident description")
+        case .currencySwing: return String(localized: "The exchange rate moved the wrong way between ordering and paying.", comment: "Incident description")
+        case .freightSpike: return String(localized: "Container rates jumped. The next shipment costs materially more.", comment: "Incident description")
+        case .tariffHike: return String(localized: "Duty on this category was raised. Everything still in transit costs more to land.", comment: "Incident description")
+        case .customsHold: return String(localized: "Paperwork queries. The goods sit in a bonded warehouse, paid for and unsellable.", comment: "Incident description")
         case .cloudOutage: return String(localized: "The platform went down with it. Nothing shipped while everyone firefought.", comment: "Incident description")
         case .dataBreach: return String(localized: "An exposed credential was found. Everything stopped for the response.", comment: "Incident description")
         case .keyDeparture: return String(localized: "Someone who held a lot of context in their head handed in their notice.", comment: "Incident description")
@@ -183,6 +223,16 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return "truck.box.badge.clock.fill"
         case .priceSpike: return "chart.line.uptrend.xyaxis"
         case .laborWalkout: return "person.2.slash.fill"
+        case .portCongestion: return "clock.badge.exclamationmark.fill"
+        case .warehouseInjury: return "bandage.fill"
+        case .competitorUndercut: return "arrow.down.right.circle.fill"
+        case .marketplacePolicyChange: return "building.columns.fill"
+        case .buyerDefault: return "person.crop.circle.badge.xmark"
+        case .factoryQualityFailure: return "xmark.seal.fill"
+        case .currencySwing: return "dollarsign.arrow.circlepath"
+        case .freightSpike: return "ferry.fill"
+        case .tariffHike: return "percent"
+        case .customsHold: return "lock.doc.fill"
         case .cloudOutage: return "icloud.slash.fill"
         case .dataBreach: return "lock.trianglebadge.exclamationmark.fill"
         case .keyDeparture: return "person.fill.xmark"
@@ -212,6 +262,16 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return 0.004...0.012
         case .priceSpike: return 0...0
         case .laborWalkout: return 0.006...0.014
+        case .portCongestion: return 0.006...0.016
+        case .warehouseInjury: return 0.010...0.024
+        case .competitorUndercut: return 0...0
+        case .marketplacePolicyChange: return 0.008...0.020
+        case .buyerDefault: return 0...0
+        case .factoryQualityFailure: return 0.016...0.038
+        case .currencySwing: return 0.010...0.026
+        case .freightSpike: return 0.014...0.032
+        case .tariffHike: return 0.018...0.040
+        case .customsHold: return 0.012...0.030
         case .cloudOutage: return 0.010...0.026
         case .dataBreach: return 0.022...0.050
         case .keyDeparture: return 0.004...0.010
@@ -246,6 +306,7 @@ enum SimEventKind: CaseIterable {
         switch self {
         case .fire: return 6...16
         case .materialTheft: return 8...22
+        case .customsHold: return 2...6
         case .hurricane: return 3...9
         default: return nil
         }
@@ -255,6 +316,9 @@ enum SimEventKind: CaseIterable {
     var deliveryDelayRange: ClosedRange<Double>? {
         switch self {
         case .supplierFailure: return 5...12
+        case .customsHold: return 8...20
+        case .portCongestion: return 6...16
+        case .freightSpike: return 2...6
         case .hurricane: return 1...4
         default: return nil
         }
@@ -269,6 +333,7 @@ enum SimEventKind: CaseIterable {
         case .burnoutWave: return 0.18...0.32
         case .keyDeparture: return 0.08...0.15
         case .cloudOutage: return 0.05...0.12
+        case .warehouseInjury: return 0.10...0.20
         default: return nil
         }
     }
@@ -294,6 +359,8 @@ enum SimEventKind: CaseIterable {
         case .structuralDefect: return 3...8
         case .designClash: return 2...6
         case .changeOrder: return 1...4
+        case .factoryQualityFailure: return 6...16
+        case .competitorUndercut: return 2...5
         case .criticalBug: return 3...8
         case .scalingFailure: return 4...10
         case .pivotRequest: return 2...6
@@ -307,6 +374,10 @@ enum SimEventKind: CaseIterable {
         case .priceSpike: return 0.12...0.30
         case .supplierFailure: return 0.04...0.10
         case .vendorRepricing: return 0.10...0.26
+        case .tariffHike: return 0.08...0.20
+        case .freightSpike: return 0.10...0.24
+        case .currencySwing: return 0.06...0.18
+        case .marketplacePolicyChange: return 0.04...0.10
         default: return nil
         }
     }
@@ -332,6 +403,16 @@ enum SimEventKind: CaseIterable {
 
     /// True when the incident costs you a person outright.
     var takesAWorker: Bool { self == .keyDeparture }
+
+    /// Share of money already earned but not yet paid out that simply
+    /// vanishes. A buyer going under is the sharpest lesson in the
+    /// difference between a sale and cash.
+    var receivableLossRange: ClosedRange<Double>? {
+        switch self {
+        case .buyerDefault: return 0.25...0.60
+        default: return nil
+        }
+    }
 }
 
 /// One fired incident, with everything it actually did, so the banner can

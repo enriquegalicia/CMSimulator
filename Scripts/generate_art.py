@@ -62,6 +62,13 @@ IMAGES = [
     ("Features.png", "A stack of app window cards fanned out, the top one showing a checkmark, representing shipped product features."),
     ("Payments.png", "A credit card overlapping a small receipt with a coin, representing payments and billing."),
     ("Launch.png", "A small rocket lifting off from a rounded pad with a checklist clipboard beside it, representing launch readiness."),
+    # Import & resale scenario work streams.
+    ("Sourcing.png", "A magnifying glass held over a small factory building with a handshake beneath it, representing vetting overseas suppliers."),
+    ("Listing.png", "A price tag with a small product box behind it and a tiny star above, representing a product listed for sale."),
+    ("Compliance.png", "A certificate scroll with a ribbon seal beside a small barcode label, representing certification and labelling."),
+    ("Range.png", "Three different product boxes of varying sizes fanned out in a row, representing a broader product range."),
+    ("Warehouse.png", "A warehouse building with a roller door and two stacked pallets beside it, representing storage capacity."),
+    ("Accounts.png", "A shop front awning with a handshake in the doorway, representing retail buyer accounts."),
 ]
 
 LOGO = ("AppIcon-Source.png", "Three interlocking gears - the largest containing a small money bag with a dollar sign, the second a lightbulb, the third a crossed hammer and wrench - representing cost, ideas, and construction.")

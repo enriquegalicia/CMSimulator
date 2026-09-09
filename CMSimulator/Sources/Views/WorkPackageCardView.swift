@@ -17,6 +17,7 @@ struct WorkPackageCardView: View {
     /// Software has no warehouse: with no supply chain there is nothing to
     /// order and no way to be starved, so the whole strip is omitted.
     let usesSupplyChain: Bool
+    private var showsSupply: Bool { usesSupplyChain && package.consumesMaterials }
     let crew: [Worker]
     let ordersInFlight: [MaterialOrder]
     let currentDay: Double
@@ -59,7 +60,7 @@ struct WorkPackageCardView: View {
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(usesSupplyChain && package.isStarvedOfMaterials && !activeCrew.isEmpty ? Color.red : Color.clear, lineWidth: 1.5)
+                .strokeBorder(showsSupply && package.isStarvedOfMaterials && !activeCrew.isEmpty ? Color.red : Color.clear, lineWidth: 1.5)
         )
         .opacity(package.isUnlocked ? 1 : 0.4)
     }
@@ -122,24 +123,24 @@ struct WorkPackageCardView: View {
                     Label(String(localized: "No \(scenario.staffName.lowercased()) assigned", comment: "Work package status"), systemImage: "person.slash")
                         .font(.caption2)
                         .foregroundStyle(.orange)
-                } else if usesSupplyChain, package.isStarvedOfMaterials {
+                } else if showsSupply, package.isStarvedOfMaterials {
                     Label(String(localized: "Out of \(scenario.supplyName.lowercased()) — still on full pay", comment: "Work package status"),
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.caption2.bold())
                         .foregroundStyle(.red)
-                } else if usesSupplyChain, let cover = daysOfCover {
+                } else if showsSupply, let cover = daysOfCover {
                     Label(String(localized: "\(Int(package.materialStock)) units on site — \(String(format: "%.1f", cover)) days of cover", comment: "Material stock and days of cover"),
                           systemImage: "shippingbox")
                         .font(.caption2)
                         .foregroundStyle(cover < 3 ? .orange : .secondary)
-                } else if usesSupplyChain {
+                } else if showsSupply {
                     Label(String(localized: "\(Int(package.materialStock)) units on site", comment: "Material stock with no crew working"),
                           systemImage: "shippingbox")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
 
-                if usesSupplyChain, let delivery = nextDelivery {
+                if showsSupply, let delivery = nextDelivery {
                     Label(String(localized: "\(Int(delivery.quantity)) units arriving in \(Int(delivery.daysOut(from: currentDay))) days", comment: "Incoming delivery"),
                           systemImage: "truck.box")
                         .font(.caption2)
@@ -172,7 +173,7 @@ struct WorkPackageCardView: View {
                 }
                 .buttonStyle(.bordered)
 
-                if usesSupplyChain {
+                if showsSupply {
                     Button(action: onOrder) {
                         Label(scenario.supplyOrderVerb, systemImage: "cart")
                             .font(.caption.bold())

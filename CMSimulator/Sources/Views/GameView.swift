@@ -26,11 +26,12 @@ struct GameView: View {
     let onComplete: () -> Void
 
     enum Board: String, CaseIterable, Identifiable {
-        case site, levers, log
+        case site, growth, levers, log
         var id: String { rawValue }
         func title(in scenario: ScenarioKind) -> String {
             switch self {
             case .site: return scenario.boardName
+            case .growth: return scenario.supplyName
             case .levers: return String(localized: "Levers", comment: "Board tab")
             case .log: return String(localized: "Log", comment: "Board tab")
             }
@@ -49,7 +50,10 @@ struct GameView: View {
             header.padding(.horizontal, isWide ? 20 : 14).padding(.top, 10).padding(.bottom, 8)
 
             Picker("Board", selection: $board) {
-                ForEach(Board.allCases) { Text($0.title(in: engine.brief.scenario)).tag($0) }
+                // The market board only exists for scenarios with customers.
+                ForEach(Board.allCases.filter { $0 != .growth || engine.growth != nil }) {
+                    Text($0.title(in: engine.brief.scenario)).tag($0)
+                }
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, isWide ? 20 : 14)
@@ -58,6 +62,7 @@ struct GameView: View {
                 Group {
                     switch board {
                     case .site: siteBoard
+                    case .growth: growthBoard
                     case .levers: leversBoard
                     case .log: logBoard
                     }
@@ -218,10 +223,16 @@ struct GameView: View {
                           value: engine.averageMorale, icon: "figure.2")
                 MeterView(title: String(localized: "Trust", comment: "Meter label"),
                           value: engine.clientTrust, icon: "person.crop.circle.badge.checkmark")
-                MarketSparkline(history: engine.market.history,
-                                current: engine.market.effectiveIndex,
-                                isLocked: engine.market.isLocked,
-                                supplyName: engine.brief.scenario.supplyName)
+                if let growth = engine.growth {
+                    MeterView(title: String(localized: "Launched", comment: "Meter label"),
+                              value: growth.isLaunched ? 1 : 0,
+                              icon: growth.isLaunched ? "paperplane.fill" : "paperplane")
+                } else {
+                    MarketSparkline(history: engine.market.history,
+                                    current: engine.market.effectiveIndex,
+                                    isLocked: engine.market.isLocked,
+                                    supplyName: engine.brief.scenario.supplyName)
+                }
             }
 
             HStack(spacing: isWide ? 22 : 14) {
@@ -268,6 +279,7 @@ struct GameView: View {
                     WorkPackageCardView(
                         package: package,
                         scenario: engine.brief.scenario,
+                        usesSupplyChain: engine.brief.usesSupplyChain,
                         crew: engine.crew(for: package.id),
                         ordersInFlight: engine.orders,
                         currentDay: engine.elapsedDays,
@@ -298,6 +310,17 @@ struct GameView: View {
                 .controlSize(.small)
                 .tint(.orange)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var growthBoard: some View {
+        if let growth = engine.growth {
+            GrowthPanelView(growth: growth,
+                            techDebt: engine.workPackages.reduce(0) { $0 + $1.defectDebt },
+                            dailyBurn: engine.dailyBurn,
+                            elapsedDays: engine.elapsedDays,
+                            onSetSpend: { engine.setGrowthSpend($0) })
         }
     }
 

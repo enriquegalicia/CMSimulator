@@ -106,12 +106,39 @@ enum ClientPersona: String, CaseIterable, Identifiable {
 
 // MARK: - Milestone
 
+/// What has to be true before money arrives.
+enum PaymentTrigger {
+    /// Overall work completed, 0...100. How a client certifies progress.
+    case progress(Double)
+    /// Paying customers reached. How investors decide you are worth
+    /// funding - nobody wires a Series A because you closed 26% of a
+    /// feature list.
+    case customers(Double)
+}
+
 struct PaymentMilestone: Identifiable {
     let id: Int
-    /// Overall project progress (0...100) that releases this payment.
-    let progressThreshold: Double
-    /// Share of contract value released, before retainage.
+    let trigger: PaymentTrigger
+    /// Share of contract value released, before retainage. For financing
+    /// rounds this is the size of the round instead.
     let share: Double
+    /// Fraction of the company sold. Zero for earned payments; non-zero
+    /// makes this a funding round, which adds cash without adding revenue
+    /// and costs a slice of the exit.
+    let dilution: Double
+    /// Shown when the money lands.
+    let name: String
+
+    init(id: Int, trigger: PaymentTrigger, share: Double,
+         dilution: Double = 0, name: String = "") {
+        self.id = id
+        self.trigger = trigger
+        self.share = share
+        self.dilution = dilution
+        self.name = name
+    }
+
+    var isFinancing: Bool { dilution > 0 }
 }
 
 // MARK: - Difficulty
@@ -249,6 +276,18 @@ struct ProjectBrief {
     /// Daily volatility of the materials price index.
     let marketVolatility: Double
 
+    /// The market this scenario sells into. Nil for scenarios that have no
+    /// customers - a building has a client, not a user base.
+    let growth: GrowthSpec?
+    /// Whether work consumes a physical, lead-timed supply. False for
+    /// software: engineers are the constraint, not a warehouse. Turning
+    /// the system off rather than relabelling it is the honest answer, and
+    /// proves a scenario can disable a system and not just rename it.
+    let usesSupplyChain: Bool
+    /// The stream whose completion puts the product in front of customers.
+    /// Nil when the scenario has no launch concept.
+    let launchStreamID: String?
+
     /// The incidents this scenario can throw at you.
     var incidentDeck: [SimEventKind] { SimEventKind.deck(for: scenario) }
 
@@ -289,11 +328,11 @@ struct ProjectBrief {
     static let constructionMilestones: [PaymentMilestone] = [
         // Must sum to 1 - advanceRate, or the client pays out more than
         // the contract is worth.
-        PaymentMilestone(id: 0, progressThreshold: 6, share: 0.14),
-        PaymentMilestone(id: 1, progressThreshold: 26, share: 0.18),
-        PaymentMilestone(id: 2, progressThreshold: 48, share: 0.18),
-        PaymentMilestone(id: 3, progressThreshold: 72, share: 0.20),
-        PaymentMilestone(id: 4, progressThreshold: 100, share: 0.18),
+        PaymentMilestone(id: 0, trigger: .progress(6), share: 0.14),
+        PaymentMilestone(id: 1, trigger: .progress(26), share: 0.18),
+        PaymentMilestone(id: 2, trigger: .progress(48), share: 0.18),
+        PaymentMilestone(id: 3, trigger: .progress(72), share: 0.20),
+        PaymentMilestone(id: 4, trigger: .progress(100), share: 0.18),
     ]
 
     /// Builds a run. Every varying number is drawn from `generator`, so a
@@ -327,57 +366,67 @@ struct ProjectBrief {
             milestones: constructionMilestones,
             streams: constructionStreams,
             labourMarketFactor: Double.random(in: 0.88...1.22, using: &rng),
-            marketVolatility: Double.random(in: 0.012...0.026, using: &rng) * difficulty.marketVolatilityFactor
+            marketVolatility: Double.random(in: 0.012...0.026, using: &rng) * difficulty.marketVolatilityFactor,
+            growth: nil,
+            usesSupplyChain: true,
+            launchStreamID: nil
         )
     }
 
     // MARK: Startup scenario
 
-    /// Deliberately the same shape as the construction streams - same
-    /// total units, same crew sizes, same unlock cascade - so the balance
-    /// the bot harness established carries across and the two scenarios
-    /// stay comparable on one leaderboard. What differs is what the work
-    /// *is*, what it consumes, and how long capacity takes to provision.
+    /// Restructured around the launch, not around finishing a feature
+    /// list. Discovery, platform and MVP are only 30% of the work - the
+    /// product goes live a third of the way in, and the remaining
+    /// two-thirds is spent growing a business that already exists.
+    ///
+    /// That ordering is the point. Shipping the MVP early starts word of
+    /// mouth compounding sooner; polishing everything before launch is
+    /// the classic way to run out of money with a beautiful product and
+    /// no customers.
+    ///
+    /// Nothing here consumes a lead-timed supply. For software the
+    /// constraint is people, so the supply chain is switched off entirely
+    /// rather than dressed up as "provisioning capacity".
     static let startupStreams: [WorkStreamSpec] = [
         WorkStreamSpec(id: "discovery", title: String(localized: "Discovery", comment: "Startup work stream name"),
-                       imageName: "Discovery.png", units: 250, optimalCrew: 8, startThreshold: 0,
-                       materialCostPerUnit: 45, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 2),
+                       imageName: "Discovery.png", units: 180, optimalCrew: 6, startThreshold: 0,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
         WorkStreamSpec(id: "platform", title: String(localized: "Core platform", comment: "Startup work stream name"),
-                       imageName: "Platform.png", units: 540, optimalCrew: 16, startThreshold: 4,
-                       materialCostPerUnit: 330, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 6),
-        WorkStreamSpec(id: "api", title: String(localized: "API & data", comment: "Startup work stream name"),
-                       imageName: "API.png", units: 375, optimalCrew: 12, startThreshold: 11,
-                       materialCostPerUnit: 95, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 3),
-        WorkStreamSpec(id: "features", title: String(localized: "Feature build", comment: "Startup work stream name"),
-                       imageName: "Features.png", units: 1160, optimalCrew: 34, startThreshold: 19,
-                       materialCostPerUnit: 250, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 5),
+                       imageName: "Platform.png", units: 300, optimalCrew: 10, startThreshold: 3,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "mvp", title: String(localized: "MVP & launch", comment: "Startup work stream name"),
+                       imageName: "Launch.png", units: 220, optimalCrew: 8, startThreshold: 9,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "features", title: String(localized: "Feature depth", comment: "Startup work stream name"),
+                       imageName: "Features.png", units: 1_100, optimalCrew: 30, startThreshold: 20,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
         WorkStreamSpec(id: "payments", title: String(localized: "Payments & billing", comment: "Startup work stream name"),
-                       imageName: "Payments.png", units: 625, optimalCrew: 19, startThreshold: 33,
-                       materialCostPerUnit: 245, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 9),
-        WorkStreamSpec(id: "launch", title: String(localized: "Launch readiness", comment: "Startup work stream name"),
-                       imageName: "Launch.png", units: 550, optimalCrew: 17, startThreshold: 46,
-                       materialCostPerUnit: 190, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 7),
+                       imageName: "Payments.png", units: 700, optimalCrew: 20, startThreshold: 42,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+        WorkStreamSpec(id: "scale", title: String(localized: "Scale & reliability", comment: "Startup work stream name"),
+                       imageName: "API.png", units: 1_000, optimalCrew: 26, startThreshold: 62,
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
     ]
 
-    /// Funding tranches rather than progress payments, but mechanically
-    /// the same: money arrives in lumps, behind the work, once you have
-    /// shown traction. Must still sum to 1 - advanceRate.
-    static let startupMilestones: [PaymentMilestone] = [
-        PaymentMilestone(id: 0, progressThreshold: 6, share: 0.12),
-        PaymentMilestone(id: 1, progressThreshold: 26, share: 0.16),
-        PaymentMilestone(id: 2, progressThreshold: 48, share: 0.18),
-        PaymentMilestone(id: 3, progressThreshold: 72, share: 0.22),
-        PaymentMilestone(id: 4, progressThreshold: 100, share: 0.17),
+    /// Money in is a seed already banked plus two rounds gated on
+    /// customers - because that is what investors actually price. Each
+    /// round buys runway and sells a slice of the exit, so taking one is
+    /// a real decision rather than a reward for progress.
+    static let startupRounds: [PaymentMilestone] = [
+        PaymentMilestone(id: 0, trigger: .customers(60), share: 0.34, dilution: 0.20,
+                         name: String(localized: "Series A", comment: "Funding round name")),
+        PaymentMilestone(id: 1, trigger: .customers(650), share: 0.62, dilution: 0.16,
+                         name: String(localized: "Series B", comment: "Funding round name")),
     ]
 
-    /// A seed-stage company with a round already closed, burning toward a
-    /// ship date and an exit.
+    /// A seed-stage company: money in the bank, a product that does not
+    /// exist yet, and a runway.
     ///
-    /// The differences that matter versus construction: capacity is
-    /// cheaper but slower to provision on the streams that need vendor
-    /// contracts, the engineering market is tighter and more volatile,
-    /// and tech debt bites harder because diligence at the exit is
-    /// unforgiving.
+    /// `contractValue` here is the capital pool the rounds are sized
+    /// against, not a payout. What the run is actually worth is decided at
+    /// the exit by ARR, growth rate, tech debt and how much of the company
+    /// you still own.
     static func startup(
         difficulty: Difficulty = .standard,
         persona: ClientPersona? = nil,
@@ -392,19 +441,25 @@ struct ProjectBrief {
             clientPersona: chosenPersona,
             difficulty: difficulty,
             seed: seed,
-            contractValue: 3_600_000,
-            startingCash: (300_000 * difficulty.startingCashFactor).rounded(),
-            creditLimit: (450_000 * difficulty.creditLimitFactor).rounded(),
-            dailyInterestRate: 0.00055,
-            deadlineDays: (110 * difficulty.deadlineFactor).rounded(),
-            baseLatePenaltyPerDay: 6_000,
-            retainageRate: 0.07,
-            advanceRate: 0.15,
-            milestones: startupMilestones,
+            contractValue: 7_400_000,
+            startingCash: (1_500_000 * difficulty.startingCashFactor).rounded(),
+            creditLimit: (240_000 * difficulty.creditLimitFactor).rounded(),
+            // Venture debt is dearer than a construction credit line.
+            dailyInterestRate: 0.00075,
+            deadlineDays: (150 * difficulty.deadlineFactor).rounded(),
+            // Past the runway you are on bridge financing, which is
+            // expensive and gets worse the longer it goes on.
+            baseLatePenaltyPerDay: 5_200,
+            retainageRate: 0,
+            advanceRate: 0,
+            milestones: startupRounds,
             streams: startupStreams,
-            // Engineers are scarcer and price more aggressively than trades.
+            // Engineers price harder than trades, and more variably.
             labourMarketFactor: Double.random(in: 0.95...1.35, using: &rng),
-            marketVolatility: Double.random(in: 0.014...0.030, using: &rng) * difficulty.marketVolatilityFactor
+            marketVolatility: Double.random(in: 0.014...0.030, using: &rng) * difficulty.marketVolatilityFactor,
+            growth: .seedStageSaaS,
+            usesSupplyChain: false,
+            launchStreamID: "mvp"
         )
     }
 

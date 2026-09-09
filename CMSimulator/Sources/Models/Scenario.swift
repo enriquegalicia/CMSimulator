@@ -41,7 +41,7 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         case .construction:
             return String(localized: "Deliver a building for a fixed price, against a fixed date.", comment: "Scenario tagline")
         case .startup:
-            return String(localized: "Ship a product before the runway runs out, and sell the company.", comment: "Scenario tagline")
+            return String(localized: "Launch a product, grow real customers, and sell the company for what it is worth.", comment: "Scenario tagline")
         }
     }
 
@@ -59,7 +59,7 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         case .construction:
             return String(localized: "Materials arrive late and idle crews still get paid. Supply timing is the whole game.", comment: "Scenario signature lesson")
         case .startup:
-            return String(localized: "Tech debt is invisible until diligence. Ship fast and you pay for it at the exit.", comment: "Scenario signature lesson")
+            return String(localized: "Launching early compounds. Every day you polish before launch is growth you never get back.", comment: "Scenario signature lesson")
         }
     }
 
@@ -89,7 +89,7 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
     var supplyName: String {
         switch self {
         case .construction: return String(localized: "Materials", comment: "Consumable resource name")
-        case .startup: return String(localized: "Capacity", comment: "Consumable resource name")
+        case .startup: return String(localized: "Growth", comment: "Consumable resource name")
         }
     }
 
@@ -97,7 +97,7 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
     var supplyOrderVerb: String {
         switch self {
         case .construction: return String(localized: "Order", comment: "Button: buy more of the consumable")
-        case .startup: return String(localized: "Provision", comment: "Button: buy more of the consumable")
+        case .startup: return String(localized: "Promote", comment: "Button: buy more of the consumable")
         }
     }
 
@@ -133,6 +133,14 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// Whether this scenario buys a physical, lead-timed supply at all.
+    var hasSupplyChain: Bool {
+        switch self {
+        case .construction: return true
+        case .startup: return false
+        }
+    }
+
     var suppliersName: String {
         switch self {
         case .construction: return String(localized: "Who supplies it", comment: "Order sheet: suppliers section")
@@ -153,7 +161,7 @@ extension CapabilityKind {
         case (.planning, .construction):       return String(localized: "Planning", comment: "Capability name")
         case (.planning, .startup):            return String(localized: "Roadmap", comment: "Capability name")
         case (.procurement, .construction):    return String(localized: "Acquisitions", comment: "Capability name")
-        case (.procurement, .startup):         return String(localized: "Vendors", comment: "Capability name")
+        case (.procurement, .startup):         return String(localized: "Go-to-market", comment: "Capability name")
         case (.quality, .construction):        return String(localized: "Quality", comment: "Capability name")
         case (.quality, .startup):             return String(localized: "Engineering quality", comment: "Capability name")
         case (.risk, .construction):           return String(localized: "Risk", comment: "Capability name")

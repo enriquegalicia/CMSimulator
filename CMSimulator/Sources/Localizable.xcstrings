@@ -54,6 +54,24 @@
       },
       "comment": "Site log: package unlocked"
     },
+    "%@ closed: %@ in, %lld%% sold.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ closed: %@ in, %lld%% sold."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ cerrada: entran %@, se vende %lld%%."
+          }
+        }
+      },
+      "comment": "Site log: funding round closed"
+    },
     "%@ complete.": {
       "extractionState": "manual",
       "localizations": {
@@ -843,7 +861,25 @@
           }
         }
       },
-      "comment": "Per-day wage suffix"
+      "comment": "Per day suffix"
+    },
+    "/mo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/mo"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/mes"
+          }
+        }
+      },
+      "comment": "Per month suffix"
     },
     "A coordination clash between disciplines needs rework.": {
       "extractionState": "manual",
@@ -1007,6 +1043,60 @@
       },
       "comment": "Startup work stream name"
     },
+    "Acquired for %@. Your share: %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquired for %@. Your share: %@."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adquirida por %@. Tu parte: %@."
+          }
+        }
+      },
+      "comment": "Site log: exit"
+    },
+    "Acquiring a customer costs %@ today, and gets dearer as the obvious ones run out.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquiring a customer costs %@ today, and gets dearer as the obvious ones run out."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conseguir un cliente cuesta %@ hoy, y se encarece conforme se agotan los evidentes."
+          }
+        }
+      },
+      "comment": "Acquisition cost explanation"
+    },
+    "Acquisition spend": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquisition spend"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gasto en adquisición"
+          }
+        }
+      },
+      "comment": "Growth panel section"
+    },
     "Acquisitions": {
       "extractionState": "manual",
       "localizations": {
@@ -1114,6 +1204,24 @@
         }
       },
       "comment": "Counterparty name"
+    },
+    "Annual recurring revenue": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annual recurring revenue"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingreso recurrente anual"
+          }
+        }
+      },
+      "comment": "Exit line"
     },
     "App closed without shutting down": {
       "extractionState": "manual",
@@ -1294,19 +1402,19 @@
         }
       }
     },
-    "Both run on the same simulation and are ranked on the same thing: profit. What changes is the work, what it consumes, and what can go wrong.": {
+    "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Both run on the same simulation and are ranked on the same thing: profit. What changes is the work, what it consumes, and what can go wrong."
+            "value": "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ambos corren sobre la misma simulación y se clasifican por lo mismo: la utilidad. Lo que cambia es el trabajo, lo que consume y lo que puede salir mal."
+            "value": "Ambos corren sobre la misma simulación, pero no son el mismo juego. Cada uno tiene su propio trabajo, su propia forma de ganar dinero, sus propios problemas — y su propia tabla de posiciones."
           }
         }
       },
@@ -1419,6 +1527,24 @@
         }
       },
       "comment": "Capability verb"
+    },
+    "Buys roughly %@ customers a day at today's price.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buys roughly %@ customers a day at today's price."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra unos %@ clientes al día al precio de hoy."
+          }
+        }
+      },
+      "comment": "Acquisition spend effect"
     },
     "Cancel": {
       "extractionState": "manual",
@@ -1797,6 +1923,42 @@
       },
       "comment": "Help bullet"
     },
+    "Company sold for": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Company sold for"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La empresa se vendió en"
+          }
+        }
+      },
+      "comment": "Exit line"
+    },
+    "Company value": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Company value"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valor de la empresa"
+          }
+        }
+      },
+      "comment": "Valuation line"
+    },
     "Complete": {
       "extractionState": "manual",
       "localizations": {
@@ -1903,6 +2065,24 @@
         }
       },
       "comment": "Startup work stream name"
+    },
+    "Cost to serve": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cost to serve"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Costo de atender"
+          }
+        }
+      },
+      "comment": "Unit economics line"
     },
     "Costs throughout the simulator display in this currency. Defaults to your device's own currency.": {
       "extractionState": "manual",
@@ -2100,6 +2280,42 @@
         }
       }
     },
+    "Customers": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Customers"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clientes"
+          }
+        }
+      },
+      "comment": "Growth panel stat"
+    },
+    "Customers at exit": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Customers at exit"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clientes al momento de vender"
+          }
+        }
+      },
+      "comment": "Exit line"
+    },
     "Cuts delivery lead times and unlocks price hedging, so crews stop standing idle waiting on materials.": {
       "extractionState": "manual",
       "localizations": {
@@ -2171,6 +2387,42 @@
         }
       },
       "comment": "HUD label"
+    },
+    "Default alive — revenue covers the burn.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default alive — revenue covers the burn."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autosuficiente — los ingresos cubren la quema."
+          }
+        }
+      },
+      "comment": "Sustainability state"
+    },
+    "Default dead — still burning more than you earn.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default dead — still burning more than you earn."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aún no eres autosuficiente — quemas más de lo que ganas."
+          }
+        }
+      },
+      "comment": "Sustainability state"
     },
     "Defects": {
       "extractionState": "manual",
@@ -2442,6 +2694,42 @@
       },
       "comment": "Scenario picker section header"
     },
+    "Diligence haircut, tech debt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diligence haircut, tech debt"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descuento por auditoría: deuda técnica"
+          }
+        }
+      },
+      "comment": "Exit line"
+    },
+    "Diligence knocked %@ off for tech debt.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diligence knocked %@ off for tech debt."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La auditoría descontó %@ por deuda técnica."
+          }
+        }
+      },
+      "comment": "Site log: diligence haircut"
+    },
     "Discovery": {
       "extractionState": "manual",
       "localizations": {
@@ -2675,6 +2963,24 @@
       },
       "comment": "Help bullet"
     },
+    "Everything going out": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything going out"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo lo que sale"
+          }
+        }
+      },
+      "comment": "Unit economics line"
+    },
     "Exit": {
       "extractionState": "manual",
       "localizations": {
@@ -2854,6 +3160,24 @@
       },
       "comment": "Startup work stream name"
     },
+    "Feature depth": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feature depth"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profundidad de funciones"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
+    },
     "Fencing, lighting, night watch. Stops material walking off site.": {
       "extractionState": "manual",
       "localizations": {
@@ -2871,6 +3195,24 @@
         }
       },
       "comment": "Mitigation description"
+    },
+    "Finish MVP & launch to put the product in front of people. Until then you have no customers and no revenue — only burn.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish MVP & launch to put the product in front of people. Until then you have no customers and no revenue — only burn."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termina MVP y lanzamiento para poner el producto frente a la gente. Hasta entonces no hay clientes ni ingresos — solo quema."
+          }
+        }
+      },
+      "comment": "Growth panel: pre-launch explanation"
     },
     "Finished on day %lld against a %lld-day contract.": {
       "extractionState": "manual",
@@ -3070,6 +3412,96 @@
       },
       "comment": "Capability summary"
     },
+    "Go-to-market": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go-to-market"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salida al mercado"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
+    "Growth": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Growth"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crecimiento"
+          }
+        }
+      },
+      "comment": "Consumable resource name"
+    },
+    "Growth rate drives the multiple. Tech debt you never paid down comes off the price at the end.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Growth rate drives the multiple. Tech debt you never paid down comes off the price at the end."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La tasa de crecimiento define el múltiplo. La deuda técnica que nunca saldaste se descuenta del precio al final."
+          }
+        }
+      },
+      "comment": "Valuation explanation"
+    },
+    "Growth spend paused - not enough cash.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Growth spend paused - not enough cash."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gasto en crecimiento pausado: no hay efectivo suficiente."
+          }
+        }
+      },
+      "comment": "Site log: growth spend halted"
+    },
+    "Growth, 14 days": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Growth, 14 days"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crecimiento, 14 días"
+          }
+        }
+      },
+      "comment": "Growth panel stat"
+    },
     "Handover": {
       "extractionState": "manual",
       "localizations": {
@@ -3105,6 +3537,24 @@
         }
       },
       "comment": "Difficulty explanation"
+    },
+    "Headline valuation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Headline valuation"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valuación bruta"
+          }
+        }
+      },
+      "comment": "Exit line"
     },
     "Help": {
       "extractionState": "manual",
@@ -3753,6 +4203,24 @@
       },
       "comment": "Incident consequence: defects"
     },
+    "Launch a product, grow real customers, and sell the company for what it is worth.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launch a product, grow real customers, and sell the company for what it is worth."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanza un producto, haz crecer clientes reales y vende la empresa por lo que vale."
+          }
+        }
+      },
+      "comment": "Scenario tagline"
+    },
     "Launch readiness": {
       "extractionState": "manual",
       "localizations": {
@@ -3770,6 +4238,96 @@
         }
       },
       "comment": "Startup work stream name"
+    },
+    "Launched": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launched"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanzado"
+          }
+        }
+      },
+      "comment": "Meter label"
+    },
+    "Launched on day %lld · %lld days of growth so far": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launched on day %lld · %lld days of growth so far"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanzado el día %lld · %lld días creciendo hasta ahora"
+          }
+        }
+      },
+      "comment": "Growth panel: launch summary"
+    },
+    "Launched on day %lld, sold on day %lld.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launched on day %lld, sold on day %lld."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanzado el día %lld, vendido el día %lld."
+          }
+        }
+      },
+      "comment": "Result subtitle, startup exit"
+    },
+    "Launched. The product is live and can start acquiring customers.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launched. The product is live and can start acquiring customers."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanzado. El producto está en vivo y ya puede captar clientes."
+          }
+        }
+      },
+      "comment": "Site log: product launched"
+    },
+    "Launching early compounds. Every day you polish before launch is growth you never get back.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launching early compounds. Every day you polish before launch is growth you never get back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanzar pronto se acumula. Cada día que pules antes de lanzar es crecimiento que no recuperas."
+          }
+        }
+      },
+      "comment": "Scenario signature lesson"
     },
     "Lead times %lld%% shorter": {
       "extractionState": "manual",
@@ -4040,6 +4598,24 @@
       },
       "comment": "Vendor pitch"
     },
+    "MVP & launch": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MVP & launch"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MVP y lanzamiento"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
+    },
     "Margin": {
       "extractionState": "manual",
       "localizations": {
@@ -4093,6 +4669,24 @@
         }
       },
       "comment": "Counterparty description"
+    },
+    "Margin per customer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margin per customer"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margen por cliente"
+          }
+        }
+      },
+      "comment": "Unit economics line"
     },
     "Material prices spike": {
       "extractionState": "manual",
@@ -4418,6 +5012,42 @@
       },
       "comment": "Difficulty description"
     },
+    "Multiple": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multiple"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Múltiplo"
+          }
+        }
+      },
+      "comment": "Valuation line"
+    },
+    "Multiple, set by growth": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multiple, set by growth"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Múltiplo, según el crecimiento"
+          }
+        }
+      },
+      "comment": "Exit line"
+    },
     "Negotiates vendor contracts down and shortens provisioning, so engineers stop waiting on capacity.": {
       "extractionState": "manual",
       "localizations": {
@@ -4507,6 +5137,24 @@
         }
       },
       "comment": "Work package status"
+    },
+    "No acquirer. With no revenue there is nothing to price.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No acquirer. With no revenue there is nothing to price."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay comprador. Sin ingresos no hay nada que valuar."
+          }
+        }
+      },
+      "comment": "Site log: no exit"
     },
     "No problems have been recorded.": {
       "extractionState": "manual",
@@ -4652,6 +5300,24 @@
       },
       "comment": "Site log: capability unaffordable"
     },
+    "Not launched yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not launched yet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aún sin lanzar"
+          }
+        }
+      },
+      "comment": "Growth panel: pre-launch title"
+    },
     "Nothing has gone wrong yet.": {
       "extractionState": "manual",
       "localizations": {
@@ -4687,6 +5353,24 @@
         }
       },
       "comment": "Empty site log"
+    },
+    "Nothing to promote until the product is live.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to promote until the product is live."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay nada que promover hasta que el producto esté en vivo."
+          }
+        }
+      },
+      "comment": "Acquisition spend disabled"
     },
     "Old hand": {
       "extractionState": "manual",
@@ -5299,6 +5983,24 @@
       },
       "comment": "Site log: delivered"
     },
+    "Promote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promote"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promover"
+          }
+        }
+      },
+      "comment": "Button: buy more of the consumable"
+    },
     "Provision": {
       "extractionState": "manual",
       "localizations": {
@@ -5587,6 +6289,24 @@
       },
       "comment": "P&L line"
     },
+    "Revenue per customer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revenue per customer"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingreso por cliente"
+          }
+        }
+      },
+      "comment": "Unit economics line"
+    },
     "Reviews and tests as you go. Tech debt paid down now costs a fraction of what it costs at due diligence.": {
       "extractionState": "manual",
       "localizations": {
@@ -5803,6 +6523,24 @@
       },
       "comment": "Diagnostic summary"
     },
+    "Scale & reliability": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scale & reliability"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escala y confiabilidad"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
+    },
     "Scenario": {
       "extractionState": "manual",
       "localizations": {
@@ -5819,7 +6557,7 @@
           }
         }
       },
-      "comment": "Scenario picker section header"
+      "comment": "Leaderboard scenario filter"
     },
     "Scores": {
       "extractionState": "manual",
@@ -5982,6 +6720,42 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Series A": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Series A"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serie A"
+          }
+        }
+      },
+      "comment": "Funding round name"
+    },
+    "Series B": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Series B"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serie B"
+          }
+        }
+      },
+      "comment": "Funding round name"
     },
     "Serious diligence. Holds back hard on tech debt, but wires reliably and on time.": {
       "extractionState": "manual",
@@ -6864,6 +7638,24 @@
       },
       "comment": "Counterparty description"
     },
+    "The offer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The offer"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La oferta"
+          }
+        }
+      },
+      "comment": "Result section header"
+    },
     "The platform went down with it. Nothing shipped while everyone firefought.": {
       "extractionState": "manual",
       "localizations": {
@@ -7242,6 +8034,24 @@
       },
       "comment": "Diagnostic report kind"
     },
+    "Unit economics": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unit economics"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Economía unitaria"
+          }
+        }
+      },
+      "comment": "Growth panel section"
+    },
     "Use": {
       "extractionState": "manual",
       "localizations": {
@@ -7368,6 +8178,24 @@
       },
       "comment": "Site exposure level"
     },
+    "What you would sell for today": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What you would sell for today"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En cuánto venderías hoy"
+          }
+        }
+      },
+      "comment": "Growth panel section"
+    },
     "Where the money went": {
       "extractionState": "manual",
       "localizations": {
@@ -7421,6 +8249,24 @@
         }
       },
       "comment": "Order sheet: suppliers section"
+    },
+    "Word of mouth compounds off the customers you already have, so every day before launch is growth you never get back.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Word of mouth compounds off the customers you already have, so every day before launch is growth you never get back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El boca a boca se multiplica sobre los clientes que ya tienes, así que cada día antes de lanzar es crecimiento que no recuperas."
+          }
+        }
+      },
+      "comment": "Growth panel: why launching early matters"
     },
     "Work halted for a safety review after an on-site incident.": {
       "extractionState": "manual",
@@ -7530,6 +8376,42 @@
       },
       "comment": "Result subtitle, failure"
     },
+    "You reached the exit without ever launching. A product nobody used is worth nothing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You reached the exit without ever launching. A product nobody used is worth nothing."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Llegaste a la venta sin haber lanzado nunca. Un producto que nadie usó no vale nada."
+          }
+        }
+      },
+      "comment": "Result subtitle, never launched"
+    },
+    "You took home": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You took home"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Te llevaste"
+          }
+        }
+      },
+      "comment": "Exit line"
+    },
     "Your name": {
       "extractionState": "manual",
       "localizations": {
@@ -7547,6 +8429,24 @@
         }
       },
       "comment": "Score name field"
+    },
+    "Your share after %@ raised": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your share after %@ raised"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu parte tras levantar %@"
+          }
+        }
+      },
+      "comment": "Exit line: founder equity"
     },
     "credit %@": {
       "extractionState": "manual",

@@ -369,7 +369,9 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(scenario: .construction, outcome: .insolvent, profit: 50_000, revenue: 100_000,
+        let result = RunResult(scenario: .construction, exitOffer: nil, founderEquity: 1,
+                               capitalRaised: 0, launchDay: nil,
+                               outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
                                openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 0,
                                clientTrust: 0.5, reputation: 0.5, difficulty: .standard,
@@ -379,7 +381,9 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(scenario: .construction, outcome: .delivered, profit: 100_000, revenue: 500_000,
+            RunResult(scenario: .construction, exitOffer: nil, founderEquity: 1,
+                      capitalRaised: 0, launchDay: nil,
+                      outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
                       openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 5,
                       clientTrust: 0.8, reputation: 0.8, difficulty: difficulty,
@@ -621,9 +625,21 @@ final class ScenarioTests: XCTestCase {
         for kind in ScenarioKind.allCases {
             let brief = ProjectBrief.make(scenario: kind)
 
-            let payout = brief.advanceRate + brief.milestones.reduce(0) { $0 + $1.share }
-            XCTAssertEqual(payout, 1.0, accuracy: 0.001,
-                           "\(kind): advance plus milestones must equal the contract value")
+            // Earned payments must sum to exactly the contract - anything
+            // else means the client pays out more or less than the job is
+            // worth. Financing rounds are not earnings and carry no such
+            // rule: they are sized against a capital pool.
+            let earned = brief.milestones.filter { !$0.isFinancing }
+            if !earned.isEmpty {
+                let payout = brief.advanceRate + earned.reduce(0) { $0 + $1.share }
+                XCTAssertEqual(payout, 1.0, accuracy: 0.001,
+                               "\(kind): advance plus earned payments must equal the contract value")
+            } else {
+                XCTAssertEqual(brief.advanceRate, 0, accuracy: 1e-9,
+                               "\(kind): a venture-funded run has no client advance")
+                XCTAssertTrue(brief.milestones.allSatisfy { $0.dilution > 0 },
+                              "\(kind): every round must cost equity")
+            }
 
             let total = brief.streams.reduce(0) { $0 + $1.units }
             var cumulative = 0.0
@@ -715,5 +731,162 @@ final class ScenarioTests: XCTestCase {
         engine.restart(with: .make(scenario: .construction, difficulty: .tight))
         XCTAssertEqual(engine.brief.scenario, .construction)
         XCTAssertEqual(engine.brief.difficulty, .tight)
+    }
+}
+
+// MARK: - Startup economics
+//
+// The first version of the startup scenario was construction with the
+// nouns changed: no customers, money released by build progress, and a
+// sale price fixed before the run started. These lock in that it is now
+// actually a business.
+
+@MainActor
+final class StartupEconomicsTests: XCTestCase {
+
+    private func launchedEngine(seed: UInt64 = 7) -> SimulationEngine {
+        let engine = SimulationEngine(brief: .startup(difficulty: .steady, persona: .institution, seed: seed))
+        engine.debugLaunchProduct()
+        return engine
+    }
+
+    /// Software has no warehouse. Turning the supply chain off rather than
+    /// relabelling it is the whole point of the correction.
+    func testStartupHasNoSupplyChain() {
+        let brief = ProjectBrief.startup()
+        XCTAssertFalse(brief.usesSupplyChain)
+        for stream in brief.streams {
+            XCTAssertEqual(stream.materialUnitsPerWorkUnit, 0,
+                           "\(stream.id) still consumes a lead-timed supply")
+            XCTAssertEqual(stream.baseLeadTimeDays, 0)
+        }
+        XCTAssertTrue(ProjectBrief.construction().usesSupplyChain,
+                      "construction must keep its supply chain")
+    }
+
+    /// Nothing can be acquired before the product is in front of anyone.
+    func testNoCustomersBeforeLaunch() {
+        let engine = SimulationEngine(brief: .startup(difficulty: .steady, seed: 3))
+        engine.setGrowthSpend(20_000)
+        for _ in 0..<200 { engine.advance(byDays: 0.5) }
+
+        XCTAssertEqual(engine.growth?.isLaunched, false)
+        XCTAssertEqual(engine.growth?.customers ?? -1, 0, accuracy: 1e-9,
+                       "spending on acquisition before launch must buy nothing")
+    }
+
+    /// Referrals multiply the base you have, so without an inbound trickle
+    /// the loop can never start - a launched product with no ad budget
+    /// would get literally nobody, for ever. That was a real bug.
+    func testALaunchedProductGrowsWithoutAnyAdSpend() {
+        let engine = launchedEngine()
+        engine.setGrowthSpend(0)
+        for _ in 0..<120 { engine.advance(byDays: 0.5) }
+        XCTAssertGreaterThan(engine.growth?.customers ?? 0, 10,
+                             "organic acquisition must seed itself from zero")
+    }
+
+    /// Customers are the whole point: they pay, and paying reduces burn.
+    func testCustomersProduceRevenueThatOffsetsBurn() {
+        let engine = launchedEngine()
+        engine.setGrowthSpend(15_000)
+        for _ in 0..<200 { engine.advance(byDays: 0.5) }
+
+        guard let growth = engine.growth else { return XCTFail("no market") }
+        XCTAssertGreaterThan(growth.customers, 0)
+        XCTAssertGreaterThan(growth.dailyRevenue, 0)
+
+        let gross = engine.dailyBurn + growth.dailyCostToServe + growth.dailyGrowthSpend
+        XCTAssertEqual(engine.netDailyBurn, gross - growth.dailyRevenue, accuracy: 1e-6,
+                       "revenue must come off the burn, or 'default alive' means nothing")
+        XCTAssertLessThan(engine.netDailyBurn, gross)
+    }
+
+    /// Raising is not earning. Counting a round as revenue would make
+    /// "raise and fail" score as a profitable run.
+    func testFundingRoundsAddCashButNotRevenueAndCostEquity() {
+        var ledger = Ledger(startingCash: 100_000, creditLimit: 0, dailyInterestRate: 0)
+        let revenueBefore = ledger.profit + ledger.costs.total
+
+        ledger.raise(2_000_000, dilution: 0.2)
+
+        XCTAssertEqual(ledger.cash, 2_100_000, accuracy: 1e-6)
+        XCTAssertEqual(ledger.capitalRaised, 2_000_000, accuracy: 1e-6)
+        XCTAssertEqual(ledger.founderEquity, 0.8, accuracy: 1e-9)
+        XCTAssertEqual(ledger.profit + ledger.costs.total, revenueBefore, accuracy: 1e-6,
+                       "a round must not count as earnings")
+    }
+
+    /// Investors price traction. Clients certify progress. The two
+    /// scenarios must trigger money on genuinely different things.
+    func testStartupIsFundedByTractionAndConstructionByProgress() {
+        for milestone in ProjectBrief.startup().milestones {
+            guard case .customers = milestone.trigger else {
+                return XCTFail("a funding round fired on build progress")
+            }
+            XCTAssertTrue(milestone.isFinancing, "a round must dilute")
+        }
+        for milestone in ProjectBrief.construction().milestones {
+            guard case .progress = milestone.trigger else {
+                return XCTFail("a client payment fired on customer count")
+            }
+            XCTAssertFalse(milestone.isFinancing, "a progress payment must not dilute")
+        }
+    }
+
+    /// What the company is worth has to be earned during the run, not
+    /// decided before it starts.
+    func testValuationIsEarnedNotFixed() {
+        let quiet = launchedEngine(seed: 11)
+        quiet.setGrowthSpend(0)
+        for _ in 0..<80 { quiet.advance(byDays: 0.5) }
+
+        let busy = launchedEngine(seed: 11)
+        busy.setGrowthSpend(30_000)
+        for _ in 0..<80 { busy.advance(byDays: 0.5) }
+
+        let quietValue = quiet.growth!.exitValuation(openTechDebt: 0).netValuation
+        let busyValue = busy.growth!.exitValuation(openTechDebt: 0).netValuation
+        XCTAssertGreaterThan(busyValue, quietValue * 1.2,
+                             "growing harder must be worth measurably more at the exit")
+    }
+
+    /// Tech debt has to bite twice: customers leave during the run, and
+    /// diligence takes a bite out of the price at the end.
+    func testTechDebtRaisesChurnAndCutsTheSalePrice() {
+        let growth = GrowthModel(spec: .seedStageSaaS)
+        XCTAssertGreaterThan(growth.dailyChurnRate(techDebt: 90),
+                             growth.dailyChurnRate(techDebt: 0) * 2,
+                             "debt must visibly drive customers away")
+        XCTAssertLessThan(growth.satisfaction(techDebt: 90), 0.5)
+
+        // Diligence can only take a bite out of a company worth something,
+        // so grow one before pricing it.
+        let engine = launchedEngine(seed: 5)
+        engine.setGrowthSpend(20_000)
+        for _ in 0..<160 { engine.advance(byDays: 0.5) }
+        guard let grown = engine.growth, grown.customers > 50 else {
+            return XCTFail("expected a company with customers to price")
+        }
+
+        let clean = grown.exitValuation(openTechDebt: 0)
+        let dirty = grown.exitValuation(openTechDebt: 60)
+        XCTAssertEqual(clean.diligenceHaircut, 0, accuracy: 1e-9)
+        XCTAssertGreaterThan(dirty.diligenceHaircut, 0)
+        XCTAssertLessThan(dirty.netValuation, clean.netValuation,
+                          "unpaid tech debt must come off the sale price")
+    }
+
+    /// Building the whole product and never shipping it is not a win,
+    /// however tidy the books look.
+    func testNeverLaunchingScoresZero() {
+        let result = RunResult(
+            scenario: .startup, exitOffer: nil, founderEquity: 1, capitalRaised: 0,
+            launchDay: nil, outcome: .delivered, profit: 5_000_000, revenue: 6_000_000,
+            costs: CostBreakdown(), days: 150, deadlineDays: 150, progress: 100,
+            openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 4,
+            clientTrust: 0.9, reputation: 0.9, difficulty: .standard,
+            persona: .developer, seed: 1)
+        XCTAssertEqual(result.score, 0, accuracy: 1e-9)
     }
 }

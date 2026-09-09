@@ -74,6 +74,10 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var vendors: [Vendor]
     @Published private(set) var orders: [MaterialOrder] = []
     @Published private(set) var mitigationsHeld: Set<MitigationClass> = []
+    /// Customers, revenue and valuation. Nil for scenarios with no market.
+    @Published private(set) var growth: GrowthModel?
+    /// The offer on the table once the run ends, for the debrief.
+    @Published private(set) var exitOffer: ExitOffer?
 
     @Published private(set) var totalProgress: Double = 0
     @Published private(set) var elapsedDays: Double = 0
@@ -121,6 +125,7 @@ final class SimulationEngine: ObservableObject {
         self.vendors = Vendor.standingPanel()
         self.workPackages = brief.streams.map { WorkPackage(spec: $0) }
         self.capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
+        self.growth = brief.growth.map(GrowthModel.init(spec:))
         configureFreshRun()
     }
 
@@ -128,8 +133,10 @@ final class SimulationEngine: ObservableObject {
         workPackages[0].isUnlocked = true
         // Mobilization stock, procured under the contract's advance. Enough
         // to start without an order, not enough to coast.
-        for i in workPackages.indices {
-            workPackages[i].materialStock = workPackages[i].units * workPackages[i].spec.materialUnitsPerWorkUnit * 0.15
+        if brief.usesSupplyChain {
+            for i in workPackages.indices {
+                workPackages[i].materialStock = workPackages[i].units * workPackages[i].spec.materialUnitsPerWorkUnit * 0.15
+            }
         }
         for i in capabilities.indices where capabilities[i].kind.unlockThreshold <= 0 {
             capabilities[i].isUnlocked = true
@@ -156,6 +163,8 @@ final class SimulationEngine: ObservableObject {
         vendors = Vendor.standingPanel()
         workPackages = next.streams.map { WorkPackage(spec: $0) }
         capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
+        growth = next.growth.map(GrowthModel.init(spec:))
+        exitOffer = nil
         workers = []
         orders = []
         mitigationsHeld = []
@@ -221,11 +230,20 @@ final class SimulationEngine: ObservableObject {
         accrueLatePenalties()
         recomputeProgress()
         updateUnlocks()
+        advanceGrowth(step: step)
         raisePaymentMilestones()
         advanceIncidentClock(step: step)
         updateForecast()
 
-        if workPackages.allSatisfy(\.isComplete) {
+        if brief.growth != nil {
+            // A startup does not stop when the backlog is empty - that is
+            // the point at which it is finally free to just grow. The run
+            // ends at the exit horizon.
+            if elapsedDays >= deadlineDays {
+                performExit()
+                return
+            }
+        } else if workPackages.allSatisfy(\.isComplete) {
             performHandover()
             return
         }
@@ -265,7 +283,7 @@ final class SimulationEngine: ObservableObject {
             // Crew waiting on materials are still on full pay. This is the
             // single clearest lesson in the game about lead times, so it is
             // tracked explicitly and reported at the end.
-            if workPackages[i].isStarvedOfMaterials {
+            if brief.usesSupplyChain, workPackages[i].isStarvedOfMaterials {
                 workPackages[i].idleCrewDays += Double(crew.count) * step
                 continue
             }
@@ -277,12 +295,18 @@ final class SimulationEngine: ObservableObject {
             let otFactor = WorkPackage.overtimeFactor(overtime)
 
             var produced = rawOutput * congestion * drag * otFactor * step
-            let materialCap = workPackages[i].materialStock / workPackages[i].spec.materialUnitsPerWorkUnit
-            produced = min(produced, workPackages[i].unitsRemaining, materialCap)
+            if brief.usesSupplyChain {
+                let materialCap = workPackages[i].materialStock / workPackages[i].spec.materialUnitsPerWorkUnit
+                produced = min(produced, workPackages[i].unitsRemaining, materialCap)
+            } else {
+                produced = min(produced, workPackages[i].unitsRemaining)
+            }
             guard produced > 0 else { continue }
 
             workPackages[i].unitsCompleted += produced
-            workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
+            if brief.usesSupplyChain {
+                workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
+            }
 
             var defectPerUnit = crew.reduce(0) { $0 + $1.defectRate(overtime: overtime) } / Double(crew.count)
             if workPackages[i].isFastTracked { defectPerUnit += CapabilityEffects.fastTrackDefectPenalty }
@@ -306,7 +330,7 @@ final class SimulationEngine: ObservableObject {
             let package = workPackages.first { $0.id == workers[i].packageID }
             let isWorking = (package?.isUnlocked ?? false)
                 && !(package?.isComplete ?? true)
-                && !(package?.isStarvedOfMaterials ?? true)
+                && !(brief.usesSupplyChain && (package?.isStarvedOfMaterials ?? true))
             let wasTraining = workers[i].isInTraining
             workers[i].advance(days: step, overtime: overtime, isWorking: isWorking)
             if wasTraining, !workers[i].isInTraining {
@@ -395,17 +419,38 @@ final class SimulationEngine: ObservableObject {
 
     private func raisePaymentMilestones() {
         for milestone in brief.milestones where !ledger.milestonesPaid.contains(milestone.id) {
-            guard totalProgress >= milestone.progressThreshold else { continue }
+            guard isTriggered(milestone.trigger) else { continue }
             ledger.milestonesPaid.insert(milestone.id)
-            let gross = (brief.contractValue + scopeRevenue) * milestone.share
-            let retainage = gross * brief.retainageRate
-            let delay = max(1, brief.clientPersona.basePaymentDelayDays
-                - CapabilityEffects.paymentSpeedUpDays(level: level(of: .communications))
-                - clientTrust * 4)
-            pendingPayments.append((net: gross - retainage, retainage: retainage, dueDay: elapsedDays + delay))
-            reputation = min(1, reputation + 0.03)
-            log(String(localized: "Milestone certified. Payment due in \(Int(delay)) days.", comment: "Site log: milestone reached"),
-                symbol: "checkmark.circle.fill", tone: .good)
+
+            if milestone.isFinancing {
+                // A round is cash today paid for with a slice of the exit.
+                // It never counts as earnings, or raising and then failing
+                // would score as a profitable run.
+                let amount = brief.contractValue * milestone.share
+                ledger.raise(amount, dilution: milestone.dilution)
+                reputation = min(1, reputation + 0.04)
+                clientTrust = min(1, clientTrust + 0.08)
+                log(String(localized: "\(milestone.name) closed: \(Int(amount).formatted()) in, \(Int(milestone.dilution * 100))% sold.", comment: "Site log: funding round closed"),
+                    symbol: "chart.line.uptrend.xyaxis", tone: .good)
+            } else {
+                let gross = (brief.contractValue + scopeRevenue) * milestone.share
+                let retainage = gross * brief.retainageRate
+                let delay = max(1, brief.clientPersona.basePaymentDelayDays
+                    - CapabilityEffects.paymentSpeedUpDays(level: level(of: .communications))
+                    - clientTrust * 4)
+                pendingPayments.append((net: gross - retainage, retainage: retainage, dueDay: elapsedDays + delay))
+                reputation = min(1, reputation + 0.03)
+                log(String(localized: "Milestone certified. Payment due in \(Int(delay)) days.", comment: "Site log: milestone reached"),
+                    symbol: "checkmark.circle.fill", tone: .good)
+            }
+        }
+    }
+
+    /// Clients certify progress; investors price traction.
+    private func isTriggered(_ trigger: PaymentTrigger) -> Bool {
+        switch trigger {
+        case .progress(let threshold): return totalProgress >= threshold
+        case .customers(let threshold): return (growth?.customers ?? 0) >= threshold
         }
     }
 
@@ -450,6 +495,51 @@ final class SimulationEngine: ObservableObject {
             log(String(localized: "\(Int(order.quantity)) units delivered to \(workPackages[i].title).", comment: "Site log: delivery arrived"),
                 symbol: "shippingbox.fill", tone: .good)
         }
+    }
+
+    // MARK: Growth
+
+    /// Moves the customer base, banks subscription revenue and pays to
+    /// serve it. Only runs for scenarios that have a market at all.
+    private func advanceGrowth(step: Double) {
+        guard growth != nil else { return }
+
+        // The product reaches people when its launch stream is finished.
+        if let launchID = brief.launchStreamID,
+           let launchStream = workPackages.first(where: { $0.id == launchID }),
+           launchStream.isComplete, growth?.isLaunched == false {
+            growth?.launch(onDay: elapsedDays)
+            log(String(localized: "Launched. The product is live and can start acquiring customers.", comment: "Site log: product launched"),
+                symbol: "paperplane.fill", tone: .good)
+        }
+
+        let totalUnits = workPackages.reduce(0) { $0 + $1.units }
+        let built = workPackages.reduce(0) { $0 + $1.unitsCompleted }
+        let breadth = totalUnits > 0 ? built / totalUnits : 0
+        let debt = workPackages.reduce(0) { $0 + $1.defectDebt }
+
+        let result = growth!.advance(days: step, techDebt: debt,
+                                     breadth: breadth, currentDay: elapsedDays)
+        if result.revenue > 0 {
+            // Subscription income is genuinely earned, unlike a round.
+            ledger.receive(result.revenue, retainage: 0)
+        }
+        if result.costToServe > 0 {
+            ledger.forceSpend(result.costToServe, into: \.materials)
+        }
+        if growth!.dailyGrowthSpend > 0 {
+            let spend = growth!.dailyGrowthSpend * step
+            if !ledger.spend(spend, into: \.capabilities) {
+                growth?.dailyGrowthSpend = 0
+                log(String(localized: "Growth spend paused - not enough cash.", comment: "Site log: growth spend halted"),
+                    symbol: "exclamationmark.triangle.fill", tone: .bad)
+            }
+        }
+    }
+
+    /// Player control over acquisition spend.
+    func setGrowthSpend(_ perDay: Double) {
+        growth?.dailyGrowthSpend = max(0, perDay)
     }
 
     // MARK: Progress and unlocks
@@ -698,7 +788,8 @@ final class SimulationEngine: ObservableObject {
     /// estimate. Only meaningful once Planning is staffed.
     var currentThroughput: Double {
         var total = 0.0
-        for package in workPackages where package.isUnlocked && !package.isComplete && !package.isStarvedOfMaterials {
+        for package in workPackages where package.isUnlocked && !package.isComplete
+            && !(brief.usesSupplyChain && package.isStarvedOfMaterials) {
             let crew = workers.filter { $0.packageID == package.id && !$0.isInTraining }
             guard !crew.isEmpty else { continue }
             let raw = crew.reduce(0) { $0 + $1.effectiveOutput }
@@ -936,6 +1027,34 @@ final class SimulationEngine: ObservableObject {
 
     // MARK: - Handover
 
+    /// The end of a startup run: an acquirer prices the company on its
+    /// revenue, its growth rate and whatever diligence turns up, and the
+    /// founder takes home whatever share of that they still own.
+    private func performExit() {
+        guard let growth else { return finish(.insolvent) }
+        let openDebt = workPackages.reduce(0) { $0 + $1.defectDebt }
+        let offer = growth.exitValuation(openTechDebt: openDebt)
+        exitOffer = offer
+
+        for payment in pendingPayments { ledger.receive(payment.net, retainage: payment.retainage) }
+        pendingPayments = []
+
+        let proceeds = offer.netValuation * ledger.founderEquity
+        if proceeds > 0 {
+            ledger.receive(proceeds, retainage: 0)
+            log(String(localized: "Acquired for \(Int(offer.netValuation).formatted()). Your share: \(Int(proceeds).formatted()).", comment: "Site log: exit"),
+                symbol: "sparkles", tone: .good)
+        } else {
+            log(String(localized: "No acquirer. With no revenue there is nothing to price.", comment: "Site log: no exit"),
+                symbol: "xmark.octagon.fill", tone: .bad)
+        }
+        if offer.diligenceHaircut > 0 {
+            log(String(localized: "Diligence knocked \(Int(offer.diligenceHaircut).formatted()) off for tech debt.", comment: "Site log: diligence haircut"),
+                symbol: "doc.text.magnifyingglass", tone: .bad)
+        }
+        finish(.delivered)
+    }
+
     private func performHandover() {
         let openDefects = workPackages.reduce(0) { $0 + $1.defectDebt }
         if openDefects > 0.01 {
@@ -982,7 +1101,19 @@ final class SimulationEngine: ObservableObject {
         return payroll + upkeep + lateCost
     }
 
-    var runwayDays: Double { ledger.runwayDays(dailyBurn: dailyBurn) }
+    /// Everything going out, net of what comes in. Once subscription
+    /// revenue covers the burn this goes to zero and the runway is
+    /// infinite - the company is default alive.
+    var netDailyBurn: Double {
+        var net = dailyBurn
+        if let growth {
+            net += growth.dailyCostToServe + growth.dailyGrowthSpend
+            net -= growth.dailyRevenue
+        }
+        return net
+    }
+
+    var runwayDays: Double { ledger.runwayDays(dailyBurn: max(0, netDailyBurn)) }
 
     var averageMorale: Double {
         guard !workers.isEmpty else { return 1 }
@@ -1005,6 +1136,10 @@ final class SimulationEngine: ObservableObject {
     var result: RunResult {
         RunResult(
             scenario: brief.scenario,
+            exitOffer: exitOffer,
+            founderEquity: ledger.founderEquity,
+            capitalRaised: ledger.capitalRaised,
+            launchDay: growth?.launchDay,
             outcome: outcome ?? .insolvent,
             profit: ledger.profit,
             revenue: ledger.revenueReceived + ledger.retainageHeld,
@@ -1042,6 +1177,12 @@ final class SimulationEngine: ObservableObject {
         workPackages[idx].unitsCompleted = max(0, min(units, workPackages[idx].units))
     }
 
+    /// Puts the product live without playing through the build, so the
+    /// growth loop can be tested on its own.
+    func debugLaunchProduct() {
+        growth?.launch(onDay: elapsedDays)
+    }
+
     /// Empties the bank and the credit line, to exercise insolvency.
     func debugDrainCash() {
         ledger.debugDrain()
@@ -1062,6 +1203,14 @@ final class SimulationEngine: ObservableObject {
 
 struct RunResult {
     let scenario: ScenarioKind
+    /// Startup runs only. What the company sold for and on what basis.
+    let exitOffer: ExitOffer?
+    /// The founder's remaining share at the exit.
+    let founderEquity: Double
+    /// Capital taken in. Not earnings - kept separate so the debrief can
+    /// show that raising is not the same as making money.
+    let capitalRaised: Double
+    let launchDay: Double?
     let outcome: RunOutcome
     let profit: Double
     let revenue: Double
@@ -1089,6 +1238,8 @@ struct RunResult {
     /// Steady one.
     var score: Double {
         guard outcome == .delivered else { return 0 }
+        // Never launching is not a delivery, however tidy the books look.
+        if scenario == .startup, launchDay == nil { return 0 }
         let onTimeBonus = wasOnTime ? 1.1 : 1.0
         return max(0, profit) * difficulty.scoreMultiplier * onTimeBonus
     }

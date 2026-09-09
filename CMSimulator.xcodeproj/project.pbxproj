@@ -62,6 +62,8 @@
 		45551AD7B47248E2B5A2283E /* Features.png in Resources */ = {isa = PBXBuildFile; fileRef = 672520B4C0FF4CBF97EED865 /* Features.png */; };
 		9BC3B4034EE64428A4E0226D /* Payments.png in Resources */ = {isa = PBXBuildFile; fileRef = 060EF195979E4D4B9B934444 /* Payments.png */; };
 		28909552386D4B0998605426 /* Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = A2F2CCCB1BB3498AA3267EE8 /* Launch.png */; };
+		7757D72C868D49DDBA81A757 /* GrowthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */; };
+		86E278180B8740BB8FD38637 /* GrowthPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +146,8 @@
 		672520B4C0FF4CBF97EED865 /* Features.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Features.png; sourceTree = "<group>"; };
 		060EF195979E4D4B9B934444 /* Payments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Payments.png; sourceTree = "<group>"; };
 		A2F2CCCB1BB3498AA3267EE8 /* Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Launch.png; sourceTree = "<group>"; };
+		97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthModel.swift; sourceTree = "<group>"; };
+		F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthPanelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				5FC1E3D47680310511107479 /* WorkPackage.swift */,
+				97F2C38B1CE346888FEA55B0 /* GrowthModel.swift */,
 				888E24CE241D476797D81FCE /* Scenario.swift */,
 				6E8495D0F8C84AD6A0B177A3 /* Worker.swift */,
 				193D6E08585A49D181A2DF3F /* Ledger.swift */,
@@ -296,6 +301,7 @@
 				EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */,
 				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
 				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
+				F0DD052F0B6D4F88B0DC7C77 /* GrowthPanelView.swift */,
 				F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */,
 				F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */,
 				17B3C79377994FF4B1D147DD /* MaterialOrderView.swift */,
@@ -484,6 +490,8 @@
 				F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */,
 				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
 				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
+				7757D72C868D49DDBA81A757 /* GrowthModel.swift in Sources */,
+				86E278180B8740BB8FD38637 /* GrowthPanelView.swift in Sources */,
 				E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */,
 				341E194F261A4BD1ADB7A2E4 /* ScenarioPickerView.swift in Sources */,
 				54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */,

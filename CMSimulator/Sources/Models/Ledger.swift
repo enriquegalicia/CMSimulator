@@ -74,6 +74,14 @@ struct Ledger {
     private(set) var retainageHeld: Double = 0
     /// Milestone indices already paid, so each releases exactly once.
     var milestonesPaid: Set<Int> = []
+    /// Investment taken in. Deliberately *not* revenue: money you raised
+    /// is not money you earned, and counting it as such would make
+    /// "raise a round and fail" score as a profitable run.
+    private(set) var capitalRaised: Double = 0
+    /// The founder's remaining share, 1.0 at the start. Every round sold
+    /// buys runway now and costs a slice of the exit later - which is the
+    /// whole trade-off of taking money.
+    private(set) var founderEquity: Double = 1.0
     /// Days the project has been unable to make payroll in full.
     var daysInArrears: Double = 0
 
@@ -139,6 +147,16 @@ struct Ledger {
         let toDebt = min(debt, released)
         debt -= toDebt
         cash += released - toDebt
+    }
+
+    /// Investment. Adds cash and dilutes, but never counts as earnings.
+    mutating func raise(_ amount: Double, dilution: Double) {
+        guard amount > 0 else { return }
+        capitalRaised += amount
+        founderEquity *= (1 - min(max(dilution, 0), 0.9))
+        let toDebt = min(debt, amount)
+        debt -= toDebt
+        cash += amount - toDebt
     }
 
     mutating func accrueInterest(days: Double) {

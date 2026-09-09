@@ -28,6 +28,7 @@ struct ResultView: View {
             VStack(spacing: 18) {
                 banner
                 if delivered { headline }
+                exitCard
                 ledgerCard
                 operationsCard
                 saveCard
@@ -47,14 +48,59 @@ struct ResultView: View {
                  ? String(localized: "Project handed over", comment: "Result title, success")
                  : String(localized: "Insolvent", comment: "Result title, failure"))
                 .font(.title.bold())
-            Text(delivered
-                 ? String(localized: "Finished on day \(Int(result.days)) against a \(Int(result.deadlineDays))-day contract.", comment: "Result subtitle, success")
-                 : String(localized: "You ran out of money on day \(Int(result.days)) with \(result.progress, format: .number.precision(.fractionLength(0)))% built.", comment: "Result subtitle, failure"))
+            Text(subtitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
         .padding(.top, 8)
+    }
+
+    /// Reads as the end of whichever kind of run this was.
+    private var subtitle: String {
+        guard delivered else {
+            return String(localized: "You ran out of money on day \(Int(result.days)) with \(result.progress, format: .number.precision(.fractionLength(0)))% built.", comment: "Result subtitle, failure")
+        }
+        if result.scenario == .startup {
+            guard let launchDay = result.launchDay else {
+                return String(localized: "You reached the exit without ever launching. A product nobody used is worth nothing.", comment: "Result subtitle, never launched")
+            }
+            return String(localized: "Launched on day \(Int(launchDay)), sold on day \(Int(result.days)).", comment: "Result subtitle, startup exit")
+        }
+        return String(localized: "Finished on day \(Int(result.days)) against a \(Int(result.deadlineDays))-day contract.", comment: "Result subtitle, success")
+    }
+
+    @ViewBuilder
+    private var exitCard: some View {
+        if let offer = result.exitOffer {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("The offer", comment: "Result section header")
+                    .font(.headline)
+                row(String(localized: "Customers at exit", comment: "Exit line"), offer.customers, isCurrency: false)
+                row(String(localized: "Annual recurring revenue", comment: "Exit line"), offer.annualRecurringRevenue)
+                HStack {
+                    Text(String(localized: "Multiple, set by growth", comment: "Exit line")).font(.subheadline)
+                    Spacer()
+                    Text(String(format: "%.1f×", offer.multiple)).font(.subheadline.monospacedDigit())
+                }
+                row(String(localized: "Headline valuation", comment: "Exit line"), offer.headlineValuation, bold: true)
+                if offer.diligenceHaircut > 0 {
+                    row(String(localized: "Diligence haircut, tech debt", comment: "Exit line"), -offer.diligenceHaircut, tint: .red)
+                }
+                Divider()
+                row(String(localized: "Company sold for", comment: "Exit line"), offer.netValuation, bold: true)
+                HStack {
+                    Text(String(localized: "Your share after \(result.capitalRaised, format: .currency(code: currencyCode).precision(.fractionLength(0))) raised", comment: "Exit line: founder equity")).font(.subheadline)
+                    Spacer()
+                    Text(result.founderEquity, format: .percent.precision(.fractionLength(0)))
+                        .font(.subheadline.monospacedDigit())
+                }
+                row(String(localized: "You took home", comment: "Exit line"),
+                    offer.netValuation * result.founderEquity, tint: .green, bold: true)
+            }
+            .padding(16)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        }
     }
 
     private var headline: some View {
@@ -97,12 +143,15 @@ struct ResultView: View {
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
     }
 
-    private func row(_ label: String, _ amount: Double, tint: Color = .primary, bold: Bool = false) -> some View {
+    private func row(_ label: String, _ amount: Double, tint: Color = .primary,
+                     bold: Bool = false, isCurrency: Bool = true) -> some View {
         HStack {
             Text(label)
                 .font(bold ? .subheadline.bold() : .subheadline)
             Spacer()
-            Text(amount, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+            Text(isCurrency
+                 ? amount.formatted(.currency(code: currencyCode).precision(.fractionLength(0)))
+                 : Int(amount).formatted())
                 .font((bold ? Font.subheadline.bold() : Font.subheadline).monospacedDigit())
                 .foregroundStyle(tint == .primary && amount < 0 ? .secondary : tint)
         }

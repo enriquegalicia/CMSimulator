@@ -39,7 +39,7 @@ struct ScenarioPickerView: View {
                 } header: {
                     Text("Scenario", comment: "Scenario picker section header")
                 } footer: {
-                    Text("Both run on the same simulation and are ranked on the same thing: profit. What changes is the work, what it consumes, and what can go wrong.", comment: "Scenario picker explanation")
+                    Text("Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.", comment: "Scenario picker explanation")
                 }
 
                 Section {

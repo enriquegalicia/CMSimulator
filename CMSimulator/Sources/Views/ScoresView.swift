@@ -40,8 +40,17 @@ struct ScoresView: View {
     private var isWide: Bool { horizontalSizeClass == .regular }
 
     @State private var board: ScoreBoard = .profit
+    /// Profit is comparable within a scenario but not across them - a
+    /// software exit is two orders of magnitude bigger than a building's
+    /// margin. One list of both would just be the startup runs.
+    @State private var scenarioFilter: ScenarioKind = .construction
+
+    private var scoped: [ScoreEntry] {
+        scores.filter { $0.scenarioKind == scenarioFilter }
+    }
 
     private var ranked: [ScoreEntry] {
+        let scores = scoped
         switch board {
         case .profit: return scores.sorted { $0.score > $1.score }
         case .speed: return scores.sorted { $0.days < $1.days }
@@ -62,6 +71,11 @@ struct ScoresView: View {
                 Button("Exit", action: onExit)
                     .controlSize(isWide ? .large : .regular)
             }
+
+            Picker(String(localized: "Scenario", comment: "Leaderboard scenario filter"), selection: $scenarioFilter) {
+                ForEach(ScenarioKind.allCases) { Text($0.name).tag($0) }
+            }
+            .pickerStyle(.segmented)
 
             Picker("Leaderboard", selection: $board) {
                 ForEach(ScoreBoard.allCases) { Text($0.shortTitle).tag($0) }

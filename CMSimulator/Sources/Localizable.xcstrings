@@ -108,6 +108,24 @@
       },
       "comment": "Site log: fast-tracked"
     },
+    "%@ for %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ for %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ para %@"
+          }
+        }
+      },
+      "comment": "Material order sheet title"
+    },
     "%@ grew by %lld units, contract value up %@.": {
       "extractionState": "manual",
       "localizations": {
@@ -161,6 +179,24 @@
         }
       },
       "comment": "Site log: mitigation bought"
+    },
+    "%@ left, taking their experience with them.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ left, taking their experience with them."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ se fue y se llevó su experiencia."
+          }
+        }
+      },
+      "comment": "Incident consequence: worker leaves"
     },
     "%@ let go. Severance %@.": {
       "extractionState": "manual",
@@ -270,6 +306,24 @@
       },
       "comment": "Site log: mitigation worked"
     },
+    "%@ price index": {
+      "comment": "Accessibility label for the market sparkline",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ price index"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Índice de precios de %@"
+          }
+        }
+      }
+    },
     "%@ resigned. Morale was too low.": {
       "extractionState": "manual",
       "localizations": {
@@ -359,6 +413,24 @@
         }
       },
       "comment": "Site log: capability reduced"
+    },
+    "%@ · %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@"
+          }
+        }
+      },
+      "comment": "Result scenario and counterparty"
     },
     "%@/day": {
       "extractionState": "manual",
@@ -467,24 +539,6 @@
       },
       "comment": "Result operational stat"
     },
-    "%lld defects outstanding, fixing %@/day": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld defects outstanding, fixing %@/day"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld defectos pendientes, corrigiendo %@/día"
-          }
-        }
-      },
-      "comment": "Quality effect summary"
-    },
     "%lld defects reached handover": {
       "extractionState": "manual",
       "localizations": {
@@ -592,6 +646,24 @@
         }
       },
       "comment": "Result operational stat"
+    },
+    "%lld open, clearing %@/day": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld open, clearing %@/day"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pendientes, resolviendo %@/día"
+          }
+        }
+      },
+      "comment": "Quality effect summary"
     },
     "%lld released from %@ — scope complete.": {
       "extractionState": "manual",
@@ -773,6 +845,24 @@
       },
       "comment": "Incident description"
     },
+    "A key engineer resigns": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A key engineer resigns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renuncia un ingeniero clave"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "A signing cost comes out of cash today. The wage comes out every day after that, whether or not there is work for them to do.": {
       "extractionState": "manual",
       "localizations": {
@@ -845,6 +935,60 @@
       },
       "comment": "Incident description"
     },
+    "A vendor raised prices at renewal and there was no time to switch.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A vendor raised prices at renewal and there was no time to switch."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un proveedor subió precios en la renovación y no hubo tiempo de cambiar."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "A vendor reprices mid-contract": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A vendor reprices mid-contract"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un proveedor sube precios a medio contrato"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "API & data": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API & data"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API y datos"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
+    },
     "Acquisitions": {
       "extractionState": "manual",
       "localizations": {
@@ -916,6 +1060,42 @@
         }
       },
       "comment": "Order sheet note when nothing is outstanding"
+    },
+    "An exposed credential was found. Everything stopped for the response.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An exposed credential was found. Everything stopped for the response."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se encontró una credencial expuesta. Todo se detuvo para responder."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "Angel syndicate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angel syndicate"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sindicato de ángeles"
+          }
+        }
+      },
+      "comment": "Counterparty name"
     },
     "App closed without shutting down": {
       "extractionState": "manual",
@@ -1025,6 +1205,24 @@
       },
       "comment": "Worker status: may quit"
     },
+    "Audits, secrets hygiene, access control. Stops a breach becoming a disaster.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audits, secrets hygiene, access control. Stops a breach becoming a disaster."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auditorías, manejo de secretos y control de acceso. Evita que una brecha se vuelva un desastre."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
     "Available at %lld%% overall": {
       "extractionState": "manual",
       "localizations": {
@@ -1078,6 +1276,42 @@
         }
       }
     },
+    "Both run on the same simulation and are ranked on the same thing: profit. What changes is the work, what it consumes, and what can go wrong.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both run on the same simulation and are ranked on the same thing: profit. What changes is the work, what it consumes, and what can go wrong."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ambos corren sobre la misma simulación y se clasifican por lo mismo: la utilidad. Lo que cambia es el trabajo, lo que consume y lo que puede salir mal."
+          }
+        }
+      },
+      "comment": "Scenario picker explanation"
+    },
+    "Bridge financing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bridge financing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Financiamiento puente"
+          }
+        }
+      },
+      "comment": "Cost of running past the deadline"
+    },
     "Builds client trust, which decides how fast you get paid and whether they grant an extension.": {
       "extractionState": "manual",
       "localizations": {
@@ -1091,6 +1325,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Construye la confianza del cliente, que decide qué tan rápido te pagan y si te dan prórroga."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Builds investor confidence, which decides how fast tranches wire and whether they extend the runway.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Builds investor confidence, which decides how fast tranches wire and whether they extend the runway."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Construye la confianza de los inversionistas, que decide qué tan rápido llegan los tramos y si te extienden la pista."
           }
         }
       },
@@ -1113,6 +1365,24 @@
         }
       },
       "comment": "HUD label"
+    },
+    "Burnout spreads": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burnout spreads"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El desgaste se contagia"
+          }
+        }
+      },
+      "comment": "Incident title"
     },
     "Buys information": {
       "extractionState": "manual",
@@ -1185,6 +1455,24 @@
       },
       "comment": "Cost breakdown line"
     },
+    "Capacity": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capacity"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capacidad"
+          }
+        }
+      },
+      "comment": "Consumable resource name"
+    },
     "Cash": {
       "extractionState": "manual",
       "localizations": {
@@ -1256,6 +1544,42 @@
         }
       },
       "comment": "Candidate stat"
+    },
+    "Clear reporting and expectation setting. Blunts pivots and pushback.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear reporting and expectation setting. Blunts pivots and pushback."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reportes claros y expectativas bien puestas. Frena los pivotes y las objeciones."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
+    "Client": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Client"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cliente"
+          }
+        }
+      },
+      "comment": "Who pays the player"
     },
     "Client change order": {
       "extractionState": "manual",
@@ -1347,6 +1671,42 @@
       },
       "comment": "Result trust detail"
     },
+    "Cloud provider outage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud provider outage"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caída del proveedor de nube"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "Code review & testing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code review & testing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisión de código y pruebas"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
     "Comes with the Risk capability. Covers this share of any incident above the deductible, in exchange for a daily premium.": {
       "extractionState": "manual",
       "localizations": {
@@ -1434,7 +1794,7 @@
           }
         }
       },
-      "comment": "Work package name"
+      "comment": "Scenario name"
     },
     "Contract management": {
       "extractionState": "manual",
@@ -1489,6 +1849,24 @@
         }
       },
       "comment": "Capability verb"
+    },
+    "Core platform": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Core platform"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plataforma base"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
     },
     "Costs throughout the simulator display in this currency. Defaults to your device's own currency.": {
       "extractionState": "manual",
@@ -1577,7 +1955,7 @@
           }
         }
       },
-      "comment": "Header button"
+      "comment": "Collective noun for hired staff"
     },
     "Crew on %@": {
       "extractionState": "manual",
@@ -1615,24 +1993,6 @@
       },
       "comment": "Incident title"
     },
-    "Crews on a package with no materials still draw full pay. A slow supplier can cost more in idle wages than it saves on price.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Crews on a package with no materials still draw full pay. A slow supplier can cost more in idle wages than it saves on price."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Las cuadrillas de una partida sin material siguen cobrando completo. Un proveedor lento puede costar más en sueldos parados de lo que ahorra en precio."
-          }
-        }
-      },
-      "comment": "Order sheet explanation"
-    },
     "Crews on full pay with nothing to build. Order materials earlier, or pay for a faster supplier.": {
       "extractionState": "manual",
       "localizations": {
@@ -1650,6 +2010,24 @@
         }
       },
       "comment": "Result lesson: idle crew"
+    },
+    "Critical bug in production": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Critical bug in production"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error crítico en producción"
+          }
+        }
+      },
+      "comment": "Incident title"
     },
     "Crowded — output per head falling": {
       "extractionState": "manual",
@@ -1758,6 +2136,24 @@
       },
       "comment": "HUD label"
     },
+    "Defects": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Defects"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Defectos"
+          }
+        }
+      },
+      "comment": "Hidden quality debt"
+    },
     "Defects that reach handover are charged at over four times the cost of catching them during the build, and the client withholds against them.": {
       "extractionState": "manual",
       "localizations": {
@@ -1829,6 +2225,24 @@
         }
       },
       "comment": "Diagnostics clear confirmation"
+    },
+    "Deliver a building for a fixed price, against a fixed date.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deliver a building for a fixed price, against a fixed date."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrega un edificio a precio fijo y en una fecha fija."
+          }
+        }
+      },
+      "comment": "Scenario tagline"
     },
     "Deliveries slipped %lld days.": {
       "extractionState": "manual",
@@ -1920,6 +2334,24 @@
       },
       "comment": "Incident title"
     },
+    "Design docs and independent review. Catches bad decisions before they ship.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Design docs and independent review. Catches bad decisions before they ship."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documentos de diseño y revisión independiente. Detecta malas decisiones antes de que salgan."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
     "Device": {
       "extractionState": "manual",
       "localizations": {
@@ -1955,6 +2387,42 @@
         }
       },
       "comment": "Settings row"
+    },
+    "Difficulty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Difficulty"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dificultad"
+          }
+        }
+      },
+      "comment": "Scenario picker section header"
+    },
+    "Discovery": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discovery"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descubrimiento"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
     },
     "Dismiss": {
       "extractionState": "manual",
@@ -2081,6 +2549,24 @@
       },
       "comment": "Work package name"
     },
+    "Engineering quality": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engineering quality"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calidad de ingeniería"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
     "Enough to finish: %lld": {
       "extractionState": "manual",
       "localizations": {
@@ -2168,7 +2654,8 @@
             "value": "Salir"
           }
         }
-      }
+      },
+      "comment": "End of the run"
     },
     "Experience": {
       "extractionState": "manual",
@@ -2223,6 +2710,24 @@
         }
       },
       "comment": "Diagnostics export button"
+    },
+    "Exposure": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposición"
+          }
+        }
+      },
+      "comment": "Risk sheet label"
     },
     "Fast, cuts corners": {
       "extractionState": "manual",
@@ -2294,6 +2799,24 @@
           }
         }
       }
+    },
+    "Feature build": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feature build"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Construcción de funciones"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
     },
     "Fencing, lighting, night watch. Stops material walking off site.": {
       "extractionState": "manual",
@@ -2421,6 +2944,42 @@
       },
       "comment": "Capability summary"
     },
+    "Forecasts the ship date and flags risks before they bite. Higher levels let you start a workstream before its dependency is done.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forecasts the ship date and flags risks before they bite. Higher levels let you start a workstream before its dependency is done."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pronostica la fecha de lanzamiento y señala los riesgos antes de que peguen. En niveles altos te deja arrancar un frente antes de que su dependencia esté lista."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Frugal and hands-off. Wires slowly and haggles, but forgives a rough product.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frugal and hands-off. Wires slowly and haggles, but forgives a rough product."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frugal y poco intervencionista. Transfiere lento y regatea, pero perdona un producto tosco."
+          }
+        }
+      },
+      "comment": "Counterparty description"
+    },
     "Fully staffed": {
       "extractionState": "manual",
       "localizations": {
@@ -2456,6 +3015,60 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Funds specific safeguards and insurance against the incidents that can kill a company.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funds specific safeguards and insurance against the incidents that can kill a company."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Financia salvaguardas concretas y seguro contra los incidentes que pueden matar a una empresa."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
+    "Handover": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrega"
+          }
+        }
+      },
+      "comment": "End of the run"
+    },
+    "Harder settings score higher on the leaderboard.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harder settings score higher on the leaderboard."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las dificultades altas puntúan más en la tabla."
+          }
+        }
+      },
+      "comment": "Difficulty explanation"
     },
     "Help": {
       "extractionState": "manual",
@@ -2780,6 +3393,24 @@
       },
       "comment": "Mitigation description"
     },
+    "Infrastructure resilience": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Infrastructure resilience"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resiliencia de infraestructura"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
     "Insolvent": {
       "extractionState": "manual",
       "localizations": {
@@ -2850,7 +3481,7 @@
           }
         }
       },
-      "comment": "Client persona description"
+      "comment": "Counterparty description"
     },
     "Inspects work in progress. Defects caught now cost a fraction of what they cost at handover.": {
       "extractionState": "manual",
@@ -2869,6 +3500,24 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Institutional fund": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Institutional fund"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fondo institucional"
+          }
+        }
+      },
+      "comment": "Counterparty name"
     },
     "Insurance": {
       "extractionState": "manual",
@@ -2924,6 +3573,78 @@
       },
       "comment": "Cost breakdown line"
     },
+    "Investor management": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investor management"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestión de inversionistas"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
+    "Investor relations": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investor relations"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relación con inversionistas"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
+    "Investors": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inversionistas"
+          }
+        }
+      },
+      "comment": "Who pays the player"
+    },
+    "Investors push back": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investors push back"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los inversionistas objetan"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
     "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants": {
       "extractionState": "manual",
       "localizations": {
@@ -2976,7 +3697,7 @@
           }
         }
       },
-      "comment": "Cost breakdown line"
+      "comment": "Cost of running past the deadline"
     },
     "Latent defects added to %@.": {
       "extractionState": "manual",
@@ -2995,6 +3716,24 @@
         }
       },
       "comment": "Incident consequence: defects"
+    },
+    "Launch readiness": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Launch readiness"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo para lanzar"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
     },
     "Lead times %lld%% shorter": {
       "extractionState": "manual",
@@ -3048,6 +3787,24 @@
         }
       },
       "comment": "Result label"
+    },
+    "Learning & development": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learning & development"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formación y desarrollo"
+          }
+        }
+      },
+      "comment": "Capability name"
     },
     "Learns": {
       "extractionState": "manual",
@@ -3138,6 +3895,24 @@
         }
       },
       "comment": "Board tab"
+    },
+    "Load outgrew the architecture. Parts of it have to be rebuilt.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load outgrew the architecture. Parts of it have to be rebuilt."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La carga rebasó la arquitectura. Hay partes que rehacer."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "Lock the materials price for 30 days": {
       "extractionState": "manual",
@@ -3281,7 +4056,7 @@
           }
         }
       },
-      "comment": "Client persona description"
+      "comment": "Counterparty description"
     },
     "Material prices spike": {
       "extractionState": "manual",
@@ -3318,6 +4093,24 @@
         }
       }
     },
+    "Materials arrive late and idle crews still get paid. Supply timing is the whole game.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Materials arrive late and idle crews still get paid. Supply timing is the whole game."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El material llega tarde y las cuadrillas paradas igual cobran. El timing del suministro es todo el juego."
+          }
+        }
+      },
+      "comment": "Scenario signature lesson"
+    },
     "Materials index jumped %lld%%.": {
       "extractionState": "manual",
       "localizations": {
@@ -3335,24 +4128,6 @@
         }
       },
       "comment": "Incident consequence: price shock"
-    },
-    "Materials price index": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Materials price index"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Índice de precios de materiales"
-          }
-        }
-      },
-      "comment": "Accessibility label for the market sparkline"
     },
     "Materials stolen": {
       "extractionState": "manual",
@@ -3498,6 +4273,24 @@
       },
       "comment": "Forecast severity"
     },
+    "Months of pace caught up with the team at once.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Months of pace caught up with the team at once."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meses de ritmo le cobraron la factura al equipo de golpe."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "Morale": {
       "extractionState": "manual",
       "localizations": {
@@ -3588,6 +4381,24 @@
       },
       "comment": "Difficulty description"
     },
+    "Negotiates vendor contracts down and shortens provisioning, so engineers stop waiting on capacity.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negotiates vendor contracts down and shortens provisioning, so engineers stop waiting on capacity."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negocia a la baja los contratos con proveedores y acorta el aprovisionamiento, para que los ingenieros dejen de esperar capacidad."
+          }
+        }
+      },
+      "comment": "Capability summary"
+    },
     "New contract": {
       "extractionState": "manual",
       "localizations": {
@@ -3624,41 +4435,41 @@
       },
       "comment": "Help bullet"
     },
-    "No crew assigned": {
+    "New run": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No crew assigned"
+            "value": "New run"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin cuadrilla asignada"
+            "value": "Nueva partida"
+          }
+        }
+      },
+      "comment": "Header button"
+    },
+    "No %@ assigned": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No %@ assigned"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin %@ asignado"
           }
         }
       },
       "comment": "Work package status"
-    },
-    "No one on site": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No one on site"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No hay nadie en obra"
-          }
-        }
-      },
-      "comment": "Empty crew state title"
     },
     "No problems have been recorded.": {
       "extractionState": "manual",
@@ -3713,6 +4524,24 @@
         }
       },
       "comment": "Worker archetype description"
+    },
+    "Nobody hired yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nobody hired yet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todavía no has contratado a nadie"
+          }
+        }
+      },
+      "comment": "Empty crew state title"
     },
     "Normal": {
       "extractionState": "manual",
@@ -3891,25 +4720,8 @@
             "value": "Pedir"
           }
         }
-      }
-    },
-    "Order for %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Order for %@"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pedido para %@"
-          }
-        }
       },
-      "comment": "Material order sheet title"
+      "comment": "Button: buy more of the consumable"
     },
     "Ordered %lld units from %@, %lld days out.": {
       "extractionState": "manual",
@@ -3947,19 +4759,19 @@
       },
       "comment": "Help bullet"
     },
-    "Out of materials — crew idle on full pay": {
+    "Out of %@ — still on full pay": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Out of materials — crew idle on full pay"
+            "value": "Out of %@ — still on full pay"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin material — cuadrilla parada cobrando completo"
+            "value": "Sin %@ — y siguen cobrando completo"
           }
         }
       },
@@ -4018,19 +4830,19 @@
       },
       "comment": "Help bullet"
     },
-    "Overtime, crowded crews and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.": {
+    "Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Overtime, crowded crews and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off."
+            "value": "Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Las horas extra, las cuadrillas saturadas y el ánimo bajo elevan la exposición. Los incidentes se pueden volver más raros y leves, pero nunca se apagan."
+            "value": "Las horas extra, los frentes saturados y el ánimo bajo elevan la exposición. Los incidentes se pueden volver más raros y leves, pero nunca se apagan."
           }
         }
       },
@@ -4108,6 +4920,24 @@
       },
       "comment": "Fire confirmation action"
     },
+    "Payments & billing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payments & billing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pagos y facturación"
+          }
+        }
+      },
+      "comment": "Startup work stream name"
+    },
     "Payroll missed. Crews walk if this is not fixed.": {
       "extractionState": "manual",
       "localizations": {
@@ -4125,6 +4955,24 @@
         }
       },
       "comment": "Site log: payroll missed"
+    },
+    "People with nothing to work on still draw full pay. A slow supplier can cost more in idle wages than it saves on price.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People with nothing to work on still draw full pay. A slow supplier can cost more in idle wages than it saves on price."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La gente sin nada que hacer sigue cobrando completo. Un proveedor lento puede costar más en sueldos parados de lo que ahorra en precio."
+          }
+        }
+      },
+      "comment": "Order sheet explanation"
     },
     "Permit rejected": {
       "extractionState": "manual",
@@ -4322,7 +5170,25 @@
           }
         }
       },
-      "comment": "Client persona name"
+      "comment": "Counterparty name"
+    },
+    "Product": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Product"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Producto"
+          }
+        }
+      },
+      "comment": "Board tab: work streams"
     },
     "Profit": {
       "extractionState": "manual",
@@ -4396,6 +5262,24 @@
       },
       "comment": "Site log: delivered"
     },
+    "Provision": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provision"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provisionar"
+          }
+        }
+      },
+      "comment": "Button: buy more of the consumable"
+    },
     "Public institution": {
       "extractionState": "manual",
       "localizations": {
@@ -4412,7 +5296,7 @@
           }
         }
       },
-      "comment": "Client persona name"
+      "comment": "Counterparty name"
     },
     "Put in place — %@ plus %@/day": {
       "extractionState": "manual",
@@ -4431,6 +5315,24 @@
         }
       },
       "comment": "Buy mitigation button"
+    },
+    "Puts engineers on focused learning. They ship nothing while away and come back permanently better.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puts engineers on focused learning. They ship nothing while away and come back permanently better."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pone a los ingenieros a formarse a fondo. No entregan nada mientras están fuera y vuelven mejores para siempre."
+          }
+        }
+      },
+      "comment": "Capability summary"
     },
     "Quality": {
       "extractionState": "manual",
@@ -4540,6 +5442,42 @@
       },
       "comment": "Diagnostics section header"
     },
+    "Redundancy and failover. Cuts losses when a provider goes down.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redundancy and failover. Cuts losses when a provider goes down."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redundancia y conmutación por error. Reduce las pérdidas cuando se cae un proveedor."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
+    "Resilience": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resilience"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resiliencia"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
     "Resilient": {
       "extractionState": "manual",
       "localizations": {
@@ -4558,42 +5496,6 @@
       },
       "comment": "Candidate stat"
     },
-    "Restart": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restart"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reiniciar"
-          }
-        }
-      },
-      "comment": "Restart confirmation action"
-    },
-    "Restart the simulation?": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restart the simulation?"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Reiniciar la simulación?"
-          }
-        }
-      },
-      "comment": "Restart confirmation title"
-    },
     "Retail chain": {
       "extractionState": "manual",
       "localizations": {
@@ -4610,7 +5512,7 @@
           }
         }
       },
-      "comment": "Client persona name"
+      "comment": "Counterparty name"
     },
     "Retires a debt": {
       "extractionState": "manual",
@@ -4647,6 +5549,24 @@
         }
       },
       "comment": "P&L line"
+    },
+    "Reviews and tests as you go. Tech debt paid down now costs a fraction of what it costs at due diligence.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reviews and tests as you go. Tech debt paid down now costs a fraction of what it costs at due diligence."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revisa y prueba sobre la marcha. La deuda técnica saldada ahora cuesta una fracción de lo que cuesta en la auditoría."
+          }
+        }
+      },
+      "comment": "Capability summary"
     },
     "Rework": {
       "extractionState": "manual",
@@ -4701,6 +5621,24 @@
         }
       },
       "comment": "Help bullet"
+    },
+    "Roadmap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roadmap"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoja de ruta"
+          }
+        }
+      },
+      "comment": "Capability name"
     },
     "Runway": {
       "extractionState": "manual",
@@ -4774,6 +5712,24 @@
       },
       "comment": "Worker archetype name"
     },
+    "Sane on-call and real time off. Fewer burnouts, fewer resignations.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sane on-call and real time off. Fewer burnouts, fewer resignations."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardias razonables y descanso de verdad. Menos desgaste y menos renuncias."
+          }
+        }
+      },
+      "comment": "Mitigation description"
+    },
     "Save score": {
       "extractionState": "manual",
       "localizations": {
@@ -4809,6 +5765,24 @@
         }
       },
       "comment": "Diagnostic summary"
+    },
+    "Scenario": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scenario"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escenario"
+          }
+        }
+      },
+      "comment": "Scenario picker section header"
     },
     "Scores": {
       "extractionState": "manual",
@@ -4864,6 +5838,60 @@
       },
       "comment": "Help section title"
     },
+    "Security & compliance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Security & compliance"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguridad y cumplimiento"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
+    "Security incident": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Security incident"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incidente de seguridad"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "Seed-stage product": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seed-stage product"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Producto en etapa semilla"
+          }
+        }
+      },
+      "comment": "Scenario name"
+    },
     "Seeing %lld days ahead": {
       "extractionState": "manual",
       "localizations": {
@@ -4917,6 +5945,24 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Serious diligence. Holds back hard on tech debt, but wires reliably and on time.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serious diligence. Holds back hard on tech debt, but wires reliably and on time."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auditoría seria. Retiene fuerte por deuda técnica, pero transfiere puntual y sin falta."
+          }
+        }
+      },
+      "comment": "Counterparty description"
     },
     "Settings": {
       "extractionState": "manual",
@@ -4989,6 +6035,24 @@
       },
       "comment": "Diagnostics share button"
     },
+    "Ship a product before the runway runs out, and sell the company.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship a product before the runway runs out, and sell the company."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saca un producto antes de que se acabe la pista, y vende la empresa."
+          }
+        }
+      },
+      "comment": "Scenario tagline"
+    },
     "Signing %@": {
       "extractionState": "manual",
       "localizations": {
@@ -5023,25 +6087,7 @@
           }
         }
       },
-      "comment": "Board tab"
-    },
-    "Site exposure": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Site exposure"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exposición de la obra"
-          }
-        }
-      },
-      "comment": "Risk sheet label"
+      "comment": "Board tab: work streams"
     },
     "Site security": {
       "extractionState": "manual",
@@ -5078,6 +6124,42 @@
         }
       },
       "comment": "Vendor reliability label"
+    },
+    "Someone who held a lot of context in their head handed in their notice.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone who held a lot of context in their head handed in their notice."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alguien que tenía muchísimo contexto en la cabeza presentó su renuncia."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "Something shipped broken and had to be unpicked in a hurry.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something shipped broken and had to be unpicked in a hurry."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo salió roto y hubo que deshacerlo a las carreras."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "Specialist": {
       "extractionState": "manual",
@@ -5187,6 +6269,24 @@
       },
       "comment": "Difficulty name"
     },
+    "Start": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comenzar"
+          }
+        }
+      },
+      "comment": "Begin a new run"
+    },
     "Starts at %lld%% overall": {
       "extractionState": "manual",
       "localizations": {
@@ -5222,6 +6322,24 @@
         }
       },
       "comment": "Worker archetype description"
+    },
+    "Startup": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startup"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startup"
+          }
+        }
+      },
+      "comment": "Scenario name"
     },
     "Steady": {
       "extractionState": "manual",
@@ -5312,6 +6430,24 @@
         }
       },
       "comment": "Mitigation description"
+    },
+    "Strategic partner": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strategic partner"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Socio estratégico"
+          }
+        }
+      },
+      "comment": "Counterparty name"
     },
     "Structural defect found": {
       "extractionState": "manual",
@@ -5421,6 +6557,78 @@
       },
       "comment": "Capability verb"
     },
+    "Team": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Team"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equipo"
+          }
+        }
+      },
+      "comment": "Collective noun for hired staff"
+    },
+    "Team health": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Team health"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salud del equipo"
+          }
+        }
+      },
+      "comment": "Mitigation name"
+    },
+    "Tech debt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tech debt"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deuda técnica"
+          }
+        }
+      },
+      "comment": "Hidden quality debt"
+    },
+    "Tech debt is invisible until diligence. Ship fast and you pay for it at the exit.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tech debt is invisible until diligence. Ship fast and you pay for it at the exit."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La deuda técnica es invisible hasta la auditoría. Corre rápido y la pagas en la venta."
+          }
+        }
+      },
+      "comment": "Scenario signature lesson"
+    },
     "Technical review": {
       "extractionState": "manual",
       "localizations": {
@@ -5438,6 +6646,42 @@
         }
       },
       "comment": "Mitigation name"
+    },
+    "The board wants a pivot": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The board wants a pivot"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El consejo quiere un pivote"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "The board wants the product pointed somewhere new.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The board wants the product pointed somewhere new."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El consejo quiere apuntar el producto hacia otro lado."
+          }
+        }
+      },
+      "comment": "Incident description"
     },
     "The cheapest supplier is slow and unreliable. On a package that is about to run dry, that costs far more in idle wages than it saves.": {
       "extractionState": "manual",
@@ -5547,6 +6791,60 @@
       },
       "comment": "Difficulty description"
     },
+    "The last update did not land well. Confidence took a knock.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The last update did not land well. Confidence took a knock."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El último reporte no cayó bien. La confianza se resintió."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
+    "The launch date is contractual. Brutal if you slip, generous if you land early.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The launch date is contractual. Brutal if you slip, generous if you land early."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La fecha de lanzamiento es contractual. Brutal si te atrasas, generoso si llegas antes."
+          }
+        }
+      },
+      "comment": "Counterparty description"
+    },
+    "The platform went down with it. Nothing shipped while everyone firefought.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The platform went down with it. Nothing shipped while everyone firefought."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La plataforma se cayó con él. No se entregó nada mientras todos apagaban el fuego."
+          }
+        }
+      },
+      "comment": "Incident description"
+    },
     "The previous session ended without reaching the background and without a crash signal. This usually means the system terminated the app for using too much memory, or it stopped responding.": {
       "extractionState": "manual",
       "localizations": {
@@ -5599,21 +6897,39 @@
           }
         }
       },
-      "comment": "Client persona description"
+      "comment": "Counterparty description"
     },
-    "Their experience is lost for good, morale drops across the whole site, and your next applicants will be worse.": {
+    "The system buckles under load": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Their experience is lost for good, morale drops across the whole site, and your next applicants will be worse."
+            "value": "The system buckles under load"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Su experiencia se pierde para siempre, el ánimo cae en toda la obra y los siguientes candidatos serán peores."
+            "value": "El sistema se dobla bajo la carga"
+          }
+        }
+      },
+      "comment": "Incident title"
+    },
+    "Their experience is lost for good, morale drops across everyone else, and your next applicants will be worse.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Their experience is lost for good, morale drops across everyone else, and your next applicants will be worse."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su experiencia se pierde para siempre, el ánimo cae en todos los demás y los siguientes candidatos serán peores."
           }
         }
       },
@@ -5673,23 +6989,23 @@
       },
       "comment": "Diagnostics section header"
     },
-    "This ends the current contract and draws a fresh project.": {
+    "This ends the run in progress.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This ends the current contract and draws a fresh project."
+            "value": "This ends the run in progress."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Esto termina el contrato actual y genera un proyecto nuevo."
+            "value": "Esto termina la partida en curso."
           }
         }
       },
-      "comment": "Restart confirmation message"
+      "comment": "Warning when replacing an active run"
     },
     "Tight": {
       "extractionState": "manual",
@@ -5925,6 +7241,24 @@
       },
       "comment": "Vendor reliability label"
     },
+    "Vendors": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vendors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proveedores"
+          }
+        }
+      },
+      "comment": "Capability name"
+    },
     "Wages": {
       "extractionState": "manual",
       "localizations": {
@@ -6015,6 +7349,24 @@
       },
       "comment": "Result section header"
     },
+    "Who provides it": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Who provides it"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quién lo provee"
+          }
+        }
+      },
+      "comment": "Order sheet: suppliers section"
+    },
     "Who supplies it": {
       "extractionState": "manual",
       "localizations": {
@@ -6031,7 +7383,7 @@
           }
         }
       },
-      "comment": "Order sheet section header"
+      "comment": "Order sheet: suppliers section"
     },
     "Work halted for a safety review after an on-site incident.": {
       "extractionState": "manual",

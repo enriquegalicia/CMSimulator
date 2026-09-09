@@ -28,9 +28,9 @@ struct GameView: View {
     enum Board: String, CaseIterable, Identifiable {
         case site, levers, log
         var id: String { rawValue }
-        var title: String {
+        func title(in scenario: ScenarioKind) -> String {
             switch self {
-            case .site: return String(localized: "Site", comment: "Board tab")
+            case .site: return scenario.boardName
             case .levers: return String(localized: "Levers", comment: "Board tab")
             case .log: return String(localized: "Log", comment: "Board tab")
             }
@@ -38,7 +38,7 @@ struct GameView: View {
     }
 
     @State private var board: Board = .site
-    @State private var showRestartConfirm = false
+    @State private var showScenarioPicker = false
     @State private var showCrew = false
     @State private var showRisk = false
 
@@ -49,7 +49,7 @@ struct GameView: View {
             header.padding(.horizontal, isWide ? 20 : 14).padding(.top, 10).padding(.bottom, 8)
 
             Picker("Board", selection: $board) {
-                ForEach(Board.allCases) { Text($0.title).tag($0) }
+                ForEach(Board.allCases) { Text($0.title(in: engine.brief.scenario)).tag($0) }
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, isWide ? 20 : 14)
@@ -75,12 +75,15 @@ struct GameView: View {
         }
         .overlay(alignment: .top) { eventOverlay }
         .animation(.spring(duration: 0.3), value: engine.activeEvent?.id)
-        .confirmationDialog(String(localized: "Restart the simulation?", comment: "Restart confirmation title"),
-                            isPresented: $showRestartConfirm, titleVisibility: .visible) {
-            Button(String(localized: "Restart", comment: "Restart confirmation action"), role: .destructive) { engine.restart() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This ends the current contract and draws a fresh project.", comment: "Restart confirmation message")
+        .sheet(isPresented: $showScenarioPicker) {
+            ScenarioPickerView(
+                current: engine.brief,
+                onStart: { kind, level in
+                    engine.restart(with: .make(scenario: kind, difficulty: level))
+                    showScenarioPicker = false
+                },
+                onCancel: { showScenarioPicker = false }
+            )
         }
         .sheet(item: Binding(get: { engine.hiringRequest }, set: { if $0 == nil { engine.cancelHiring() } })) { request in
             CandidatePickerView(request: request,
@@ -90,12 +93,14 @@ struct GameView: View {
         }
         .sheet(item: Binding(get: { engine.orderRequest }, set: { if $0 == nil { engine.cancelMaterialOrder() } })) { request in
             MaterialOrderView(request: request,
+                              scenario: engine.brief.scenario,
                               spendingPower: engine.ledger.spendingPower,
                               onOrder: { engine.placeOrder(vendor: $0, quantity: $1) },
                               onCancel: { engine.cancelMaterialOrder() })
         }
         .sheet(isPresented: $showCrew) {
-            CrewView(workers: engine.workers,
+            CrewView(scenario: engine.brief.scenario,
+                     workers: engine.workers,
                      packageTitles: Dictionary(uniqueKeysWithValues: engine.workPackages.map { ($0.id, $0.title) }),
                      trainingLevel: engine.level(of: .training),
                      courseDays: CapabilityEffects.courseDays(level: engine.level(of: .training)),
@@ -106,7 +111,8 @@ struct GameView: View {
                      onExit: { showCrew = false })
         }
         .sheet(isPresented: $showRisk) {
-            RiskPortfolioView(held: engine.mitigationsHeld,
+            RiskPortfolioView(scenario: engine.brief.scenario,
+                              held: engine.mitigationsHeld,
                               riskLevel: engine.level(of: .risk),
                               insuranceCoverage: CapabilityEffects.insuranceCoverage(level: engine.level(of: .risk)),
                               spendingPower: engine.ledger.spendingPower,
@@ -178,11 +184,12 @@ struct GameView: View {
                           value: engine.clientTrust, icon: "person.crop.circle.badge.checkmark")
                 MarketSparkline(history: engine.market.history,
                                 current: engine.market.effectiveIndex,
-                                isLocked: engine.market.isLocked)
+                                isLocked: engine.market.isLocked,
+                                supplyName: engine.brief.scenario.supplyName)
             }
 
             HStack(spacing: isWide ? 22 : 14) {
-                headerButton("person.2.fill", String(localized: "Crew", comment: "Header button")) { showCrew = true }
+                headerButton("person.2.fill", engine.brief.scenario.staffName) { showCrew = true }
                     .badge(engine.workers.count)
                 headerButton("shield.lefthalf.filled", String(localized: "Risk", comment: "Header button")) { showRisk = true }
                 Spacer()
@@ -195,7 +202,7 @@ struct GameView: View {
                     .controlSize(.small)
                     .tint(.green)
                 }
-                headerButton("arrow.counterclockwise", String(localized: "Restart", comment: "Header button")) { showRestartConfirm = true }
+                headerButton("arrow.counterclockwise", String(localized: "New run", comment: "Header button")) { showScenarioPicker = true }
                 headerButton("questionmark.circle", String(localized: "Help", comment: "Header button"), action: onShowHelp)
                 headerButton("trophy", String(localized: "Scores", comment: "Header button"), action: onShowScores)
                 headerButton("gearshape", String(localized: "Settings", comment: "Header button"), action: onShowSettings)
@@ -225,6 +232,7 @@ struct GameView: View {
                 ForEach(engine.workPackages) { package in
                     WorkPackageCardView(
                         package: package,
+                        scenario: engine.brief.scenario,
                         crew: engine.crew(for: package.id),
                         ordersInFlight: engine.orders,
                         currentDay: engine.elapsedDays,
@@ -277,6 +285,7 @@ struct GameView: View {
                 ForEach(engine.capabilities) { capability in
                     CapabilityCardView(
                         capability: capability,
+                        scenario: engine.brief.scenario,
                         spendingPower: engine.ledger.spendingPower,
                         currentEffect: effectSummary(for: capability),
                         onUpgrade: { engine.upgrade(capability.kind) },
@@ -299,7 +308,7 @@ struct GameView: View {
             return String(localized: "Lead times \(Int((1 - CapabilityEffects.leadTimeMultiplier(level: level)) * 100))% shorter", comment: "Acquisitions effect summary")
         case .quality:
             let open = engine.visibleDefectDebt ?? 0
-            return String(localized: "\(Int(open)) defects outstanding, fixing \(String(format: "%.1f", CapabilityEffects.inspectionRatePerDay(level: level)))/day", comment: "Quality effect summary")
+            return String(localized: "\(Int(open)) open, clearing \(String(format: "%.1f", CapabilityEffects.inspectionRatePerDay(level: level)))/day", comment: "Quality effect summary")
         case .risk:
             return String(localized: "\(engine.mitigationsHeld.count) mitigations, \(Int(CapabilityEffects.insuranceCoverage(level: level) * 100))% insured", comment: "Risk effect summary")
         case .communications:

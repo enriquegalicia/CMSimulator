@@ -135,8 +135,8 @@ struct ResultView: View {
                    title: String(localized: "\(result.finalCrewSize) on the books at the end", comment: "Result operational stat"),
                    detail: String(localized: "Client trust finished at \(result.clientTrust, format: .percent.precision(.fractionLength(0))).", comment: "Result trust detail"),
                    tint: .secondary)
-            lesson(systemImage: "person.crop.square.filled.and.at.rectangle",
-                   title: result.persona.name,
+            lesson(systemImage: result.scenario.symbolName,
+                   title: String(localized: "\(result.scenario.name) · \(result.persona.name(in: result.scenario))", comment: "Result scenario and counterparty"),
                    detail: String(localized: "\(result.difficulty.name) difficulty · seed \(String(result.seed % 1_000_000))", comment: "Result run parameters"),
                    tint: .secondary)
         }

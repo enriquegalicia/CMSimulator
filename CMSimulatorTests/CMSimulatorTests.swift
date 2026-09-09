@@ -369,7 +369,7 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(outcome: .insolvent, profit: 50_000, revenue: 100_000,
+        let result = RunResult(scenario: .construction, outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
                                openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 0,
                                clientTrust: 0.5, reputation: 0.5, difficulty: .standard,
@@ -379,7 +379,7 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(outcome: .delivered, profit: 100_000, revenue: 500_000,
+            RunResult(scenario: .construction, outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
                       openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 5,
                       clientTrust: 0.8, reputation: 0.8, difficulty: difficulty,
@@ -606,5 +606,114 @@ final class DiagnosticsTests: XCTestCase {
         }
         // Reaching here without a crash is the assertion.
         XCTAssertTrue(true)
+    }
+}
+
+// MARK: - Scenarios
+
+@MainActor
+final class ScenarioTests: XCTestCase {
+
+    /// Every scenario has to satisfy the same structural invariants, or it
+    /// soft-locks or pays out more than it is worth. Running these across
+    /// all cases means a third scenario is checked the day it is added.
+    func testEveryScenarioIsStructurallySound() {
+        for kind in ScenarioKind.allCases {
+            let brief = ProjectBrief.make(scenario: kind)
+
+            let payout = brief.advanceRate + brief.milestones.reduce(0) { $0 + $1.share }
+            XCTAssertEqual(payout, 1.0, accuracy: 0.001,
+                           "\(kind): advance plus milestones must equal the contract value")
+
+            let total = brief.streams.reduce(0) { $0 + $1.units }
+            var cumulative = 0.0
+            for stream in brief.streams {
+                XCTAssertLessThanOrEqual(stream.startThreshold, cumulative / total * 100 + 0.001,
+                                         "\(kind): \(stream.id) unlocks before enough work exists to reach it")
+                cumulative += stream.units
+                XCTAssertGreaterThan(stream.optimalCrew, 0, "\(kind): \(stream.id) needs a crew size")
+                XCTAssertGreaterThan(stream.units, 0, "\(kind): \(stream.id) needs work in it")
+            }
+            XCTAssertEqual(brief.streams.first?.startThreshold, 0,
+                           "\(kind): something must be startable on day one")
+            XCTAssertEqual(Set(brief.streams.map(\.id)).count, brief.streams.count,
+                           "\(kind): stream ids must be unique")
+        }
+    }
+
+    /// Each scenario draws only from its own deck - a building site must
+    /// never see a data breach, and a startup never a hurricane.
+    func testIncidentDecksAreScenarioSpecificAndComplete() {
+        let construction = Set(SimEventKind.deck(for: .construction))
+        let startup = Set(SimEventKind.deck(for: .startup))
+
+        XCTAssertTrue(construction.isDisjoint(with: startup), "decks must not overlap")
+        XCTAssertFalse(construction.contains(.dataBreach))
+        XCTAssertFalse(startup.contains(.hurricane))
+
+        // Risk sells cover per class, so every class must be reachable in
+        // every scenario or a mitigation would be unspendable money.
+        for kind in ScenarioKind.allCases {
+            let deck = SimEventKind.deck(for: kind)
+            for mitigation in MitigationClass.allCases {
+                XCTAssertTrue(deck.contains { $0.mitigationClass == mitigation },
+                              "\(kind) has no incident for \(mitigation) - its mitigation could never pay off")
+                // And drawing from that class must stay inside the deck.
+                let drawn = SimEventKind.random(in: mitigation, from: deck)
+                XCTAssertTrue(deck.contains(drawn), "\(kind) drew \(drawn) from outside its deck")
+            }
+        }
+    }
+
+    /// Naming is scenario-dependent everywhere it is player-facing.
+    func testScenariosRenameTheSharedSystems() {
+        for capability in CapabilityKind.allCases {
+            XCTAssertNotEqual(capability.displayName(in: .construction),
+                              capability.displayName(in: .startup),
+                              "\(capability) reads the same in both scenarios")
+        }
+        for mitigation in MitigationClass.allCases {
+            XCTAssertNotEqual(mitigation.name(in: .construction),
+                              mitigation.name(in: .startup),
+                              "\(mitigation) reads the same in both scenarios")
+        }
+        XCTAssertNotEqual(ScenarioKind.construction.supplyName, ScenarioKind.startup.supplyName)
+        XCTAssertNotEqual(ScenarioKind.construction.staffName, ScenarioKind.startup.staffName)
+    }
+
+    /// A startup run has to be winnable and reach the end, same as
+    /// construction - the shared balance is the point of one leaderboard.
+    func testAStartupRunReachesAnOutcome() {
+        let engine = SimulationEngine(brief: .startup(difficulty: .steady, persona: .institution, seed: 21))
+        XCTAssertEqual(engine.brief.scenario, .startup)
+
+        for _ in 0..<3_000 where engine.outcome == nil {
+            for package in engine.workPackages where package.isUnlocked && !package.isComplete {
+                engine.debugSetMaterialStock(100_000, for: package.id)
+                if engine.crew(for: package.id).count < package.optimalCrew {
+                    engine.requestHire(for: package.id)
+                    if let candidate = engine.hiringRequest?.candidates.first {
+                        engine.confirmHire(candidate)
+                    } else {
+                        engine.cancelHiring()
+                    }
+                }
+            }
+            engine.dismissEvent()
+            engine.advance(byDays: 0.5)
+        }
+        XCTAssertNotNil(engine.outcome, "a fully supplied, fully staffed startup run must terminate")
+    }
+
+    /// Restarting keeps you in the scenario you were playing unless you
+    /// explicitly pick another one.
+    func testRestartStaysInTheSameScenarioByDefault() {
+        let engine = SimulationEngine(brief: .startup(seed: 9))
+        engine.restart()
+        XCTAssertEqual(engine.brief.scenario, .startup)
+
+        engine.restart(with: .make(scenario: .construction, difficulty: .tight))
+        XCTAssertEqual(engine.brief.scenario, .construction)
+        XCTAssertEqual(engine.brief.difficulty, .tight)
     }
 }

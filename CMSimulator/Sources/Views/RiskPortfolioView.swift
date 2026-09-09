@@ -11,6 +11,7 @@
 import SwiftUI
 
 struct RiskPortfolioView: View {
+    let scenario: ScenarioKind
     let held: Set<MitigationClass>
     let riskLevel: Int
     let insuranceCoverage: Double
@@ -45,20 +46,20 @@ struct RiskPortfolioView: View {
             List {
                 Section {
                     HStack {
-                        Text("Site exposure", comment: "Risk sheet label")
+                        Text("Exposure", comment: "Risk sheet label")
                         Spacer()
                         Text(exposureLabel)
                             .font(.subheadline.bold())
                             .foregroundStyle(exposureTint)
                     }
                     if let forecast {
-                        Label(String(localized: "\(forecast.severityLabel) \(forecast.mitigationClass.name.lowercased()) risk in about \(Int(forecast.daysAway)) days", comment: "Planning forecast warning"),
+                        Label(String(localized: "\(forecast.severityLabel) \(forecast.mitigationClass.name(in: scenario).lowercased()) risk in about \(Int(forecast.daysAway)) days", comment: "Planning forecast warning"),
                               systemImage: "eye.fill")
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }
                 } footer: {
-                    Text("Overtime, crowded crews and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.", comment: "Risk sheet explanation")
+                    Text("Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.", comment: "Risk sheet explanation")
                         .font(.caption)
                 }
 
@@ -109,14 +110,14 @@ struct RiskPortfolioView: View {
         let affordable = mitigation.purchaseCost <= spendingPower
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Label(mitigation.name, systemImage: mitigation.symbolName)
+                Label(mitigation.name(in: scenario), systemImage: mitigation.symbolName)
                     .font(.subheadline.bold())
                 Spacer()
                 if owned {
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
                 }
             }
-            Text(mitigation.blurb)
+            Text(mitigation.blurb(in: scenario))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
             if owned {

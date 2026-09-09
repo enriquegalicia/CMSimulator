@@ -31,6 +31,8 @@ final class ScoreEntry {
     var difficultyRaw: String
     var personaRaw: String
     var scenarioName: String
+    /// Which scenario this run was, so leaderboards can be filtered.
+    var scenarioKindRaw: String = ScenarioKind.construction.rawValue
     var seed: String
     var completedAt: Date
 
@@ -47,10 +49,12 @@ final class ScoreEntry {
         self.difficultyRaw = result.difficulty.rawValue
         self.personaRaw = result.persona.rawValue
         self.scenarioName = scenarioName
+        self.scenarioKindRaw = result.scenario.rawValue
         self.seed = String(result.seed)
         self.completedAt = completedAt
     }
 
     var difficulty: Difficulty? { Difficulty(rawValue: difficultyRaw) }
     var persona: ClientPersona? { ClientPersona(rawValue: personaRaw) }
+    var scenarioKind: ScenarioKind? { ScenarioKind(rawValue: scenarioKindRaw) }
 }

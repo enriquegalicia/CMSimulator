@@ -100,13 +100,15 @@ struct MarketSparkline: View {
     let history: [Double]
     let current: Double
     let isLocked: Bool
+    /// What this scenario calls the thing being priced.
+    let supplyName: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 4) {
                 Image(systemName: isLocked ? "lock.fill" : "chart.line.uptrend.xyaxis")
                     .font(.caption2)
-                Text("Materials")
+                Text(supplyName)
                     .font(.caption2.weight(.semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
@@ -136,7 +138,7 @@ struct MarketSparkline: View {
             .frame(height: 14)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Materials price index", comment: "Accessibility label for the market sparkline"))
+        .accessibilityLabel(Text("\(supplyName) price index", comment: "Accessibility label for the market sparkline"))
         .accessibilityValue(String(format: "%.2f", current))
     }
 }
@@ -145,7 +147,8 @@ struct MarketSparkline: View {
     VStack(spacing: 16) {
         MeterView(title: "Morale", value: 0.72, icon: "figure.2")
         MeterView(title: "Client trust", value: 0.3, icon: "person.crop.circle")
-        MarketSparkline(history: [1, 1.02, 0.99, 1.05, 1.12, 1.08, 1.15], current: 1.15, isLocked: false)
+        MarketSparkline(history: [1, 1.02, 0.99, 1.05, 1.12, 1.08, 1.15], current: 1.15,
+                        isLocked: false, supplyName: "Materials")
     }
     .padding()
 }

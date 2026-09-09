@@ -38,18 +38,9 @@ enum CapabilityKind: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 
     /// Stable, never localized - used for image lookup and persistence.
+    /// Display names and summaries live in Scenario.swift, because they
+    /// depend on which scenario is running.
     var imageName: String { "\(rawValue).png" }
-
-    var displayName: String {
-        switch self {
-        case .planning: return String(localized: "Planning", comment: "Capability name")
-        case .procurement: return String(localized: "Acquisitions", comment: "Capability name")
-        case .quality: return String(localized: "Quality", comment: "Capability name")
-        case .risk: return String(localized: "Risk", comment: "Capability name")
-        case .communications: return String(localized: "Communications", comment: "Capability name")
-        case .training: return String(localized: "Training", comment: "Capability name")
-        }
-    }
 
     /// The one-word verb. Shown on the card so the player can tell at a
     /// glance that these six do genuinely different things.
@@ -61,23 +52,6 @@ enum CapabilityKind: String, CaseIterable, Identifiable {
         case .risk: return String(localized: "Allocates cover", comment: "Capability verb")
         case .communications: return String(localized: "Controls the cash clock", comment: "Capability verb")
         case .training: return String(localized: "Trades now for later", comment: "Capability verb")
-        }
-    }
-
-    var summary: String {
-        switch self {
-        case .planning:
-            return String(localized: "Forecasts the finish date and warns you about trouble before it lands. Higher levels let you fast-track a package early.", comment: "Capability summary")
-        case .procurement:
-            return String(localized: "Cuts delivery lead times and unlocks price hedging, so crews stop standing idle waiting on materials.", comment: "Capability summary")
-        case .quality:
-            return String(localized: "Inspects work in progress. Defects caught now cost a fraction of what they cost at handover.", comment: "Capability summary")
-        case .risk:
-            return String(localized: "Funds specific mitigations and insurance cover against the incidents that can end a run.", comment: "Capability summary")
-        case .communications:
-            return String(localized: "Builds client trust, which decides how fast you get paid and whether they grant an extension.", comment: "Capability summary")
-        case .training:
-            return String(localized: "Sends workers on courses. They earn nothing while away and come back permanently better.", comment: "Capability summary")
         }
     }
 
@@ -131,7 +105,6 @@ struct Capability: Identifiable {
     var invested: Double = 0
 
     var id: CapabilityKind { kind }
-    var title: String { kind.displayName }
     var imageName: String { kind.imageName }
     var isMaxed: Bool { level >= kind.maxLevel }
     var dailyUpkeep: Double { Double(level) * kind.dailyUpkeepPerLevel }

@@ -18,6 +18,10 @@ import Foundation
 
 /// What a mitigation protects against. Risk capability funds these
 /// individually, so cover is a portfolio decision.
+/// Five structural buckets of things that can go wrong, shared by every
+/// scenario so Risk stays one system. The case names are construction
+/// flavoured for historical reasons; the player-facing labels come from
+/// Scenario.swift and depend on which scenario is running.
 enum MitigationClass: String, CaseIterable, Identifiable {
     case weather
     case security
@@ -26,26 +30,6 @@ enum MitigationClass: String, CaseIterable, Identifiable {
     case client
 
     var id: String { rawValue }
-
-    var name: String {
-        switch self {
-        case .weather: return String(localized: "Weather protection", comment: "Mitigation name")
-        case .security: return String(localized: "Site security", comment: "Mitigation name")
-        case .safety: return String(localized: "Safety programme", comment: "Mitigation name")
-        case .technical: return String(localized: "Technical review", comment: "Mitigation name")
-        case .client: return String(localized: "Contract management", comment: "Mitigation name")
-        }
-    }
-
-    var blurb: String {
-        switch self {
-        case .weather: return String(localized: "Storm shielding and drainage. Cuts weather losses.", comment: "Mitigation description")
-        case .security: return String(localized: "Fencing, lighting, night watch. Stops material walking off site.", comment: "Mitigation description")
-        case .safety: return String(localized: "Toolbox talks and enforcement. Fewer incidents, fewer stoppages.", comment: "Mitigation description")
-        case .technical: return String(localized: "Independent design checking. Catches clashes before they are built.", comment: "Mitigation description")
-        case .client: return String(localized: "Tight change control. Blunts scope creep and rejections.", comment: "Mitigation description")
-        }
-    }
 
     var symbolName: String {
         switch self {
@@ -95,6 +79,16 @@ enum SimEventKind: CaseIterable {
     case supplierFailure
     case priceSpike
     case laborWalkout
+    // Startup deck.
+    case cloudOutage
+    case dataBreach
+    case keyDeparture
+    case burnoutWave
+    case criticalBug
+    case scalingFailure
+    case investorPushback
+    case pivotRequest
+    case vendorRepricing
 
     var mitigationClass: MitigationClass {
         switch self {
@@ -103,6 +97,26 @@ enum SimEventKind: CaseIterable {
         case .materialTheft, .supplierFailure, .priceSpike: return .security
         case .designClash, .structuralDefect: return .technical
         case .permitRejection, .changeOrder: return .client
+        case .cloudOutage: return .weather
+        case .dataBreach, .vendorRepricing: return .security
+        case .keyDeparture, .burnoutWave: return .safety
+        case .criticalBug, .scalingFailure: return .technical
+        case .investorPushback, .pivotRequest: return .client
+        }
+    }
+
+    /// Which scenarios this incident belongs to. A brief carries its own
+    /// deck, so a building site never sees a data breach and a startup
+    /// never sees a hurricane.
+    static func deck(for scenario: ScenarioKind) -> [SimEventKind] {
+        switch scenario {
+        case .construction:
+            return [.hurricane, .fire, .safetyIncident, .materialTheft, .designClash,
+                    .permitRejection, .structuralDefect, .changeOrder, .supplierFailure,
+                    .priceSpike, .laborWalkout]
+        case .startup:
+            return [.cloudOutage, .dataBreach, .keyDeparture, .burnoutWave, .criticalBug,
+                    .scalingFailure, .investorPushback, .pivotRequest, .vendorRepricing]
         }
     }
 
@@ -119,6 +133,15 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return String(localized: "Supplier default", comment: "Incident title")
         case .priceSpike: return String(localized: "Material prices spike", comment: "Incident title")
         case .laborWalkout: return String(localized: "Crew walks off", comment: "Incident title")
+        case .cloudOutage: return String(localized: "Cloud provider outage", comment: "Incident title")
+        case .dataBreach: return String(localized: "Security incident", comment: "Incident title")
+        case .keyDeparture: return String(localized: "A key engineer resigns", comment: "Incident title")
+        case .burnoutWave: return String(localized: "Burnout spreads", comment: "Incident title")
+        case .criticalBug: return String(localized: "Critical bug in production", comment: "Incident title")
+        case .scalingFailure: return String(localized: "The system buckles under load", comment: "Incident title")
+        case .investorPushback: return String(localized: "Investors push back", comment: "Incident title")
+        case .pivotRequest: return String(localized: "The board wants a pivot", comment: "Incident title")
+        case .vendorRepricing: return String(localized: "A vendor reprices mid-contract", comment: "Incident title")
         }
     }
 
@@ -135,6 +158,15 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return String(localized: "A supplier defaulted. Deliveries in transit are delayed.", comment: "Incident description")
         case .priceSpike: return String(localized: "A supply shock sent the materials index sharply higher.", comment: "Incident description")
         case .laborWalkout: return String(localized: "Morale broke down and part of the crew walked off the job.", comment: "Incident description")
+        case .cloudOutage: return String(localized: "The platform went down with it. Nothing shipped while everyone firefought.", comment: "Incident description")
+        case .dataBreach: return String(localized: "An exposed credential was found. Everything stopped for the response.", comment: "Incident description")
+        case .keyDeparture: return String(localized: "Someone who held a lot of context in their head handed in their notice.", comment: "Incident description")
+        case .burnoutWave: return String(localized: "Months of pace caught up with the team at once.", comment: "Incident description")
+        case .criticalBug: return String(localized: "Something shipped broken and had to be unpicked in a hurry.", comment: "Incident description")
+        case .scalingFailure: return String(localized: "Load outgrew the architecture. Parts of it have to be rebuilt.", comment: "Incident description")
+        case .investorPushback: return String(localized: "The last update did not land well. Confidence took a knock.", comment: "Incident description")
+        case .pivotRequest: return String(localized: "The board wants the product pointed somewhere new.", comment: "Incident description")
+        case .vendorRepricing: return String(localized: "A vendor raised prices at renewal and there was no time to switch.", comment: "Incident description")
         }
     }
 
@@ -151,6 +183,15 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return "truck.box.badge.clock.fill"
         case .priceSpike: return "chart.line.uptrend.xyaxis"
         case .laborWalkout: return "person.2.slash.fill"
+        case .cloudOutage: return "icloud.slash.fill"
+        case .dataBreach: return "lock.trianglebadge.exclamationmark.fill"
+        case .keyDeparture: return "person.fill.xmark"
+        case .burnoutWave: return "battery.0percent"
+        case .criticalBug: return "ladybug.fill"
+        case .scalingFailure: return "chart.line.downtrend.xyaxis"
+        case .investorPushback: return "hand.thumbsdown.fill"
+        case .pivotRequest: return "arrow.triangle.branch"
+        case .vendorRepricing: return "tag.slash.fill"
         }
     }
 
@@ -171,6 +212,15 @@ enum SimEventKind: CaseIterable {
         case .supplierFailure: return 0.004...0.012
         case .priceSpike: return 0...0
         case .laborWalkout: return 0.006...0.014
+        case .cloudOutage: return 0.010...0.026
+        case .dataBreach: return 0.022...0.050
+        case .keyDeparture: return 0.004...0.010
+        case .burnoutWave: return 0.004...0.012
+        case .criticalBug: return 0.012...0.030
+        case .scalingFailure: return 0.020...0.042
+        case .investorPushback: return 0.004...0.012
+        case .pivotRequest: return 0.008...0.028
+        case .vendorRepricing: return 0...0
         }
     }
 
@@ -183,6 +233,10 @@ enum SimEventKind: CaseIterable {
         case .designClash: return 2...5
         case .permitRejection: return 1...2.5
         case .structuralDefect: return 3...7
+        case .cloudOutage: return 1...4
+        case .criticalBug: return 2...5
+        case .scalingFailure: return 4...9
+        case .dataBreach: return 1...3
         default: return nil
         }
     }
@@ -212,6 +266,9 @@ enum SimEventKind: CaseIterable {
         case .safetyIncident: return 0.10...0.20
         case .fire: return 0.08...0.16
         case .laborWalkout: return 0.15...0.28
+        case .burnoutWave: return 0.18...0.32
+        case .keyDeparture: return 0.08...0.15
+        case .cloudOutage: return 0.05...0.12
         default: return nil
         }
     }
@@ -223,6 +280,10 @@ enum SimEventKind: CaseIterable {
         case .structuralDefect: return 0.08...0.15
         case .safetyIncident: return 0.04...0.10
         case .designClash: return 0.03...0.08
+        case .investorPushback: return 0.10...0.20
+        case .dataBreach: return 0.08...0.18
+        case .scalingFailure: return 0.06...0.14
+        case .criticalBug: return 0.04...0.10
         default: return nil
         }
     }
@@ -233,6 +294,9 @@ enum SimEventKind: CaseIterable {
         case .structuralDefect: return 3...8
         case .designClash: return 2...6
         case .changeOrder: return 1...4
+        case .criticalBug: return 3...8
+        case .scalingFailure: return 4...10
+        case .pivotRequest: return 2...6
         default: return nil
         }
     }
@@ -242,6 +306,7 @@ enum SimEventKind: CaseIterable {
         switch self {
         case .priceSpike: return 0.12...0.30
         case .supplierFailure: return 0.04...0.10
+        case .vendorRepricing: return 0.10...0.26
         default: return nil
         }
     }
@@ -251,13 +316,22 @@ enum SimEventKind: CaseIterable {
     var scopeAddedRange: ClosedRange<Double>? {
         switch self {
         case .changeOrder: return 4...12
+        case .pivotRequest: return 5...14
         default: return nil
         }
     }
 
-    static func random(in mitigationClass: MitigationClass) -> SimEventKind {
-        allCases.filter { $0.mitigationClass == mitigationClass }.randomElement()!
+    /// Picks an incident of the given class from a scenario's own deck.
+    /// Falls back to the whole class if a deck somehow has no entry for
+    /// it, so a malformed scenario degrades rather than trapping.
+    static func random(in mitigationClass: MitigationClass, from deck: [SimEventKind]) -> SimEventKind {
+        let candidates = deck.filter { $0.mitigationClass == mitigationClass }
+        if let pick = candidates.randomElement() { return pick }
+        return allCases.filter { $0.mitigationClass == mitigationClass }.randomElement()!
     }
+
+    /// True when the incident costs you a person outright.
+    var takesAWorker: Bool { self == .keyDeparture }
 }
 
 /// One fired incident, with everything it actually did, so the banner can

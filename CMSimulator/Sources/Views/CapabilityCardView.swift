@@ -16,6 +16,7 @@ import SwiftUI
 
 struct CapabilityCardView: View {
     let capability: Capability
+    let scenario: ScenarioKind
     let spendingPower: Double
     /// A short line of what this capability is currently doing for the
     /// player, supplied by the engine so the card can prove its worth.
@@ -37,7 +38,7 @@ struct CapabilityCardView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(capability.title).font(.subheadline.bold())
+                    Text(capability.kind.displayName(in: scenario)).font(.subheadline.bold())
                     Text(capability.kind.verb)
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(Color.accentColor)
@@ -47,7 +48,7 @@ struct CapabilityCardView: View {
                 levelPips
             }
 
-            Text(capability.kind.summary)
+            Text(capability.kind.summary(in: scenario))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -124,7 +125,7 @@ struct CapabilityCardView: View {
                             .font(.caption.bold())
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityLabel(String(localized: "Stand down \(capability.title)", comment: "Accessibility label for reducing a capability"))
+                    .accessibilityLabel(String(localized: "Stand down \(capability.kind.displayName(in: scenario))", comment: "Accessibility label for reducing a capability"))
                 }
             }
             .controlSize(.small)

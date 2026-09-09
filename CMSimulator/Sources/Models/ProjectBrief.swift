@@ -26,19 +26,34 @@ enum ClientPersona: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var name: String {
-        switch self {
-        case .developer: return String(localized: "Private developer", comment: "Client persona name")
-        case .institution: return String(localized: "Public institution", comment: "Client persona name")
-        case .retailer: return String(localized: "Retail chain", comment: "Client persona name")
+    /// The three cases are behaviours - cost-driven, quality-driven,
+    /// schedule-driven - not industries. The raw values keep their
+    /// original names so previously saved scores still decode.
+    func name(in scenario: ScenarioKind) -> String {
+        switch (self, scenario) {
+        case (.developer, .construction):   return String(localized: "Private developer", comment: "Counterparty name")
+        case (.developer, .startup):        return String(localized: "Angel syndicate", comment: "Counterparty name")
+        case (.institution, .construction): return String(localized: "Public institution", comment: "Counterparty name")
+        case (.institution, .startup):      return String(localized: "Institutional fund", comment: "Counterparty name")
+        case (.retailer, .construction):    return String(localized: "Retail chain", comment: "Counterparty name")
+        case (.retailer, .startup):         return String(localized: "Strategic partner", comment: "Counterparty name")
         }
     }
 
-    var brief: String {
-        switch self {
-        case .developer: return String(localized: "Margin is everything. Pays slowly, haggles, but tolerates a rough finish.", comment: "Client persona description")
-        case .institution: return String(localized: "Inspects everything. Withholds hard on defects, but pays reliably and on time.", comment: "Client persona description")
-        case .retailer: return String(localized: "The store opens on the date on the contract. Brutal late penalties, generous early bonus.", comment: "Client persona description")
+    func brief(in scenario: ScenarioKind) -> String {
+        switch (self, scenario) {
+        case (.developer, .construction):
+            return String(localized: "Margin is everything. Pays slowly, haggles, but tolerates a rough finish.", comment: "Counterparty description")
+        case (.developer, .startup):
+            return String(localized: "Frugal and hands-off. Wires slowly and haggles, but forgives a rough product.", comment: "Counterparty description")
+        case (.institution, .construction):
+            return String(localized: "Inspects everything. Withholds hard on defects, but pays reliably and on time.", comment: "Counterparty description")
+        case (.institution, .startup):
+            return String(localized: "Serious diligence. Holds back hard on tech debt, but wires reliably and on time.", comment: "Counterparty description")
+        case (.retailer, .construction):
+            return String(localized: "The store opens on the date on the contract. Brutal late penalties, generous early bonus.", comment: "Counterparty description")
+        case (.retailer, .startup):
+            return String(localized: "The launch date is contractual. Brutal if you slip, generous if you land early.", comment: "Counterparty description")
         }
     }
 
@@ -204,6 +219,7 @@ struct WorkStreamSpec {
 // MARK: - Brief
 
 struct ProjectBrief {
+    let scenario: ScenarioKind
     let scenarioName: String
     let clientPersona: ClientPersona
     let difficulty: Difficulty
@@ -232,6 +248,11 @@ struct ProjectBrief {
     let labourMarketFactor: Double
     /// Daily volatility of the materials price index.
     let marketVolatility: Double
+
+    /// The incidents this scenario can throw at you.
+    var incidentDeck: [SimEventKind] { SimEventKind.deck(for: scenario) }
+
+    var counterpartyName: String { clientPersona.name(in: scenario) }
 
     var latePenaltyPerDay: Double { baseLatePenaltyPerDay * clientPersona.latePenaltyFactor }
     var earlyBonusPerDay: Double { latePenaltyPerDay * clientPersona.earlyBonusFactor }
@@ -290,6 +311,7 @@ struct ProjectBrief {
         let baseDeadline: Double = 110
 
         return ProjectBrief(
+            scenario: .construction,
             scenarioName: String(localized: "Mixed-use build", comment: "Scenario name"),
             clientPersona: chosenPersona,
             difficulty: difficulty,
@@ -307,6 +329,97 @@ struct ProjectBrief {
             labourMarketFactor: Double.random(in: 0.88...1.22, using: &rng),
             marketVolatility: Double.random(in: 0.012...0.026, using: &rng) * difficulty.marketVolatilityFactor
         )
+    }
+
+    // MARK: Startup scenario
+
+    /// Deliberately the same shape as the construction streams - same
+    /// total units, same crew sizes, same unlock cascade - so the balance
+    /// the bot harness established carries across and the two scenarios
+    /// stay comparable on one leaderboard. What differs is what the work
+    /// *is*, what it consumes, and how long capacity takes to provision.
+    static let startupStreams: [WorkStreamSpec] = [
+        WorkStreamSpec(id: "discovery", title: String(localized: "Discovery", comment: "Startup work stream name"),
+                       imageName: "Discovery.png", units: 250, optimalCrew: 8, startThreshold: 0,
+                       materialCostPerUnit: 45, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 2),
+        WorkStreamSpec(id: "platform", title: String(localized: "Core platform", comment: "Startup work stream name"),
+                       imageName: "Platform.png", units: 540, optimalCrew: 16, startThreshold: 4,
+                       materialCostPerUnit: 330, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 6),
+        WorkStreamSpec(id: "api", title: String(localized: "API & data", comment: "Startup work stream name"),
+                       imageName: "API.png", units: 375, optimalCrew: 12, startThreshold: 11,
+                       materialCostPerUnit: 95, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 3),
+        WorkStreamSpec(id: "features", title: String(localized: "Feature build", comment: "Startup work stream name"),
+                       imageName: "Features.png", units: 1160, optimalCrew: 34, startThreshold: 19,
+                       materialCostPerUnit: 250, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 5),
+        WorkStreamSpec(id: "payments", title: String(localized: "Payments & billing", comment: "Startup work stream name"),
+                       imageName: "Payments.png", units: 625, optimalCrew: 19, startThreshold: 33,
+                       materialCostPerUnit: 245, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 9),
+        WorkStreamSpec(id: "launch", title: String(localized: "Launch readiness", comment: "Startup work stream name"),
+                       imageName: "Launch.png", units: 550, optimalCrew: 17, startThreshold: 46,
+                       materialCostPerUnit: 190, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 7),
+    ]
+
+    /// Funding tranches rather than progress payments, but mechanically
+    /// the same: money arrives in lumps, behind the work, once you have
+    /// shown traction. Must still sum to 1 - advanceRate.
+    static let startupMilestones: [PaymentMilestone] = [
+        PaymentMilestone(id: 0, progressThreshold: 6, share: 0.12),
+        PaymentMilestone(id: 1, progressThreshold: 26, share: 0.16),
+        PaymentMilestone(id: 2, progressThreshold: 48, share: 0.18),
+        PaymentMilestone(id: 3, progressThreshold: 72, share: 0.22),
+        PaymentMilestone(id: 4, progressThreshold: 100, share: 0.17),
+    ]
+
+    /// A seed-stage company with a round already closed, burning toward a
+    /// ship date and an exit.
+    ///
+    /// The differences that matter versus construction: capacity is
+    /// cheaper but slower to provision on the streams that need vendor
+    /// contracts, the engineering market is tighter and more volatile,
+    /// and tech debt bites harder because diligence at the exit is
+    /// unforgiving.
+    static func startup(
+        difficulty: Difficulty = .standard,
+        persona: ClientPersona? = nil,
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+    ) -> ProjectBrief {
+        var rng = SeededGenerator(seed: seed)
+        let chosenPersona = persona ?? ClientPersona.allCases.randomElement(using: &rng)!
+
+        return ProjectBrief(
+            scenario: .startup,
+            scenarioName: String(localized: "Seed-stage product", comment: "Scenario name"),
+            clientPersona: chosenPersona,
+            difficulty: difficulty,
+            seed: seed,
+            contractValue: 3_600_000,
+            startingCash: (300_000 * difficulty.startingCashFactor).rounded(),
+            creditLimit: (450_000 * difficulty.creditLimitFactor).rounded(),
+            dailyInterestRate: 0.00055,
+            deadlineDays: (110 * difficulty.deadlineFactor).rounded(),
+            baseLatePenaltyPerDay: 6_000,
+            retainageRate: 0.07,
+            advanceRate: 0.15,
+            milestones: startupMilestones,
+            streams: startupStreams,
+            // Engineers are scarcer and price more aggressively than trades.
+            labourMarketFactor: Double.random(in: 0.95...1.35, using: &rng),
+            marketVolatility: Double.random(in: 0.014...0.030, using: &rng) * difficulty.marketVolatilityFactor
+        )
+    }
+
+    /// One entry point for both scenarios, so callers - the engine, the
+    /// picker, the tests - never have to switch on the kind themselves.
+    static func make(
+        scenario: ScenarioKind,
+        difficulty: Difficulty = .standard,
+        persona: ClientPersona? = nil,
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+    ) -> ProjectBrief {
+        switch scenario {
+        case .construction: return .construction(difficulty: difficulty, persona: persona, seed: seed)
+        case .startup:      return .startup(difficulty: difficulty, persona: persona, seed: seed)
+        }
     }
 }
 

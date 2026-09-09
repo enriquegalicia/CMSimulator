@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate CMSimulator's in-game card art via OpenAI's image API.
 
-Extends generate_icon.py's pattern to the twelve work-package/booster
+Extends generate_icon.py's pattern to the work-stream and capability
 card images plus the intro screen's logo. Same tooling logic, same
 Aguach1leLabs family style (cream plate, espresso-brown ink outline,
 terracotta primary, green accent) so every card in the game reads as
@@ -54,6 +54,14 @@ IMAGES = [
     ("Risk.png", "A shield with a small warning triangle at its center, representing risk management."),
     ("Communications.png", "A speech bubble overlapping a second speech bubble, representing stakeholder communications."),
     ("Training.png", "An open book with a graduation-cap silhouette above it, representing workforce training."),
+    # Startup scenario work streams. Same six capability cards are reused
+    # across scenarios, so only the work streams need their own art.
+    ("Discovery.png", "A magnifying glass held over a sticky-note board of small squares, representing user research and product discovery."),
+    ("Platform.png", "Three stacked server or database slabs with a small foundation block beneath them, representing a core platform."),
+    ("API.png", "Two puzzle-like connector blocks clicking together with a small data arrow between them, representing an API and data layer."),
+    ("Features.png", "A stack of app window cards fanned out, the top one showing a checkmark, representing shipped product features."),
+    ("Payments.png", "A credit card overlapping a small receipt with a coin, representing payments and billing."),
+    ("Launch.png", "A small rocket lifting off from a rounded pad with a checklist clipboard beside it, representing launch readiness."),
 ]
 
 LOGO = ("AppIcon-Source.png", "Three interlocking gears - the largest containing a small money bag with a dollar sign, the second a lightbulb, the third a crossed hammer and wrench - representing cost, ideas, and construction.")

@@ -137,7 +137,7 @@ final class SimulationEngine: ObservableObject {
         scheduleNextIncident()
         let advance = brief.contractValue * brief.advanceRate
         ledger.receive(advance * (1 - brief.retainageRate), retainage: advance * brief.retainageRate)
-        log(String(localized: "Contract signed with \(brief.clientPersona.name). \(Int(deadlineDays)) days to hand over.", comment: "Site log: run start"),
+        log(String(localized: "Contract signed with \(brief.counterpartyName). \(Int(deadlineDays)) days to hand over.", comment: "Site log: run start"),
             symbol: "signature", tone: .neutral)
         log(String(localized: "Mobilisation advance of \(Int(advance).formatted()) received.", comment: "Site log: advance payment"),
             symbol: "banknote.fill", tone: .good)
@@ -146,7 +146,7 @@ final class SimulationEngine: ObservableObject {
 
     func restart(with newBrief: ProjectBrief? = nil) {
         setSpeed(.paused)
-        let next = newBrief ?? .construction(difficulty: brief.difficulty)
+        let next = newBrief ?? .make(scenario: brief.scenario, difficulty: brief.difficulty)
         brief = next
         ledger = Ledger(startingCash: next.startingCash,
                         creditLimit: next.creditLimit,
@@ -554,12 +554,12 @@ final class SimulationEngine: ObservableObject {
         let mitigationClass = nextIncidentClass
         if mitigationsHeld.contains(mitigationClass),
            Double.random(in: 0...1) < mitigationClass.probabilityReduction {
-            log(String(localized: "\(mitigationClass.name) prevented an incident.", comment: "Site log: mitigation worked"),
+            log(String(localized: "\(mitigationClass.name(in: brief.scenario)) prevented an incident.", comment: "Site log: mitigation worked"),
                 symbol: "shield.lefthalf.filled", tone: .good)
             scheduleNextIncident()
             return
         }
-        fire(SimEventKind.random(in: mitigationClass), severity: nextIncidentSeverity)
+        fire(SimEventKind.random(in: mitigationClass, from: brief.incidentDeck), severity: nextIncidentSeverity)
         scheduleNextIncident()
     }
 
@@ -652,8 +652,18 @@ final class SimulationEngine: ObservableObject {
             }
         }
 
+        if kind.takesAWorker, !workers.isEmpty {
+            // Whoever knows the most walks - which is what makes this
+            // incident hurt long after the cash hit is forgotten.
+            if let idx = workers.indices.max(by: { workers[$0].experience < workers[$1].experience }) {
+                let leaver = workers[idx]
+                workers.remove(at: idx)
+                consequences.append(String(localized: "\(leaver.name) left, taking their experience with them.", comment: "Incident consequence: worker leaves"))
+            }
+        }
+
         if mitigated {
-            consequences.append(String(localized: "\(kind.mitigationClass.name) limited the damage.", comment: "Incident consequence: mitigation softened it"))
+            consequences.append(String(localized: "\(kind.mitigationClass.name(in: brief.scenario)) limited the damage.", comment: "Incident consequence: mitigation softened it"))
         }
 
         activeEvent = SimEvent(kind: kind, message: kind.message, grossCost: gross,
@@ -782,13 +792,13 @@ final class SimulationEngine: ObservableObject {
               capabilities[idx].isUnlocked, !capabilities[idx].isMaxed else { return }
         let cost = capabilities[idx].nextLevelCost
         guard ledger.spend(cost, into: \.capabilities) else {
-            log(String(localized: "Not enough funds to staff \(kind.displayName).", comment: "Site log: capability unaffordable"),
+            log(String(localized: "Not enough funds to staff \(kind.displayName(in: brief.scenario)).", comment: "Site log: capability unaffordable"),
                 symbol: "xmark.circle.fill", tone: .bad)
             return
         }
         capabilities[idx].level += 1
         capabilities[idx].invested += cost
-        log(String(localized: "\(kind.displayName) staffed to level \(capabilities[idx].level).", comment: "Site log: capability upgraded"),
+        log(String(localized: "\(kind.displayName(in: brief.scenario)) staffed to level \(capabilities[idx].level).", comment: "Site log: capability upgraded"),
             symbol: "arrow.up.circle.fill", tone: .good)
     }
 
@@ -799,7 +809,7 @@ final class SimulationEngine: ObservableObject {
     func standDown(_ kind: CapabilityKind) {
         guard let idx = capabilities.firstIndex(where: { $0.kind == kind }), capabilities[idx].level > 0 else { return }
         capabilities[idx].level -= 1
-        log(String(localized: "\(kind.displayName) stood down to level \(capabilities[idx].level).", comment: "Site log: capability reduced"),
+        log(String(localized: "\(kind.displayName(in: brief.scenario)) stood down to level \(capabilities[idx].level).", comment: "Site log: capability reduced"),
             symbol: "arrow.down.circle", tone: .neutral)
     }
 
@@ -809,7 +819,7 @@ final class SimulationEngine: ObservableObject {
         guard level(of: .risk) > 0, !mitigationsHeld.contains(mitigationClass) else { return }
         guard ledger.spend(mitigationClass.purchaseCost, into: \.capabilities) else { return }
         mitigationsHeld.insert(mitigationClass)
-        log(String(localized: "\(mitigationClass.name) in place.", comment: "Site log: mitigation bought"),
+        log(String(localized: "\(mitigationClass.name(in: brief.scenario)) in place.", comment: "Site log: mitigation bought"),
             symbol: mitigationClass.symbolName, tone: .good)
     }
 
@@ -994,6 +1004,7 @@ final class SimulationEngine: ObservableObject {
 
     var result: RunResult {
         RunResult(
+            scenario: brief.scenario,
             outcome: outcome ?? .insolvent,
             profit: ledger.profit,
             revenue: ledger.revenueReceived + ledger.retainageHeld,
@@ -1050,6 +1061,7 @@ final class SimulationEngine: ObservableObject {
 // MARK: - Result
 
 struct RunResult {
+    let scenario: ScenarioKind
     let outcome: RunOutcome
     let profit: Double
     let revenue: Double

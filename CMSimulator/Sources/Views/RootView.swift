@@ -19,6 +19,7 @@ struct RootView: View {
     @State private var showScores = false
     @State private var showResult = false
     @State private var showSettings = false
+    @State private var showScenarioPicker = false
 
     var body: some View {
         GameView(
@@ -54,9 +55,19 @@ struct RootView: View {
                     showScores = true
                 },
                 onRestart: {
-                    engine.restart()
                     showResult = false
+                    showScenarioPicker = true
                 }
+            )
+        }
+        .sheet(isPresented: $showScenarioPicker) {
+            ScenarioPickerView(
+                current: engine.brief,
+                onStart: { kind, level in
+                    engine.restart(with: .make(scenario: kind, difficulty: level))
+                    showScenarioPicker = false
+                },
+                onCancel: { showScenarioPicker = false }
             )
         }
         .task { gameCenter.authenticate() }

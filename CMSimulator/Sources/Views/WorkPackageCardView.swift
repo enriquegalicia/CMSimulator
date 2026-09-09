@@ -13,6 +13,7 @@ import SwiftUI
 
 struct WorkPackageCardView: View {
     let package: WorkPackage
+    let scenario: ScenarioKind
     let crew: [Worker]
     let ordersInFlight: [MaterialOrder]
     let currentDay: Double
@@ -115,11 +116,11 @@ struct WorkPackageCardView: View {
         } else {
             VStack(alignment: .leading, spacing: 3) {
                 if activeCrew.isEmpty {
-                    Label(String(localized: "No crew assigned", comment: "Work package status"), systemImage: "person.slash")
+                    Label(String(localized: "No \(scenario.staffName.lowercased()) assigned", comment: "Work package status"), systemImage: "person.slash")
                         .font(.caption2)
                         .foregroundStyle(.orange)
                 } else if package.isStarvedOfMaterials {
-                    Label(String(localized: "Out of materials — crew idle on full pay", comment: "Work package status"),
+                    Label(String(localized: "Out of \(scenario.supplyName.lowercased()) — still on full pay", comment: "Work package status"),
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.caption2.bold())
                         .foregroundStyle(.red)
@@ -169,7 +170,7 @@ struct WorkPackageCardView: View {
                 .buttonStyle(.bordered)
 
                 Button(action: onOrder) {
-                    Label("Order", systemImage: "cart")
+                    Label(scenario.supplyOrderVerb, systemImage: "cart")
                         .font(.caption.bold())
                         .frame(maxWidth: .infinity)
                 }

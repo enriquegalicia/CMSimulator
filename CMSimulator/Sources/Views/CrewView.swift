@@ -12,6 +12,7 @@
 import SwiftUI
 
 struct CrewView: View {
+    let scenario: ScenarioKind
     let workers: [Worker]
     let packageTitles: [String: String]
     let trainingLevel: Int
@@ -36,7 +37,7 @@ struct CrewView: View {
             Group {
                 if workers.isEmpty {
                     ContentUnavailableView(
-                        String(localized: "No one on site", comment: "Empty crew state title"),
+                        String(localized: "Nobody hired yet", comment: "Empty crew state title"),
                         systemImage: "person.slash",
                         description: Text("Hire onto a work package to get started.", comment: "Empty crew state description")
                     )
@@ -55,7 +56,7 @@ struct CrewView: View {
                     }
                 }
             }
-            .navigationTitle(String(localized: "Crew", comment: "Crew sheet title"))
+            .navigationTitle(scenario.staffName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -75,7 +76,7 @@ struct CrewView: View {
                 }
                 Button("Cancel", role: .cancel) { confirmingFire = nil }
             } message: {
-                Text("Their experience is lost for good, morale drops across the whole site, and your next applicants will be worse.", comment: "Fire confirmation message")
+                Text("Their experience is lost for good, morale drops across everyone else, and your next applicants will be worse.", comment: "Fire confirmation message")
             }
         }
     }

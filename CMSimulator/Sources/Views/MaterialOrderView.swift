@@ -13,6 +13,7 @@ import SwiftUI
 
 struct MaterialOrderView: View {
     let request: MaterialOrderRequest
+    let scenario: ScenarioKind
     let spendingPower: Double
     let onOrder: (Vendor, Double) -> Void
     let onCancel: () -> Void
@@ -20,9 +21,10 @@ struct MaterialOrderView: View {
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     @State private var quantity: Double
 
-    init(request: MaterialOrderRequest, spendingPower: Double,
+    init(request: MaterialOrderRequest, scenario: ScenarioKind, spendingPower: Double,
          onOrder: @escaping (Vendor, Double) -> Void, onCancel: @escaping () -> Void) {
         self.request = request
+        self.scenario = scenario
         self.spendingPower = spendingPower
         self.onOrder = onOrder
         self.onCancel = onCancel
@@ -103,13 +105,13 @@ struct MaterialOrderView: View {
                         vendorRow(vendor)
                     }
                 } header: {
-                    Text("Who supplies it", comment: "Order sheet section header")
+                    Text(scenario.suppliersName)
                 } footer: {
-                    Text("Crews on a package with no materials still draw full pay. A slow supplier can cost more in idle wages than it saves on price.", comment: "Order sheet explanation")
+                    Text("People with nothing to work on still draw full pay. A slow supplier can cost more in idle wages than it saves on price.", comment: "Order sheet explanation")
                         .font(.caption)
                 }
             }
-            .navigationTitle(String(localized: "Order for \(request.packageTitle)", comment: "Material order sheet title"))
+            .navigationTitle(String(localized: "\(scenario.supplyOrderVerb) for \(request.packageTitle)", comment: "Material order sheet title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

@@ -54,6 +54,14 @@
 		291B940079D94C5DA1B33F09 /* RiskPortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101416A002AC478895FC7B8C /* RiskPortfolioView.swift */; };
 		54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248A5DF56F94249953EA28E /* Diagnostics.swift */; };
 		2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */; };
+		E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E24CE241D476797D81FCE /* Scenario.swift */; };
+		341E194F261A4BD1ADB7A2E4 /* ScenarioPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */; };
+		804E4FC24C4F410BBA4F4DA4 /* Discovery.png in Resources */ = {isa = PBXBuildFile; fileRef = 69C5447AAF1B4A7A86BC953C /* Discovery.png */; };
+		909F6679A5E44C5AAD4DD28C /* Platform.png in Resources */ = {isa = PBXBuildFile; fileRef = 006C8D48BC6A4E5EBA80999D /* Platform.png */; };
+		06B4CDC6885E42B8979EFFAE /* API.png in Resources */ = {isa = PBXBuildFile; fileRef = 594F1EEA6DFC41E198551452 /* API.png */; };
+		45551AD7B47248E2B5A2283E /* Features.png in Resources */ = {isa = PBXBuildFile; fileRef = 672520B4C0FF4CBF97EED865 /* Features.png */; };
+		9BC3B4034EE64428A4E0226D /* Payments.png in Resources */ = {isa = PBXBuildFile; fileRef = 060EF195979E4D4B9B934444 /* Payments.png */; };
+		28909552386D4B0998605426 /* Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = A2F2CCCB1BB3498AA3267EE8 /* Launch.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +136,14 @@
 		101416A002AC478895FC7B8C /* RiskPortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskPortfolioView.swift; sourceTree = "<group>"; };
 		0248A5DF56F94249953EA28E /* Diagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostics.swift; sourceTree = "<group>"; };
 		F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
+		888E24CE241D476797D81FCE /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
+		F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPickerView.swift; sourceTree = "<group>"; };
+		69C5447AAF1B4A7A86BC953C /* Discovery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Discovery.png; sourceTree = "<group>"; };
+		006C8D48BC6A4E5EBA80999D /* Platform.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Platform.png; sourceTree = "<group>"; };
+		594F1EEA6DFC41E198551452 /* API.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = API.png; sourceTree = "<group>"; };
+		672520B4C0FF4CBF97EED865 /* Features.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Features.png; sourceTree = "<group>"; };
+		060EF195979E4D4B9B934444 /* Payments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Payments.png; sourceTree = "<group>"; };
+		A2F2CCCB1BB3498AA3267EE8 /* Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Launch.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +240,12 @@
 			isa = PBXGroup;
 			children = (
 				3DB3C6801BDFA5EC005285E9 /* Design.png */,
+				69C5447AAF1B4A7A86BC953C /* Discovery.png */,
+				006C8D48BC6A4E5EBA80999D /* Platform.png */,
+				594F1EEA6DFC41E198551452 /* API.png */,
+				672520B4C0FF4CBF97EED865 /* Features.png */,
+				060EF195979E4D4B9B934444 /* Payments.png */,
+				A2F2CCCB1BB3498AA3267EE8 /* Launch.png */,
 				3DAD45391BDF1445007E123A /* Structure.png */,
 				3DAD45331BDF1423007E123A /* Risk.png */,
 				3DAD45291BDF13F4007E123A /* Planning.png */,
@@ -243,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				5FC1E3D47680310511107479 /* WorkPackage.swift */,
+				888E24CE241D476797D81FCE /* Scenario.swift */,
 				6E8495D0F8C84AD6A0B177A3 /* Worker.swift */,
 				193D6E08585A49D181A2DF3F /* Ledger.swift */,
 				11E33BBA18764F1FB08982BF /* ProjectBrief.swift */,
@@ -273,6 +296,7 @@
 				EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */,
 				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
 				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
+				F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */,
 				F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */,
 				17B3C79377994FF4B1D147DD /* MaterialOrderView.swift */,
 				1C340D762136475D842DBB7F /* CapabilityCardView.swift */,
@@ -409,6 +433,12 @@
 				3DAD44E91BDEF84B007E123A /* LaunchScreen.storyboard in Resources */,
 				3DAD45341BDF1423007E123A /* Risk.png in Resources */,
 				3DB3C6811BDFA5EC005285E9 /* Design.png in Resources */,
+				804E4FC24C4F410BBA4F4DA4 /* Discovery.png in Resources */,
+				909F6679A5E44C5AAD4DD28C /* Platform.png in Resources */,
+				06B4CDC6885E42B8979EFFAE /* API.png in Resources */,
+				45551AD7B47248E2B5A2283E /* Features.png in Resources */,
+				9BC3B4034EE64428A4E0226D /* Payments.png in Resources */,
+				28909552386D4B0998605426 /* Launch.png in Resources */,
 				3DAD44E61BDEF84B007E123A /* Assets.xcassets in Resources */,
 				2F1497E13AECBA02B6EF5175 /* PrivacyInfo.xcprivacy in Resources */,
 				3DAD452A1BDF13F4007E123A /* Planning.png in Resources */,
@@ -454,6 +484,8 @@
 				F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */,
 				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
 				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
+				E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */,
+				341E194F261A4BD1ADB7A2E4 /* ScenarioPickerView.swift in Sources */,
 				54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */,
 				2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */,
 				C01548353C07455C9ECF3BB8 /* Worker.swift in Sources */,

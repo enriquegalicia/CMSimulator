@@ -119,7 +119,7 @@ extension Vendor {
     /// name pools: suppliers should sound like firms the player would
     /// actually ring up.
     private static var names: [String] {
-        NamePool.split(String(localized: "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Ironclad Supply Co.,BuildRight Partners",
+        NamePool.split(String(localized: "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants",
                             comment: "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."))
     }
 

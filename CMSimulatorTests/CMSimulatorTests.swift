@@ -510,6 +510,49 @@ final class LocalizationTests: XCTestCase {
         }
     }
 
+    /// Closes the loop end to end: not just that the pools exist per
+    /// language, but that the generator actually resolves through the
+    /// running bundle. The tests run under English, so the crew the
+    /// generator produces must be drawn from the English pool.
+    func testGeneratedNamesComeFromTheRunningLanguagesPool() throws {
+        guard Bundle.main.preferredLocalizations.first?.hasPrefix("en") == true else {
+            throw XCTSkip("only meaningful when the test bundle runs in English")
+        }
+        let englishGiven = Set(NamePool.split(
+            "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"))
+
+        var seen = Set<String>()
+        for _ in 0..<300 {
+            let given = Candidate.randomName().split(separator: " ").first.map(String.init) ?? ""
+            seen.insert(given)
+            XCTAssertTrue(englishGiven.contains(given),
+                          "\(given) is not in the English pool - the generator is reading the wrong language")
+        }
+        XCTAssertGreaterThan(seen.count, 5, "the pool should actually be varying")
+    }
+
+    /// Names must actually differ by language. The base pools were once
+    /// Spanish in both, so an English player met a Spanish crew - the
+    /// pools being localized is only useful if they are genuinely
+    /// different sets.
+    func testNamePoolsDifferBetweenEnglishAndSpanish() {
+        func pool(_ language: String, startingWith prefix: String) -> String? {
+            guard let path = Bundle.main.path(forResource: language, ofType: "lproj"),
+                  let bundle = Bundle(path: path) else { return nil }
+            let table = bundle.localizedString(forKey: prefix, value: nil, table: nil)
+            return table == prefix ? nil : table
+        }
+
+        let englishFirst = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"
+        guard let spanish = pool("es", startingWith: englishFirst) else {
+            return XCTFail("Spanish given-name pool missing from the bundle")
+        }
+        XCTAssertNotEqual(spanish, englishFirst,
+                          "the Spanish pool must be its own set of names, not a copy of the English one")
+        XCTAssertTrue(spanish.contains("Mateo"), "expected Spanish given names")
+        XCTAssertFalse(NamePool.split(spanish).isEmpty)
+    }
+
     /// Every vendor offer must carry a usable company name.
     func testVendorPanelAlwaysHasNamedSuppliers() {
         for _ in 0..<50 {

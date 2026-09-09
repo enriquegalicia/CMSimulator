@@ -335,17 +335,18 @@ struct HiringRequest: Identifiable {
 
 extension Candidate {
     /// Name pools are localized as one comma-separated list each, so a
-    /// translator can swap in names that read naturally in their language
-    /// rather than transliterating twenty separate keys. The base list is
-    /// mostly Spanish-speaking with a few names from elsewhere, which is
-    /// what a real crew on this kind of job looks like.
+    /// translator swaps in names that read naturally in their language
+    /// rather than transliterating twenty separate keys. Each list is
+    /// mostly local with a few names from elsewhere, which is what a real
+    /// crew on this kind of job looks like - so an English player meets a
+    /// mostly English crew and a Spanish player a mostly Spanish one.
     private static var firstNames: [String] {
-        NamePool.split(String(localized: "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Marcus,Grace,Owen,Nadia",
+        NamePool.split(String(localized: "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean",
                           comment: "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."))
     }
 
     private static var lastNames: [String] {
-        NamePool.split(String(localized: "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Reyes,Webb,Okafor",
+        NamePool.split(String(localized: "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes",
                           comment: "Comma-separated pool of worker surnames. Replace with surnames that read naturally in your language - do not translate these literally."))
     }
 

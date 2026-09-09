@@ -845,24 +845,6 @@
       },
       "comment": "Incident description"
     },
-    "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Ironclad Supply Co.,BuildRight Partners": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Ironclad Supply Co.,BuildRight Partners"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Aceros Peninsular,BuildRight Partners"
-          }
-        }
-      },
-      "comment": "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."
-    },
     "Acquisitions": {
       "extractionState": "manual",
       "localizations": {
@@ -2475,24 +2457,6 @@
       },
       "comment": "Capability summary"
     },
-    "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Reyes,Webb,Okafor": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Reyes,Webb,Okafor"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Aguilar,Webb,Okafor"
-          }
-        }
-      },
-      "comment": "Comma-separated pool of worker surnames. Replace with surnames that read naturally in your language - do not translate these literally."
-    },
     "Help": {
       "extractionState": "manual",
       "localizations": {
@@ -2960,6 +2924,42 @@
       },
       "comment": "Cost breakdown line"
     },
+    "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Aceros Peninsular,BuildRight Partners"
+          }
+        }
+      },
+      "comment": "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."
+    },
+    "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Fernanda,Sebastián,Marcus,Grace"
+          }
+        }
+      },
+      "comment": "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."
+    },
     "Late penalties": {
       "extractionState": "manual",
       "localizations": {
@@ -3282,24 +3282,6 @@
         }
       },
       "comment": "Client persona description"
-    },
-    "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Marcus,Grace,Owen,Nadia": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Marcus,Grace,Owen,Nadia"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Fernanda,Sebastián,Marcus,Grace"
-          }
-        }
-      },
-      "comment": "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."
     },
     "Material prices spike": {
       "extractionState": "manual",
@@ -5978,6 +5960,24 @@
         }
       },
       "comment": "Mitigation name"
+    },
+    "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Aguilar,Webb,Okafor"
+          }
+        }
+      },
+      "comment": "Comma-separated pool of worker surnames. Replace with surnames that read naturally in your language - do not translate these literally."
     },
     "Well run": {
       "extractionState": "manual",

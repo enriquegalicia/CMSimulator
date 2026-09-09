@@ -115,11 +115,13 @@ struct Vendor: Identifiable {
 }
 
 extension Vendor {
-    private static let names = [
-        "Ironclad Supply Co.", "Meridian Materials", "BuildRight Partners",
-        "Cornerstone Vendors", "Apex Sourcing Group", "Foundry & Co.",
-        "Delta Trade Supply", "Northgate Aggregates",
-    ]
+    /// Localized as one comma-separated list, same reasoning as the worker
+    /// name pools: suppliers should sound like firms the player would
+    /// actually ring up.
+    private static var names: [String] {
+        NamePool.split(String(localized: "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Ironclad Supply Co.,BuildRight Partners",
+                            comment: "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."))
+    }
 
     /// Three standing offers: the classic cheap/balanced/premium spread,
     /// but the axes that matter are lead time and reliability, not just

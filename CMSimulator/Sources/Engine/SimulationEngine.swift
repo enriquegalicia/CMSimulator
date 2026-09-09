@@ -1041,6 +1041,9 @@ final class SimulationEngine: ObservableObject {
     private func log(_ text: String, symbol: String, tone: SiteLogEntry.Tone) {
         siteLog.insert(SiteLogEntry(day: Int(elapsedDays), text: text, symbol: symbol, tone: tone), at: 0)
         if siteLog.count > 60 { siteLog.removeLast(siteLog.count - 60) }
+        // Same trail, kept for crash reports - if the app dies, this is
+        // what says which action it died on.
+        Diagnostics.shared.breadcrumb("d\(Int(elapsedDays)) \(text)")
     }
 }
 

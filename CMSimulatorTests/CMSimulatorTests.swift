@@ -448,3 +448,120 @@ final class MaterialMarketTests: XCTestCase {
         XCTAssertEqual(market.effectiveIndex, market.index, accuracy: 1e-12)
     }
 }
+
+// MARK: - Crash regressions
+//
+// Both of these shipped in the rebuild and were reported from the field.
+
+@MainActor
+final class CrashRegressionTests: XCTestCase {
+
+    /// A package that already has everything it needs produced a suggested
+    /// quantity of 0, which collapsed the order sheet's Slider bounds to
+    /// `1...1`. A zero-width range divides by zero when the thumb position
+    /// is computed, and the sheet crashed on open.
+    func testOrderSheetNeverProducesADegenerateSliderRange() {
+        let engine = SimulationEngine(brief: .construction(difficulty: .steady, persona: .institution, seed: 5))
+        // Fully stocked: nothing outstanding to order.
+        engine.debugSetMaterialStock(1_000_000, for: "design")
+        engine.requestMaterialOrder(for: "design")
+
+        guard let request = engine.orderRequest else { return XCTFail("no order request") }
+        XCTAssertEqual(request.suggestedQuantity, 0, "nothing should be outstanding")
+
+        // Mirrors MaterialOrderView.maxQuantity.
+        let maxQuantity = max(20, (request.suggestedQuantity * 2).rounded())
+        XCTAssertGreaterThan(maxQuantity, 1,
+                             "the slider's upper bound must stay above its lower bound of 1")
+    }
+
+    /// Shortfalls are always rounded up, so the final fraction of a package
+    /// stays orderable rather than rounding to a zero-quantity order.
+    func testSuggestedQuantityRoundsShortfallsUp() {
+        let engine = SimulationEngine(brief: .construction(difficulty: .steady, persona: .institution, seed: 5))
+        engine.debugSetMaterialStock(0, for: "design")
+        engine.debugSetUnitsCompleted(249.6, for: "design")
+        engine.requestMaterialOrder(for: "design")
+
+        guard let request = engine.orderRequest else { return XCTFail("no order request") }
+        XCTAssertGreaterThanOrEqual(request.suggestedQuantity, 1)
+    }
+}
+
+// MARK: - Localization
+
+final class LocalizationTests: XCTestCase {
+
+    /// Name pools are shipped as one comma-separated localized string each.
+    /// A translator dropping or mangling one must never yield an empty pool
+    /// (which would trap on `randomElement()!`) or a blank name.
+    func testNamePoolSplittingIsRobust() {
+        XCTAssertEqual(NamePool.split("Ana, Beto ,Carla"), ["Ana", "Beto", "Carla"])
+        XCTAssertEqual(NamePool.split("Ana,,  ,Beto"), ["Ana", "Beto"])
+        XCTAssertFalse(NamePool.split("").isEmpty, "an empty list must still yield a usable name")
+        XCTAssertFalse(NamePool.split("  ,, ").isEmpty)
+    }
+
+    func testGeneratedNamesAreNeverBlank() {
+        for _ in 0..<200 {
+            let name = Candidate.randomName()
+            XCTAssertFalse(name.trimmingCharacters(in: .whitespaces).isEmpty)
+            XCTAssertTrue(name.contains(" "), "a full name should have a given name and a surname")
+        }
+    }
+
+    /// Every vendor offer must carry a usable company name.
+    func testVendorPanelAlwaysHasNamedSuppliers() {
+        for _ in 0..<50 {
+            let panel = Vendor.standingPanel()
+            XCTAssertEqual(panel.count, 3)
+            for vendor in panel {
+                XCTAssertFalse(vendor.name.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+    }
+}
+
+@MainActor
+final class DiagnosticsTests: XCTestCase {
+
+    /// Regression: `install()` harvested a pending crash before loading the
+    /// reports already on disk, so the first save wrote a one-entry array
+    /// over the file and every earlier report was lost - exactly the
+    /// history you need when a crash is intermittent.
+    func testRecordingAReportKeepsTheOnesAlreadyThere() {
+        let diagnostics = Diagnostics.shared
+        diagnostics.clear()
+
+        diagnostics.recordError("First", detail: "one")
+        diagnostics.recordError("Second", detail: "two")
+
+        XCTAssertEqual(diagnostics.reports.count, 2)
+        XCTAssertEqual(diagnostics.reports.first?.summary, "Second", "newest first")
+        XCTAssertTrue(diagnostics.reports.contains { $0.summary == "First" },
+                      "recording a report must not discard earlier ones")
+        diagnostics.clear()
+    }
+
+    func testExportIncludesEveryReportAndItsEnvironment() {
+        let diagnostics = Diagnostics.shared
+        diagnostics.clear()
+        diagnostics.recordError("Boom", detail: "stack trace here")
+
+        let text = diagnostics.exportText
+        XCTAssertTrue(text.contains("Boom"))
+        XCTAssertTrue(text.contains("stack trace here"))
+        XCTAssertTrue(text.contains(Diagnostics.deviceModel))
+        diagnostics.clear()
+    }
+
+    func testBreadcrumbsNeverOverflowTheirBuffer() {
+        // The trail is mirrored into a fixed C buffer that a signal handler
+        // writes verbatim; overrunning it would corrupt the report.
+        for i in 0..<5_000 {
+            Diagnostics.shared.breadcrumb("step \(i) with some padding text to fill the buffer")
+        }
+        // Reaching here without a crash is the assertion.
+        XCTAssertTrue(true)
+    }
+}

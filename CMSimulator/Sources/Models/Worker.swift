@@ -295,6 +295,22 @@ struct Worker: Identifiable {
     }
 }
 
+// MARK: - Localized name pools
+
+/// Name lists are localized as single comma-separated strings rather than
+/// one key per name, so a translator swaps in a whole culturally-natural
+/// set in one edit instead of transliterating dozens of entries.
+enum NamePool {
+    /// Tolerates stray spaces and empty entries, so a mistranslated list
+    /// can never produce a blank name or an empty pool.
+    static func split(_ list: String) -> [String] {
+        let parts = list.split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        return parts.isEmpty ? ["Álex"] : parts
+    }
+}
+
 // MARK: - Candidate pool
 
 /// One applicant on offer. Wraps a fully-formed Worker so what you see in
@@ -318,15 +334,20 @@ struct HiringRequest: Identifiable {
 }
 
 extension Candidate {
-    private static let firstNames = [
-        "Jordan", "Priya", "Marcus", "Elena", "Sam", "Diego", "Ava", "Lucas",
-        "Nadia", "Ravi", "Grace", "Owen", "Mireia", "Tomás", "Ines", "Kofi",
-        "Lena", "Hugo", "Amara", "Yusuf",
-    ]
-    private static let lastNames = [
-        "Reyes", "Shah", "Webb", "Novak", "Okafor", "Marín", "Chen", "Ferreira",
-        "Haddad", "Patel", "Kim", "Malone", "Duarte", "Bianchi", "Sørensen", "Adeyemi",
-    ]
+    /// Name pools are localized as one comma-separated list each, so a
+    /// translator can swap in names that read naturally in their language
+    /// rather than transliterating twenty separate keys. The base list is
+    /// mostly Spanish-speaking with a few names from elsewhere, which is
+    /// what a real crew on this kind of job looks like.
+    private static var firstNames: [String] {
+        NamePool.split(String(localized: "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Marcus,Grace,Owen,Nadia",
+                          comment: "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."))
+    }
+
+    private static var lastNames: [String] {
+        NamePool.split(String(localized: "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Reyes,Webb,Okafor",
+                          comment: "Comma-separated pool of worker surnames. Replace with surnames that read naturally in your language - do not translate these literally."))
+    }
 
     static func randomName() -> String {
         "\(firstNames.randomElement()!) \(lastNames.randomElement()!)"

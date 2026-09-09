@@ -52,6 +52,8 @@
 		3168BF3C587048B5AB23527D /* CapabilityCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C340D762136475D842DBB7F /* CapabilityCardView.swift */; };
 		C8868EB3B6374C95A5A0E822 /* CrewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA57C569A674C7CA2021749 /* CrewView.swift */; };
 		291B940079D94C5DA1B33F09 /* RiskPortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101416A002AC478895FC7B8C /* RiskPortfolioView.swift */; };
+		54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248A5DF56F94249953EA28E /* Diagnostics.swift */; };
+		2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +126,8 @@
 		1C340D762136475D842DBB7F /* CapabilityCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityCardView.swift; sourceTree = "<group>"; };
 		DFA57C569A674C7CA2021749 /* CrewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewView.swift; sourceTree = "<group>"; };
 		101416A002AC478895FC7B8C /* RiskPortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskPortfolioView.swift; sourceTree = "<group>"; };
+		0248A5DF56F94249953EA28E /* Diagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostics.swift; sourceTree = "<group>"; };
+		F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				378A50C23684A218625CD8C9 /* SimulationEngine.swift */,
+				0248A5DF56F94249953EA28E /* Diagnostics.swift */,
 				00A9D8F37A1831C1DC972A12 /* GameCenterManager.swift */,
 			);
 			path = Engine;
@@ -268,6 +273,7 @@
 				EF7C681BEDD96BE3C0D781AB /* GaugeView.swift */,
 				7DA11C4B7EA78377373139B1 /* WorkPackageCardView.swift */,
 				61EE31E6C5EE05E2DFD6913C /* GameView.swift */,
+				F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */,
 				17B3C79377994FF4B1D147DD /* MaterialOrderView.swift */,
 				1C340D762136475D842DBB7F /* CapabilityCardView.swift */,
 				DFA57C569A674C7CA2021749 /* CrewView.swift */,
@@ -448,6 +454,8 @@
 				F42A3EB509C0569B2A51ED5B /* GaugeView.swift in Sources */,
 				1C1CA40564B99B0476535203 /* WorkPackageCardView.swift in Sources */,
 				552F19E5DD8CCC998A1FF15F /* GameView.swift in Sources */,
+				54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */,
+				2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */,
 				C01548353C07455C9ECF3BB8 /* Worker.swift in Sources */,
 				0A8D1583ABDE441D91AA4CA5 /* Ledger.swift in Sources */,
 				7FC5098CA9A9408AB04C1327 /* ProjectBrief.swift in Sources */,
@@ -634,6 +642,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CriticalPath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -652,6 +661,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CriticalPath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -668,6 +678,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CriticalPathSim.app/CriticalPathSim";
 			};
@@ -685,6 +696,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aguach1leLabs.CMSimulatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CriticalPathSim.app/CriticalPathSim";
 			};

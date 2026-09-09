@@ -26,6 +26,24 @@ struct SettingsView: View {
                 } footer: {
                     Text("Costs throughout the simulator display in this currency. Defaults to your device's own currency.")
                 }
+
+                Section {
+                    NavigationLink {
+                        DiagnosticsView()
+                    } label: {
+                        HStack {
+                            Label(String(localized: "Diagnostics", comment: "Settings row"), systemImage: "stethoscope")
+                            Spacer()
+                            if !Diagnostics.shared.reports.isEmpty {
+                                Text("\(Diagnostics.shared.reports.count)")
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } footer: {
+                    Text("Crashes and errors are recorded on this device so they can be sent on and fixed. Nothing is uploaded automatically.", comment: "Settings diagnostics footer")
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)

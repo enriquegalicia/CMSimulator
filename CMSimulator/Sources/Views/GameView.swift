@@ -140,8 +140,44 @@ struct GameView: View {
         return .primary
     }
 
+    /// Says what you are playing and opens the picker. This is the only
+    /// signpost to the scenario list, so it is deliberately a labelled
+    /// control rather than another icon in the row below.
+    private var scenarioChip: some View {
+        Button {
+            showScenarioPicker = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: engine.brief.scenario.symbolName)
+                    .font(.caption)
+                Text(engine.brief.scenario.name)
+                    .font(.caption.bold())
+                Text(verbatim: "·")
+                    .foregroundStyle(.secondary)
+                Text(engine.brief.difficulty.name)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 9))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(.quaternary, in: Capsule())
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(String(localized: "Change scenario", comment: "Accessibility label for the scenario chip"))
+        .accessibilityValue(String(localized: "\(engine.brief.scenario.name), \(engine.brief.difficulty.name)", comment: "Current scenario and difficulty"))
+    }
+
     private var header: some View {
         VStack(spacing: 8) {
+            HStack {
+                scenarioChip
+                Spacer(minLength: 4)
+            }
+
             HStack(alignment: .top, spacing: 8) {
                 StatTile(label: String(localized: "Cash", comment: "HUD label"),
                          value: engine.ledger.cash.formatted(.currency(code: currencyCode).precision(.fractionLength(0))),
@@ -202,7 +238,6 @@ struct GameView: View {
                     .controlSize(.small)
                     .tint(.green)
                 }
-                headerButton("arrow.counterclockwise", String(localized: "New run", comment: "Header button")) { showScenarioPicker = true }
                 headerButton("questionmark.circle", String(localized: "Help", comment: "Header button"), action: onShowHelp)
                 headerButton("trophy", String(localized: "Scores", comment: "Header button"), action: onShowScores)
                 headerButton("gearshape", String(localized: "Settings", comment: "Header button"), action: onShowSettings)

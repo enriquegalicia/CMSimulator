@@ -20,6 +20,7 @@ struct RootView: View {
     @State private var showResult = false
     @State private var showSettings = false
     @State private var showScenarioPicker = false
+    @AppStorage(AppSettings.hasSeenScenarioPickerKey) private var hasSeenScenarioPicker = false
 
     var body: some View {
         GameView(
@@ -70,7 +71,15 @@ struct RootView: View {
                 onCancel: { showScenarioPicker = false }
             )
         }
-        .task { gameCenter.authenticate() }
+        .task {
+            gameCenter.authenticate()
+            // First ever launch: show what is on offer rather than
+            // dropping straight into whichever scenario is the default.
+            if !hasSeenScenarioPicker {
+                hasSeenScenarioPicker = true
+                showScenarioPicker = true
+            }
+        }
         .sheet(item: Binding(
             get: { gameCenter.authViewController.map(GameCenterControllerWrapper.init) },
             set: { _ in gameCenter.authViewController = nil }

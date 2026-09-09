@@ -307,7 +307,6 @@
       "comment": "Site log: mitigation worked"
     },
     "%@ price index": {
-      "comment": "Accessibility label for the market sparkline",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -322,7 +321,8 @@
             "value": "Índice de precios de %@"
           }
         }
-      }
+      },
+      "comment": "Accessibility label for the market sparkline"
     },
     "%@ resigned. Morale was too low.": {
       "extractionState": "manual",
@@ -431,6 +431,24 @@
         }
       },
       "comment": "Result scenario and counterparty"
+    },
+    "%@, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        }
+      },
+      "comment": "Current scenario and difficulty"
     },
     "%@/day": {
       "extractionState": "manual",
@@ -1508,6 +1526,24 @@
         }
       },
       "comment": "Result lesson: defects"
+    },
+    "Change scenario": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change scenario"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cambiar escenario"
+          }
+        }
+      },
+      "comment": "Accessibility label for the scenario chip"
     },
     "Cheap and slow now. Learns faster than anyone.": {
       "extractionState": "manual",
@@ -4091,7 +4127,8 @@
             "value": "Materiales"
           }
         }
-      }
+      },
+      "comment": "Consumable resource name"
     },
     "Materials arrive late and idle crews still get paid. Supply timing is the whole game.": {
       "extractionState": "manual",
@@ -4451,7 +4488,7 @@
           }
         }
       },
-      "comment": "Header button"
+      "comment": "Scenario picker title"
     },
     "No %@ assigned": {
       "extractionState": "manual",

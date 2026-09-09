@@ -9,6 +9,9 @@ import Foundation
 
 enum AppSettings {
     static let currencyCodeKey = "currencyCode"
+    /// Set once the player has been shown the scenario list, so the
+    /// picker greets a first-time player and never nags after that.
+    static let hasSeenScenarioPickerKey = "hasSeenScenarioPicker"
 
     /// The device's own currency, used the first time the app runs before
     /// the player has ever opened Settings. Falls back to USD if the

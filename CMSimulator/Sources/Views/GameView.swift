@@ -49,7 +49,7 @@ struct GameView: View {
         VStack(spacing: 0) {
             header.padding(.horizontal, isWide ? 20 : 14).padding(.top, 10).padding(.bottom, 8)
 
-            Picker("Board", selection: $board) {
+            Picker(String(localized: "Board", comment: "Accessibility label for the board switcher"), selection: $board) {
                 // The market board only exists for scenarios with customers.
                 ForEach(Board.allCases.filter { $0 != .growth || engine.growth != nil }) {
                     Text($0.title(in: engine.brief.scenario)).tag($0)

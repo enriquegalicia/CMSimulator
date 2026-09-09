@@ -22,9 +22,9 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Text("Currency")
+                    Text("Currency", comment: "Settings section header")
                 } footer: {
-                    Text("Costs throughout the simulator display in this currency. Defaults to your device's own currency.")
+                    Text("Costs throughout the simulator display in this currency. Defaults to your device's own currency.", comment: "Settings currency footer")
                 }
 
                 Section {
@@ -45,7 +45,7 @@ struct SettingsView: View {
                     Text("Crashes and errors are recorded on this device so they can be sent on and fixed. Nothing is uploaded automatically.", comment: "Settings diagnostics footer")
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(String(localized: "Settings", comment: "Settings screen title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

@@ -575,42 +575,6 @@
       },
       "comment": "Result operational stat"
     },
-    "%lld defects reached handover": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld defects reached handover"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld defectos llegaron a la entrega"
-          }
-        }
-      },
-      "comment": "Result operational stat"
-    },
-    "%lld idle crew-days": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld idle crew-days"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld días-cuadrilla sin trabajar"
-          }
-        }
-      },
-      "comment": "Result operational stat"
-    },
     "%lld late": {
       "extractionState": "manual",
       "localizations": {
@@ -646,6 +610,24 @@
         }
       },
       "comment": "HUD days remaining caption"
+    },
+    "%lld left unresolved at the end": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld left unresolved at the end"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld sin resolver al final"
+          }
+        }
+      },
+      "comment": "Result operational stat"
     },
     "%lld mitigations, %lld%% insured": {
       "extractionState": "manual",
@@ -701,6 +683,24 @@
       },
       "comment": "Quality effect summary"
     },
+    "%lld paid idle days": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld paid idle days"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld días pagados sin trabajar"
+          }
+        }
+      },
+      "comment": "Result operational stat"
+    },
     "%lld released from %@ — scope complete.": {
       "extractionState": "manual",
       "localizations": {
@@ -719,19 +719,19 @@
       },
       "comment": "Site log: crew demobilised"
     },
-    "%lld still onboarding — crew slowed": {
+    "%lld still onboarding — slowing the others": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld still onboarding — crew slowed"
+            "value": "%lld still onboarding — slowing the others"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld en inducción — la cuadrilla va más lenta"
+            "value": "%lld en inducción — frenando a los demás"
           }
         }
       },
@@ -1024,24 +1024,6 @@
         }
       },
       "comment": "Incident title"
-    },
-    "API & data": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "API & data"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "API y datos"
-          }
-        }
-      },
-      "comment": "Startup work stream name"
     },
     "Acquired for %@. Your share: %@.": {
       "extractionState": "manual",
@@ -1400,7 +1382,8 @@
             "value": "Tablero"
           }
         }
-      }
+      },
+      "comment": "Accessibility label for the board switcher"
     },
     "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.": {
       "extractionState": "manual",
@@ -1598,24 +1581,6 @@
         }
       },
       "comment": "Cost breakdown line"
-    },
-    "Capacity": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capacity"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capacidad"
-          }
-        }
-      },
-      "comment": "Consumable resource name"
     },
     "Cash": {
       "extractionState": "manual",
@@ -1974,7 +1939,8 @@
             "value": "Terminada"
           }
         }
-      }
+      },
+      "comment": "Work stream finished"
     },
     "Construction": {
       "extractionState": "manual",
@@ -2099,7 +2065,8 @@
             "value": "Los costos en todo el simulador se muestran en esta moneda. Por defecto, se usa la moneda de tu dispositivo."
           }
         }
-      }
+      },
+      "comment": "Settings currency footer"
     },
     "Courses run %lld days": {
       "extractionState": "manual",
@@ -2173,24 +2140,6 @@
       },
       "comment": "Collective noun for hired staff"
     },
-    "Crew on %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Crew on %@"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cuadrilla de %@"
-          }
-        }
-      },
-      "comment": "Accessibility label for the crew count button"
-    },
     "Crew walks off": {
       "extractionState": "manual",
       "localizations": {
@@ -2208,24 +2157,6 @@
         }
       },
       "comment": "Incident title"
-    },
-    "Crews on full pay with nothing to build. Order materials earlier, or pay for a faster supplier.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Crews on full pay with nothing to build. Order materials earlier, or pay for a faster supplier."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cuadrillas cobrando completo sin nada que construir. Pide material antes, o paga un proveedor más rápido."
-          }
-        }
-      },
-      "comment": "Result lesson: idle crew"
     },
     "Critical bug in production": {
       "extractionState": "manual",
@@ -2837,6 +2768,24 @@
       },
       "comment": "Site log: early bonus"
     },
+    "Electrical & Lighting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Electrical & Lighting"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IES e IEL"
+          }
+        }
+      },
+      "comment": "Work package name - Electrical & Lighting installations"
+    },
     "Elevated": {
       "extractionState": "manual",
       "localizations": {
@@ -3140,25 +3089,8 @@
             "value": "Acelerada"
           }
         }
-      }
-    },
-    "Feature build": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Feature build"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Construcción de funciones"
-          }
-        }
       },
-      "comment": "Startup work stream name"
+      "comment": "Badge: stream started before its dependency finished"
     },
     "Feature depth": {
       "extractionState": "manual",
@@ -3625,7 +3557,8 @@
             "value": "Contratar"
           }
         }
-      }
+      },
+      "comment": "Button: recruit onto this work stream"
     },
     "Hire for %@": {
       "extractionState": "manual",
@@ -3711,7 +3644,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cómo se llevó la obra"
+            "value": "Cómo se gestionó"
           }
         }
       },
@@ -3752,42 +3685,6 @@
         }
       },
       "comment": "Help screen title"
-    },
-    "IES & IEL": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "IES & IEL"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "IES & IEL"
-          }
-        }
-      },
-      "comment": "Work package name - Electrical & Lighting installations"
-    },
-    "IHS & IAA": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "IHS & IAA"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "IHS & IAA"
-          }
-        }
-      },
-      "comment": "Work package name - Hydro-sanitary & Air conditioning installations"
     },
     "If the app crashes or hits a problem, it gets recorded here automatically — including what you were doing just before.": {
       "extractionState": "manual",
@@ -4221,24 +4118,6 @@
       },
       "comment": "Scenario tagline"
     },
-    "Launch readiness": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Launch readiness"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Listo para lanzar"
-          }
-        }
-      },
-      "comment": "Startup work stream name"
-    },
     "Launched": {
       "extractionState": "manual",
       "localizations": {
@@ -4362,7 +4241,8 @@
             "value": "Tabla de Clasificación"
           }
         }
-      }
+      },
+      "comment": "Accessibility label for the leaderboard switcher"
     },
     "Leaderboard score": {
       "extractionState": "manual",
@@ -4562,19 +4442,19 @@
       },
       "comment": "Forecast severity"
     },
-    "Lowers incident risk for the whole crew.": {
+    "Lowers incident risk for everyone around them.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lowers incident risk for the whole crew."
+            "value": "Lowers incident risk for everyone around them."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Baja el riesgo de incidentes de toda la cuadrilla."
+            "value": "Baja el riesgo de incidentes de todos a su alrededor."
           }
         }
       },
@@ -4994,19 +4874,19 @@
       },
       "comment": "Order unaffordable warning"
     },
-    "More working capital and a longer programme. Learn the systems.": {
+    "More working capital and more time. Learn the systems.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "More working capital and a longer programme. Learn the systems."
+            "value": "More working capital and more time. Learn the systems."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Más capital de trabajo y un programa más largo. Para aprender los sistemas."
+            "value": "Más capital de trabajo y más tiempo. Para aprender los sistemas."
           }
         }
       },
@@ -5066,24 +4946,6 @@
       },
       "comment": "Capability summary"
     },
-    "New contract": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New contract"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nuevo contrato"
-          }
-        }
-      },
-      "comment": "Start a new run button"
-    },
     "New hires start at a quarter speed and slow down everyone already on that crew while they learn. Adding people to a late package makes it later.": {
       "extractionState": "manual",
       "localizations": {
@@ -5118,7 +4980,7 @@
           }
         }
       },
-      "comment": "Scenario picker title"
+      "comment": "Start a new run button"
     },
     "No %@ assigned": {
       "extractionState": "manual",
@@ -5384,7 +5246,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Veterano de obra"
+            "value": "Veterano"
           }
         }
       },
@@ -5408,19 +5270,19 @@
       },
       "comment": "Result badge"
     },
-    "Onboarding — at %lld%% and slowing the crew": {
+    "Onboarding — at %lld%% and slowing the others": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Onboarding — at %lld%% and slowing the crew"
+            "value": "Onboarding — at %lld%% and slowing the others"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "En inducción — al %lld%% y frenando a la cuadrilla"
+            "value": "En inducción — al %lld%% y frenando a los demás"
           }
         }
       },
@@ -5531,7 +5393,8 @@
             "value": "Horas extra"
           }
         }
-      }
+      },
+      "comment": "Label for the overtime slider"
     },
     "Overtime buys speed and burns morale. People with no morale left resign on their own.": {
       "extractionState": "manual",
@@ -5677,6 +5540,42 @@
       },
       "comment": "Site log: payroll missed"
     },
+    "People on %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People on %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personas en %@"
+          }
+        }
+      },
+      "comment": "Accessibility label for the crew count button"
+    },
+    "People on full pay with nothing to work on. Fix the thing that was blocking them sooner.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People on full pay with nothing to work on. Fix the thing that was blocking them sooner."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gente cobrando completo sin nada que hacer. Resuelve antes lo que los tenía detenidos."
+          }
+        }
+      },
+      "comment": "Result lesson: idle crew"
+    },
     "People with nothing to work on still draw full pay. A slow supplier can cost more in idle wages than it saves on price.": {
       "extractionState": "manual",
       "localizations": {
@@ -5784,6 +5683,24 @@
         }
       },
       "comment": "Default score entry name when the player leaves the name field blank"
+    },
+    "Plumbing & HVAC": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plumbing & HVAC"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IHS e IAA"
+          }
+        }
+      },
+      "comment": "Work package name - Hydro-sanitary & Air conditioning installations"
     },
     "Premium, fast and dependable": {
       "extractionState": "manual",
@@ -5996,24 +5913,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Promover"
-          }
-        }
-      },
-      "comment": "Button: buy more of the consumable"
-    },
-    "Provision": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Provision"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Provisionar"
           }
         }
       },
@@ -6790,7 +6689,8 @@
             "value": "Ajustes"
           }
         }
-      }
+      },
+      "comment": "Settings screen title"
     },
     "Severance": {
       "extractionState": "manual",
@@ -6845,24 +6745,6 @@
         }
       },
       "comment": "Diagnostics share button"
-    },
-    "Ship a product before the runway runs out, and sell the company.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ship a product before the runway runs out, and sell the company."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saca un producto antes de que se acabe la pista, y vende la empresa."
-          }
-        }
-      },
-      "comment": "Scenario tagline"
     },
     "Signing %@": {
       "extractionState": "manual",
@@ -7422,24 +7304,6 @@
       },
       "comment": "Hidden quality debt"
     },
-    "Tech debt is invisible until diligence. Ship fast and you pay for it at the exit.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tech debt is invisible until diligence. Ship fast and you pay for it at the exit."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La deuda técnica es invisible hasta la auditoría. Corre rápido y la pagas en la venta."
-          }
-        }
-      },
-      "comment": "Scenario signature lesson"
-    },
     "Technical review": {
       "extractionState": "manual",
       "localizations": {
@@ -7584,19 +7448,19 @@
       },
       "comment": "Incident description"
     },
-    "The intended balance. Deadline is reachable if you run a tight site.": {
+    "The intended balance. The date is reachable if you run things tightly.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The intended balance. Deadline is reachable if you run a tight site."
+            "value": "The intended balance. The date is reachable if you run things tightly."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El equilibrio previsto. La fecha se alcanza si llevas la obra con orden."
+            "value": "El equilibrio previsto. La fecha se alcanza si llevas las cosas con orden."
           }
         }
       },
@@ -8087,24 +7951,6 @@
         }
       },
       "comment": "Vendor reliability label"
-    },
-    "Vendors": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vendors"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Proveedores"
-          }
-        }
-      },
-      "comment": "Capability name"
     },
     "Wages": {
       "extractionState": "manual",

@@ -88,7 +88,7 @@ enum WorkerArchetype: String, CaseIterable {
         case .gunner: return String(localized: "Quick output, but leaves defects behind and burns out.", comment: "Worker archetype description")
         case .apprentice: return String(localized: "Cheap and slow now. Learns faster than anyone.", comment: "Worker archetype description")
         case .allRounder: return String(localized: "No weaknesses, no edge. Reliable middle.", comment: "Worker archetype description")
-        case .safetyLead: return String(localized: "Lowers incident risk for the whole crew.", comment: "Worker archetype description")
+        case .safetyLead: return String(localized: "Lowers incident risk for everyone around them.", comment: "Worker archetype description")
         case .specialist: return String(localized: "High output and clean work. Demands a high wage.", comment: "Worker archetype description")
         }
     }

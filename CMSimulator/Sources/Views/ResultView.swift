@@ -164,13 +164,13 @@ struct ResultView: View {
 
             if result.idleCrewDays > 0.5 {
                 lesson(systemImage: "hourglass",
-                       title: String(localized: "\(Int(result.idleCrewDays)) idle crew-days", comment: "Result operational stat"),
-                       detail: String(localized: "Crews on full pay with nothing to build. Order materials earlier, or pay for a faster supplier.", comment: "Result lesson: idle crew"),
+                       title: String(localized: "\(Int(result.idleCrewDays)) paid idle days", comment: "Result operational stat"),
+                       detail: String(localized: "People on full pay with nothing to work on. Fix the thing that was blocking them sooner.", comment: "Result lesson: idle crew"),
                        tint: result.idleCrewDays > 20 ? .red : .orange)
             }
             if result.openDefects > 0.5 {
                 lesson(systemImage: "wrench.and.screwdriver.fill",
-                       title: String(localized: "\(Int(result.openDefects)) defects reached handover", comment: "Result operational stat"),
+                       title: String(localized: "\(Int(result.openDefects)) left unresolved at the end", comment: "Result operational stat"),
                        detail: String(localized: "Caught during the build these cost a fraction as much. Quality inspections pay for themselves.", comment: "Result lesson: defects"),
                        tint: .red)
             }
@@ -229,7 +229,7 @@ struct ResultView: View {
             Button {
                 onRestart()
             } label: {
-                Text("New contract", comment: "Start a new run button").frame(maxWidth: .infinity)
+                Text("New run", comment: "Start a new run button").frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
             .controlSize(.large)

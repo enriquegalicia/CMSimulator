@@ -158,8 +158,8 @@ enum Difficulty: String, CaseIterable, Identifiable {
 
     var blurb: String {
         switch self {
-        case .steady: return String(localized: "More working capital and a longer programme. Learn the systems.", comment: "Difficulty description")
-        case .standard: return String(localized: "The intended balance. Deadline is reachable if you run a tight site.", comment: "Difficulty description")
+        case .steady: return String(localized: "More working capital and more time. Learn the systems.", comment: "Difficulty description")
+        case .standard: return String(localized: "The intended balance. The date is reachable if you run things tightly.", comment: "Difficulty description")
         case .tight: return String(localized: "Thin capital, hard date, volatile prices. One bad week ends you.", comment: "Difficulty description")
         }
     }
@@ -317,10 +317,10 @@ struct ProjectBrief {
         WorkStreamSpec(id: "construction", title: String(localized: "Construction", comment: "Work package name"),
                        imageName: "Construction.png", units: 1160, optimalCrew: 34, startThreshold: 19,
                        materialCostPerUnit: 260, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 6),
-        WorkStreamSpec(id: "ihs", title: String(localized: "IHS & IAA", comment: "Work package name - Hydro-sanitary & Air conditioning installations"),
+        WorkStreamSpec(id: "ihs", title: String(localized: "Plumbing & HVAC", comment: "Work package name - Hydro-sanitary & Air conditioning installations"),
                        imageName: "IHS.png", units: 625, optimalCrew: 19, startThreshold: 33,
                        materialCostPerUnit: 230, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 8),
-        WorkStreamSpec(id: "ies", title: String(localized: "IES & IEL", comment: "Work package name - Electrical & Lighting installations"),
+        WorkStreamSpec(id: "ies", title: String(localized: "Electrical & Lighting", comment: "Work package name - Electrical & Lighting installations"),
                        imageName: "IES.png", units: 550, optimalCrew: 17, startThreshold: 46,
                        materialCostPerUnit: 200, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 9),
     ]

@@ -132,7 +132,7 @@ struct CrewView: View {
                     .font(.caption2)
                     .foregroundStyle(.purple)
             } else if worker.isOnboarding {
-                Label(String(localized: "Onboarding — at \(Int(worker.rampMultiplier * 100))% and slowing the crew", comment: "Worker status: onboarding"),
+                Label(String(localized: "Onboarding — at \(Int(worker.rampMultiplier * 100))% and slowing the others", comment: "Worker status: onboarding"),
                       systemImage: "hourglass")
                     .font(.caption2)
                     .foregroundStyle(.orange)

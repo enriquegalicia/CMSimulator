@@ -27,7 +27,7 @@ struct GrowthPanelView: View {
 
     /// Revenue against everything going out. Reaching parity is the moment
     /// a startup stops being a countdown.
-    private var isDefaultAlive: Bool { growth.dailyRevenue >= dailyBurn && dailyBurn > 0 }
+    private var isDefaultAlive: Bool { growth.dailyRevenue > 0 && growth.dailyRevenue >= dailyBurn }
 
     var body: some View {
         VStack(spacing: 12) {

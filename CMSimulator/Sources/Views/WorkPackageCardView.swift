@@ -76,7 +76,7 @@ struct WorkPackageCardView: View {
                 HStack(spacing: 5) {
                     Text(package.title).font(.subheadline.bold())
                     if package.isFastTracked {
-                        Label("Fast-tracked", systemImage: "bolt.fill")
+                        Label(String(localized: "Fast-tracked", comment: "Badge: stream started before its dependency finished"), systemImage: "bolt.fill")
                             .labelStyle(.iconOnly)
                             .font(.caption2)
                             .foregroundStyle(.orange)
@@ -101,7 +101,7 @@ struct WorkPackageCardView: View {
             }
             .buttonStyle(.plain)
             .disabled(crew.isEmpty)
-            .accessibilityLabel(String(localized: "Crew on \(package.title)", comment: "Accessibility label for the crew count button"))
+            .accessibilityLabel(String(localized: "People on \(package.title)", comment: "Accessibility label for the crew count button"))
         }
     }
 
@@ -113,7 +113,7 @@ struct WorkPackageCardView: View {
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         } else if package.isComplete {
-            Label("Complete", systemImage: "checkmark.seal.fill")
+            Label(String(localized: "Complete", comment: "Work stream finished"), systemImage: "checkmark.seal.fill")
                 .font(.caption2)
                 .foregroundStyle(.green)
         } else {
@@ -147,7 +147,7 @@ struct WorkPackageCardView: View {
                 }
 
                 if greenCount > 0 {
-                    Label(String(localized: "\(greenCount) still onboarding — crew slowed", comment: "Mentoring drag warning"),
+                    Label(String(localized: "\(greenCount) still onboarding — slowing the others", comment: "Mentoring drag warning"),
                           systemImage: "hourglass")
                         .font(.caption2)
                         .foregroundStyle(.orange)
@@ -166,7 +166,7 @@ struct WorkPackageCardView: View {
         VStack(spacing: 6) {
             HStack(spacing: 8) {
                 Button(action: onHire) {
-                    Label("Hire", systemImage: "person.badge.plus")
+                    Label(String(localized: "Hire", comment: "Button: recruit onto this work stream"), systemImage: "person.badge.plus")
                         .font(.caption.bold())
                         .frame(maxWidth: .infinity)
                 }
@@ -186,7 +186,7 @@ struct WorkPackageCardView: View {
 
             if !activeCrew.isEmpty {
                 HStack(spacing: 6) {
-                    Text("Overtime")
+                    Text("Overtime", comment: "Label for the overtime slider")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                     Slider(value: Binding(get: { package.overtime }, set: onOvertime), in: 0...1)

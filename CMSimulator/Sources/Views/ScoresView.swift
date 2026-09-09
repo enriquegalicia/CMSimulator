@@ -77,7 +77,7 @@ struct ScoresView: View {
             }
             .pickerStyle(.segmented)
 
-            Picker("Leaderboard", selection: $board) {
+            Picker(String(localized: "Leaderboard", comment: "Accessibility label for the leaderboard switcher"), selection: $board) {
                 ForEach(ScoreBoard.allCases) { Text($0.shortTitle).tag($0) }
             }
             .pickerStyle(.segmented)

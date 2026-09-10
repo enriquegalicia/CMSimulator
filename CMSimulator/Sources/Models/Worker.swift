@@ -57,6 +57,45 @@ enum WorkerTuning {
     static let moraleBurnPerOvertimeDay: Double = 0.11
 }
 
+// MARK: - Roles
+
+/// What someone actually does, as distinct from how they do it. An
+/// archetype says whether a person is fast or careful; a role says whether
+/// they are an ML engineer or a compliance officer. It matters only once
+/// Discovery has established what the company is building - before that,
+/// hiring a specialist is a bet on a venture you cannot see yet.
+enum WorkerRole: String, CaseIterable, Identifiable {
+    case generalist
+    case engineer
+    case dataScientist
+    case designer
+    case commercial
+    case compliance
+    case operations
+
+    var id: String { rawValue }
+
+    var name: String {
+        switch self {
+        case .generalist: return String(localized: "Generalist", comment: "Worker role")
+        case .engineer: return String(localized: "Engineer", comment: "Worker role")
+        case .dataScientist: return String(localized: "Data scientist", comment: "Worker role")
+        case .designer: return String(localized: "Designer", comment: "Worker role")
+        case .commercial: return String(localized: "Commercial", comment: "Worker role")
+        case .compliance: return String(localized: "Compliance", comment: "Worker role")
+        case .operations: return String(localized: "Operations", comment: "Worker role")
+        }
+    }
+
+    /// A generalist is never wrong and never decisive. Specialists cost
+    /// more and only pay off in a company that needs them.
+    var wageFactor: Double { self == .generalist ? 0.92 : 1.12 }
+
+    /// Roles a company can hire before it knows what it is. Everyone is
+    /// available; only some of them will turn out to matter.
+    static var hireable: [WorkerRole] { allCases }
+}
+
 // MARK: - Archetypes
 
 /// A worker's disposition. Unlike the old Candidate archetypes - which
@@ -191,6 +230,8 @@ struct Worker: Identifiable {
     let id = UUID()
     let name: String
     let archetype: WorkerArchetype
+    /// What this person does. Only consequential once a venture is known.
+    let role: WorkerRole
     /// Which work package this worker is assigned to.
     var packageID: WorkPackage.ID
 
@@ -223,6 +264,10 @@ struct Worker: Identifiable {
 
     var isOnBench: Bool { packageID == Worker.benchPackageID }
 
+    /// Multiplier applied when the company's venture values this role -
+    /// or does not. Set by the engine once Discovery resolves.
+    var roleFit: Double = 1.0
+
     /// Output per peso per day. The only fair way to rank a roster that
     /// mixes apprentices at 240 a day with specialists at 980.
     var valueForMoney: Double { dailyWage > 0 ? recentOutput / dailyWage : 0 }
@@ -239,12 +284,14 @@ struct Worker: Identifiable {
         recentOutput = 0
     }
 
-    init(name: String, archetype: WorkerArchetype, packageID: WorkPackage.ID, marketWageFactor: Double = 1.0) {
+    init(name: String, archetype: WorkerArchetype, packageID: WorkPackage.ID,
+         role: WorkerRole = .generalist, marketWageFactor: Double = 1.0) {
         self.name = name
         self.archetype = archetype
+        self.role = role
         self.packageID = packageID
         self.skill = .random(in: archetype.skillRange)
-        self.dailyWage = (Double.random(in: archetype.wageRange) * marketWageFactor).rounded()
+        self.dailyWage = (Double.random(in: archetype.wageRange) * marketWageFactor * role.wageFactor).rounded()
         self.experience = archetype.startingExperience
     }
 
@@ -274,7 +321,7 @@ struct Worker: Identifiable {
     /// (mentoring drag, congestion, overtime).
     var effectiveOutput: Double {
         guard !isInTraining else { return 0 }
-        return skill * rampMultiplier * experienceMultiplier * moraleMultiplier
+        return skill * rampMultiplier * experienceMultiplier * moraleMultiplier * roleFit
     }
 
     /// Defects generated per unit produced. Rushing and low morale make
@@ -351,6 +398,7 @@ struct Candidate: Identifiable {
 
     var name: String { worker.name }
     var archetype: WorkerArchetype { worker.archetype }
+    var role: WorkerRole { worker.role }
 }
 
 /// Drives the candidate-picker sheet.
@@ -384,10 +432,22 @@ extension Candidate {
         "\(firstNames.randomElement()!) \(lastNames.randomElement()!)"
     }
 
+    /// Angels are funds and individuals, not employees, so they get their
+    /// own pool rather than a worker name with "Capital" bolted on.
+    private static var investorNames: [String] {
+        NamePool.split(String(localized: "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital",
+                          comment: "Comma-separated pool of angel investor and fund names. Replace with names that read naturally in your language - do not translate these literally."))
+    }
+
+    static func randomInvestorName() -> String {
+        investorNames.randomElement() ?? "Foundry Lane"
+    }
+
     /// Three distinct archetypes, so every hire is a real choice rather
     /// than three near-clones. `marketWageFactor` comes from the labour
     /// market: in a tight market the same people cost more.
-    static func pool(for packageID: WorkPackage.ID, marketWageFactor: Double, poolQuality: Double) -> [Candidate] {
+    static func pool(for packageID: WorkPackage.ID, marketWageFactor: Double, poolQuality: Double,
+                     roles: [WorkerRole] = [.generalist]) -> [Candidate] {
         // Reputation gates the top of the pool: fire people often enough
         // and the good ones stop applying.
         var available = WorkerArchetype.allCases
@@ -402,6 +462,7 @@ extension Candidate {
                 name: randomName(),
                 archetype: archetype,
                 packageID: packageID,
+                role: roles.randomElement() ?? .generalist,
                 marketWageFactor: marketWageFactor
             ))
         }

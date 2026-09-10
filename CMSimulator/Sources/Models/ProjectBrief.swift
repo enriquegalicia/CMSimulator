@@ -344,6 +344,10 @@ struct ProjectBrief {
     /// done under a contract, false for a company that persists past any
     /// one piece of work and has to redeploy instead.
     var releasesStaffOnCompletion: Bool { scenario == .construction }
+    /// Whether people are hired as named disciplines rather than as
+    /// interchangeable labour. Only meaningful where a venture can decide
+    /// which disciplines matter.
+    var hiresByRole: Bool { scenario == .startup }
     /// Whether work consumes a physical, lead-timed supply. False for
     /// software: engineers are the constraint, not a warehouse. Turning
     /// the system off rather than relabelling it is the honest answer, and

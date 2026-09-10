@@ -112,6 +112,27 @@ struct ResultView: View {
                 }
                 row(String(localized: "You took home", comment: "Exit line"),
                     offer.netValuation * result.founderEquity, tint: .green, bold: true)
+
+                Divider()
+
+                // What a founder is actually judged on: not raw profit,
+                // but what every peso consumed turned into.
+                let consumed = result.costs.total
+                row(String(localized: "Capital consumed", comment: "Exit line"), consumed)
+                row(String(localized: "Enterprise value created", comment: "Exit line"), offer.netValuation, tint: .green)
+                HStack {
+                    Text("Value per peso spent", comment: "Exit line").font(.subheadline.bold())
+                    Spacer()
+                    Text(String(format: "%.2f×", consumed > 0 ? offer.netValuation / consumed : 0))
+                        .font(.subheadline.monospacedDigit().bold())
+                        .foregroundStyle(consumed > 0 && offer.netValuation > consumed ? .green : .red)
+                }
+                if let venture = result.venture {
+                    Text(String(localized: "Discovery found: \(venture.name). \(venture.hazard)", comment: "Result venture note"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .padding(16)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))

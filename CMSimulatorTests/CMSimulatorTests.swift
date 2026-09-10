@@ -369,7 +369,7 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
+        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, venture: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                                capitalRaised: 0, launchDay: nil,
                                outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
@@ -381,7 +381,7 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
+            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, venture: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                       capitalRaised: 0, launchDay: nil,
                       outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
@@ -881,7 +881,7 @@ final class StartupEconomicsTests: XCTestCase {
     /// however tidy the books look.
     func testNeverLaunchingScoresZero() {
         let result = RunResult(
-            scenario: .startup, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1, capitalRaised: 0,
+            scenario: .startup, exitOffer: nil, seasonClose: nil, venture: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1, capitalRaised: 0,
             launchDay: nil, outcome: .delivered, profit: 5_000_000, revenue: 6_000_000,
             costs: CostBreakdown(), days: 150, deadlineDays: 150, progress: 100,
             openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 4,
@@ -1240,5 +1240,95 @@ final class RosterLifecycleTests: XCTestCase {
         cheap.dailyWage = 260; cheap.recentOutput = 0.9
         dear.dailyWage = 940; dear.recentOutput = 1.6
         XCTAssertGreaterThan(cheap.valueForMoney, dear.valueForMoney)
+    }
+
+}
+
+// MARK: - Discovery decides what company you are
+
+@MainActor
+final class VentureTests: XCTestCase {
+
+    /// Every venture must actually change the economics, or the five are
+    /// five names on one business.
+    func testTheFiveVenturesAreEconomicallyDistinct() {
+        let serve = Set(VentureKind.allCases.map(\.costToServeFactor))
+        let exits = Set(VentureKind.allCases.map(\.exitMultipleFactor))
+        let churn = Set(VentureKind.allCases.map(\.churnFactor))
+        XCTAssertEqual(serve.count, VentureKind.allCases.count, "two ventures cost the same to serve")
+        XCTAssertEqual(exits.count, VentureKind.allCases.count, "two ventures exit at the same multiple")
+        XCTAssertEqual(churn.count, VentureKind.allCases.count, "two ventures churn identically")
+        for venture in VentureKind.allCases {
+            XCTAssertFalse(venture.valuedRoles.isEmpty, "\(venture.rawValue) needs nobody in particular")
+            XCTAssertFalse(venture.valuedRoles.contains(.generalist), "a venture should never *need* a generalist")
+        }
+    }
+
+    /// Hiring the right discipline has to pay, and the wrong one has to
+    /// cost, or Discovery resolving into something changes nothing.
+    func testRoleFitRewardsTheDisciplineTheVentureNeeds() {
+        let venture = VentureKind.aiInfrastructure
+        XCTAssertGreaterThan(venture.fit(for: .dataScientist), 1.0)
+        XCTAssertLessThan(venture.fit(for: .compliance), 1.0)
+        // A generalist is never the best answer and never a disaster.
+        XCTAssertLessThan(venture.fit(for: .generalist), venture.fit(for: .engineer))
+        XCTAssertGreaterThan(venture.fit(for: .generalist), venture.fit(for: .compliance))
+    }
+
+    /// Discovery must resolve, and must re-price the people already hired.
+    func testFinishingDiscoveryResolvesTheVentureAndRepricesTheTeam() {
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .steady, seed: 3))
+        guard let discovery = engine.workPackages.first(where: { $0.id == "discovery" }) else {
+            return XCTFail("startup has no discovery stream")
+        }
+        engine.requestHire(for: discovery.id)
+        if let r = engine.hiringRequest, let pick = r.candidates.first { engine.confirmHire(pick) }
+        else { engine.cancelHiring() }
+
+        XCTAssertNil(engine.venture, "the company knew what it was before Discovery finished")
+        engine.debugSetUnitsCompleted(discovery.units, for: discovery.id)
+        engine.advance(byDays: 0.25)
+
+        guard let venture = engine.venture else { return XCTFail("Discovery completed without resolving a venture") }
+        for worker in engine.workers {
+            XCTAssertEqual(worker.roleFit, venture.fit(for: worker.role), accuracy: 1e-9,
+                           "\(worker.name) was not re-priced against the venture")
+        }
+    }
+
+    /// Angels are a search, not a milestone. Nothing should arrive from
+    /// simply waiting.
+    func testAngelsOnlyAppearWhileActivelyRaising() {
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .steady, seed: 12))
+        for _ in 0..<600 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+        XCTAssertTrue(engine.angelProspects.isEmpty, "an angel turned up without anyone going to look")
+        XCTAssertFalse(engine.isSearchingForAngels)
+    }
+
+    /// A raise costs money for ever and buys morale now.
+    func testARaiseCostsMoreAndLiftsMorale() {
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .steady, seed: 8))
+        guard let stream = engine.workPackages.first(where: \.isUnlocked) else { return XCTFail("no stream") }
+        engine.requestHire(for: stream.id)
+        if let r = engine.hiringRequest, let pick = r.candidates.first { engine.confirmHire(pick) }
+        else { return XCTFail("no candidate") }
+        guard let before = engine.workers.first else { return XCTFail("nobody hired") }
+        let wage = before.dailyWage
+        let morale = before.morale
+        engine.giveRaise(before.id)
+        guard let after = engine.workers.first else { return XCTFail("worker vanished") }
+        XCTAssertGreaterThan(after.dailyWage, wage)
+        XCTAssertGreaterThan(after.morale, morale)
+    }
+
+    /// The startup deck has to include what actually threatens ownership.
+    func testStartupDeckCoversIPRisk() {
+        let deck = SimEventKind.deck(for: .startup)
+        XCTAssertTrue(deck.contains(.patentClaim))
+        XCTAssertTrue(deck.contains(.licenceContamination))
+        XCTAssertTrue(deck.contains(.founderDispute))
+        // And those risks must be coverable, or buying cover is theatre.
+        let covered = Set(deck.map(\.mitigationClass))
+        XCTAssertTrue(covered.contains(.security))
     }
 }

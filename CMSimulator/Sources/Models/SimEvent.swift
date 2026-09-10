@@ -108,6 +108,9 @@ enum SimEventKind: CaseIterable {
     case investorPushback
     case pivotRequest
     case vendorRepricing
+    case patentClaim
+    case licenceContamination
+    case founderDispute
     // Import deck.
     case customsHold
     case tariffHike
@@ -131,7 +134,8 @@ enum SimEventKind: CaseIterable {
         case .dataBreach, .vendorRepricing: return .security
         case .keyDeparture, .burnoutWave: return .safety
         case .criticalBug, .scalingFailure: return .technical
-        case .investorPushback, .pivotRequest: return .client
+        case .investorPushback, .pivotRequest, .founderDispute: return .client
+        case .patentClaim, .licenceContamination: return .security
         case .freightSpike, .portCongestion: return .weather
         case .currencySwing, .buyerDefault: return .security
         case .factoryQualityFailure, .competitorUndercut: return .technical
@@ -155,7 +159,8 @@ enum SimEventKind: CaseIterable {
                     .competitorUndercut, .portCongestion, .warehouseInjury]
         case .startup:
             return [.cloudOutage, .dataBreach, .keyDeparture, .burnoutWave, .criticalBug,
-                    .scalingFailure, .investorPushback, .pivotRequest, .vendorRepricing]
+                    .scalingFailure, .investorPushback, .pivotRequest, .vendorRepricing,
+                    .patentClaim, .licenceContamination, .founderDispute]
         }
     }
 
@@ -191,6 +196,9 @@ enum SimEventKind: CaseIterable {
         case .investorPushback: return String(localized: "Investors push back", comment: "Incident title")
         case .pivotRequest: return String(localized: "The board wants a pivot", comment: "Incident title")
         case .vendorRepricing: return String(localized: "A vendor reprices mid-contract", comment: "Incident title")
+        case .patentClaim: return String(localized: "A patent claim lands", comment: "Incident title")
+        case .licenceContamination: return String(localized: "A licence problem in the codebase", comment: "Incident title")
+        case .founderDispute: return String(localized: "A dispute over who owns what", comment: "Incident title")
         }
     }
 
@@ -226,6 +234,9 @@ enum SimEventKind: CaseIterable {
         case .investorPushback: return String(localized: "The last update did not land well. Confidence took a knock.", comment: "Incident description")
         case .pivotRequest: return String(localized: "The board wants the product pointed somewhere new.", comment: "Incident description")
         case .vendorRepricing: return String(localized: "A vendor raised prices at renewal and there was no time to switch.", comment: "Incident description")
+        case .patentClaim: return String(localized: "A competitor says part of the product is theirs. Lawyers now, and a discount at diligence either way.", comment: "Incident description")
+        case .licenceContamination: return String(localized: "A dependency turned out to be copyleft. Somebody has to rip it out and rewrite it.", comment: "Incident description")
+        case .founderDispute: return String(localized: "An early contributor claims equity that was never papered. Investors noticed.", comment: "Incident description")
         }
     }
 
@@ -261,6 +272,9 @@ enum SimEventKind: CaseIterable {
         case .investorPushback: return "hand.thumbsdown.fill"
         case .pivotRequest: return "arrow.triangle.branch"
         case .vendorRepricing: return "tag.slash.fill"
+        case .patentClaim: return "building.columns.fill"
+        case .licenceContamination: return "doc.badge.gearshape.fill"
+        case .founderDispute: return "person.2.slash.fill"
         }
     }
 
@@ -300,6 +314,9 @@ enum SimEventKind: CaseIterable {
         case .investorPushback: return 0.004...0.012
         case .pivotRequest: return 0.008...0.028
         case .vendorRepricing: return 0...0
+        case .patentClaim: return 0.018...0.048
+        case .licenceContamination: return 0.006...0.018
+        case .founderDispute: return 0.010...0.030
         }
     }
 
@@ -365,6 +382,8 @@ enum SimEventKind: CaseIterable {
         case .safetyIncident: return 0.04...0.10
         case .designClash: return 0.03...0.08
         case .investorPushback: return 0.10...0.20
+        case .patentClaim: return 0.06...0.14
+        case .founderDispute: return 0.12...0.24
         case .dataBreach: return 0.08...0.18
         case .scalingFailure: return 0.06...0.14
         case .criticalBug: return 0.04...0.10

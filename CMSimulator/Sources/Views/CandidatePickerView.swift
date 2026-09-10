@@ -14,6 +14,9 @@ import SwiftUI
 struct CandidatePickerView: View {
     let request: HiringRequest
     let spendingPower: Double
+    /// What the company turned out to be, once Discovery has said so.
+    /// Nil means you are still hiring blind, which is the point.
+    let venture: VentureKind?
     let onSelect: (Candidate) -> Void
     let onCancel: () -> Void
 
@@ -70,6 +73,27 @@ struct CandidatePickerView: View {
                     Text("/day", comment: "Per-day wage suffix")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                }
+
+                if worker.role != .generalist || venture != nil {
+                    HStack(spacing: 5) {
+                        Text(worker.role.name)
+                            .font(.caption.bold())
+                        if let venture {
+                            let wanted = venture.valuedRoles.contains(worker.role)
+                            Label(wanted
+                                  ? String(localized: "what you need", comment: "Candidate role fit, good")
+                                  : String(localized: "not what you need", comment: "Candidate role fit, poor"),
+                                  systemImage: wanted ? "checkmark.circle.fill" : "minus.circle")
+                                .font(.caption2)
+                                .foregroundStyle(wanted ? .green : .orange)
+                        } else {
+                            Text("— you do not know yet whether this matters", comment: "Candidate role fit, unknown")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
                 }
 
                 Text(worker.archetype.traitName)

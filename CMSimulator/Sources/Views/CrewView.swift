@@ -25,6 +25,7 @@ struct CrewView: View {
     /// where finishing a stream sends people home instead.
     let reassignableTo: [(id: String, title: String)]
     let onReassign: (Worker.ID, String) -> Void
+    let onRaise: (Worker.ID) -> Void
     let onExit: () -> Void
 
     @State private var showByPerformance = false
@@ -176,6 +177,10 @@ struct CrewView: View {
             }
 
             HStack(spacing: 6) {
+                if worker.role != .generalist {
+                    Text(worker.role.name)
+                        .font(.caption2.bold())
+                }
                 Text(worker.archetype.traitName)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -242,6 +247,14 @@ struct CrewView: View {
                     .buttonStyle(.bordered)
                     .disabled(worker.isInTraining || courseCost > spendingPower)
                 }
+                Button {
+                    onRaise(worker.id)
+                } label: {
+                    Label(String(localized: "Raise", comment: "Give a pay rise button"), systemImage: "arrow.up.forward")
+                        .font(.caption2)
+                }
+                .buttonStyle(.bordered)
+
                 if !reassignableTo.isEmpty {
                     Menu {
                         ForEach(reassignableTo, id: \.id) { target in

@@ -98,6 +98,7 @@ struct GameView: View {
         .sheet(item: Binding(get: { engine.hiringRequest }, set: { if $0 == nil { engine.cancelHiring() } })) { request in
             CandidatePickerView(request: request,
                                 spendingPower: engine.ledger.spendingPower,
+                                venture: engine.venture,
                                 onSelect: { engine.confirmHire($0) },
                                 onCancel: { engine.cancelHiring() })
         }
@@ -124,6 +125,7 @@ struct GameView: View {
                             .filter { $0.isUnlocked && !$0.isComplete }
                             .map { (id: $0.id, title: $0.title) },
                      onReassign: { engine.reassign($0, to: $1) },
+                     onRaise: { engine.giveRaise($0) },
                      onExit: { showCrew = false })
         }
         .sheet(isPresented: $showRisk) {
@@ -341,7 +343,16 @@ struct GameView: View {
                             techDebt: engine.workPackages.reduce(0) { $0 + $1.defectDebt },
                             dailyBurn: engine.dailyBurn,
                             elapsedDays: engine.elapsedDays,
-                            onSetSpend: { engine.setGrowthSpend($0) })
+                            venture: engine.venture,
+                            angels: engine.angelProspects,
+                            isSearchingForAngels: engine.isSearchingForAngels,
+                            founderEquity: engine.ledger.founderEquity,
+                            capitalRaised: engine.ledger.capitalRaised,
+                            onSetSpend: { engine.setGrowthSpend($0) },
+                            onStartAngelSearch: { engine.startAngelSearch() },
+                            onStopAngelSearch: { engine.stopAngelSearch() },
+                            onAcceptAngel: { engine.acceptAngel($0) },
+                            onDeclineAngel: { engine.declineAngel($0) })
         }
     }
 

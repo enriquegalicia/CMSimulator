@@ -17,7 +17,16 @@ struct GrowthPanelView: View {
     let techDebt: Double
     let dailyBurn: Double
     let elapsedDays: Double
+    let venture: VentureKind?
+    let angels: [AngelProspect]
+    let isSearchingForAngels: Bool
+    let founderEquity: Double
+    let capitalRaised: Double
     let onSetSpend: (Double) -> Void
+    let onStartAngelSearch: () -> Void
+    let onStopAngelSearch: () -> Void
+    let onAcceptAngel: (AngelProspect.ID) -> Void
+    let onDeclineAngel: (AngelProspect.ID) -> Void
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
 
@@ -31,6 +40,7 @@ struct GrowthPanelView: View {
 
     var body: some View {
         VStack(spacing: 12) {
+            ventureCard
             if !growth.isLaunched {
                 preLaunchCard
             } else {
@@ -39,7 +49,117 @@ struct GrowthPanelView: View {
                 valuationCard
             }
             spendCard
+            fundingCard
         }
+    }
+
+    // MARK: What Discovery found
+
+    @ViewBuilder
+    private var ventureCard: some View {
+        if let venture {
+            VStack(alignment: .leading, spacing: 8) {
+                Label(venture.name, systemImage: "scope")
+                    .font(.headline)
+                    .foregroundStyle(Color.accentColor)
+                Text(venture.finding)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Label(venture.hazard, systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+                Divider()
+                Text(String(localized: "Needs: \(venture.valuedRoles.map(\.name).sorted().formatted(.list(type: .and)))", comment: "Roles the venture values"))
+                    .font(.caption2.bold())
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("People in those roles work at a premium here. Everyone else you hired is a specialist doing generalist work.", comment: "Role fit explanation")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        } else {
+            VStack(alignment: .leading, spacing: 6) {
+                Label(String(localized: "You do not know what you are building yet", comment: "Pre-discovery title"),
+                      systemImage: "questionmark.circle")
+                    .font(.headline)
+                    .foregroundStyle(.orange)
+                Text("Finish Discovery to establish what this company is. Until then every specialist you hire is a bet on an answer you have not got.", comment: "Pre-discovery explanation")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        }
+    }
+
+    // MARK: Raising
+
+    private var fundingCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Raising", comment: "Funding section header").font(.headline)
+                Spacer()
+                Text(String(localized: "You own \(founderEquity, format: .percent.precision(.fractionLength(0)))", comment: "Founder equity"))
+                    .font(.subheadline.bold().monospacedDigit())
+                    .foregroundStyle(founderEquity < 0.4 ? .orange : .primary)
+            }
+            if capitalRaised > 0 {
+                Text(String(localized: "\(capitalRaised, format: .currency(code: currencyCode).precision(.fractionLength(0))) raised so far — none of it is revenue.", comment: "Capital raised note"))
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
+
+            ForEach(angels) { angel in
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(angel.name).font(.subheadline.bold())
+                        if angel.isMarquee {
+                            Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow)
+                        }
+                        Spacer()
+                        Text(angel.amount, format: money).font(.subheadline.monospacedDigit())
+                    }
+                    Text(String(localized: "\(angel.dilution, format: .percent.precision(.fractionLength(1))) of the company · \(Int(angel.daysOpen)) days to decide", comment: "Angel terms"))
+                        .font(.caption2).foregroundStyle(.secondary)
+                    HStack(spacing: 8) {
+                        Button(String(localized: "Take it", comment: "Accept angel button")) { onAcceptAngel(angel.id) }
+                            .buttonStyle(.borderedProminent)
+                        Button(String(localized: "Pass", comment: "Decline angel button")) { onDeclineAngel(angel.id) }
+                            .buttonStyle(.bordered)
+                    }
+                    .controlSize(.small)
+                }
+                .padding(10)
+                .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+            }
+
+            Button(action: isSearchingForAngels ? onStopAngelSearch : onStartAngelSearch) {
+                Label(isSearchingForAngels
+                      ? String(localized: "Stop raising", comment: "Stop angel search")
+                      : String(localized: "Go and raise", comment: "Start angel search"),
+                      systemImage: isSearchingForAngels ? "stop.circle" : "magnifyingglass")
+                    .font(.caption.bold())
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(isSearchingForAngels ? .secondary : .accentColor)
+            .controlSize(.small)
+
+            Text(isSearchingForAngels
+                 ? String(localized: "Out pitching. Introductions take weeks and most go nowhere — traction and a communications team both shorten it.", comment: "Angel search active")
+                 : String(localized: "Angels are found, not summoned. Raising costs a retainer and the weeks you spend doing it.", comment: "Angel search idle"))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
     }
 
     // MARK: Pre-launch

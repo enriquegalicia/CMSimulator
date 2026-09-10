@@ -98,6 +98,12 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var forecast: RiskForecast?
     @Published private(set) var siteLog: [SiteLogEntry] = []
     @Published private(set) var extensionUsed = false
+    /// What Discovery established this company to be. Nil until it lands.
+    @Published private(set) var venture: VentureKind?
+    /// Angel investors currently on the table, and whether a search is on.
+    @Published private(set) var angelProspects: [AngelProspect] = []
+    @Published private(set) var isSearchingForAngels = false
+    private var angelSearchDays: Double = 0
     /// How many incidents have actually struck this run.
     @Published private(set) var incidentsFired = 0
     /// How many were stopped before they struck by a mitigation you held.
@@ -213,6 +219,10 @@ final class SimulationEngine: ObservableObject {
         activeEvent = nil
         eventQueue.removeAll()
         activeEventAge = 0
+        venture = nil
+        angelProspects.removeAll()
+        isSearchingForAngels = false
+        angelSearchDays = 0
         incidentsFired = 0
         incidentsPrevented = 0
         nearMisses = 0
@@ -258,8 +268,10 @@ final class SimulationEngine: ObservableObject {
         market.advance(days: step)
         receiveDeliveries()
         advanceWork(step: step)
+        resolveVentureIfDiscovered()
         demobiliseFinishedStreams()
         advanceRoster(step: step)
+        advanceAngelSearch(step: step)
         payPayroll(step: step)
         payUpkeep(step: step)
         runInspections(step: step)
@@ -416,6 +428,33 @@ final class SimulationEngine: ObservableObject {
     /// a trade leaving at the end of its works, not a layoff. Without it,
     /// finished crews would draw full pay to the end of the job and no
     /// amount of good play could turn a profit.
+    /// Discovery's job is to establish what the company actually is. Until
+    /// it lands you are guessing, and the specialists you hired are a bet.
+    private func resolveVentureIfDiscovered() {
+        guard venture == nil,
+              let spec = brief.growth,
+              let discovery = workPackages.first(where: { $0.spec.skillFamily == "product" && $0.id == "discovery" }),
+              discovery.isComplete else { return }
+        _ = spec
+        var rng = SeededGenerator(seed: brief.seed &+ 991)
+        let found = VentureKind.allCases.randomElement(using: &rng) ?? .devTools
+        venture = found
+        growth?.venture = found
+        applyRoleFit()
+        log(String(localized: "Discovery landed: \(found.name). \(found.finding)", comment: "Site log: venture resolved"),
+            symbol: "scope", tone: .good)
+        log(String(localized: "What will try to kill you: \(found.hazard)", comment: "Site log: venture hazard"),
+            symbol: "exclamationmark.triangle.fill", tone: .bad)
+    }
+
+    /// Re-prices everyone against what the company turned out to need.
+    private func applyRoleFit() {
+        guard let venture else { return }
+        for i in workers.indices {
+            workers[i].roleFit = venture.fit(for: workers[i].role)
+        }
+    }
+
     /// Anyone still sitting on finished work gets moved, wherever the
     /// completion came from. Doing this inside the production loop alone
     /// missed streams completed by a change order or by debug state.
@@ -794,6 +833,104 @@ final class SimulationEngine: ObservableObject {
     var isInGracePeriod: Bool { elapsedDays < brief.gracePeriodDays }
     /// Days of grace still to run, for the HUD.
     var graceDaysRemaining: Double { max(0, brief.gracePeriodDays - elapsedDays) }
+
+    // MARK: Angels
+
+    /// Whether this scenario raises money at all. A building has a client
+    /// who pays for work; a company has investors who buy a share of it.
+    var canRaiseFromAngels: Bool { brief.growth != nil }
+
+    /// Start looking. Costs a retainer and, more importantly, attention:
+    /// the days spent pitching are days not spent building.
+    func startAngelSearch() {
+        guard canRaiseFromAngels, !isSearchingForAngels else { return }
+        let retainer = brief.contractValue * 0.004
+        guard ledger.spend(retainer, into: \.capabilities) else {
+            log(String(localized: "Not enough cash to run a raise.", comment: "Site log: angel search unaffordable"),
+                symbol: "xmark.circle.fill", tone: .bad)
+            return
+        }
+        isSearchingForAngels = true
+        angelSearchDays = 0
+        log(String(localized: "Started raising. Introductions take weeks, and most of them go nowhere.", comment: "Site log: angel search started"),
+            symbol: "magnifyingglass", tone: .neutral)
+    }
+
+    func stopAngelSearch() {
+        isSearchingForAngels = false
+        angelSearchDays = 0
+    }
+
+    /// Offers arrive on their own schedule and go cold if ignored.
+    private func advanceAngelSearch(step: Double) {
+        guard canRaiseFromAngels else { return }
+
+        for i in angelProspects.indices { angelProspects[i].daysOpen -= step }
+        let expiring = angelProspects.filter { $0.daysOpen <= 0 }
+        for gone in expiring {
+            log(String(localized: "\(gone.name) went cold.", comment: "Site log: angel offer expired"),
+                symbol: "clock.badge.xmark", tone: .bad)
+        }
+        angelProspects.removeAll { $0.daysOpen <= 0 }
+
+        guard isSearchingForAngels else { return }
+        angelSearchDays += step
+
+        // Credibility is what shortens a raise: traction, a reputation and
+        // somebody whose job is talking to investors.
+        let comms = Double(level(of: .communications))
+        let traction = min(1, (growth?.customers ?? 0) / 900)
+        let credibility = 0.35 + 0.25 * comms + 0.4 * traction + 0.3 * clientTrust
+        let dailyChance = min(0.10, 0.012 * credibility) * step
+        guard angelProspects.count < 3, Double.random(in: 0...1) < dailyChance else { return }
+
+        let marquee = Double.random(in: 0...1) < min(0.4, 0.10 + 0.22 * traction)
+        let amount = (brief.contractValue * Double.random(in: 0.06...0.20)).rounded()
+        // A marquee name pays less per point and is still worth taking.
+        let dilution = (amount / brief.contractValue) * Double.random(in: 0.9...1.5) * (marquee ? 0.8 : 1.0)
+        let prospect = AngelProspect(
+            name: Candidate.randomInvestorName(),
+            amount: amount,
+            dilution: min(0.35, dilution),
+            daysOpen: Double.random(in: 12...26),
+            isMarquee: marquee)
+        angelProspects.append(prospect)
+        log(marquee
+            ? String(localized: "\(prospect.name) is interested — a name that pulls others in behind it.", comment: "Site log: marquee angel")
+            : String(localized: "\(prospect.name) is interested.", comment: "Site log: angel interested"),
+            symbol: "sparkles", tone: .good)
+    }
+
+    /// Take the money. Cash today against a slice of whatever you build.
+    func acceptAngel(_ id: AngelProspect.ID) {
+        guard let offer = angelProspects.first(where: { $0.id == id }) else { return }
+        ledger.raise(offer.amount, dilution: offer.dilution)
+        angelProspects.removeAll { $0.id == id }
+        isSearchingForAngels = false
+        reputation = min(1, reputation + (offer.isMarquee ? 0.10 : 0.04))
+        clientTrust = min(1, clientTrust + (offer.isMarquee ? 0.16 : 0.07))
+        log(String(localized: "\(offer.name) wired \(Int(offer.amount).formatted()) for \(Int(offer.dilution * 100))%.", comment: "Site log: angel accepted"),
+            symbol: "checkmark.seal.fill", tone: .good)
+    }
+
+    func declineAngel(_ id: AngelProspect.ID) {
+        angelProspects.removeAll { $0.id == id }
+    }
+
+    // MARK: Pay
+
+    /// A raise. Costs more every day from here, buys morale now and makes
+    /// someone materially harder to poach - which matters most for the
+    /// specialists a resolved venture has just made valuable.
+    func giveRaise(_ workerID: Worker.ID, by fraction: Double = 0.12) {
+        guard let i = workers.firstIndex(where: { $0.id == workerID }) else { return }
+        let uplift = (workers[i].dailyWage * fraction).rounded()
+        guard uplift > 0 else { return }
+        workers[i].dailyWage += uplift
+        workers[i].morale = min(1, workers[i].morale + 0.22)
+        log(String(localized: "\(workers[i].name) got a raise to \(Int(workers[i].dailyWage).formatted()) a day.", comment: "Site log: raise given"),
+            symbol: "arrow.up.forward.circle.fill", tone: .good)
+    }
 
     // MARK: Risk register
 
@@ -1176,13 +1313,14 @@ final class SimulationEngine: ObservableObject {
         hiringRequest = HiringRequest(
             id: packageID,
             packageTitle: package.title,
-            candidates: Candidate.pool(for: packageID, marketWageFactor: tightness, poolQuality: reputation),
+            candidates: Candidate.pool(for: packageID, marketWageFactor: tightness, poolQuality: reputation,
+                                       roles: brief.hiresByRole ? WorkerRole.hireable : [.generalist]),
             marketWageFactor: tightness
         )
     }
 
     func confirmHire(_ candidate: Candidate) {
-        defer { hiringRequest = nil }
+        defer { hiringRequest = nil; applyRoleFit() }
         guard ledger.spend(candidate.worker.signingCost, into: \.signing) else {
             log(String(localized: "Not enough funds to hire \(candidate.name).", comment: "Site log: hire failed"),
                 symbol: "xmark.circle.fill", tone: .bad)
@@ -1530,6 +1668,7 @@ final class SimulationEngine: ObservableObject {
             scenario: brief.scenario,
             exitOffer: exitOffer,
             seasonClose: seasonClose,
+            venture: venture,
             ventureScoreFactor: brief.ventureScoreFactor,
             incidentsFired: incidentsFired,
             nearMisses: nearMisses,
@@ -1608,6 +1747,8 @@ struct RunResult {
     let exitOffer: ExitOffer?
     /// Import runs only. What the season came to once the leftovers went.
     let seasonClose: SeasonClose?
+    /// What Discovery established the company to be, for the debrief.
+    let venture: VentureKind?
     /// What the founder's own setup - lean capital, no grace - is worth
     /// on the leaderboard. Always 1 for work under someone else's contract.
     let ventureScoreFactor: Double

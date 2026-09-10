@@ -23,6 +23,127 @@
 
 import Foundation
 
+/// What Discovery turns out to have found. You start not knowing what you
+/// are building; the work of Discovery is to establish it. Only then do
+/// you learn which of the people you hired were the right ones - which is
+/// what makes hiring specialists early a bet rather than a purchase.
+enum VentureKind: String, CaseIterable, Identifiable {
+    case aiInfrastructure
+    case fintech
+    case marketplace
+    case devTools
+    case healthSoftware
+
+    var id: String { rawValue }
+
+    var name: String {
+        switch self {
+        case .aiInfrastructure: return String(localized: "AI infrastructure", comment: "Startup venture name")
+        case .fintech: return String(localized: "Fintech & payments", comment: "Startup venture name")
+        case .marketplace: return String(localized: "Consumer marketplace", comment: "Startup venture name")
+        case .devTools: return String(localized: "Developer tools", comment: "Startup venture name")
+        case .healthSoftware: return String(localized: "Health software", comment: "Startup venture name")
+        }
+    }
+
+    /// What Discovery tells you, in the founder's own words.
+    var finding: String {
+        switch self {
+        case .aiInfrastructure:
+            return String(localized: "The problem is inference cost. You are building infrastructure, and the people who matter are the ones who can measure it.", comment: "Discovery finding")
+        case .fintech:
+            return String(localized: "The problem is moving money safely. Nothing ships until it is compliant, and that changes who you need.", comment: "Discovery finding")
+        case .marketplace:
+            return String(localized: "The problem is liquidity, not product. You are building a market, and it lives or dies on how cheaply you can bring people to it.", comment: "Discovery finding")
+        case .devTools:
+            return String(localized: "The problem is developer time. Adoption will be slow and retention will be excellent, if the thing is genuinely good.", comment: "Discovery finding")
+        case .healthSoftware:
+            return String(localized: "The problem is clinical trust. Certification sits on the critical path and no amount of engineering moves it.", comment: "Discovery finding")
+        }
+    }
+
+    /// Roles this venture actually needs. Hire these and they compound;
+    /// hire the others and you are paying specialists to be generalists.
+    var valuedRoles: Set<WorkerRole> {
+        switch self {
+        case .aiInfrastructure: return [.engineer, .dataScientist]
+        case .fintech: return [.compliance, .engineer]
+        case .marketplace: return [.commercial, .operations]
+        case .devTools: return [.engineer, .designer]
+        case .healthSoftware: return [.compliance, .dataScientist]
+        }
+    }
+
+    /// Output multiplier for someone the venture needs, and for someone it
+    /// does not. A generalist sits between the two either way.
+    func fit(for role: WorkerRole) -> Double {
+        if role == .generalist { return 0.96 }
+        return valuedRoles.contains(role) ? 1.28 : 0.78
+    }
+
+    /// What it costs to serve a customer, relative to the base model.
+    var costToServeFactor: Double {
+        switch self {
+        case .aiInfrastructure: return 1.85
+        case .fintech: return 1.15
+        case .marketplace: return 1.30
+        case .devTools: return 0.70
+        case .healthSoftware: return 1.00
+        }
+    }
+
+    /// What an acquirer pays for a peso of revenue here.
+    var exitMultipleFactor: Double {
+        switch self {
+        case .aiInfrastructure: return 1.45
+        case .fintech: return 1.15
+        case .marketplace: return 0.70
+        case .devTools: return 1.05
+        case .healthSoftware: return 1.35
+        }
+    }
+
+    /// How quickly customers leave if the product is weak.
+    var churnFactor: Double {
+        switch self {
+        case .aiInfrastructure: return 1.20
+        case .fintech: return 0.75
+        case .marketplace: return 1.45
+        case .devTools: return 0.65
+        case .healthSoftware: return 0.60
+        }
+    }
+
+    /// Where the money goes before it arrives - shown to the player as the
+    /// warning that comes with the finding.
+    var hazard: String {
+        switch self {
+        case .aiInfrastructure: return String(localized: "Compute burn, and a model release that turns you into a feature.", comment: "Venture hazard")
+        case .fintech: return String(localized: "Regulatory delay, and fraud losses you did not price.", comment: "Venture hazard")
+        case .marketplace: return String(localized: "Acquisition cost rising faster than anyone stays.", comment: "Venture hazard")
+        case .devTools: return String(localized: "Everybody tries it, nobody upgrades.", comment: "Venture hazard")
+        case .healthSoftware: return String(localized: "Certification slipping past the end of your runway.", comment: "Venture hazard")
+        }
+    }
+}
+
+/// Someone who might put money in, once you have gone and found them.
+/// Angels are not a milestone that fires on a threshold - they are a
+/// search that costs time you could have spent building.
+struct AngelProspect: Identifiable {
+    let id = UUID()
+    let name: String
+    let amount: Double
+    let dilution: Double
+    /// Days before this offer goes cold.
+    var daysOpen: Double
+    /// Whether their name pulls the next round in behind them.
+    let isMarquee: Bool
+
+    var pricePerPoint: Double { dilution > 0 ? amount / (dilution * 100) : 0 }
+}
+
+
 // MARK: - Parameters
 
 /// The scenario-supplied constants of a market. Kept separate from run
@@ -114,7 +235,13 @@ struct GrowthModel {
         spec.monthlyRevenuePerCustomer * (0.45 + 0.55 * productBreadth) / 30
     }
 
-    var costToServePerCustomerPerDay: Double { spec.monthlyCostToServe / 30 }
+    /// Set when Discovery resolves. Until then the company has generic
+    /// economics, because it does not yet know what it is.
+    var venture: VentureKind?
+
+    var costToServePerCustomerPerDay: Double {
+        spec.monthlyCostToServe / 30 * (venture?.costToServeFactor ?? 1)
+    }
 
     /// Gross margin per customer per day. Negative means every new
     /// customer makes things worse, which is a real and instructive way
@@ -139,7 +266,7 @@ struct GrowthModel {
     }
 
     func dailyChurnRate(techDebt: Double) -> Double {
-        spec.baseDailyChurn * (1 + techDebt / spec.churnDebtTolerance)
+        spec.baseDailyChurn * (1 + techDebt / spec.churnDebtTolerance) * (venture?.churnFactor ?? 1)
     }
 
     /// Net customer growth over the last fortnight, annualised-ish. Drives
@@ -223,7 +350,8 @@ struct GrowthModel {
     func exitValuation(openTechDebt: Double) -> ExitOffer {
         let arr = annualRecurringRevenue
         let growthBonus = min(1, max(0, growthRate / 0.35)) * spec.growthMultipleBonus
-        let multiple = spec.baseExitMultiple + growthBonus
+        // What a peso of revenue is worth depends on what business it is.
+        let multiple = (spec.baseExitMultiple + growthBonus) * (venture?.exitMultipleFactor ?? 1)
         let headline = arr * multiple
         let haircut = min(headline, openTechDebt * spec.diligenceCostPerDebt)
         return ExitOffer(

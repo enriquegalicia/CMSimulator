@@ -18,6 +18,13 @@ struct RiskPortfolioView: View {
     let spendingPower: Double
     let exposure: Double
     let forecast: RiskForecast?
+    let register: [RiskRegisterRow]
+    let incidentsFired: Int
+    let nearMisses: Int
+    let incidentsPrevented: Int
+    let savedByMitigation: Double
+    let savedByInsurance: Double
+    let savedByNearMiss: Double
     let onBuy: (MitigationClass) -> Void
     let onExit: () -> Void
 
@@ -63,6 +70,49 @@ struct RiskPortfolioView: View {
                         .font(.caption)
                 }
 
+                Section {
+                    ForEach(register) { row in
+                        registerRow(row)
+                    }
+                } header: {
+                    Text("Risk register", comment: "Risk sheet section header")
+                } footer: {
+                    Text("Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, a bad relationship pulls the client up it.", comment: "Risk register explanation")
+                        .font(.caption)
+                }
+
+                Section {
+                    LabeledContent {
+                        Text(incidentsFired.formatted()).font(.subheadline.monospacedDigit().bold())
+                    } label: {
+                        Label(String(localized: "Incidents that landed", comment: "Risk tally"), systemImage: "bolt.fill")
+                    }
+                    LabeledContent {
+                        Text(nearMisses.formatted()).font(.subheadline.monospacedDigit().bold())
+                    } label: {
+                        Label(String(localized: "Near misses", comment: "Risk tally"), systemImage: "exclamationmark.triangle")
+                    }
+                    LabeledContent {
+                        Text(incidentsPrevented.formatted()).font(.subheadline.monospacedDigit().bold())
+                    } label: {
+                        Label(String(localized: "Stopped by cover you held", comment: "Risk tally"), systemImage: "shield.lefthalf.filled")
+                    }
+                    if totalAvoided > 1 {
+                        LabeledContent {
+                            Text(totalAvoided, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                                .font(.subheadline.monospacedDigit().bold())
+                                .foregroundStyle(.green)
+                        } label: {
+                            Label(String(localized: "Losses avoided", comment: "Risk tally"), systemImage: "checkmark.shield.fill")
+                        }
+                    }
+                } header: {
+                    Text("This run so far", comment: "Risk sheet section header")
+                } footer: {
+                    Text("A near miss is the same roll without the bill. Run the job well and you get warnings; run it hot and you get invoices.", comment: "Near miss explanation")
+                        .font(.caption)
+                }
+
                 if riskLevel > 0 {
                     Section {
                         ForEach(MitigationClass.allCases) { mitigation in
@@ -103,6 +153,38 @@ struct RiskPortfolioView: View {
                 }
             }
         }
+    }
+
+    private var totalAvoided: Double { savedByMitigation + savedByInsurance + savedByNearMiss }
+
+    /// One register line. Probability is shown as a plain interval - "about
+    /// every 24 days" reads far better than "4.1% per day".
+    private func registerRow(_ row: RiskRegisterRow) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Image(systemName: row.mitigationClass.symbolName)
+                .foregroundStyle(row.isCovered ? Color.green : .orange)
+                .frame(width: 22)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(row.mitigationClass.name(in: scenario))
+                    .font(.subheadline.bold())
+                Text(row.daysBetween.isFinite
+                     ? String(localized: "About every \(Int(row.daysBetween)) days", comment: "Risk register frequency")
+                     : String(localized: "Not expected", comment: "Risk register frequency when impossible"))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 4)
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(row.worstCaseCost, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                    .font(.subheadline.monospacedDigit())
+                Text(row.isCovered
+                     ? String(localized: "covered", comment: "Risk register cover state")
+                     : String(localized: "uncovered", comment: "Risk register cover state"))
+                    .font(.caption2)
+                    .foregroundStyle(row.isCovered ? .green : .orange)
+            }
+        }
+        .padding(.vertical, 2)
     }
 
     private func mitigationRow(_ mitigation: MitigationClass) -> some View {

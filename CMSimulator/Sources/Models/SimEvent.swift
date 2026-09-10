@@ -67,6 +67,25 @@ enum MitigationClass: String, CaseIterable, Identifiable {
     var severityReduction: Double { 0.6 }
 }
 
+/// One line of the risk register: how likely a class of incident is to be
+/// the next thing that happens, what it would cost, and whether you hold
+/// cover against it. Derived entirely from live engine state.
+struct RiskRegisterRow: Identifiable {
+    let mitigationClass: MitigationClass
+    /// Chance this class lands on any given day.
+    let dailyProbability: Double
+    /// The dearest card in this class, at full severity, after cover.
+    let worstCaseCost: Double
+    let isCovered: Bool
+
+    var id: String { mitigationClass.rawValue }
+    /// Probability times cost - the only honest way to rank a register.
+    var expectedDailyCost: Double { dailyProbability * worstCaseCost }
+
+    /// Roughly how long until one of these is due.
+    var daysBetween: Double { dailyProbability > 0 ? 1 / dailyProbability : .infinity }
+}
+
 enum SimEventKind: CaseIterable {
     case hurricane
     case fire

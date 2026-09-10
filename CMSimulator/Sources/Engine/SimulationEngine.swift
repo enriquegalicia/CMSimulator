@@ -102,6 +102,16 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var incidentsFired = 0
     /// How many were stopped before they struck by a mitigation you held.
     @Published private(set) var incidentsPrevented = 0
+    /// Incidents that came close and did not land. A well-run operation
+    /// converts hits into near misses, which is the only way exposure can
+    /// be read *before* it costs money.
+    @Published private(set) var nearMisses = 0
+    /// What risk management is estimated to have saved, split by how.
+    /// Cover you never claim otherwise reads as pure waste.
+    @Published private(set) var savedByMitigation: Double = 0
+    @Published private(set) var savedByInsurance: Double = 0
+    @Published private(set) var savedByNearMiss: Double = 0
+    var totalLossesAvoided: Double { savedByMitigation + savedByInsurance + savedByNearMiss }
 
     // MARK: Private run state
 
@@ -126,7 +136,7 @@ final class SimulationEngine: ObservableObject {
     /// Extra contract value earned from client change orders.
     private var scopeRevenue: Double = 0
 
-    private let baseIncidentIntervalDays: Double = 17
+    private let baseIncidentIntervalDays: Double = 11
 
     // MARK: Init
 
@@ -201,6 +211,10 @@ final class SimulationEngine: ObservableObject {
         activeEventAge = 0
         incidentsFired = 0
         incidentsPrevented = 0
+        nearMisses = 0
+        savedByMitigation = 0
+        savedByInsurance = 0
+        savedByNearMiss = 0
         hiringRequest = nil
         orderRequest = nil
         forecast = nil
@@ -713,6 +727,46 @@ final class SimulationEngine: ObservableObject {
         }
     }
 
+    // MARK: Risk register
+
+    /// One row per class of incident: how likely it is to be the next one,
+    /// what it would cost if it landed, and whether you hold cover. All of
+    /// it derived from state that already drives the model - nothing here
+    /// is a second source of truth.
+    var riskRegister: [RiskRegisterRow] {
+        let weights = incidentClassWeights()
+        let total = weights.values.reduce(0, +)
+        let interval = currentIncidentInterval
+        return MitigationClass.allCases.map { klass in
+            let share = total > 0 ? (weights[klass] ?? 0) / total : 0
+            let held = mitigationsHeld.contains(klass)
+            // Chance this class lands on any given day.
+            var daily = interval > 0 ? share / interval : 0
+            if held { daily *= (1 - klass.probabilityReduction) }
+            // Worst case is the dearest card in that class at full severity.
+            let worst = brief.incidentDeck
+                .filter { $0.mitigationClass == klass }
+                .map(\.costFractionRange.upperBound)
+                .max() ?? 0
+            let cost = brief.contractValue * worst * (held ? klass.severityReduction : 1)
+            return RiskRegisterRow(mitigationClass: klass,
+                                   dailyProbability: daily,
+                                   worstCaseCost: cost,
+                                   isCovered: held)
+        }
+        .sorted { $0.dailyProbability * $0.worstCaseCost > $1.dailyProbability * $1.worstCaseCost }
+    }
+
+    /// Mean days between incidents at the current exposure. Shared by the
+    /// scheduler and the register so they can never disagree.
+    private var currentIncidentInterval: Double {
+        let riskDamping = 1 / CapabilityEffects.incidentProbabilityMultiplier(level: level(of: .risk))
+        return baseIncidentIntervalDays
+            / brief.difficulty.eventFrequencyFactor
+            / max(0.3, siteExposure)
+            * riskDamping
+    }
+
     // MARK: Incidents
 
     /// How exposed the site is right now. Overtime, crowding, low morale
@@ -744,17 +798,27 @@ final class SimulationEngine: ObservableObject {
     }
 
     private func scheduleNextIncident() {
-        let riskDamping = 1 / CapabilityEffects.incidentProbabilityMultiplier(level: level(of: .risk))
-        let interval = baseIncidentIntervalDays
-            / brief.difficulty.eventFrequencyFactor
-            / max(0.3, siteExposure)
-            * riskDamping
+        let interval = currentIncidentInterval
         nextIncidentDay = elapsedDays + Double.random(in: interval * 0.55...interval * 1.55)
         nextIncidentClass = weightedIncidentClass()
         nextIncidentSeverity = Double.random(in: 0.2...1.0)
     }
 
     private func weightedIncidentClass() -> MitigationClass {
+        let weights = incidentClassWeights()
+        let total = weights.values.reduce(0, +)
+        var roll = Double.random(in: 0...total)
+        for (kind, weight) in weights {
+            roll -= weight
+            if roll <= 0 { return kind }
+        }
+        return .weather
+    }
+
+    /// How the next incident is drawn. Bad practice pulls specific
+    /// categories toward you, so incidents read as consequences rather
+    /// than as arbitrary punishment.
+    private func incidentClassWeights() -> [MitigationClass: Double] {
         var weights: [MitigationClass: Double] = [
             .weather: 1.0, .security: 1.0, .safety: 1.0, .technical: 1.0, .client: 1.0,
         ]
@@ -772,13 +836,7 @@ final class SimulationEngine: ObservableObject {
             let over = (trading.listPrice / trading.spec.referencePrice) - 1
             weights[.technical]! += over * 9.0
         }
-        let total = weights.values.reduce(0, +)
-        var roll = Double.random(in: 0...total)
-        for (kind, weight) in weights {
-            roll -= weight
-            if roll <= 0 { return kind }
-        }
-        return .weather
+        return weights
     }
 
     private func advanceIncidentClock(step: Double) {
@@ -795,13 +853,43 @@ final class SimulationEngine: ObservableObject {
         if mitigationsHeld.contains(mitigationClass),
            Double.random(in: 0...1) < mitigationClass.probabilityReduction {
             incidentsPrevented += 1
+            savedByMitigation += expectedLoss(for: mitigationClass, severity: nextIncidentSeverity)
             log(String(localized: "\(mitigationClass.name(in: brief.scenario)) prevented an incident.", comment: "Site log: mitigation worked"),
                 symbol: "shield.lefthalf.filled", tone: .good)
             scheduleNextIncident()
             return
         }
-        fire(SimEventKind.random(in: mitigationClass, from: brief.incidentDeck), severity: nextIncidentSeverity)
+        let kind = SimEventKind.random(in: mitigationClass, from: brief.incidentDeck)
+        if Double.random(in: 0...1) < nearMissChance {
+            nearMisses += 1
+            savedByNearMiss += expectedLoss(for: mitigationClass, severity: nextIncidentSeverity)
+            log(String(localized: "Near miss: \(kind.title.lowercased()). Nothing lost this time.", comment: "Site log: near miss"),
+                symbol: "exclamationmark.triangle", tone: .neutral)
+            scheduleNextIncident()
+            return
+        }
+        fire(kind, severity: nextIncidentSeverity)
         scheduleNextIncident()
+    }
+
+    /// How often a scheduled incident passes without damage. A well-run
+    /// operation gets warnings where a dangerous one gets bills, so the
+    /// exposure gauge has consequences you can see before you pay for them.
+    private var nearMissChance: Double {
+        min(0.40, max(0.05, 0.30 - 0.20 * (siteExposure - 1)))
+    }
+
+    /// What an incident of this class would have cost at this severity.
+    /// Used only to report what risk management saved - never charged.
+    private func expectedLoss(for klass: MitigationClass, severity: Double) -> Double {
+        let fractions = brief.incidentDeck
+            .filter { $0.mitigationClass == klass }
+            .map(\.costFractionRange)
+        guard !fractions.isEmpty else { return 0 }
+        let mean = fractions.reduce(0.0) { acc, r in
+            acc + r.lowerBound + (r.upperBound - r.lowerBound) * severity
+        } / Double(fractions.count)
+        return brief.contractValue * mean
     }
 
     private func fire(_ kind: SimEventKind, severity: Double) {
@@ -822,6 +910,7 @@ final class SimulationEngine: ObservableObject {
         let coverage = CapabilityEffects.insuranceCoverage(level: level(of: .risk))
         if coverage > 0, gross > CapabilityEffects.insuranceDeductible {
             covered = (gross - CapabilityEffects.insuranceDeductible) * coverage
+            savedByInsurance += covered
             consequences.append(String(localized: "Insurance covered \(Int(covered).formatted()).", comment: "Incident consequence: insurance"))
         }
         if gross > 0 {
@@ -1373,6 +1462,9 @@ final class SimulationEngine: ObservableObject {
             scenario: brief.scenario,
             exitOffer: exitOffer,
             seasonClose: seasonClose,
+            incidentsFired: incidentsFired,
+            nearMisses: nearMisses,
+            lossesAvoided: totalLossesAvoided,
             founderEquity: ledger.founderEquity,
             capitalRaised: ledger.capitalRaised,
             launchDay: growth?.launchDay,
@@ -1420,6 +1512,10 @@ final class SimulationEngine: ObservableObject {
     }
 
     /// Empties the bank and the credit line, to exercise insolvency.
+    /// Grants cover directly, bypassing the Risk capability gate, so the
+    /// register can be tested independently of how cover is bought.
+    func debugGrantMitigation(_ klass: MitigationClass) { mitigationsHeld.insert(klass) }
+
     func debugDrainCash() {
         ledger.debugDrain()
     }
@@ -1443,6 +1539,10 @@ struct RunResult {
     let exitOffer: ExitOffer?
     /// Import runs only. What the season came to once the leftovers went.
     let seasonClose: SeasonClose?
+    /// How the run's risk actually went, for the debrief.
+    let incidentsFired: Int
+    let nearMisses: Int
+    let lossesAvoided: Double
     /// The founder's remaining share at the exit.
     let founderEquity: Double
     /// Capital taken in. Not earnings - kept separate so the debrief can

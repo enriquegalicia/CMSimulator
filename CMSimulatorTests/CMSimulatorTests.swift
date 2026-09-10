@@ -369,7 +369,7 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, founderEquity: 1,
+        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                                capitalRaised: 0, launchDay: nil,
                                outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
@@ -381,7 +381,7 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, founderEquity: 1,
+            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                       capitalRaised: 0, launchDay: nil,
                       outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
@@ -881,7 +881,7 @@ final class StartupEconomicsTests: XCTestCase {
     /// however tidy the books look.
     func testNeverLaunchingScoresZero() {
         let result = RunResult(
-            scenario: .startup, exitOffer: nil, seasonClose: nil, founderEquity: 1, capitalRaised: 0,
+            scenario: .startup, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1, capitalRaised: 0,
             launchDay: nil, outcome: .delivered, profit: 5_000_000, revenue: 6_000_000,
             costs: CostBreakdown(), days: 150, deadlineDays: 150, progress: 100,
             openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 4,
@@ -1097,5 +1097,40 @@ final class IncidentDeliveryTests: XCTestCase {
         XCTAssertGreaterThan(engine.workers.count, 8, "test needs a grown team to be meaningful")
         XCTAssertGreaterThan(engine.organisationLoad, lean,
                              "capability upkeep did not rise as the company grew")
+    }
+
+    /// The register has to be derived from the same weights the scheduler
+    /// draws from, or it is a decorative second source of truth.
+    func testRiskRegisterCoversEveryClassAndRanksByExpectedCost() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 5))
+        let register = engine.riskRegister
+        XCTAssertEqual(Set(register.map(\.mitigationClass)), Set(MitigationClass.allCases))
+        let ranked = register.map(\.expectedDailyCost)
+        XCTAssertEqual(ranked, ranked.sorted(by: >), "register is not ranked by probability x cost")
+    }
+
+    /// Holding cover must move the register, not just the outcome.
+    func testBuyingCoverLowersThatClassOnTheRegister() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 5))
+        for _ in 0..<400 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+        guard engine.level(of: .risk) > 0 || true else { return }
+        let klass = MitigationClass.safety
+        let before = engine.riskRegister.first { $0.mitigationClass == klass }!
+        engine.debugGrantMitigation(klass)
+        let after = engine.riskRegister.first { $0.mitigationClass == klass }!
+        XCTAssertLessThan(after.dailyProbability, before.dailyProbability)
+        XCTAssertLessThan(after.worstCaseCost, before.worstCaseCost)
+        XCTAssertTrue(after.isCovered)
+    }
+
+    /// A well-run operation should be warned before it is billed.
+    func testWellRunOperationsGetNearMisses() {
+        var sawNearMiss = false
+        for seed in UInt64(1)...6 {
+            let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: seed))
+            for _ in 0..<800 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+            if engine.nearMisses > 0 { sawNearMiss = true; break }
+        }
+        XCTAssertTrue(sawNearMiss, "no near miss in six full runs - the leading indicator never fires")
     }
 }

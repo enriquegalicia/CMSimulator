@@ -29,6 +29,7 @@ struct ResultView: View {
                 banner
                 if delivered { headline }
                 exitCard
+                riskCard
                 seasonCard
                 ledgerCard
                 operationsCard
@@ -111,6 +112,33 @@ struct ResultView: View {
                 }
                 row(String(localized: "You took home", comment: "Exit line"),
                     offer.netValuation * result.founderEquity, tint: .green, bold: true)
+            }
+            .padding(16)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        }
+    }
+
+    /// Cover you never claimed reads as waste unless the debrief says what
+    /// it bought you.
+    @ViewBuilder
+    private var riskCard: some View {
+        if result.incidentsFired > 0 || result.nearMisses > 0 || result.lossesAvoided > 1 {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("How the risk went", comment: "Result section header")
+                    .font(.headline)
+                row(String(localized: "Incidents that landed", comment: "Result risk line"),
+                    Double(result.incidentsFired),
+                    tint: result.incidentsFired > 4 ? .red : .primary, isCurrency: false)
+                row(String(localized: "Near misses", comment: "Result risk line"),
+                    Double(result.nearMisses), isCurrency: false)
+                if result.lossesAvoided > 1 {
+                    row(String(localized: "Losses avoided", comment: "Result risk line"),
+                        result.lossesAvoided, tint: .green, bold: true)
+                    Text("Cover, mitigation and a well-run operation together kept this off your books. It never shows up as profit, which is why it is worth stating.", comment: "Losses avoided explanation")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .padding(16)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))

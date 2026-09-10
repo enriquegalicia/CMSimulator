@@ -128,6 +128,13 @@ struct GameView: View {
                               spendingPower: engine.ledger.spendingPower,
                               exposure: engine.siteExposure,
                               forecast: engine.forecast,
+                              register: engine.riskRegister,
+                              incidentsFired: engine.incidentsFired,
+                              nearMisses: engine.nearMisses,
+                              incidentsPrevented: engine.incidentsPrevented,
+                              savedByMitigation: engine.savedByMitigation,
+                              savedByInsurance: engine.savedByInsurance,
+                              savedByNearMiss: engine.savedByNearMiss,
                               onBuy: { engine.buyMitigation($0) },
                               onExit: { showRisk = false })
         }

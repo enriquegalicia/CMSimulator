@@ -1046,3 +1046,37 @@ final class ImportEconomicsTests: XCTestCase {
         XCTAssertEqual(ProjectBrief.construction().capabilityCostFactor, 1.0, accuracy: 1e-9)
     }
 }
+
+// MARK: - Risk is not gated on the player noticing a banner
+
+@MainActor
+final class IncidentDeliveryTests: XCTestCase {
+
+    /// The banner used to gate the incident clock: `advanceIncidentClock`
+    /// returned early while `activeEvent != nil`, so a player who never
+    /// tapped the small dismiss button saw exactly one incident for a
+    /// whole run, in every scenario. Risk was effectively switched off.
+    ///
+    /// Note the tick size: `advance(byDays:)` is one indivisible step, so
+    /// `advance(byDays: 200)` is a single 200-day tick that can fire at most
+    /// one incident. Drive it the way the app does - small steps - or the
+    /// test measures the harness rather than the engine.
+    func testIncidentsKeepFiringWhenTheBannerIsNeverDismissed() {
+        for scenario in ScenarioKind.allCases {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 7))
+            // Deliberately never call dismissEvent().
+            for _ in 0..<800 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+            XCTAssertGreaterThan(engine.incidentsFired, 1,
+                                 "\(scenario.rawValue): only \(engine.incidentsFired) incident(s) fired with the banner left up")
+        }
+    }
+
+    /// Banners must retire themselves, or the queue grows without bound
+    /// and the newest incident is never seen.
+    func testTheBannerRetiresItselfSoTheQueueDrains() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 3))
+        for _ in 0..<800 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+        XCTAssertLessThanOrEqual(engine.queuedEventCount, 4,
+                                 "incident queue is not draining")
+    }
+}

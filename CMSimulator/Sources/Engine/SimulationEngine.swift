@@ -98,6 +98,10 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var forecast: RiskForecast?
     @Published private(set) var siteLog: [SiteLogEntry] = []
     @Published private(set) var extensionUsed = false
+    /// How many incidents have actually struck this run.
+    @Published private(set) var incidentsFired = 0
+    /// How many were stopped before they struck by a mitigation you held.
+    @Published private(set) var incidentsPrevented = 0
 
     // MARK: Private run state
 
@@ -108,6 +112,12 @@ final class SimulationEngine: ObservableObject {
     private var nextIncidentClass: MitigationClass = .weather
     private var nextIncidentSeverity: Double = 0.5
     private var logDayAccumulator: Double = 0
+    /// Incidents that fired while an earlier banner was still on screen.
+    /// The banner is a display device; it must never be able to hold the
+    /// risk model back.
+    private var eventQueue: [SimEvent] = []
+    /// Sim-days the current banner has been up, so it can retire itself.
+    private var activeEventAge: Double = 0
     /// Consecutive simulated days with no work happening and no means to
     /// restart it. Without this a project that sheds its whole crew never
     /// misses payroll (there is none to miss) and so never ends - it just
@@ -187,6 +197,10 @@ final class SimulationEngine: ObservableObject {
         extensionUsed = false
         outcome = nil
         activeEvent = nil
+        eventQueue.removeAll()
+        activeEventAge = 0
+        incidentsFired = 0
+        incidentsPrevented = 0
         hiringRequest = nil
         orderRequest = nil
         forecast = nil
@@ -240,6 +254,7 @@ final class SimulationEngine: ObservableObject {
         advanceTrading(step: step)
         raisePaymentMilestones()
         advanceIncidentClock(step: step)
+        ageActiveEvent(step: step)
         updateForecast()
 
         if brief.trade != nil {
@@ -762,11 +777,12 @@ final class SimulationEngine: ObservableObject {
         if exposure > 1.15 {
             nextIncidentDay -= (exposure - 1.15) * 0.2 * step
         }
-        guard elapsedDays >= nextIncidentDay, activeEvent == nil else { return }
+        guard elapsedDays >= nextIncidentDay else { return }
 
         let mitigationClass = nextIncidentClass
         if mitigationsHeld.contains(mitigationClass),
            Double.random(in: 0...1) < mitigationClass.probabilityReduction {
+            incidentsPrevented += 1
             log(String(localized: "\(mitigationClass.name(in: brief.scenario)) prevented an incident.", comment: "Site log: mitigation worked"),
                 symbol: "shield.lefthalf.filled", tone: .good)
             scheduleNextIncident()
@@ -899,8 +915,15 @@ final class SimulationEngine: ObservableObject {
             consequences.append(String(localized: "\(kind.mitigationClass.name(in: brief.scenario)) limited the damage.", comment: "Incident consequence: mitigation softened it"))
         }
 
-        activeEvent = SimEvent(kind: kind, message: kind.message, grossCost: gross,
-                               insuranceCovered: covered, consequences: consequences)
+        incidentsFired += 1
+        let event = SimEvent(kind: kind, message: kind.message, grossCost: gross,
+                             insuranceCovered: covered, consequences: consequences)
+        if activeEvent == nil {
+            activeEvent = event
+            activeEventAge = 0
+        } else if eventQueue.count < 4 {
+            eventQueue.append(event)
+        }
         // Incidents fire after this tick's recompute, so refresh the
         // headline figures here - otherwise destroyed work and added scope
         // do not show up until the following tick and the banner appears to
@@ -913,7 +936,24 @@ final class SimulationEngine: ObservableObject {
         range.lowerBound + (range.upperBound - range.lowerBound) * min(max(t, 0), 1)
     }
 
-    func dismissEvent() { activeEvent = nil }
+    func dismissEvent() {
+        activeEvent = eventQueue.isEmpty ? nil : eventQueue.removeFirst()
+        activeEventAge = 0
+    }
+
+    /// Banners expire on their own after a few simulated days. Before this,
+    /// an undismissed banner suppressed every later incident for the rest
+    /// of the run - a run played without touching it saw exactly one.
+    private func ageActiveEvent(step: Double) {
+        guard activeEvent != nil else { return }
+        activeEventAge += step
+        if activeEventAge >= 3.0 || !eventQueue.isEmpty && activeEventAge >= 1.5 {
+            dismissEvent()
+        }
+    }
+
+    /// How many incidents are waiting behind the one on screen.
+    var queuedEventCount: Int { eventQueue.count }
 
     // MARK: Forecast (Planning)
 

@@ -456,6 +456,18 @@ enum SourceOrigin: String, CaseIterable, Identifiable {
     /// Whether the price moves with the exchange rate.
     var isFXExposed: Bool { self != .domestic }
 
+    /// Who you actually deal with at this origin. A Shenzhen factory and a
+    /// local distributor are different firms selling the same goods.
+    var supplierTrade: SupplierTrade {
+        switch self {
+        case .chinaWholesale: return .factoryChina
+        case .chinaRetail: return .resellerChina
+        case .vietnam: return .factoryVietnam
+        case .india: return .factoryIndia
+        case .domestic: return .distributorDomestic
+        }
+    }
+
     var summary: String {
         switch self {
         case .chinaWholesale: return String(localized: "Cheapest unit price there is, and the highest duty. Big minimum orders lock your cash up for weeks.", comment: "Sourcing summary")

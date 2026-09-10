@@ -184,6 +184,10 @@ struct CrewView: View {
                 Text(worker.archetype.traitName)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
+                Text(verbatim: "·").font(.caption2).foregroundStyle(.secondary)
+                Text(String(localized: "\(worker.education.name(in: scenario)), \(worker.yearsOfExperience) yrs", comment: "Roster education and years"))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
                 if worker.isOnBench {
                     Text("Unassigned", comment: "Worker status: on the bench")
                         .font(.caption2.bold())

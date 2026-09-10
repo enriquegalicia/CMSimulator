@@ -57,6 +57,62 @@ enum WorkerTuning {
     static let moraleBurnPerOvertimeDay: Double = 0.11
 }
 
+// MARK: - Background
+
+/// How far someone took their formal training. It is not a proxy for
+/// skill - a tradesperson who came up through an apprenticeship can
+/// out-produce a graduate all day - but it does say who learns fastest
+/// and who expects to be paid more for the certificate.
+enum EducationLevel: String, CaseIterable, Identifiable, Comparable {
+    case trade          // apprenticeship / technical certificate
+    case technician     // technical college
+    case degree         // bachelor's
+    case postgraduate   // master's or above
+
+    var id: String { rawValue }
+
+    /// A construction crew and a software team describe the same shelf of
+    /// qualifications differently.
+    func name(in scenario: ScenarioKind) -> String {
+        switch (self, scenario) {
+        case (.trade, .construction): return String(localized: "Apprenticeship", comment: "Education level, construction")
+        case (.trade, _): return String(localized: "Self-taught", comment: "Education level, non-construction")
+        case (.technician, .construction): return String(localized: "Technical certificate", comment: "Education level, construction")
+        case (.technician, _): return String(localized: "Bootcamp or diploma", comment: "Education level, non-construction")
+        case (.degree, _): return String(localized: "Degree", comment: "Education level")
+        case (.postgraduate, _): return String(localized: "Postgraduate", comment: "Education level")
+        }
+    }
+
+    /// What the certificate costs you on the wage bill, before anything
+    /// they actually do.
+    var wageFactor: Double {
+        switch self {
+        case .trade: return 0.90
+        case .technician: return 0.98
+        case .degree: return 1.10
+        case .postgraduate: return 1.22
+        }
+    }
+
+    /// How much faster formal training makes someone absorb a course.
+    /// This is the honest edge a qualification buys: not raw output, but
+    /// the rate at which they get better.
+    var learningFactor: Double {
+        switch self {
+        case .trade: return 0.92
+        case .technician: return 1.00
+        case .degree: return 1.12
+        case .postgraduate: return 1.25
+        }
+    }
+
+    static func < (a: EducationLevel, b: EducationLevel) -> Bool {
+        let order: [EducationLevel] = [.trade, .technician, .degree, .postgraduate]
+        return order.firstIndex(of: a)! < order.firstIndex(of: b)!
+    }
+}
+
 // MARK: - Roles
 
 /// What someone actually does, as distinct from how they do it. An
@@ -217,6 +273,32 @@ enum WorkerArchetype: String, CaseIterable {
         case .apprentice: return 0
         }
     }
+
+    /// Backgrounds that plausibly produce this disposition. An old hand
+    /// most often came up through the trade; a specialist most often did
+    /// not. Drawn from, not fixed - people are not their archetype.
+    var likelyEducation: [EducationLevel] {
+        switch self {
+        case .veteran: return [.trade, .trade, .technician, .degree]
+        case .gunner: return [.trade, .technician, .technician, .degree]
+        case .apprentice: return [.trade, .trade, .technician]
+        case .allRounder: return [.technician, .degree, .trade]
+        case .safetyLead: return [.technician, .technician, .degree]
+        case .specialist: return [.degree, .degree, .postgraduate, .technician]
+        }
+    }
+
+    /// Years already served when you meet them.
+    var yearsRange: ClosedRange<Int> {
+        switch self {
+        case .veteran: return 14...30
+        case .gunner: return 3...9
+        case .apprentice: return 0...2
+        case .allRounder: return 5...14
+        case .safetyLead: return 7...18
+        case .specialist: return 8...20
+        }
+    }
 }
 
 // MARK: - Worker
@@ -232,6 +314,13 @@ struct Worker: Identifiable {
     let archetype: WorkerArchetype
     /// What this person does. Only consequential once a venture is known.
     let role: WorkerRole
+    /// How far they took their formal training.
+    let education: EducationLevel
+    /// Years in the trade before you met them. Feeds their starting
+    /// experience, so a twenty-year veteran does not begin at zero - but
+    /// experience is earned per package, so it is a head start, not a
+    /// guarantee.
+    let yearsOfExperience: Int
     /// Which work package this worker is assigned to.
     var packageID: WorkPackage.ID
 
@@ -285,14 +374,25 @@ struct Worker: Identifiable {
     }
 
     init(name: String, archetype: WorkerArchetype, packageID: WorkPackage.ID,
-         role: WorkerRole = .generalist, marketWageFactor: Double = 1.0) {
+         role: WorkerRole = .generalist,
+         education: EducationLevel? = nil,
+         yearsOfExperience: Int? = nil,
+         marketWageFactor: Double = 1.0) {
         self.name = name
         self.archetype = archetype
         self.role = role
+        self.education = education ?? archetype.likelyEducation.randomElement()!
+        self.yearsOfExperience = yearsOfExperience ?? Int.random(in: archetype.yearsRange)
         self.packageID = packageID
         self.skill = .random(in: archetype.skillRange)
-        self.dailyWage = (Double.random(in: archetype.wageRange) * marketWageFactor * role.wageFactor).rounded()
-        self.experience = archetype.startingExperience
+        // Both the certificate and the years show up on the wage, and the
+        // years also show up as a genuine head start on experience.
+        let ed = self.education
+        let yrs = Double(self.yearsOfExperience)
+        self.dailyWage = (Double.random(in: archetype.wageRange)
+                          * marketWageFactor * role.wageFactor * ed.wageFactor
+                          * (1 + min(0.35, yrs * 0.014))).rounded()
+        self.experience = min(0.92, archetype.startingExperience + min(0.30, yrs * 0.018))
     }
 
     var isOnboarding: Bool { rampProgress < 1 }
@@ -308,6 +408,9 @@ struct Worker: Identifiable {
     }
 
     /// Experience multiplier: 1.0 green, up to `veteranMultiplier` mastered.
+    /// How fast a training course lands for this person.
+    var learningRate: Double { education.learningFactor }
+
     var experienceMultiplier: Double {
         1 + (WorkerTuning.veteranMultiplier - 1) * experience
     }
@@ -399,6 +502,8 @@ struct Candidate: Identifiable {
     var name: String { worker.name }
     var archetype: WorkerArchetype { worker.archetype }
     var role: WorkerRole { worker.role }
+    var education: EducationLevel { worker.education }
+    var yearsOfExperience: Int { worker.yearsOfExperience }
 }
 
 /// Drives the candidate-picker sheet.

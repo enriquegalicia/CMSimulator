@@ -738,6 +738,24 @@
       },
       "comment": "Current scenario and difficulty"
     },
+    "%@, %lld yrs": {
+      "extractionState": "manual",
+      "comment": "Roster education and years",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %lld yrs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$lld años"
+          }
+        }
+      }
+    },
     "%@/day": {
       "extractionState": "manual",
       "localizations": {
@@ -1150,6 +1168,24 @@
         }
       },
       "comment": "Incident consequence: material lost"
+    },
+    "%lld yrs in the trade": {
+      "extractionState": "manual",
+      "comment": "Candidate years of experience",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld yrs in the trade"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld años en el oficio"
+          }
+        }
+      }
     },
     "%lldd": {
       "extractionState": "manual",
@@ -2033,6 +2069,24 @@
       },
       "comment": "Worker archetype name"
     },
+    "Apprenticeship": {
+      "extractionState": "manual",
+      "comment": "Education level, construction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apprenticeship"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oficio aprendido en obra"
+          }
+        }
+      }
+    },
     "Ask for time": {
       "extractionState": "manual",
       "localizations": {
@@ -2231,6 +2285,24 @@
       },
       "comment": "Accessibility label for the board switcher"
     },
+    "Bootcamp or diploma": {
+      "extractionState": "manual",
+      "comment": "Education level, non-construction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bootcamp or diploma"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bootcamp o diplomado"
+          }
+        }
+      }
+    },
     "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.": {
       "extractionState": "manual",
       "localizations": {
@@ -2266,6 +2338,24 @@
         }
       },
       "comment": "Cost of running past the deadline"
+    },
+    "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of builders merchants selling masonry and finishes. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Materiales BuildRight,Agregados Puerta Norte,Block y Cuchara,Materiales Piedra Angular,Albañilería Apex"
+          }
+        }
+      }
     },
     "Builds buyer relationships, which decide how fast you are paid and how much of the market you get.": {
       "extractionState": "manual",
@@ -3400,6 +3490,24 @@
       },
       "comment": "Capability verb"
     },
+    "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of plumbing and HVAC suppliers. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plomería Línea de Cobre,Muebles y Griferías Hydro,Ductos y Aire Acondicionado,Válvulas y Bridas del Norte,Distribuidora Aire Térmico"
+          }
+        }
+      }
+    },
     "Core platform": {
       "extractionState": "manual",
       "localizations": {
@@ -3504,6 +3612,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "La cobertura, las mitigaciones y una operación bien llevada mantuvieron esto fuera de tus libros. Nunca aparece como utilidad, por eso vale la pena decirlo."
+          }
+        }
+      }
+    },
+    "Covered": {
+      "extractionState": "manual",
+      "comment": "Order button when no more input is needed",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covered"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cubierto"
           }
         }
       }
@@ -3777,6 +3903,24 @@
         }
       }
     },
+    "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of surveying and site-investigation firms. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topografía Datum,Levantamientos Trueline,Geodesia del Valle,Cardinal Topográfica,Estudios Meridiano"
+          }
+        }
+      }
+    },
     "Day": {
       "extractionState": "manual",
       "localizations": {
@@ -3884,6 +4028,24 @@
         }
       },
       "comment": "Help bullet"
+    },
+    "Degree": {
+      "extractionState": "manual",
+      "comment": "Education level",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Degree"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licenciatura"
+          }
+        }
+      }
     },
     "Delete all": {
       "extractionState": "manual",
@@ -5504,6 +5666,24 @@
       },
       "comment": "End of the run"
     },
+    "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of Vietnamese exporter names. Keep these recognisably Vietnamese in every language - do not translate or localize them.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export"
+          }
+        }
+      }
+    },
     "Harder settings score higher on the leaderboard.": {
       "extractionState": "manual",
       "localizations": {
@@ -6278,23 +6458,23 @@
       },
       "comment": "Incident title"
     },
-    "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants": {
+    "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork": {
       "extractionState": "manual",
+      "comment": "Comma-separated pool of concrete, steel and formwork suppliers. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants"
+            "value": "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aceros del Norte,Materiales Monterrey,Cementos del Valle,Suministros Peña,Ferretería La Cumbre,Grupo Zaragoza,Distribuidora Aguilar,Constructora Ibérica,Aceros Peninsular,BuildRight Partners"
+            "value": "Aceros y Varilla Ironclad,Concretos Premezclados Clave,Concretera La Fundición,Perfiles y Varilla del Centro,Cimbras Bastión"
           }
         }
-      },
-      "comment": "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."
+      }
     },
     "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean": {
       "extractionState": "manual",
@@ -8618,6 +8798,42 @@
       },
       "comment": "Work package name - Hydro-sanitary & Air conditioning installations"
     },
+    "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of engineering consultancies and permit expediters. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingeniería Plomada,Consultores Técnicos Axis,Gestoría y Licencias Piedra Angular,Cálculo Estructural,Ingeniería Meridiano"
+          }
+        }
+      }
+    },
+    "Postgraduate": {
+      "extractionState": "manual",
+      "comment": "Education level",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postgraduate"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posgrado"
+          }
+        }
+      }
+    },
     "Pre-shipment inspection": {
       "extractionState": "manual",
       "localizations": {
@@ -9050,6 +9266,24 @@
       },
       "comment": "Worker archetype description"
     },
+    "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of online marketplace reseller storefront names. Replace with storefront names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tienda QuickShip Global,Sunrise Directo,Outlet MegaValor,Revendedor FastLane,TopChoice Directo"
+          }
+        }
+      }
+    },
     "Raise": {
       "extractionState": "manual",
       "comment": "Give a pay rise button",
@@ -9208,6 +9442,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reembolsos por devoluciones"
+          }
+        }
+      }
+    },
+    "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of local, in-country distributor names. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distribuidora Regional,Comercializadora Anáhuac,Grupo Abastos Nacional,Mayoreo del Bajío,Distribuidores Locales"
           }
         }
       }
@@ -9896,6 +10148,24 @@
       },
       "comment": "Planning effect summary"
     },
+    "Self-taught": {
+      "extractionState": "manual",
+      "comment": "Education level, non-construction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-taught"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autodidacta"
+          }
+        }
+      }
+    },
     "Send these on so they can be fixed. Nothing is uploaded on its own — reports stay on this device until you share them.": {
       "extractionState": "manual",
       "localizations": {
@@ -10111,6 +10381,24 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of Chinese factory and trading company names. Keep these recognisably Chinese in every language - do not translate or localize them.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory"
+          }
+        }
+      }
     },
     "Shoppers expect about %@. Undercut and you shift more units on a thinner margin; charge more and volume falls away.": {
       "extractionState": "manual",
@@ -10850,6 +11138,24 @@
       },
       "comment": "Import work stream name"
     },
+    "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of Indian exporter names. Keep these recognisably Indian in every language - do not translate or localize them.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports"
+          }
+        }
+      }
+    },
     "Surveys & reference material": {
       "extractionState": "manual",
       "comment": "What the design stream consumes",
@@ -11011,6 +11317,24 @@
         }
       },
       "comment": "Hidden quality debt"
+    },
+    "Technical certificate": {
+      "extractionState": "manual",
+      "comment": "Education level, construction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Technical certificate"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carrera técnica"
+          }
+        }
+      }
     },
     "Technical review": {
       "extractionState": "manual",
@@ -12088,6 +12412,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vietnam"
+          }
+        }
+      }
+    },
+    "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of electrical and lighting suppliers. Replace with company names that read naturally in your language - do not translate literally.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Material Eléctrico Voltway,Cables y Tableros Cernícalo,Iluminación Lumen,Circuitos y Tableros,Distribuidora Amperaje"
           }
         }
       }

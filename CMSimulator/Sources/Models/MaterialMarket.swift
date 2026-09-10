@@ -114,20 +114,79 @@ struct Vendor: Identifiable {
     }
 }
 
-extension Vendor {
-    /// Localized as one comma-separated list, same reasoning as the worker
-    /// name pools: suppliers should sound like firms the player would
-    /// actually ring up.
-    private static var names: [String] {
-        NamePool.split(String(localized: "Ironclad Supply Co.,Meridian Materials,BuildRight Partners,Cornerstone Vendors,Apex Sourcing Group,Foundry & Co.,Delta Trade Supply,Northgate Aggregates,Halberd Steel,Kestrel Builders Merchants",
-                            comment: "Comma-separated pool of material supplier company names. Replace with company names that read naturally in your language - do not translate these literally."))
+/// The kind of firm you are buying from. A surveyor does not sell rebar
+/// and a steel stockist does not sell luminaires, so the supplier panel
+/// has to be drawn from the trade that actually sells the input.
+enum SupplierTrade: String, CaseIterable, Identifiable {
+    case surveying
+    case structural
+    case engineering
+    case builders
+    case mechanical
+    case electrical
+    /// Resale stock. The panel depends on where you are buying, not on a
+    /// trade - a Shenzhen factory and a local distributor are different
+    /// firms selling the same goods.
+    case factoryChina
+    case resellerChina
+    case factoryVietnam
+    case factoryIndia
+    case distributorDomestic
+
+    var id: String { rawValue }
+
+    /// Localized as one comma-separated list each, same reasoning as the
+    /// worker name pools: suppliers should sound like firms the player
+    /// would actually ring up for this particular thing.
+    var names: [String] {
+        switch self {
+        case .surveying:
+            return NamePool.split(String(localized: "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group",
+                comment: "Comma-separated pool of surveying and site-investigation firms. Replace with company names that read naturally in your language - do not translate literally."))
+        case .structural:
+            return NamePool.split(String(localized: "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork",
+                comment: "Comma-separated pool of concrete, steel and formwork suppliers. Replace with company names that read naturally in your language - do not translate literally."))
+        case .engineering:
+            return NamePool.split(String(localized: "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering",
+                comment: "Comma-separated pool of engineering consultancies and permit expediters. Replace with company names that read naturally in your language - do not translate literally."))
+        case .builders:
+            return NamePool.split(String(localized: "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply",
+                comment: "Comma-separated pool of builders merchants selling masonry and finishes. Replace with company names that read naturally in your language - do not translate literally."))
+        case .mechanical:
+            return NamePool.split(String(localized: "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors",
+                comment: "Comma-separated pool of plumbing and HVAC suppliers. Replace with company names that read naturally in your language - do not translate literally."))
+        case .electrical:
+            return NamePool.split(String(localized: "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors",
+                comment: "Comma-separated pool of electrical and lighting suppliers. Replace with company names that read naturally in your language - do not translate literally."))
+        case .factoryChina:
+            return NamePool.split(String(localized: "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory",
+                comment: "Comma-separated pool of Chinese factory and trading company names. Keep these recognisably Chinese in every language - do not translate or localize them."))
+        case .resellerChina:
+            return NamePool.split(String(localized: "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct",
+                comment: "Comma-separated pool of online marketplace reseller storefront names. Replace with storefront names that read naturally in your language - do not translate literally."))
+        case .factoryVietnam:
+            return NamePool.split(String(localized: "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export",
+                comment: "Comma-separated pool of Vietnamese exporter names. Keep these recognisably Vietnamese in every language - do not translate or localize them."))
+        case .factoryIndia:
+            return NamePool.split(String(localized: "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports",
+                comment: "Comma-separated pool of Indian exporter names. Keep these recognisably Indian in every language - do not translate or localize them."))
+        case .distributorDomestic:
+            return NamePool.split(String(localized: "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors",
+                comment: "Comma-separated pool of local, in-country distributor names. Replace with company names that read naturally in your language - do not translate literally."))
+        }
     }
+}
+
+extension Vendor {
 
     /// Three standing offers: the classic cheap/balanced/premium spread,
     /// but the axes that matter are lead time and reliability, not just
     /// price. "Lowest bid" is a trap that idles your crews.
-    static func standingPanel() -> [Vendor] {
-        let picked = names.shuffled().prefix(3)
+    /// The panel for one trade. Stable for the life of a run so the player
+    /// deals with the same firms rather than re-rolling terms by reopening
+    /// the sheet.
+    static func standingPanel(for trade: SupplierTrade) -> [Vendor] {
+        let picked = trade.names.shuffled().prefix(3)
         let specs: [(String, Double, Double, Double, Double)] = [
             (String(localized: "Lowest price, slow and patchy", comment: "Vendor pitch"), 0.84, 1.55, 0.24, 0.008),
             (String(localized: "Balanced terms", comment: "Vendor pitch"), 1.00, 1.00, 0.10, 0.003),

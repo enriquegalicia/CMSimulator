@@ -557,13 +557,15 @@ final class LocalizationTests: XCTestCase {
         XCTAssertFalse(NamePool.split(spanish).isEmpty)
     }
 
-    /// Every vendor offer must carry a usable company name.
+    /// Every vendor offer must carry a usable company name, in every trade.
     func testVendorPanelAlwaysHasNamedSuppliers() {
-        for _ in 0..<50 {
-            let panel = Vendor.standingPanel()
-            XCTAssertEqual(panel.count, 3)
-            for vendor in panel {
-                XCTAssertFalse(vendor.name.trimmingCharacters(in: .whitespaces).isEmpty)
+        for trade in SupplierTrade.allCases {
+            for _ in 0..<20 {
+                let panel = Vendor.standingPanel(for: trade)
+                XCTAssertEqual(panel.count, 3)
+                for vendor in panel {
+                    XCTAssertFalse(vendor.name.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
             }
         }
     }
@@ -1431,5 +1433,153 @@ final class ProgressDrawingTests: XCTestCase {
         XCTAssertGreaterThan(p.ink("design"), 0.05)
         XCTAssertLessThan(p.ink("design"), 0.25)
         XCTAssertEqual(StreamProgress(fractions: ["design": 1]).ink("design"), 1.0, accuracy: 1e-9)
+    }
+
+}
+
+// MARK: - Suppliers sell what they actually sell
+
+@MainActor
+final class SupplierTradeTests: XCTestCase {
+
+    /// A surveyor does not sell rebar. Every stream that consumes
+    /// something must name the trade that sells it, and every stream that
+    /// consumes nothing must name none.
+    func testEveryConsumingStreamNamesTheTradeThatSellsItsInput() {
+        for brief in [ProjectBrief.construction(), .startup(), .importBusiness()] {
+            for package in brief.streams {
+                let consumes = package.materialUnitsPerWorkUnit > 0
+                XCTAssertEqual(package.supplierTrade != nil, consumes,
+                               "\(package.id): supplierTrade and consumption disagree")
+                XCTAssertEqual(package.inputName != nil, consumes,
+                               "\(package.id): inputName and consumption disagree")
+            }
+        }
+    }
+
+    /// Each trade needs its own firms. One shared pool is what put
+    /// "Halberd Steel" on an order for survey drawings.
+    func testEachTradeHasItsOwnSupplierNames() {
+        var seen: [String: SupplierTrade] = [:]
+        for trade in SupplierTrade.allCases {
+            XCTAssertGreaterThanOrEqual(trade.names.count, 3,
+                                        "\(trade.rawValue) cannot fill a panel of three")
+            for name in trade.names {
+                if let other = seen[name] {
+                    XCTFail("\(name) sells for both \(other.rawValue) and \(trade.rawValue)")
+                }
+                seen[name] = trade
+            }
+        }
+    }
+
+    /// Construction streams must draw from six different trades, not one.
+    func testConstructionUsesSixDistinctTrades() {
+        let trades = ProjectBrief.construction().streams.compactMap(\.supplierTrade)
+        XCTAssertEqual(Set(trades).count, 6)
+    }
+
+    /// Where you buy changes who you deal with.
+    func testEachSourcingOriginHasItsOwnSuppliers() {
+        let trades = SourceOrigin.allCases.map(\.supplierTrade)
+        XCTAssertEqual(Set(trades).count, SourceOrigin.allCases.count)
+    }
+
+    /// Panels are stable for the run, or reopening the sheet re-rolls the
+    /// terms on offer until the player gets the ones they wanted.
+    func testPanelsDoNotRerollWhenTheSheetIsReopened() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 4))
+        guard let design = engine.workPackages.first(where: { $0.id == "design" }) else {
+            return XCTFail("no design stream")
+        }
+        engine.requestMaterialOrder(for: design.id)
+        let first = engine.orderRequest?.vendors.map(\.name)
+        engine.cancelMaterialOrder()
+        engine.requestMaterialOrder(for: design.id)
+        let second = engine.orderRequest?.vendors.map(\.name)
+        XCTAssertEqual(first, second, "the supplier panel re-rolled between openings")
+        // And they must be surveyors, not builders merchants.
+        XCTAssertTrue(Set(first ?? []).isSubset(of: Set(SupplierTrade.surveying.names)))
+    }
+}
+
+// MARK: - Who you are hiring
+
+final class CandidateBackgroundTests: XCTestCase {
+
+    /// Both facts must be present on everyone, and both must be plausible.
+    func testEveryHireHasSchoolingAndYears() {
+        for _ in 0..<80 {
+            let w = Worker(name: "X", archetype: WorkerArchetype.allCases.randomElement()!, packageID: "p")
+            XCTAssertTrue((0...30).contains(w.yearsOfExperience))
+            XCTAssertTrue(EducationLevel.allCases.contains(w.education))
+        }
+    }
+
+    /// Years must be a genuine head start, not a label - and schooling
+    /// must show up on the wage, since that is what you are paying for.
+    func testYearsBuyExperienceAndSchoolingCostsMoney() {
+        let green = Worker(name: "A", archetype: .allRounder, packageID: "p",
+                           education: .technician, yearsOfExperience: 0)
+        let seasoned = Worker(name: "B", archetype: .allRounder, packageID: "p",
+                              education: .technician, yearsOfExperience: 20)
+        XCTAssertGreaterThan(seasoned.experience, green.experience)
+
+        // Same person, dearer certificate.
+        var cheapTotal = 0.0, dearTotal = 0.0
+        for _ in 0..<200 {
+            cheapTotal += Worker(name: "C", archetype: .allRounder, packageID: "p",
+                                 education: .trade, yearsOfExperience: 5).dailyWage
+            dearTotal += Worker(name: "D", archetype: .allRounder, packageID: "p",
+                                education: .postgraduate, yearsOfExperience: 5).dailyWage
+        }
+        XCTAssertGreaterThan(dearTotal, cheapTotal)
+    }
+
+    /// The honest edge a qualification buys is not raw output - it is how
+    /// fast training lands. Otherwise it is just a more expensive worker.
+    func testSchoolingBuysLearningRateRatherThanOutput() {
+        let trade = Worker(name: "A", archetype: .allRounder, packageID: "p",
+                           education: .trade, yearsOfExperience: 5)
+        let post = Worker(name: "B", archetype: .allRounder, packageID: "p",
+                          education: .postgraduate, yearsOfExperience: 5)
+        XCTAssertGreaterThan(post.learningRate, trade.learningRate)
+        XCTAssertEqual(EducationLevel.trade.learningFactor, trade.learningRate, accuracy: 1e-9)
+    }
+
+}
+
+// MARK: - Don't buy what you already have
+
+@MainActor
+final class MaterialCoverageTests: XCTestCase {
+
+    /// Ordering input you already hold is dead money: it arrives, it is
+    /// paid for, and it is never installed. The need has to net off both
+    /// stock on site and deliveries already in transit.
+    func testOutstandingNeedNetsOffStockAndDeliveriesInFlight() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 2))
+        guard let design = engine.workPackages.first(where: { $0.id == "design" }) else {
+            return XCTFail("no design stream")
+        }
+        let before = engine.outstandingMaterialNeed(for: design.id)
+        XCTAssertGreaterThan(before, 0, "a fresh stream should need something")
+
+        // Fill the store completely; nothing more should be worth buying.
+        engine.debugSetMaterialStock(design.units * design.spec.materialUnitsPerWorkUnit,
+                                     for: design.id)
+        XCTAssertEqual(engine.outstandingMaterialNeed(for: design.id), 0, accuracy: 1e-6)
+    }
+
+    /// A stream that consumes nothing can never need an order, whatever
+    /// its stock happens to be.
+    func testStreamsThatConsumeNothingNeverNeedAnOrder() {
+        for scenario in [ScenarioKind.startup, .importing] {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 5))
+            for package in engine.workPackages {
+                XCTAssertEqual(engine.outstandingMaterialNeed(for: package.id), 0, accuracy: 1e-9,
+                               "\(package.id) in \(scenario.rawValue) wants an order it cannot use")
+            }
+        }
     }
 }

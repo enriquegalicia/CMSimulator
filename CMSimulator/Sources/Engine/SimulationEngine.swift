@@ -71,7 +71,15 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var workers: [Worker] = []
     @Published private(set) var capabilities: [Capability]
     @Published private(set) var market: MaterialMarket
-    @Published private(set) var vendors: [Vendor]
+    /// A standing panel per trade, so a surveyor never quotes you for
+    /// rebar. Built once per run and kept, so reopening the order sheet
+    /// cannot re-roll the terms on offer.
+    @Published private(set) var vendorPanels: [SupplierTrade: [Vendor]] = [:]
+
+    /// The firms who sell a given stream's input.
+    func vendors(for trade: SupplierTrade) -> [Vendor] {
+        vendorPanels[trade] ?? []
+    }
     @Published private(set) var orders: [MaterialOrder] = []
     @Published private(set) var mitigationsHeld: Set<MitigationClass> = []
     /// Customers, revenue and valuation. Nil for scenarios with no market.
@@ -159,7 +167,7 @@ final class SimulationEngine: ObservableObject {
                              dailyInterestRate: brief.dailyInterestRate)
         self.deadlineDays = brief.deadlineDays
         self.market = MaterialMarket(volatility: brief.marketVolatility)
-        self.vendors = Vendor.standingPanel()
+        self.vendorPanels = Self.buildPanels()
         self.workPackages = brief.streams.map { WorkPackage(spec: $0) }
         self.capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         self.growth = brief.growth.map(GrowthModel.init(spec:))
@@ -200,7 +208,7 @@ final class SimulationEngine: ObservableObject {
                         dailyInterestRate: next.dailyInterestRate)
         deadlineDays = next.deadlineDays
         market = MaterialMarket(volatility: next.marketVolatility)
-        vendors = Vendor.standingPanel()
+        vendorPanels = Self.buildPanels()
         workPackages = next.streams.map { WorkPackage(spec: $0) }
         capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         growth = next.growth.map(GrowthModel.init(spec:))
@@ -436,6 +444,15 @@ final class SimulationEngine: ObservableObject {
     /// a trade leaving at the end of its works, not a layoff. Without it,
     /// finished crews would draw full pay to the end of the job and no
     /// amount of good play could turn a profit.
+    /// Every trade the game can buy from gets its own panel up front, so
+    /// switching sourcing origin mid-run does not conjure a new set of
+    /// firms with freshly rolled terms.
+    private static func buildPanels() -> [SupplierTrade: [Vendor]] {
+        Dictionary(uniqueKeysWithValues: SupplierTrade.allCases.map {
+            ($0, Vendor.standingPanel(for: $0))
+        })
+    }
+
     /// Discovery's job is to establish what the company actually is. Until
     /// it lands you are guessing, and the specialists you hired are a bet.
     private func resolveVentureIfDiscovered() {
@@ -1435,7 +1452,7 @@ final class SimulationEngine: ObservableObject {
         orderRequest = MaterialOrderRequest(
             id: Self.stockOrderID,
             packageTitle: String(localized: "Stock — \(origin.name)", comment: "Order sheet title for a stock purchase"),
-            vendors: vendors,
+            vendors: vendors(for: origin.supplierTrade),
             suggestedQuantity: max(origin.minimumOrder, suggestedStockQuantity),
             baseCostPerUnit: goods + perUnitDuty,
             baseLeadTimeDays: origin.leadTimeDays * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
@@ -1461,6 +1478,17 @@ final class SimulationEngine: ObservableObject {
         return max(0, (expected - trading.unitsOnHand - inFlight)).rounded()
     }
 
+    /// Units still worth ordering for a stream, net of what is on site and
+    /// what is already on its way. Zero means buying more is dead money -
+    /// it arrives, it is paid for, and it is never installed.
+    func outstandingMaterialNeed(for packageID: WorkPackage.ID) -> Double {
+        guard let package = workPackages.first(where: { $0.id == packageID }),
+              package.consumesMaterials else { return 0 }
+        let inFlight = orders.filter { $0.packageID == packageID }.reduce(0) { $0 + $1.quantity }
+        let needed = package.unitsRemaining * package.spec.materialUnitsPerWorkUnit
+        return max(0, needed - package.materialStock - inFlight)
+    }
+
     func requestMaterialOrder(for packageID: WorkPackage.ID) {
         guard let package = workPackages.first(where: { $0.id == packageID }) else { return }
         let inFlight = orders.filter { $0.packageID == packageID }.reduce(0) { $0 + $1.quantity }
@@ -1470,7 +1498,7 @@ final class SimulationEngine: ObservableObject {
         orderRequest = MaterialOrderRequest(
             id: packageID,
             packageTitle: package.title,
-            vendors: vendors,
+            vendors: vendors(for: package.spec.supplierTrade ?? .builders),
             suggestedQuantity: suggested > 0 ? suggested.rounded(.up) : 0,
             baseCostPerUnit: package.spec.materialCostPerUnit * discount,
             baseLeadTimeDays: package.spec.baseLeadTimeDays
@@ -1556,8 +1584,9 @@ final class SimulationEngine: ObservableObject {
               !workers[idx].isInTraining else { return }
         guard ledger.spend(CapabilityEffects.courseCostPerWorker, into: \.training) else { return }
         workers[idx].trainingDaysRemaining = CapabilityEffects.courseDays(level: trainingLevel)
-        workers[idx].pendingSkillGain = CapabilityEffects.courseSkillGain(level: trainingLevel)
-        workers[idx].pendingExperienceGain = CapabilityEffects.courseExperienceGain(level: trainingLevel)
+        let rate = workers[idx].learningRate
+        workers[idx].pendingSkillGain = CapabilityEffects.courseSkillGain(level: trainingLevel) * rate
+        workers[idx].pendingExperienceGain = CapabilityEffects.courseExperienceGain(level: trainingLevel) * rate
         log(String(localized: "\(workers[idx].name) sent on a course.", comment: "Site log: training started"),
             symbol: "graduationcap", tone: .neutral)
     }

@@ -20,6 +20,8 @@ struct WorkPackageCardView: View {
     private var showsSupply: Bool { usesSupplyChain && package.consumesMaterials }
     let crew: [Worker]
     let ordersInFlight: [MaterialOrder]
+    /// Units still worth ordering, net of stock and deliveries in transit.
+    let outstandingNeed: Double
     let currentDay: Double
     let onHire: () -> Void
     let onOrder: () -> Void
@@ -178,13 +180,20 @@ struct WorkPackageCardView: View {
                 .buttonStyle(.bordered)
 
                 if showsSupply {
+                    // Ordering what you already have is dead money: it
+                    // arrives, it is paid for, and it is never installed.
+                    let covered = outstandingNeed < 1
                     Button(action: onOrder) {
-                        Label(scenario.supplyOrderVerb, systemImage: "cart")
+                        Label(covered
+                              ? String(localized: "Covered", comment: "Order button when no more input is needed")
+                              : scenario.supplyOrderVerb,
+                              systemImage: covered ? "checkmark.circle" : "cart")
                             .font(.caption.bold())
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
                     .tint(package.isStarvedOfMaterials ? .red : .accentColor)
+                    .disabled(covered)
                 }
             }
             .controlSize(.small)

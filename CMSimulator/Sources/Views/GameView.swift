@@ -99,6 +99,7 @@ struct GameView: View {
             CandidatePickerView(request: request,
                                 spendingPower: engine.ledger.spendingPower,
                                 venture: engine.venture,
+                                scenario: engine.brief.scenario,
                                 onSelect: { engine.confirmHire($0) },
                                 onCancel: { engine.cancelHiring() })
         }
@@ -320,6 +321,7 @@ struct GameView: View {
                         usesSupplyChain: engine.brief.usesSupplyChain,
                         crew: engine.crew(for: package.id),
                         ordersInFlight: engine.orders,
+                        outstandingNeed: engine.outstandingMaterialNeed(for: package.id),
                         currentDay: engine.elapsedDays,
                         onHire: { engine.requestHire(for: package.id) },
                         onOrder: { engine.requestMaterialOrder(for: package.id) },

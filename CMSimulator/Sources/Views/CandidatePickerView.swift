@@ -17,6 +17,8 @@ struct CandidatePickerView: View {
     /// What the company turned out to be, once Discovery has said so.
     /// Nil means you are still hiring blind, which is the point.
     let venture: VentureKind?
+    /// Qualifications read differently on a site and in a software team.
+    let scenario: ScenarioKind
     let onSelect: (Candidate) -> Void
     let onCancel: () -> Void
 
@@ -95,6 +97,16 @@ struct CandidatePickerView: View {
                     }
                     .fixedSize(horizontal: false, vertical: true)
                 }
+
+                HStack(spacing: 6) {
+                    Label(worker.education.name(in: scenario), systemImage: "graduationcap")
+                    Text(verbatim: "·").foregroundStyle(.secondary)
+                    Label(String(localized: "\(worker.yearsOfExperience) yrs in the trade", comment: "Candidate years of experience"),
+                          systemImage: "clock.arrow.circlepath")
+                }
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
 
                 Text(worker.archetype.traitName)
                     .font(.subheadline)

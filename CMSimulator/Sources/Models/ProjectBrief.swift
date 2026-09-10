@@ -289,6 +289,12 @@ struct ProjectBrief {
     /// operation cannot carry a building site's overheads, and charging it
     /// the same made ignoring every capability the optimal strategy.
     let capabilityCostFactor: Double
+    /// Headcount at which a capability costs its list price. Running a
+    /// quality function across forty people is not the same job as running
+    /// it across eight, so upkeep scales against the organisation you
+    /// actually built. Set to each scenario's natural size, which makes
+    /// the scaling free if you staff sensibly and punishing if you bloat.
+    let capabilityHeadcountReference: Double
     /// The market this scenario sells into. Nil for scenarios that have no
     /// customers - a building has a client, not a user base.
     let growth: GrowthSpec?
@@ -384,6 +390,7 @@ struct ProjectBrief {
             labourMarketFactor: Double.random(in: 0.88...1.22, using: &rng),
             marketVolatility: Double.random(in: 0.012...0.026, using: &rng) * difficulty.marketVolatilityFactor,
             capabilityCostFactor: 1.0,
+            capabilityHeadcountReference: 5,
             growth: nil,
             trade: nil,
             usesSupplyChain: true,
@@ -476,6 +483,7 @@ struct ProjectBrief {
             labourMarketFactor: Double.random(in: 0.95...1.35, using: &rng),
             marketVolatility: Double.random(in: 0.014...0.030, using: &rng) * difficulty.marketVolatilityFactor,
             capabilityCostFactor: 1.0,
+            capabilityHeadcountReference: 12,
             growth: .seedStageSaaS,
             trade: nil,
             usesSupplyChain: false,
@@ -555,6 +563,7 @@ struct ProjectBrief {
             labourMarketFactor: Double.random(in: 0.85...1.15, using: &rng),
             marketVolatility: Double.random(in: 0.018...0.038, using: &rng) * difficulty.marketVolatilityFactor,
             capabilityCostFactor: 0.42,
+            capabilityHeadcountReference: 8,
             growth: nil,
             trade: TradeSpec(
                 marketplace: .onlineMarketplace,

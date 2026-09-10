@@ -410,9 +410,21 @@ final class SimulationEngine: ObservableObject {
         }
     }
 
+    /// What every lever costs to run across the organisation you actually
+    /// have. Sublinear, so growing is a drag on your initiatives rather
+    /// than a wall, and clamped so neither a skeleton crew nor an empire
+    /// makes capabilities free or unpayable.
+    var organisationLoad: Double {
+        let heads = Double(workers.count)
+        guard heads > 0 else { return 0.75 }
+        let ratio = heads / max(1, brief.capabilityHeadcountReference)
+        return min(3.0, max(0.75, pow(ratio, 0.7)))
+    }
+
     private func payUpkeep(step: Double) {
-        let capabilityUpkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep } * brief.capabilityCostFactor
-        let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep } * brief.capabilityCostFactor
+        let scale = brief.capabilityCostFactor * organisationLoad
+        let capabilityUpkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep } * scale
+        let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep } * scale
         ledger.forceSpend((capabilityUpkeep + mitigationUpkeep) * step, into: \.capabilities)
 
         let riskLevel = level(of: .risk)
@@ -1064,7 +1076,7 @@ final class SimulationEngine: ObservableObject {
     func upgrade(_ kind: CapabilityKind) {
         guard let idx = capabilities.firstIndex(where: { $0.kind == kind }),
               capabilities[idx].isUnlocked, !capabilities[idx].isMaxed else { return }
-        let cost = capabilities[idx].nextLevelCost * brief.capabilityCostFactor
+        let cost = capabilities[idx].nextLevelCost * brief.capabilityCostFactor * organisationLoad
         guard ledger.spend(cost, into: \.capabilities) else {
             log(String(localized: "Not enough funds to staff \(kind.displayName(in: brief.scenario)).", comment: "Site log: capability unaffordable"),
                 symbol: "xmark.circle.fill", tone: .bad)

@@ -1079,4 +1079,23 @@ final class IncidentDeliveryTests: XCTestCase {
         XCTAssertLessThanOrEqual(engine.queuedEventCount, 4,
                                  "incident queue is not draining")
     }
+
+    /// Levers must get dearer as the organisation grows, or a big company
+    /// runs its initiatives at a small company's price and scale costs
+    /// nothing. Verified against headcount, not against a constant.
+    func testCapabilityUpkeepScalesWithHeadcount() {
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .standard, seed: 11))
+        let lean = engine.organisationLoad
+        for package in engine.workPackages where package.isUnlocked {
+            for _ in 0..<12 {
+                engine.requestHire(for: package.id)
+                if let r = engine.hiringRequest, let pick = r.candidates.first {
+                    engine.confirmHire(pick)
+                } else { engine.cancelHiring() }
+            }
+        }
+        XCTAssertGreaterThan(engine.workers.count, 8, "test needs a grown team to be meaningful")
+        XCTAssertGreaterThan(engine.organisationLoad, lean,
+                             "capability upkeep did not rise as the company grew")
+    }
 }

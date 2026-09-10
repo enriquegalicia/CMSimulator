@@ -258,6 +258,7 @@ final class SimulationEngine: ObservableObject {
         market.advance(days: step)
         receiveDeliveries()
         advanceWork(step: step)
+        demobiliseFinishedStreams()
         advanceRoster(step: step)
         payPayroll(step: step)
         payUpkeep(step: step)
@@ -356,6 +357,17 @@ final class SimulationEngine: ObservableObject {
                 workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
             }
 
+            // Attribute the day's output back to the people who made it,
+            // smoothed, so one starved day does not erase a good record.
+            let totalEffective = crew.reduce(0) { $0 + $1.effectiveOutput }
+            if totalEffective > 0, step > 0 {
+                let perUnitShare = produced / totalEffective / step
+                for wi in workers.indices where workers[wi].packageID == workPackages[i].id {
+                    let mine = workers[wi].effectiveOutput * perUnitShare
+                    workers[wi].recentOutput += (mine - workers[wi].recentOutput) * min(1, step / 7)
+                }
+            }
+
             var defectPerUnit = crew.reduce(0) { $0 + $1.defectRate(overtime: overtime) } / Double(crew.count)
             if workPackages[i].isFastTracked { defectPerUnit += CapabilityEffects.fastTrackDefectPenalty }
             defectPerUnit += workPackages[i].materialDefectPerUnit
@@ -379,6 +391,7 @@ final class SimulationEngine: ObservableObject {
             let isWorking = (package?.isUnlocked ?? false)
                 && !(package?.isComplete ?? true)
                 && !(package?.isStarvedOfMaterials ?? true)
+            if !isWorking { workers[i].recentOutput *= max(0, 1 - step / 7) }
             let wasTraining = workers[i].isInTraining
             workers[i].advance(days: step, overtime: overtime, isWorking: isWorking)
             if wasTraining, !workers[i].isInTraining {
@@ -403,12 +416,56 @@ final class SimulationEngine: ObservableObject {
     /// a trade leaving at the end of its works, not a layoff. Without it,
     /// finished crews would draw full pay to the end of the job and no
     /// amount of good play could turn a profit.
+    /// Anyone still sitting on finished work gets moved, wherever the
+    /// completion came from. Doing this inside the production loop alone
+    /// missed streams completed by a change order or by debug state.
+    private func demobiliseFinishedStreams() {
+        for package in workPackages where package.isComplete {
+            guard workers.contains(where: { $0.packageID == package.id }) else { continue }
+            demobilise(packageID: package.id, title: package.title)
+        }
+    }
+
+    /// A project consumes people and lets them go. A company keeps them
+    /// and has to find them something to do - which is where its money
+    /// goes, and why the bench is the startup's real burn.
     private func demobilise(packageID: WorkPackage.ID, title: String) {
-        let leaving = workers.filter { $0.packageID == packageID }
-        guard !leaving.isEmpty else { return }
-        workers.removeAll { $0.packageID == packageID }
-        log(String(localized: "\(leaving.count) released from \(title) — scope complete.", comment: "Site log: crew demobilised"),
-            symbol: "figure.walk.motion", tone: .neutral)
+        let affected = workers.filter { $0.packageID == packageID }
+        guard !affected.isEmpty else { return }
+
+        if brief.releasesStaffOnCompletion {
+            workers.removeAll { $0.packageID == packageID }
+            log(String(localized: "\(affected.count) released from \(title) — scope complete.", comment: "Site log: crew demobilised"),
+                symbol: "figure.walk.motion", tone: .neutral)
+        } else {
+            for i in workers.indices where workers[i].packageID == packageID {
+                workers[i].packageID = Worker.benchPackageID
+                workers[i].recentOutput = 0
+            }
+            log(String(localized: "\(title) finished. \(affected.count) now unassigned and still on payroll.", comment: "Site log: staff benched"),
+                symbol: "person.badge.clock", tone: .bad)
+        }
+    }
+
+    /// Everyone drawing a wage with nothing to work on.
+    var benchedWorkers: [Worker] { workers.filter(\.isOnBench) }
+    /// What the bench costs every day. Shown, not hidden in payroll.
+    var dailyBenchCost: Double { benchedWorkers.reduce(0) { $0 + $1.dailyWage } }
+
+    /// Move someone onto different work. Costs ramp, and costs more when
+    /// the new work draws on different skills.
+    func reassign(_ workerID: Worker.ID, to packageID: WorkPackage.ID) {
+        guard let w = workers.firstIndex(where: { $0.id == workerID }),
+              let target = workPackages.first(where: { $0.id == packageID }),
+              target.isUnlocked, !target.isComplete else { return }
+        let from = workPackages.first { $0.id == workers[w].packageID }
+        let sameFamily = from?.spec.skillFamily == target.spec.skillFamily
+        let name = workers[w].name
+        workers[w].reassign(to: packageID, sameFamily: sameFamily)
+        log(sameFamily
+            ? String(localized: "\(name) moved to \(target.title). Related work, so most of what they know carries over.", comment: "Site log: reassigned within family")
+            : String(localized: "\(name) moved to \(target.title). Different discipline — they start close to scratch.", comment: "Site log: reassigned across families"),
+            symbol: "arrow.triangle.swap", tone: sameFamily ? .neutral : .bad)
     }
 
     private func payPayroll(step: Double) {

@@ -183,6 +183,11 @@ enum WorkerArchetype: String, CaseIterable {
 // MARK: - Worker
 
 struct Worker: Identifiable {
+    /// Where people go when their stream finishes but the company does
+    /// not. Matches no work package, so a benched worker produces nothing
+    /// and is still paid every day - which is exactly the pressure.
+    static let benchPackageID: WorkPackage.ID = "__bench__"
+
     let id = UUID()
     let name: String
     let archetype: WorkerArchetype
@@ -208,6 +213,31 @@ struct Worker: Identifiable {
     /// whatever the level happens to be on the day they get back.
     var pendingSkillGain: Double = 0
     var pendingExperienceGain: Double = 0
+    /// Units per day this worker has actually been producing, smoothed.
+    /// The roster is unreadable without it: skill is a promise, this is
+    /// the delivery.
+    var recentOutput: Double = 0
+    /// How many times this person has been moved between streams. Each
+    /// move costs ramp, so a history of them explains a weak performer.
+    var reassignments: Int = 0
+
+    var isOnBench: Bool { packageID == Worker.benchPackageID }
+
+    /// Output per peso per day. The only fair way to rank a roster that
+    /// mixes apprentices at 240 a day with specialists at 980.
+    var valueForMoney: Double { dailyWage > 0 ? recentOutput / dailyWage : 0 }
+
+    /// Moving someone re-opens their ramp. Staying inside the same family
+    /// of work keeps most of what they know; crossing to another loses
+    /// most of it. This is what makes ping-ponging people expensive.
+    mutating func reassign(to newPackage: WorkPackage.ID, sameFamily: Bool) {
+        guard newPackage != packageID else { return }
+        packageID = newPackage
+        reassignments += 1
+        rampProgress = sameFamily ? 0.55 : 0.20
+        experience *= sameFamily ? 0.70 : 0.30
+        recentOutput = 0
+    }
 
     init(name: String, archetype: WorkerArchetype, packageID: WorkPackage.ID, marketWageFactor: Double = 1.0) {
         self.name = name

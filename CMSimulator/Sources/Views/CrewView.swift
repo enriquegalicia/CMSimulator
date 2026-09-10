@@ -21,16 +21,34 @@ struct CrewView: View {
     let spendingPower: Double
     let onFire: (Worker.ID) -> Void
     let onTrain: (Worker.ID) -> Void
+    /// Streams a person can be moved onto right now. Empty in scenarios
+    /// where finishing a stream sends people home instead.
+    let reassignableTo: [(id: String, title: String)]
+    let onReassign: (Worker.ID, String) -> Void
     let onExit: () -> Void
+
+    @State private var showByPerformance = false
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     @State private var confirmingFire: Worker?
 
     private var grouped: [(title: String, workers: [Worker])] {
         Dictionary(grouping: workers, by: \.packageID)
-            .map { (title: packageTitles[$0.key] ?? $0.key, workers: $0.value.sorted { $0.name < $1.name }) }
+            .map { (title: $0.key == Worker.benchPackageID
+                        ? String(localized: "Unassigned", comment: "Roster group for benched staff")
+                        : packageTitles[$0.key] ?? $0.key,
+                    workers: $0.value.sorted { $0.name < $1.name }) }
             .sorted { $0.title < $1.title }
     }
+
+    /// Everyone, best value first. Ranked on what they have actually been
+    /// producing per peso, not on the skill they were hired at.
+    private var byPerformance: [Worker] {
+        workers.sorted { $0.valueForMoney > $1.valueForMoney }
+    }
+
+    private var bench: [Worker] { workers.filter(\.isOnBench) }
+    private var benchCost: Double { bench.reduce(0) { $0 + $1.dailyWage } }
 
     var body: some View {
         NavigationStack {
@@ -46,10 +64,45 @@ struct CrewView: View {
                         Section {
                             payrollSummary
                         }
-                        ForEach(grouped, id: \.title) { group in
-                            Section(group.title) {
-                                ForEach(group.workers) { worker in
+
+                        if !bench.isEmpty {
+                            Section {
+                                Label(String(localized: "\(bench.count) people with nothing to work on, costing \(benchCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) a day.", comment: "Bench warning"),
+                                      systemImage: "person.badge.clock")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.orange)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            } footer: {
+                                Text("Move them onto open work or let them go. Doing neither is the most expensive option.", comment: "Bench explanation")
+                                    .font(.caption)
+                            }
+                        }
+
+                        Section {
+                            Picker(String(localized: "Sort", comment: "Roster sort control"), selection: $showByPerformance) {
+                                Text("By stream", comment: "Roster grouping").tag(false)
+                                Text("By performance", comment: "Roster grouping").tag(true)
+                            }
+                            .pickerStyle(.segmented)
+                        }
+
+                        if showByPerformance {
+                            Section {
+                                ForEach(byPerformance) { worker in
                                     workerRow(worker)
+                                }
+                            } header: {
+                                Text("Best value first", comment: "Performance list header")
+                            } footer: {
+                                Text("Output per day against what they cost per day. An apprentice at 260 a day can outrank a specialist at 940.", comment: "Performance explanation")
+                                    .font(.caption)
+                            }
+                        } else {
+                            ForEach(grouped, id: \.title) { group in
+                                Section(group.title) {
+                                    ForEach(group.workers) { worker in
+                                        workerRow(worker)
+                                    }
                                 }
                             }
                         }
@@ -122,9 +175,35 @@ struct CrewView: View {
                     .foregroundStyle(.secondary)
             }
 
-            Text(worker.archetype.traitName)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+            HStack(spacing: 6) {
+                Text(worker.archetype.traitName)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                if worker.isOnBench {
+                    Text("Unassigned", comment: "Worker status: on the bench")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.orange)
+                } else if showByPerformance, let title = packageTitles[worker.packageID] {
+                    Text(title)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                if worker.reassignments > 0 {
+                    Label("\(worker.reassignments)", systemImage: "arrow.triangle.swap")
+                        .font(.system(size: 9))
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            HStack(spacing: 4) {
+                Text("Delivering", comment: "Worker performance label")
+                    .font(.caption2).foregroundStyle(.secondary)
+                Text(String(format: "%.2f", worker.recentOutput))
+                    .font(.caption2.monospacedDigit().bold())
+                Text("units/day", comment: "Units per day suffix")
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
+            .foregroundStyle(worker.recentOutput < 0.15 ? Color.orange : Color.primary)
 
             if worker.isInTraining {
                 Label(String(localized: "In training, \(String(format: "%.1f", worker.trainingDaysRemaining)) days left — producing nothing", comment: "Worker status: in training"),
@@ -162,6 +241,19 @@ struct CrewView: View {
                     }
                     .buttonStyle(.bordered)
                     .disabled(worker.isInTraining || courseCost > spendingPower)
+                }
+                if !reassignableTo.isEmpty {
+                    Menu {
+                        ForEach(reassignableTo, id: \.id) { target in
+                            Button(target.title) { onReassign(worker.id, target.id) }
+                                .disabled(target.id == worker.packageID)
+                        }
+                    } label: {
+                        Label(String(localized: "Move", comment: "Reassign worker button"), systemImage: "arrow.triangle.swap")
+                            .font(.caption2)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(worker.isInTraining)
                 }
                 Spacer()
                 Button(role: .destructive) {

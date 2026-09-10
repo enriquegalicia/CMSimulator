@@ -1176,4 +1176,69 @@ final class VentureSetupTests: XCTestCase {
         XCTAssertGreaterThan(lean.scoreFactor(against: baseline),
                              comfy.scoreFactor(against: baseline))
     }
+
+}
+
+// MARK: - A project releases people; a company has to redeploy them
+
+@MainActor
+final class RosterLifecycleTests: XCTestCase {
+
+    /// Construction demobilises on completion. That is correct and must
+    /// stay correct.
+    func testConstructionReleasesStaffWhenAStreamFinishes() {
+        XCTAssertTrue(ProjectBrief.construction().releasesStaffOnCompletion)
+        XCTAssertFalse(ProjectBrief.startup().releasesStaffOnCompletion)
+        XCTAssertFalse(ProjectBrief.importBusiness().releasesStaffOnCompletion)
+    }
+
+    /// In a company, finishing a stream must not quietly delete payroll.
+    /// People land on the bench and keep costing money.
+    func testStartupBenchesStaffInsteadOfReleasingThem() {
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .steady, seed: 9))
+        guard let first = engine.workPackages.first(where: \.isUnlocked) else {
+            return XCTFail("no unlocked stream to staff")
+        }
+        for _ in 0..<4 {
+            engine.requestHire(for: first.id)
+            if let r = engine.hiringRequest, let pick = r.candidates.first { engine.confirmHire(pick) }
+            else { engine.cancelHiring() }
+        }
+        let hired = engine.workers.count
+        XCTAssertGreaterThan(hired, 0)
+
+        engine.debugSetUnitsCompleted(first.units, for: first.id)
+        engine.advance(byDays: 0.25)
+
+        XCTAssertEqual(engine.workers.count, hired, "a company lost people when a stream finished")
+        XCTAssertGreaterThan(engine.benchedWorkers.count, 0, "nobody landed on the bench")
+        XCTAssertGreaterThan(engine.dailyBenchCost, 0, "the bench is not costing anything")
+    }
+
+    /// Moving across disciplines has to cost more than moving within one,
+    /// or reassignment is free and the choice is meaningless.
+    func testCrossDisciplineMovesCostMoreThanRelatedOnes() {
+        var near = Worker(name: "A", archetype: .allRounder, packageID: "discovery")
+        var far = Worker(name: "B", archetype: .allRounder, packageID: "discovery")
+        near.experience = 0.8; near.rampProgress = 1
+        far.experience = 0.8; far.rampProgress = 1
+
+        near.reassign(to: "platform", sameFamily: true)
+        far.reassign(to: "payments", sameFamily: false)
+
+        XCTAssertGreaterThan(near.rampProgress, far.rampProgress)
+        XCTAssertGreaterThan(near.experience, far.experience)
+        XCTAssertEqual(near.reassignments, 1)
+    }
+
+    /// The roster ranks on delivery per peso, so a cheap producer can
+    /// outrank an expensive one. Without that, "cut by performance" just
+    /// means "cut the cheapest".
+    func testValueForMoneyRanksDeliveryAgainstWage() {
+        var cheap = Worker(name: "Apprentice", archetype: .apprentice, packageID: "x")
+        var dear = Worker(name: "Specialist", archetype: .specialist, packageID: "x")
+        cheap.dailyWage = 260; cheap.recentOutput = 0.9
+        dear.dailyWage = 940; dear.recentOutput = 1.6
+        XCTAssertGreaterThan(cheap.valueForMoney, dear.valueForMoney)
+    }
 }

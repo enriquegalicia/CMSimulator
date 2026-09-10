@@ -118,6 +118,12 @@ struct GameView: View {
                      spendingPower: engine.ledger.spendingPower,
                      onFire: { engine.fire(workerID: $0) },
                      onTrain: { engine.enrollInTraining($0) },
+                     reassignableTo: engine.brief.releasesStaffOnCompletion
+                        ? []
+                        : engine.workPackages
+                            .filter { $0.isUnlocked && !$0.isComplete }
+                            .map { (id: $0.id, title: $0.title) },
+                     onReassign: { engine.reassign($0, to: $1) },
                      onExit: { showCrew = false })
         }
         .sheet(isPresented: $showRisk) {

@@ -1331,4 +1331,70 @@ final class VentureTests: XCTestCase {
         let covered = Set(deck.map(\.mitigationClass))
         XCTAssertTrue(covered.contains(.security))
     }
+
+}
+
+// MARK: - Where you buy decides what can kill you
+
+@MainActor
+final class SourcingTests: XCTestCase {
+
+    /// The trade has to be legible in one line: cheap, far and exposed
+    /// against dear, near and safe. If any origin wins on every axis the
+    /// decision is not a decision.
+    func testNoOriginIsBestOnEveryAxis() {
+        for origin in SourceOrigin.allCases {
+            let cheaper = SourceOrigin.allCases.filter { $0.costFactor < origin.costFactor }
+            let faster = SourceOrigin.allCases.filter { $0.leadTimeDays < origin.leadTimeDays }
+            let safer = SourceOrigin.allCases.filter { $0.tariffRate < origin.tariffRate }
+            XCTAssertFalse(cheaper.isEmpty && faster.isEmpty && safer.isEmpty,
+                           "\(origin.rawValue) is cheapest, fastest and least exposed all at once")
+        }
+        // The dearest goods must be the ones with no border risk, or
+        // paying the premium buys nothing.
+        let dearest = SourceOrigin.allCases.max { $0.costFactor < $1.costFactor }!
+        XCTAssertEqual(dearest, .domestic, "the dearest goods should be the safe harbour")
+        XCTAssertEqual(SourceOrigin.domestic.tariffRate, 0)
+        XCTAssertGreaterThan(SourceOrigin.chinaWholesale.tariffRate, 0.1)
+    }
+
+    /// A customs broker is the "great dealer" - it must materially change
+    /// the duty bill, not decorate it.
+    func testACustomsBrokerCutsTheDutyBill() {
+        guard let spec = ProjectBrief.importBusiness(seed: 2).trade else { return XCTFail("no trade spec") }
+        let goods = spec.landedCost(from: .chinaWholesale)
+        let without = spec.duty(on: goods, from: .chinaWholesale, hasBroker: false)
+        let with = spec.duty(on: goods, from: .chinaWholesale, hasBroker: true)
+        XCTAssertGreaterThan(without, 0)
+        XCTAssertLessThan(with, without)
+        // Domestic goods have no border to negotiate.
+        XCTAssertEqual(spec.duty(on: goods, from: .domestic, hasBroker: false), 0)
+    }
+
+    /// Duty was previously folded into one landed cost, which meant every
+    /// origin paid China's tariff. Goods and duty have to price separately.
+    func testGoodsAndDutyArePricedSeparatelyPerOrigin() {
+        guard let spec = ProjectBrief.importBusiness(seed: 6).trade else { return XCTFail("no trade spec") }
+        XCTAssertLessThan(spec.landedCost(from: .chinaWholesale), spec.landedCost(from: .domestic))
+        XCTAssertGreaterThan(
+            spec.landedCost(from: .chinaWholesale) + spec.duty(on: spec.landedCost(from: .chinaWholesale), from: .chinaWholesale, hasBroker: false),
+            spec.landedCost(from: .chinaWholesale))
+    }
+
+    /// Each niche has to be a different business, and it must move cost as
+    /// well as price - otherwise picking the dearest niche is free margin.
+    func testNichesAreDistinctAndMoveBothEnds() {
+        XCTAssertEqual(Set(ProductNiche.allCases.map(\.returnFactor)).count, ProductNiche.allCases.count)
+        XCTAssertEqual(Set(ProductNiche.allCases.map(\.seasonalityFactor)).count, ProductNiche.allCases.count)
+        XCTAssertGreaterThan(ProductNiche.apparel.returnFactor, ProductNiche.tools.returnFactor * 3)
+
+        // Cost scales with the niche's price level, so margin is not a gift.
+        let dear = TradeSpec(marketplace: .onlineMarketplace, seasonPeakDay: 60, seasonWidth: 34,
+                             peakDailyDemand: 1000, baselineDailyDemand: 200,
+                             landedCostPerUnit: 7.30, tradingStreamID: "x", niche: .electronics)
+        let cheap = TradeSpec(marketplace: .onlineMarketplace, seasonPeakDay: 60, seasonWidth: 34,
+                              peakDailyDemand: 1000, baselineDailyDemand: 200,
+                              landedCostPerUnit: 7.30, tradingStreamID: "x", niche: .toys)
+        XCTAssertGreaterThan(dear.landedCost(from: .chinaWholesale), cheap.landedCost(from: .chinaWholesale))
+    }
 }

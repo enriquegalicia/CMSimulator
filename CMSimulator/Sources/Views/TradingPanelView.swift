@@ -25,6 +25,11 @@ struct TradingPanelView: View {
     let onSetPrice: (Double) -> Void
     let onSetAdSpend: (Double) -> Void
     let onBuyStock: () -> Void
+    let origin: SourceOrigin
+    let hasCustomsBroker: Bool
+    let dutyPaid: Double
+    let landedCost: (SourceOrigin) -> Double
+    let onSetOrigin: (SourceOrigin) -> Void
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
 
@@ -38,6 +43,8 @@ struct TradingPanelView: View {
     var body: some View {
         VStack(spacing: 12) {
             if !trading.isTrading { preTradingCard }
+            nicheCard
+            sourcingCard
             stockCard
             if trading.isTrading {
                 marginCard
@@ -62,6 +69,101 @@ struct TradingPanelView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    // MARK: What you sell
+
+    private var nicheCard: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(trading.niche.name, systemImage: "shippingbox.circle.fill")
+                .font(.headline)
+            Text(trading.niche.obsolescence)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 14) {
+                stat(String(localized: "Returns", comment: "Niche stat"),
+                     trading.niche.returnFactor, suffix: "×",
+                     tint: trading.niche.returnFactor > 1.4 ? .red : .primary)
+                stat(String(localized: "Seasonality", comment: "Niche stat"),
+                     trading.niche.seasonalityFactor, suffix: "×",
+                     tint: trading.niche.seasonalityFactor > 1.4 ? .orange : .primary)
+                stat(String(localized: "Price level", comment: "Niche stat"),
+                     trading.niche.priceFactor, suffix: "×")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    // MARK: Where you buy
+
+    private var sourcingCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Where you buy", comment: "Sourcing section header")
+                .font(.headline)
+
+            Picker(String(localized: "Origin", comment: "Sourcing picker label"),
+                   selection: Binding(get: { origin }, set: onSetOrigin)) {
+                ForEach(SourceOrigin.allCases) { candidate in
+                    Text(candidate.name).tag(candidate)
+                }
+            }
+            .pickerStyle(.menu)
+
+            Text(origin.channel)
+                .font(.caption.bold())
+            Text(origin.summary)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Divider()
+
+            row(String(localized: "Goods, per unit", comment: "Sourcing line"), landedCost(origin))
+            HStack {
+                Text(String(localized: "Duty at \(origin.tariffRate, format: .percent.precision(.fractionLength(0)))", comment: "Sourcing duty line"))
+                    .font(.subheadline)
+                Spacer()
+                Text(landedCost(origin) * origin.tariffRate * (hasCustomsBroker ? 0.55 : 1),
+                     format: cents)
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(origin.tariffRate > 0 ? .red : .secondary)
+            }
+            if origin.tariffRate > 0 {
+                Label(hasCustomsBroker
+                      ? String(localized: "Your customs broker is taking about 45% off that bill.", comment: "Broker active")
+                      : String(localized: "No customs broker. A reclassification here goes straight through your margin.", comment: "No broker"),
+                      systemImage: hasCustomsBroker ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
+                    .font(.caption2)
+                    .foregroundStyle(hasCustomsBroker ? .green : .orange)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 14) {
+                stat(String(localized: "Lead time", comment: "Sourcing stat"), origin.leadTimeDays, suffix: "d")
+                stat(String(localized: "Minimum", comment: "Sourcing stat"), origin.minimumOrder, suffix: "u")
+                stat(String(localized: "Defects", comment: "Sourcing stat"), origin.defectRate * 100, suffix: "%",
+                     tint: origin.defectRate > 0.05 ? .red : .primary)
+            }
+
+            if dutyPaid > 1 {
+                Text(String(localized: "\(dutyPaid, format: money) paid in duty so far this run.", comment: "Duty paid to date"))
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
+        }
+        .padding(14)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func stat(_ label: String, _ value: Double, suffix: String, tint: Color = .primary) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(label).font(.caption2).foregroundStyle(.secondary)
+            Text("\(value.formatted(.number.precision(.fractionLength(value < 10 ? 1 : 0))))\(suffix)")
+                .font(.subheadline.bold().monospacedDigit())
+                .foregroundStyle(tint)
+        }
     }
 
     // MARK: Stock

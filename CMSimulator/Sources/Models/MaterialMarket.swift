@@ -157,6 +157,9 @@ struct MaterialOrder: Identifiable {
     /// Carried through to delivery so vendor quality lands as defects on
     /// the work actually built from this batch.
     let vendorDefectPerUnit: Double
+    /// Where a stock consignment was bought. Nil for construction
+    /// materials, which have no origin decision attached.
+    var origin: SourceOrigin? = nil
     var hasSlipped = false
 
     func daysOut(from currentDay: Double) -> Double { max(0, arrivalDay - currentDay) }

@@ -37,7 +37,7 @@ import Foundation
 /// they arrive in the same shape and for the same reason.
 struct MarketplaceSpec {
     /// Share of the sale price the platform takes. 15% is the common case.
-    let referralFeeRate: Double
+    var referralFeeRate: Double
     /// Flat per-unit charge to pick, pack and ship.
     let fulfilmentFeePerUnit: Double
     /// Storage, per unit per day, while it sits unsold.
@@ -50,11 +50,11 @@ struct MarketplaceSpec {
     let longTermAfterDays: Double
     let longTermStorageMultiplier: Double
     /// Share of sold units that come back, before quality effects.
-    let baseReturnRate: Double
+    var baseReturnRate: Double
     /// Days between a sale and the money actually landing.
     let payoutDelayDays: Double
     /// The price shoppers expect. Pricing above it costs volume.
-    let referencePrice: Double
+    var referencePrice: Double
     /// How sharply volume responds to price. Above 1 means undercutting
     /// wins share faster than it loses margin.
     let priceElasticity: Double
@@ -139,9 +139,18 @@ struct TradingModel {
 
     private var dayAccumulator: Double = 0
 
-    init(spec: MarketplaceSpec) {
-        self.spec = spec
-        self.listPrice = spec.referencePrice
+    /// What is being sold. Returns, seasonality and what shoppers expect
+    /// to pay all key off it.
+    let niche: ProductNiche
+
+    init(spec: MarketplaceSpec, niche: ProductNiche = .homeGoods) {
+        self.niche = niche
+        // Shoppers price a drill and a t-shirt differently.
+        var adjusted = spec
+        adjusted.referencePrice = (spec.referencePrice * niche.priceFactor).rounded()
+        adjusted.baseReturnRate = spec.baseReturnRate * niche.returnFactor
+        self.spec = adjusted
+        self.listPrice = adjusted.referencePrice
     }
 
     // MARK: Derived
@@ -353,6 +362,178 @@ struct TradingModel {
 // MARK: - Scenario parameters
 
 /// Everything a brief needs to describe a resale market.
+/// Where the goods come from. This is the decision the whole scenario
+/// turns on, and it is a geography decision: cheap, far and exposed
+/// against dear, near and safe. A tariff move is survivable on domestic
+/// cost and fatal on Chinese cost when a whole season is committed.
+enum SourceOrigin: String, CaseIterable, Identifiable {
+    case chinaWholesale
+    case chinaRetail
+    case vietnam
+    case india
+    case domestic
+
+    var id: String { rawValue }
+
+    var name: String {
+        switch self {
+        case .chinaWholesale: return String(localized: "China — wholesale", comment: "Sourcing origin")
+        case .chinaRetail: return String(localized: "China — small lots", comment: "Sourcing origin")
+        case .vietnam: return String(localized: "Vietnam", comment: "Sourcing origin")
+        case .india: return String(localized: "India", comment: "Sourcing origin")
+        case .domestic: return String(localized: "Domestic", comment: "Sourcing origin")
+        }
+    }
+
+    /// The channel you actually buy through, which is what a trader
+    /// recognises before they recognise a country.
+    var channel: String {
+        switch self {
+        case .chinaWholesale: return String(localized: "Alibaba, direct from the factory", comment: "Sourcing channel")
+        case .chinaRetail: return String(localized: "AliExpress and Temu-style resellers", comment: "Sourcing channel")
+        case .vietnam: return String(localized: "Trading company, factory-backed", comment: "Sourcing channel")
+        case .india: return String(localized: "Export agent", comment: "Sourcing channel")
+        case .domestic: return String(localized: "Local distributor", comment: "Sourcing channel")
+        }
+    }
+
+    /// Unit cost against Chinese wholesale at 1.00.
+    var costFactor: Double {
+        switch self {
+        case .chinaWholesale: return 1.00
+        case .chinaRetail: return 1.30
+        case .vietnam: return 1.10
+        case .india: return 1.08
+        case .domestic: return 1.95
+        }
+    }
+
+    var leadTimeDays: Double {
+        switch self {
+        case .chinaWholesale: return 38
+        case .chinaRetail: return 18
+        case .vietnam: return 40
+        case .india: return 45
+        case .domestic: return 7
+        }
+    }
+
+    /// Smallest order worth placing. Cheap goods come in large lots, which
+    /// is how the cash gets locked up.
+    var minimumOrder: Double {
+        switch self {
+        case .chinaWholesale: return 900
+        case .chinaRetail: return 0
+        case .vietnam: return 500
+        case .india: return 500
+        case .domestic: return 80
+        }
+    }
+
+    /// Duty as a share of goods value, before any brokerage.
+    var tariffRate: Double {
+        switch self {
+        case .chinaWholesale: return 0.20
+        case .chinaRetail: return 0.16
+        case .vietnam: return 0.10
+        case .india: return 0.12
+        case .domestic: return 0
+        }
+    }
+
+    /// Extra defects per unit. Buying blind from a reseller costs you in
+    /// returns and in rating, not in the purchase price.
+    var defectRate: Double {
+        switch self {
+        case .chinaWholesale: return 0.020
+        case .chinaRetail: return 0.075
+        case .vietnam: return 0.022
+        case .india: return 0.030
+        case .domestic: return 0.008
+        }
+    }
+
+    /// Whether the price moves with the exchange rate.
+    var isFXExposed: Bool { self != .domestic }
+
+    var summary: String {
+        switch self {
+        case .chinaWholesale: return String(localized: "Cheapest unit price there is, and the highest duty. Big minimum orders lock your cash up for weeks.", comment: "Sourcing summary")
+        case .chinaRetail: return String(localized: "Buy in any quantity and have it fast. You pay for that in unit price and in what turns up defective.", comment: "Sourcing summary")
+        case .vietnam: return String(localized: "A little dearer than China with far less duty exposure. The supplier pool is thinner.", comment: "Sourcing summary")
+        case .india: return String(localized: "Competitive on price, slow, and the paperwork goes wrong more often.", comment: "Sourcing summary")
+        case .domestic: return String(localized: "No duty, no currency risk, here in a week. You are paying half again for all of that.", comment: "Sourcing summary")
+        }
+    }
+}
+
+/// What you actually sell. Each niche is a different business: apparel
+/// returns at triple the rate of tools, electronics carry certification
+/// and a dead-stock cliff.
+enum ProductNiche: String, CaseIterable, Identifiable {
+    case electronics
+    case homeGoods
+    case apparel
+    case tools
+    case toys
+
+    var id: String { rawValue }
+
+    var name: String {
+        switch self {
+        case .electronics: return String(localized: "Consumer electronics", comment: "Product niche")
+        case .homeGoods: return String(localized: "Home goods", comment: "Product niche")
+        case .apparel: return String(localized: "Apparel", comment: "Product niche")
+        case .tools: return String(localized: "Tools & hardware", comment: "Product niche")
+        case .toys: return String(localized: "Toys & games", comment: "Product niche")
+        }
+    }
+
+    /// Multiplier on the marketplace's base return rate.
+    var returnFactor: Double {
+        switch self {
+        case .electronics: return 1.6
+        case .homeGoods: return 0.9
+        case .apparel: return 3.1
+        case .tools: return 0.7
+        case .toys: return 1.2
+        }
+    }
+
+    /// How sharply demand collapses outside the season.
+    var seasonalityFactor: Double {
+        switch self {
+        case .electronics: return 1.3
+        case .homeGoods: return 0.8
+        case .apparel: return 1.5
+        case .tools: return 0.6
+        case .toys: return 2.2
+        }
+    }
+
+    /// What shoppers expect to pay, against the marketplace reference.
+    var priceFactor: Double {
+        switch self {
+        case .electronics: return 1.7
+        case .homeGoods: return 0.9
+        case .apparel: return 0.8
+        case .tools: return 1.2
+        case .toys: return 0.7
+        }
+    }
+
+    /// How fast unsold stock stops being worth anything.
+    var obsolescence: String {
+        switch self {
+        case .electronics: return String(localized: "Last year's model is worth a fraction of this year's.", comment: "Niche obsolescence")
+        case .homeGoods: return String(localized: "Holds its value. Slow, dull and forgiving.", comment: "Niche obsolescence")
+        case .apparel: return String(localized: "Out of season is out of money, and sizing drives the returns.", comment: "Niche obsolescence")
+        case .tools: return String(localized: "Barely dates at all. The safest thing to be left holding.", comment: "Niche obsolescence")
+        case .toys: return String(localized: "One season, then it is clearance.", comment: "Niche obsolescence")
+        }
+    }
+}
+
 struct TradeSpec {
     let marketplace: MarketplaceSpec
     /// Day the selling season peaks. Drawn from the run's seed, and not
@@ -364,17 +545,41 @@ struct TradeSpec {
     let peakDailyDemand: Double
     /// Units a day outside the season.
     let baselineDailyDemand: Double
-    /// Factory price plus freight and duty, before the currency index.
+    /// Factory price plus freight, before duty and the currency index.
+    /// Duty is charged separately now that origin is a decision - folding
+    /// it in here once meant every origin paid China's tariff.
     let landedCostPerUnit: Double
     /// Completing this stream is what puts you on sale.
     let tradingStreamID: String
+    /// What this operation sells. Drawn from the seed, and it changes the
+    /// business substantially - returns, seasonality and what shoppers
+    /// will pay are all downstream of it.
+    let niche: ProductNiche
+
+    /// Factory price from a given origin, before duty and the currency
+    /// index. The origin is the decision; this is its price tag.
+    func landedCost(from origin: SourceOrigin) -> Double {
+        // A pair of headphones costs more to buy and sells for more than a
+        // pair of socks. The niche moves both ends, so it changes the
+        // shape of the business without simply handing out margin.
+        landedCostPerUnit * origin.costFactor * niche.priceFactor
+    }
+
+    /// Duty on a consignment, after whatever a customs broker saves you.
+    /// "A great dealer" is exactly this: the difference between a duty
+    /// bill you priced for and one that eats the season.
+    func duty(on goodsValue: Double, from origin: SourceOrigin, hasBroker: Bool) -> Double {
+        goodsValue * origin.tariffRate * (hasBroker ? 0.55 : 1.0)
+    }
 
     /// Demand on a given day at a given range breadth. A bell around the
     /// peak on top of a baseline - the shape every seasonal trade has.
     func demand(on day: Double, breadth: Double) -> Double {
         let z = (day - seasonPeakDay) / seasonWidth
-        let seasonal = peakDailyDemand * exp(-0.5 * z * z)
-        return (baselineDailyDemand + seasonal) * min(1, max(0, breadth))
+        let seasonal = peakDailyDemand * exp(-0.5 * z * z) * niche.seasonalityFactor
+        // A sharply seasonal niche has less to fall back on out of season.
+        let floor = baselineDailyDemand / niche.seasonalityFactor
+        return (floor + seasonal) * min(1, max(0, breadth))
     }
 }
 

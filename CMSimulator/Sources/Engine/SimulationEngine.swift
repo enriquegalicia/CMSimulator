@@ -100,6 +100,12 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var extensionUsed = false
     /// What Discovery established this company to be. Nil until it lands.
     @Published private(set) var venture: VentureKind?
+    /// Where stock is currently bought from. A standing decision, changed
+    /// between orders, and the one the whole scenario turns on.
+    @Published var sourceOrigin: SourceOrigin = .chinaWholesale
+    /// Duty paid this run, kept separate from the goods so the debrief can
+    /// say plainly what the border cost you.
+    @Published private(set) var dutyPaid: Double = 0
     /// Angel investors currently on the table, and whether a search is on.
     @Published private(set) var angelProspects: [AngelProspect] = []
     @Published private(set) var isSearchingForAngels = false
@@ -157,7 +163,7 @@ final class SimulationEngine: ObservableObject {
         self.workPackages = brief.streams.map { WorkPackage(spec: $0) }
         self.capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         self.growth = brief.growth.map(GrowthModel.init(spec:))
-        self.trading = brief.trade.map { TradingModel(spec: $0.marketplace) }
+        self.trading = brief.trade.map { TradingModel(spec: $0.marketplace, niche: $0.niche) }
         configureFreshRun()
     }
 
@@ -198,7 +204,7 @@ final class SimulationEngine: ObservableObject {
         workPackages = next.streams.map { WorkPackage(spec: $0) }
         capabilities = CapabilityKind.allCases.map { Capability(kind: $0) }
         growth = next.growth.map(GrowthModel.init(spec:))
-        trading = next.trade.map { TradingModel(spec: $0.marketplace) }
+        trading = next.trade.map { TradingModel(spec: $0.marketplace, niche: $0.niche) }
         exitOffer = nil
         seasonClose = nil
         workers = []
@@ -220,6 +226,8 @@ final class SimulationEngine: ObservableObject {
         eventQueue.removeAll()
         activeEventAge = 0
         venture = nil
+        sourceOrigin = .chinaWholesale
+        dutyPaid = 0
         angelProspects.removeAll()
         isSearchingForAngels = false
         angelSearchDays = 0
@@ -641,14 +649,17 @@ final class SimulationEngine: ObservableObject {
                 // Landed cost is what you paid, spread over the units that
                 // actually arrived - that is the number every later
                 // calculation is measured against.
-                let landedCost = order.quantity > 0 ? order.pricePaid / order.quantity : spec.landedCostPerUnit
+                let landedCost = order.quantity > 0
+                    ? order.pricePaid / order.quantity
+                    : spec.landedCost(from: order.origin ?? sourceOrigin)
                 // Pre-shipment inspection catches bad batches at the
                 // factory, before you have paid to ship and store them.
                 let inspection = [1.0, 0.62, 0.40, 0.24][min(level(of: .quality), 3)]
+                let origin = order.origin ?? sourceOrigin
                 trading?.receive(units: order.quantity, landedCostPerUnit: landedCost,
-                                 defectRate: order.vendorDefectPerUnit * 15 * inspection,
+                                 defectRate: (order.vendorDefectPerUnit * 15 + origin.defectRate) * inspection,
                                  onDay: elapsedDays)
-                log(String(localized: "\(Int(order.quantity).formatted()) units cleared customs and are sellable.", comment: "Site log: stock arrived"),
+                log(String(localized: "\(Int(order.quantity).formatted()) units cleared customs from \(origin.name).", comment: "Site log: stock arrived from an origin"),
                     symbol: "shippingbox.fill", tone: .good)
                 continue
             }
@@ -1416,13 +1427,18 @@ final class SimulationEngine: ObservableObject {
     func requestStockOrder() {
         guard let spec = brief.trade else { return }
         let discount = 1 - CapabilityEffects.materialDiscount(level: level(of: .procurement))
+        let origin = sourceOrigin
+        // Duty rides on the unit price, so the sheet shows the true cost
+        // of the border rather than the factory price alone.
+        let goods = spec.landedCost(from: origin) * discount
+        let perUnitDuty = spec.duty(on: goods, from: origin, hasBroker: mitigationsHeld.contains(.client))
         orderRequest = MaterialOrderRequest(
             id: Self.stockOrderID,
-            packageTitle: String(localized: "Stock", comment: "Order sheet title for a stock purchase"),
+            packageTitle: String(localized: "Stock — \(origin.name)", comment: "Order sheet title for a stock purchase"),
             vendors: vendors,
-            suggestedQuantity: suggestedStockQuantity,
-            baseCostPerUnit: spec.landedCostPerUnit * discount,
-            baseLeadTimeDays: 26 * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
+            suggestedQuantity: max(origin.minimumOrder, suggestedStockQuantity),
+            baseCostPerUnit: goods + perUnitDuty,
+            baseLeadTimeDays: origin.leadTimeDays * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
             marketIndex: market.effectiveIndex,
             isLocked: market.isLocked,
             inputName: nil
@@ -1487,6 +1503,14 @@ final class SimulationEngine: ObservableObject {
                                   pricePaid: total, arrivalDay: elapsedDays + leadTime,
                                   orderedDay: elapsedDays, vendorDefectPerUnit: vendor.defectPerUnit)
         order.hasSlipped = slipped
+        if request.id == Self.stockOrderID, let spec = brief.trade {
+            order.origin = sourceOrigin
+            // Record what the border took, separately from the goods, so
+            // the debrief can say it plainly.
+            let goods = spec.landedCost(from: sourceOrigin)
+            dutyPaid += spec.duty(on: goods, from: sourceOrigin,
+                                  hasBroker: mitigationsHeld.contains(.client)) * quantity
+        }
         orders.append(order)
 
         log(String(localized: "Ordered \(Int(quantity)) units from \(vendor.name), \(Int(leadTime)) days out.", comment: "Site log: order placed"),

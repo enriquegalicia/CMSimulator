@@ -626,8 +626,9 @@ struct ProjectBrief {
                 seasonWidth: 34,
                 peakDailyDemand: 1_450 * amplitude,
                 baselineDailyDemand: 210,
-                landedCostPerUnit: 9.40,
-                tradingStreamID: "firstline"
+                landedCostPerUnit: 7.30,
+                tradingStreamID: "firstline",
+                niche: ProductNiche.allCases.randomElement(using: &rng) ?? .homeGoods
             ),
             usesSupplyChain: true,
             launchStreamID: "firstline"

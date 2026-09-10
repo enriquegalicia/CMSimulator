@@ -365,7 +365,12 @@ struct GameView: View {
                              dailyBurn: engine.dailyBurn,
                              onSetPrice: { engine.setListPrice($0) },
                              onSetAdSpend: { engine.setAdSpend($0) },
-                             onBuyStock: { engine.requestStockOrder() })
+                             onBuyStock: { engine.requestStockOrder() },
+                             origin: engine.sourceOrigin,
+                             hasCustomsBroker: engine.mitigationsHeld.contains(.client),
+                             dutyPaid: engine.dutyPaid,
+                             landedCost: { engine.brief.trade?.landedCost(from: $0) ?? 0 },
+                             onSetOrigin: { engine.sourceOrigin = $0 })
         }
     }
 

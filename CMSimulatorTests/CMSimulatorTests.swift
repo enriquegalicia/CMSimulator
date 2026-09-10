@@ -369,7 +369,7 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(scenario: .construction, exitOffer: nil, founderEquity: 1,
+        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, founderEquity: 1,
                                capitalRaised: 0, launchDay: nil,
                                outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
@@ -381,7 +381,7 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(scenario: .construction, exitOffer: nil, founderEquity: 1,
+            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, founderEquity: 1,
                       capitalRaised: 0, launchDay: nil,
                       outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
@@ -881,7 +881,7 @@ final class StartupEconomicsTests: XCTestCase {
     /// however tidy the books look.
     func testNeverLaunchingScoresZero() {
         let result = RunResult(
-            scenario: .startup, exitOffer: nil, founderEquity: 1, capitalRaised: 0,
+            scenario: .startup, exitOffer: nil, seasonClose: nil, founderEquity: 1, capitalRaised: 0,
             launchDay: nil, outcome: .delivered, profit: 5_000_000, revenue: 6_000_000,
             costs: CostBreakdown(), days: 150, deadlineDays: 150, progress: 100,
             openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 4,

@@ -1943,6 +1943,24 @@
       },
       "comment": "Trading control: advertising explanation"
     },
+    "Came back as returns": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Came back as returns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regresaron como devoluciones"
+          }
+        }
+      }
+    },
     "Cancel": {
       "extractionState": "manual",
       "localizations": {
@@ -2355,6 +2373,24 @@
         }
       },
       "comment": "Help bullet"
+    },
+    "Company sold": {
+      "extractionState": "manual",
+      "comment": "Result title, startup exit",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Company sold"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empresa vendida"
+          }
+        }
+      }
     },
     "Company sold for": {
       "extractionState": "manual",
@@ -4118,6 +4154,24 @@
       },
       "comment": "Capability name"
     },
+    "Gross sales": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gross sales"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ventas brutas"
+          }
+        }
+      }
+    },
     "Growth": {
       "extractionState": "manual",
       "localizations": {
@@ -4423,6 +4477,24 @@
         }
       },
       "comment": "Order sheet section header"
+    },
+    "How the season went": {
+      "extractionState": "manual",
+      "comment": "Result section header",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How the season went"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cómo salió la temporada"
+          }
+        }
+      }
     },
     "How to play": {
       "extractionState": "manual",
@@ -5144,6 +5216,24 @@
       },
       "comment": "Margin line"
     },
+    "Left unsold and dumped": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left unsold and dumped"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quedaron sin vender y se remataron"
+          }
+        }
+      }
+    },
     "Let %@ go?": {
       "extractionState": "manual",
       "localizations": {
@@ -5305,6 +5395,24 @@
         }
       },
       "comment": "Board tab"
+    },
+    "Lost on stock nobody wanted": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lost on stock nobody wanted"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perdido en mercancía que nadie quiso"
+          }
+        }
+      }
     },
     "Low": {
       "extractionState": "manual",
@@ -7196,6 +7304,24 @@
       },
       "comment": "Mitigation description"
     },
+    "Refunds on returns": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refunds on returns"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reembolsos por devoluciones"
+          }
+        }
+      }
+    },
     "Resilience": {
       "extractionState": "manual",
       "localizations": {
@@ -7717,6 +7843,24 @@
         }
       },
       "comment": "End of the run"
+    },
+    "Season closed": {
+      "extractionState": "manual",
+      "comment": "Result title, season end",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Season closed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temporada cerrada"
+          }
+        }
+      }
     },
     "Seasonal specialist": {
       "extractionState": "manual",
@@ -8456,6 +8600,24 @@
       },
       "comment": "Cost breakdown line"
     },
+    "Storage while it sat": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage while it sat"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almacenaje mientras esperaba"
+          }
+        }
+      }
+    },
     "Storm hits the site": {
       "extractionState": "manual",
       "localizations": {
@@ -8996,6 +9158,42 @@
       },
       "comment": "Incident title"
     },
+    "The marketplace kept %@ of everything you sold, and %@ of it came back.": {
+      "extractionState": "manual",
+      "comment": "Season summary",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The marketplace kept %@ of everything you sold, and %@ of it came back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El marketplace se quedó con %@ de todo lo que vendiste, y %@ te lo regresaron."
+          }
+        }
+      }
+    },
+    "The marketplace took": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The marketplace took"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El marketplace se llevó"
+          }
+        }
+      }
+    },
     "The offer": {
       "extractionState": "manual",
       "localizations": {
@@ -9067,6 +9265,24 @@
         }
       },
       "comment": "Diagnostic detail"
+    },
+    "The selling season ran %lld days. Whatever was left has been dumped.": {
+      "extractionState": "manual",
+      "comment": "Result subtitle, season end",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The selling season ran %lld days. Whatever was left has been dumped."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La temporada de ventas duró %lld días. Lo que sobró se remató."
+          }
+        }
+      }
     },
     "The six levers": {
       "extractionState": "manual",
@@ -9481,6 +9697,24 @@
         }
       },
       "comment": "Trading panel stat"
+    },
+    "Units sold": {
+      "extractionState": "manual",
+      "comment": "Season line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Units sold"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unidades vendidas"
+          }
+        }
+      }
     },
     "Use": {
       "extractionState": "manual",

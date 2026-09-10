@@ -29,6 +29,7 @@ struct ResultView: View {
                 banner
                 if delivered { headline }
                 exitCard
+                seasonCard
                 ledgerCard
                 operationsCard
                 saveCard
@@ -44,9 +45,7 @@ struct ResultView: View {
             Image(systemName: delivered ? "flag.checkered" : "xmark.octagon.fill")
                 .font(.system(size: 44))
                 .foregroundStyle(delivered ? .green : .red)
-            Text(delivered
-                 ? String(localized: "Project handed over", comment: "Result title, success")
-                 : String(localized: "Insolvent", comment: "Result title, failure"))
+            Text(headlineTitle)
                 .font(.title.bold())
             Text(subtitle)
                 .font(.subheadline)
@@ -56,18 +55,33 @@ struct ResultView: View {
         .padding(.top, 8)
     }
 
+    /// Each scenario ends with a different event, and the copy has to say
+    /// which one. A trader never had a contract to hand over.
+    private var headlineTitle: String {
+        guard delivered else { return String(localized: "Insolvent", comment: "Result title, failure") }
+        switch result.scenario {
+        case .construction: return String(localized: "Project handed over", comment: "Result title, success")
+        case .startup:      return String(localized: "Company sold", comment: "Result title, startup exit")
+        case .importing:    return String(localized: "Season closed", comment: "Result title, season end")
+        }
+    }
+
     /// Reads as the end of whichever kind of run this was.
     private var subtitle: String {
         guard delivered else {
             return String(localized: "You ran out of money on day \(Int(result.days)) with \(result.progress, format: .number.precision(.fractionLength(0)))% built.", comment: "Result subtitle, failure")
         }
-        if result.scenario == .startup {
+        switch result.scenario {
+        case .startup:
             guard let launchDay = result.launchDay else {
                 return String(localized: "You reached the exit without ever launching. A product nobody used is worth nothing.", comment: "Result subtitle, never launched")
             }
             return String(localized: "Launched on day \(Int(launchDay)), sold on day \(Int(result.days)).", comment: "Result subtitle, startup exit")
+        case .importing:
+            return String(localized: "The selling season ran \(Int(result.days)) days. Whatever was left has been dumped.", comment: "Result subtitle, season end")
+        case .construction:
+            return String(localized: "Finished on day \(Int(result.days)) against a \(Int(result.deadlineDays))-day contract.", comment: "Result subtitle, success")
         }
-        return String(localized: "Finished on day \(Int(result.days)) against a \(Int(result.deadlineDays))-day contract.", comment: "Result subtitle, success")
     }
 
     @ViewBuilder
@@ -97,6 +111,35 @@ struct ResultView: View {
                 }
                 row(String(localized: "You took home", comment: "Exit line"),
                     offer.netValuation * result.founderEquity, tint: .green, bold: true)
+            }
+            .padding(16)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        }
+    }
+
+    @ViewBuilder
+    private var seasonCard: some View {
+        if let close = result.seasonClose {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("How the season went", comment: "Result section header")
+                    .font(.headline)
+                row(String(localized: "Units sold", comment: "Season line"), close.unitsSold, isCurrency: false)
+                row(String(localized: "Came back as returns", comment: "Season line"), close.unitsReturned, isCurrency: false)
+                row(String(localized: "Left unsold and dumped", comment: "Season line"), close.unitsDumped,
+                    tint: close.unitsDumped > 1 ? .red : .primary, isCurrency: false)
+                Divider()
+                row(String(localized: "Gross sales", comment: "Season line"), close.grossSales, tint: .green, bold: true)
+                row(String(localized: "The marketplace took", comment: "Season line"), -close.marketplaceFees, tint: .red)
+                row(String(localized: "Refunds on returns", comment: "Season line"), -close.refunds)
+                row(String(localized: "Storage while it sat", comment: "Season line"), -close.storage)
+                if close.deadStockLoss > 1 {
+                    row(String(localized: "Lost on stock nobody wanted", comment: "Season line"),
+                        -close.deadStockLoss, tint: .red)
+                }
+                Text(String(localized: "The marketplace kept \(close.feeShareOfSales, format: .percent.precision(.fractionLength(0))) of everything you sold, and \(close.returnRate, format: .percent.precision(.fractionLength(0))) of it came back.", comment: "Season summary"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .padding(16)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))

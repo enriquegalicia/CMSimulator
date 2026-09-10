@@ -1318,6 +1318,7 @@ final class SimulationEngine: ObservableObject {
         RunResult(
             scenario: brief.scenario,
             exitOffer: exitOffer,
+            seasonClose: seasonClose,
             founderEquity: ledger.founderEquity,
             capitalRaised: ledger.capitalRaised,
             launchDay: growth?.launchDay,
@@ -1386,6 +1387,8 @@ struct RunResult {
     let scenario: ScenarioKind
     /// Startup runs only. What the company sold for and on what basis.
     let exitOffer: ExitOffer?
+    /// Import runs only. What the season came to once the leftovers went.
+    let seasonClose: SeasonClose?
     /// The founder's remaining share at the exit.
     let founderEquity: Double
     /// Capital taken in. Not earnings - kept separate so the debrief can

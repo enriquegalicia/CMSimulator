@@ -250,6 +250,12 @@ struct WorkStreamSpec {
     let materialUnitsPerWorkUnit: Double
     /// Lead time in days for a standard order of this package's materials.
     let baseLeadTimeDays: Double
+    /// What this discipline actually consumes. A design office buys
+    /// surveys and reference material, not rebar; a plumbing crew buys
+    /// pipework and fixtures, not luminaires. Nil where the stream
+    /// consumes nothing at all, which is every stream in the software and
+    /// resale scenarios.
+    let inputName: String?
 }
 
 // MARK: - Brief
@@ -329,22 +335,22 @@ struct ProjectBrief {
     static let constructionStreams: [WorkStreamSpec] = [
         WorkStreamSpec(id: "design", title: String(localized: "Design", comment: "Work package name"),
                        imageName: "Design.png", units: 250, optimalCrew: 8, startThreshold: 0,
-                       materialCostPerUnit: 60, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 2),
+                       materialCostPerUnit: 60, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 2, inputName: String(localized: "Surveys & reference material", comment: "What the design stream consumes")),
         WorkStreamSpec(id: "structure", title: String(localized: "Structure", comment: "Work package name"),
                        imageName: "Structure.png", units: 540, optimalCrew: 16, startThreshold: 4,
-                       materialCostPerUnit: 310, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 7),
+                       materialCostPerUnit: 310, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 7, inputName: String(localized: "Concrete, steel & formwork", comment: "What the structure stream consumes")),
         WorkStreamSpec(id: "engineering", title: String(localized: "Engineering", comment: "Work package name"),
                        imageName: "Engineering.png", units: 375, optimalCrew: 12, startThreshold: 11,
-                       materialCostPerUnit: 90, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 3),
+                       materialCostPerUnit: 90, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 3, inputName: String(localized: "Studies, calculations & permits", comment: "What the engineering stream consumes")),
         WorkStreamSpec(id: "construction", title: String(localized: "Construction", comment: "Work package name"),
                        imageName: "Construction.png", units: 1160, optimalCrew: 34, startThreshold: 19,
-                       materialCostPerUnit: 260, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 6),
+                       materialCostPerUnit: 260, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 6, inputName: String(localized: "Masonry, blockwork & finishes", comment: "What the construction stream consumes")),
         WorkStreamSpec(id: "ihs", title: String(localized: "Plumbing & HVAC", comment: "Work package name - Hydro-sanitary & Air conditioning installations"),
                        imageName: "IHS.png", units: 625, optimalCrew: 19, startThreshold: 33,
-                       materialCostPerUnit: 230, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 8),
+                       materialCostPerUnit: 230, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 8, inputName: String(localized: "Pipework, fixtures & ductwork", comment: "What the plumbing and HVAC stream consumes")),
         WorkStreamSpec(id: "ies", title: String(localized: "Electrical & Lighting", comment: "Work package name - Electrical & Lighting installations"),
                        imageName: "IES.png", units: 550, optimalCrew: 17, startThreshold: 46,
-                       materialCostPerUnit: 200, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 9),
+                       materialCostPerUnit: 200, materialUnitsPerWorkUnit: 1, baseLeadTimeDays: 9, inputName: String(localized: "Cable, panels & luminaires", comment: "What the electrical stream consumes")),
     ]
 
     static let constructionMilestones: [PaymentMilestone] = [
@@ -416,22 +422,22 @@ struct ProjectBrief {
     static let startupStreams: [WorkStreamSpec] = [
         WorkStreamSpec(id: "discovery", title: String(localized: "Discovery", comment: "Startup work stream name"),
                        imageName: "Discovery.png", units: 180, optimalCrew: 6, startThreshold: 0,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "platform", title: String(localized: "Core platform", comment: "Startup work stream name"),
                        imageName: "Platform.png", units: 300, optimalCrew: 10, startThreshold: 3,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "mvp", title: String(localized: "MVP & launch", comment: "Startup work stream name"),
                        imageName: "Launch.png", units: 220, optimalCrew: 8, startThreshold: 9,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "features", title: String(localized: "Feature depth", comment: "Startup work stream name"),
                        imageName: "Features.png", units: 1_100, optimalCrew: 30, startThreshold: 20,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "payments", title: String(localized: "Payments & billing", comment: "Startup work stream name"),
                        imageName: "Payments.png", units: 700, optimalCrew: 20, startThreshold: 42,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "scale", title: String(localized: "Scale & reliability", comment: "Startup work stream name"),
                        imageName: "API.png", units: 1_000, optimalCrew: 26, startThreshold: 62,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
     ]
 
     /// Money in is a seed already banked plus two rounds gated on
@@ -506,22 +512,22 @@ struct ProjectBrief {
     static let importStreams: [WorkStreamSpec] = [
         WorkStreamSpec(id: "vetting", title: String(localized: "Supplier vetting", comment: "Import work stream name"),
                        imageName: "Sourcing.png", units: 40, optimalCrew: 2, startThreshold: 0,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "firstline", title: String(localized: "First product line", comment: "Import work stream name"),
                        imageName: "Listing.png", units: 60, optimalCrew: 3, startThreshold: 4,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "compliance", title: String(localized: "Certification & labelling", comment: "Import work stream name"),
                        imageName: "Compliance.png", units: 70, optimalCrew: 3, startThreshold: 13,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "range", title: String(localized: "Range extension", comment: "Import work stream name"),
                        imageName: "Range.png", units: 130, optimalCrew: 5, startThreshold: 24,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "warehouse", title: String(localized: "Warehousing", comment: "Import work stream name"),
                        imageName: "Warehouse.png", units: 85, optimalCrew: 3, startThreshold: 42,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
         WorkStreamSpec(id: "accounts", title: String(localized: "Retail accounts", comment: "Import work stream name"),
                        imageName: "Accounts.png", units: 110, optimalCrew: 4, startThreshold: 60,
-                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0),
+                       materialCostPerUnit: 0, materialUnitsPerWorkUnit: 0, baseLeadTimeDays: 0, inputName: nil),
     ]
 
     /// A trader is not venture funded and has no client paying milestones.

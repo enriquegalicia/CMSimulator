@@ -58,6 +58,9 @@ struct WorkPackage: Identifiable {
     /// business buys goods through the same supplier panel, but its work
     /// streams are people opening product lines and consume nothing.
     var consumesMaterials: Bool { spec.materialUnitsPerWorkUnit > 0 }
+    /// What this particular discipline buys. Falls back to the scenario's
+    /// generic word only if a stream forgot to declare one.
+    var inputName: String? { spec.inputName }
 
     /// True when there is work left and nothing to build it out of. Only
     /// meaningful for streams that actually consume something.

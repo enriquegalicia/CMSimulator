@@ -129,12 +129,12 @@ struct WorkPackageCardView: View {
                         .font(.caption2.bold())
                         .foregroundStyle(.red)
                 } else if showsSupply, let cover = daysOfCover {
-                    Label(String(localized: "\(Int(package.materialStock)) units on site — \(String(format: "%.1f", cover)) days of cover", comment: "Material stock and days of cover"),
+                    Label(String(localized: "\(inputLabel): \(Int(package.materialStock)) units — \(String(format: "%.1f", cover)) days of cover", comment: "Named input stock and days of cover"),
                           systemImage: "shippingbox")
                         .font(.caption2)
                         .foregroundStyle(cover < 3 ? .orange : .secondary)
                 } else if showsSupply {
-                    Label(String(localized: "\(Int(package.materialStock)) units on site", comment: "Material stock with no crew working"),
+                    Label(String(localized: "\(inputLabel): \(Int(package.materialStock)) units", comment: "Named input stock with no crew working"),
                           systemImage: "shippingbox")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -162,6 +162,10 @@ struct WorkPackageCardView: View {
             }
         }
     }
+
+    /// A design office buys surveys, a plumbing crew buys fixtures. The
+    /// generic scenario word is only a fallback.
+    private var inputLabel: String { package.inputName ?? scenario.supplyName }
 
     private var controls: some View {
         VStack(spacing: 6) {

@@ -1129,7 +1129,8 @@ final class SimulationEngine: ObservableObject {
             baseCostPerUnit: spec.landedCostPerUnit * discount,
             baseLeadTimeDays: 26 * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
             marketIndex: market.effectiveIndex,
-            isLocked: market.isLocked
+            isLocked: market.isLocked,
+            inputName: nil
         )
     }
 
@@ -1164,7 +1165,8 @@ final class SimulationEngine: ObservableObject {
             baseLeadTimeDays: package.spec.baseLeadTimeDays
                 * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
             marketIndex: market.effectiveIndex,
-            isLocked: market.isLocked
+            isLocked: market.isLocked,
+            inputName: package.inputName
         )
     }
 

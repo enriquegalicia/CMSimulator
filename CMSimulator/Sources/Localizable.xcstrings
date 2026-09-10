@@ -576,6 +576,42 @@
       },
       "comment": "Capability daily upkeep"
     },
+    "%@: %lld units": {
+      "extractionState": "manual",
+      "comment": "Named input stock with no crew working",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld units"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@: %2$lld unidades"
+          }
+        }
+      }
+    },
+    "%@: %lld units — %@ days of cover": {
+      "extractionState": "manual",
+      "comment": "Named input stock and days of cover",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld units — %@ days of cover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@: %2$lld unidades — %3$@ días de cobertura"
+          }
+        }
+      }
+    },
     "%lld": {
       "extractionState": "manual",
       "localizations": {
@@ -862,42 +898,6 @@
         }
       },
       "comment": "Incident consequence: material lost"
-    },
-    "%lld units on site": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld units on site"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld unidades en obra"
-          }
-        }
-      },
-      "comment": "Material stock with no crew working"
-    },
-    "%lld units on site — %@ days of cover": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld units on site — %@ days of cover"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld unidades en obra — %@ días de cobertura"
-          }
-        }
-      },
-      "comment": "Material stock and days of cover"
     },
     "%lldd": {
       "extractionState": "manual",
@@ -1943,6 +1943,24 @@
       },
       "comment": "Trading control: advertising explanation"
     },
+    "Cable, panels & luminaires": {
+      "extractionState": "manual",
+      "comment": "What the electrical stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cable, panels & luminaires"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cableado, tableros y luminarias"
+          }
+        }
+      }
+    },
     "Came back as returns": {
       "extractionState": "manual",
       "comment": "Season line",
@@ -2445,6 +2463,24 @@
         }
       },
       "comment": "Work stream finished"
+    },
+    "Concrete, steel & formwork": {
+      "extractionState": "manual",
+      "comment": "What the structure stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concrete, steel & formwork"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concreto, acero y cimbra"
+          }
+        }
+      }
     },
     "Construction": {
       "extractionState": "manual",
@@ -5594,6 +5630,24 @@
       },
       "comment": "Margin line"
     },
+    "Masonry, blockwork & finishes": {
+      "extractionState": "manual",
+      "comment": "What the construction stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masonry, blockwork & finishes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Albañilería, block y acabados"
+          }
+        }
+      }
+    },
     "Material prices spike": {
       "extractionState": "manual",
       "localizations": {
@@ -6727,6 +6781,24 @@
         }
       },
       "comment": "Margin line"
+    },
+    "Pipework, fixtures & ductwork": {
+      "extractionState": "manual",
+      "comment": "What the plumbing and HVAC stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pipework, fixtures & ductwork"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tubería, muebles de baño y ductos"
+          }
+        }
+      }
     },
     "Planning": {
       "extractionState": "manual",
@@ -8726,6 +8798,24 @@
       },
       "comment": "Work package name"
     },
+    "Studies, calculations & permits": {
+      "extractionState": "manual",
+      "comment": "What the engineering stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Studies, calculations & permits"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estudios, cálculos y licencias"
+          }
+        }
+      }
+    },
     "Super fast-forward": {
       "extractionState": "manual",
       "localizations": {
@@ -8779,6 +8869,24 @@
         }
       },
       "comment": "Import work stream name"
+    },
+    "Surveys & reference material": {
+      "extractionState": "manual",
+      "comment": "What the design stream consumes",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Surveys & reference material"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levantamientos y material de referencia"
+          }
+        }
+      }
     },
     "System": {
       "extractionState": "manual",

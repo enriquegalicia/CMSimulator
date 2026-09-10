@@ -174,4 +174,7 @@ struct MaterialOrderRequest: Identifiable {
     let baseLeadTimeDays: Double
     let marketIndex: Double
     let isLocked: Bool
+    /// What this discipline buys, so the order sheet can say "Pipework,
+    /// fixtures & ductwork" rather than a generic "Order".
+    let inputName: String?
 }

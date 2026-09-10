@@ -223,6 +223,31 @@ enum Difficulty: String, CaseIterable, Identifiable {
     }
 }
 
+/// What you put in and how long before it bites. A contractor is handed a
+/// signed contract, a mobilisation advance and a date; a founder and an
+/// importer choose what they start with and live with the choice. Only
+/// scenarios you actually found offer this.
+struct VentureSetup: Equatable {
+    /// Nil takes the scenario's own default.
+    var openingCapital: Double?
+    /// Days before interest and late penalties begin. An angel's patience,
+    /// or a landlord's free-fit period.
+    var graceDays: Double
+
+    static let `default` = VentureSetup(openingCapital: nil, graceDays: 0)
+
+    /// Leaderboard consequence. Starting lean and taking no grace has to
+    /// outrank starting fat and taking three months, or the settings are
+    /// just a difficulty slider with no cost.
+    func scoreFactor(against baseline: Double) -> Double {
+        let capital = openingCapital ?? baseline
+        guard baseline > 0, capital > 0 else { return 1 }
+        let leanness = pow(min(3.0, max(0.35, baseline / capital)), 0.45)
+        let patience = 1 / (1 + graceDays / 110)
+        return leanness * patience
+    }
+}
+
 // MARK: - Work stream definition
 
 /// The static definition of one work package. Separated from the mutable
@@ -269,6 +294,11 @@ struct ProjectBrief {
 
     let contractValue: Double
     let startingCash: Double
+    /// Days at the start during which interest and late penalties are
+    /// waived. Zero for work done under someone else's contract.
+    let gracePeriodDays: Double
+    /// Applied to the leaderboard alongside the difficulty multiplier.
+    let ventureScoreFactor: Double
     let creditLimit: Double
     let dailyInterestRate: Double
     let deadlineDays: Double
@@ -385,6 +415,8 @@ struct ProjectBrief {
             seed: seed,
             contractValue: contractValue,
             startingCash: (300_000 * difficulty.startingCashFactor).rounded(),
+            gracePeriodDays: 0,
+            ventureScoreFactor: 1,
             creditLimit: (450_000 * difficulty.creditLimitFactor).rounded(),
             dailyInterestRate: 0.00045,
             deadlineDays: (baseDeadline * difficulty.deadlineFactor).rounded(),
@@ -461,7 +493,8 @@ struct ProjectBrief {
     static func startup(
         difficulty: Difficulty = .standard,
         persona: ClientPersona? = nil,
-        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max),
+        setup: VentureSetup = .default
     ) -> ProjectBrief {
         var rng = SeededGenerator(seed: seed)
         let chosenPersona = persona ?? ClientPersona.allCases.randomElement(using: &rng)!
@@ -473,7 +506,9 @@ struct ProjectBrief {
             difficulty: difficulty,
             seed: seed,
             contractValue: 7_400_000,
-            startingCash: (1_500_000 * difficulty.startingCashFactor).rounded(),
+            startingCash: (setup.openingCapital ?? 1_500_000 * difficulty.startingCashFactor).rounded(),
+            gracePeriodDays: setup.graceDays,
+            ventureScoreFactor: setup.scoreFactor(against: 1_500_000 * difficulty.startingCashFactor),
             creditLimit: (240_000 * difficulty.creditLimitFactor).rounded(),
             // Venture debt is dearer than a construction credit line.
             dailyInterestRate: 0.00075,
@@ -540,7 +575,8 @@ struct ProjectBrief {
     static func importBusiness(
         difficulty: Difficulty = .standard,
         persona: ClientPersona? = nil,
-        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max),
+        setup: VentureSetup = .default
     ) -> ProjectBrief {
         var rng = SeededGenerator(seed: seed)
         let chosenPersona = persona ?? ClientPersona.allCases.randomElement(using: &rng)!
@@ -557,7 +593,9 @@ struct ProjectBrief {
             difficulty: difficulty,
             seed: seed,
             contractValue: 1_000_000,
-            startingCash: (900_000 * difficulty.startingCashFactor).rounded(),
+            startingCash: (setup.openingCapital ?? 900_000 * difficulty.startingCashFactor).rounded(),
+            gracePeriodDays: setup.graceDays,
+            ventureScoreFactor: setup.scoreFactor(against: 900_000 * difficulty.startingCashFactor),
             creditLimit: (400_000 * difficulty.creditLimitFactor).rounded(),
             dailyInterestRate: 0.00065,
             deadlineDays: (140 * difficulty.deadlineFactor).rounded(),
@@ -591,12 +629,13 @@ struct ProjectBrief {
         scenario: ScenarioKind,
         difficulty: Difficulty = .standard,
         persona: ClientPersona? = nil,
-        seed: UInt64 = UInt64.random(in: 0..<UInt64.max)
+        seed: UInt64 = UInt64.random(in: 0..<UInt64.max),
+        setup: VentureSetup = .default
     ) -> ProjectBrief {
         switch scenario {
         case .construction: return .construction(difficulty: difficulty, persona: persona, seed: seed)
-        case .startup:      return .startup(difficulty: difficulty, persona: persona, seed: seed)
-        case .importing:    return .importBusiness(difficulty: difficulty, persona: persona, seed: seed)
+        case .startup:      return .startup(difficulty: difficulty, persona: persona, seed: seed, setup: setup)
+        case .importing:    return .importBusiness(difficulty: difficulty, persona: persona, seed: seed, setup: setup)
         }
     }
 }

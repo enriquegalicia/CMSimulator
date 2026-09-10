@@ -369,7 +369,7 @@ final class QualityAndScoringTests: XCTestCase {
     }
 
     func testInsolventRunsScoreZero() {
-        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
+        let result = RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                                capitalRaised: 0, launchDay: nil,
                                outcome: .insolvent, profit: 50_000, revenue: 100_000,
                                costs: CostBreakdown(), days: 40, deadlineDays: 100, progress: 30,
@@ -381,7 +381,7 @@ final class QualityAndScoringTests: XCTestCase {
 
     func testHarderDifficultyOutranksAnIdenticalEasyRun() {
         func score(_ difficulty: Difficulty) -> Double {
-            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
+            RunResult(scenario: .construction, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1,
                       capitalRaised: 0, launchDay: nil,
                       outcome: .delivered, profit: 100_000, revenue: 500_000,
                       costs: CostBreakdown(), days: 90, deadlineDays: 100, progress: 100,
@@ -881,7 +881,7 @@ final class StartupEconomicsTests: XCTestCase {
     /// however tidy the books look.
     func testNeverLaunchingScoresZero() {
         let result = RunResult(
-            scenario: .startup, exitOffer: nil, seasonClose: nil, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1, capitalRaised: 0,
+            scenario: .startup, exitOffer: nil, seasonClose: nil, ventureScoreFactor: 1, incidentsFired: 0, nearMisses: 0, lossesAvoided: 0, founderEquity: 1, capitalRaised: 0,
             launchDay: nil, outcome: .delivered, profit: 5_000_000, revenue: 6_000_000,
             costs: CostBreakdown(), days: 150, deadlineDays: 150, progress: 100,
             openDefects: 0, resolvedDefects: 0, idleCrewDays: 0, finalCrewSize: 4,
@@ -1132,5 +1132,48 @@ final class IncidentDeliveryTests: XCTestCase {
             if engine.nearMisses > 0 { sawNearMiss = true; break }
         }
         XCTAssertTrue(sawNearMiss, "no near miss in six full runs - the leading indicator never fires")
+    }
+
+}
+
+// MARK: - Founding a venture on your own terms
+
+@MainActor
+final class VentureSetupTests: XCTestCase {
+
+    /// A contractor is handed the terms; a founder chooses them. Offering
+    /// the controls on construction would be offering a lie.
+    func testOnlyFoundedScenariosTakeASetup() {
+        let lean = VentureSetup(openingCapital: 400_000, graceDays: 45)
+        XCTAssertEqual(ProjectBrief.construction().gracePeriodDays, 0)
+        XCTAssertEqual(ProjectBrief.construction().ventureScoreFactor, 1, accuracy: 1e-9)
+        XCTAssertEqual(ProjectBrief.startup(setup: lean).gracePeriodDays, 45, accuracy: 1e-9)
+        XCTAssertEqual(ProjectBrief.startup(setup: lean).startingCash, 400_000, accuracy: 1)
+    }
+
+    /// Grace has to actually stop the meter, or it is a cosmetic slider.
+    func testGracePeriodSuspendsInterest() {
+        func debtAfter(grace: Double) -> Double {
+            let brief = ProjectBrief.importBusiness(
+                seed: 4, setup: VentureSetup(openingCapital: 150_000, graceDays: grace))
+            let engine = SimulationEngine(brief: brief)
+            engine.debugDrainCash()
+            for _ in 0..<160 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+            return engine.ledger.costs.interest
+        }
+        XCTAssertLessThan(debtAfter(grace: 60), debtAfter(grace: 0),
+                          "grace period did not suspend interest")
+    }
+
+    /// Starting lean and taking no grace must outscore starting fat and
+    /// taking three months, or the settings cost nothing.
+    func testLeanTermsOutscoreComfortableOnes() {
+        let baseline = 900_000.0
+        let lean = VentureSetup(openingCapital: 450_000, graceDays: 0)
+        let comfy = VentureSetup(openingCapital: 1_800_000, graceDays: 90)
+        XCTAssertGreaterThan(lean.scoreFactor(against: baseline), 1.0)
+        XCTAssertLessThan(comfy.scoreFactor(against: baseline), 1.0)
+        XCTAssertGreaterThan(lean.scoreFactor(against: baseline),
+                             comfy.scoreFactor(against: baseline))
     }
 }

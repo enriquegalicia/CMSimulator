@@ -64,8 +64,8 @@ struct RootView: View {
         .sheet(isPresented: $showScenarioPicker) {
             ScenarioPickerView(
                 current: engine.brief,
-                onStart: { kind, level in
-                    engine.restart(with: .make(scenario: kind, difficulty: level))
+                onStart: { kind, level, setup in
+                    engine.restart(with: .make(scenario: kind, difficulty: level, setup: setup))
                     showScenarioPicker = false
                 },
                 onCancel: { showScenarioPicker = false }

@@ -170,6 +170,10 @@ final class SimulationEngine: ObservableObject {
         ledger.receive(advance * (1 - brief.retainageRate), retainage: advance * brief.retainageRate)
         log(String(localized: "Contract signed with \(brief.counterpartyName). \(Int(deadlineDays)) days to hand over.", comment: "Site log: run start"),
             symbol: "signature", tone: .neutral)
+        if brief.gracePeriodDays > 0 {
+            log(String(localized: "\(Int(brief.gracePeriodDays)) days of grace: no interest and no penalties until then.", comment: "Site log: grace period"),
+                symbol: "calendar.badge.clock", tone: .good)
+        }
         log(String(localized: "Mobilisation advance of \(Int(advance).formatted()) received.", comment: "Site log: advance payment"),
             symbol: "banknote.fill", tone: .good)
         recomputeProgress()
@@ -258,10 +262,10 @@ final class SimulationEngine: ObservableObject {
         payPayroll(step: step)
         payUpkeep(step: step)
         runInspections(step: step)
-        ledger.accrueInterest(days: step)
+        if !isInGracePeriod { ledger.accrueInterest(days: step) }
         advanceTrust(step: step)
         releaseDuePayments()
-        accrueLatePenalties()
+        if !isInGracePeriod { accrueLatePenalties() }
         recomputeProgress()
         updateUnlocks()
         advanceGrowth(step: step)
@@ -726,6 +730,13 @@ final class SimulationEngine: ObservableObject {
             }
         }
     }
+
+    /// True while the venture's grace period is still running. Interest
+    /// and late penalties are both waived - what you bought is time, not
+    /// money, and the leaderboard charges you for it at the end.
+    var isInGracePeriod: Bool { elapsedDays < brief.gracePeriodDays }
+    /// Days of grace still to run, for the HUD.
+    var graceDaysRemaining: Double { max(0, brief.gracePeriodDays - elapsedDays) }
 
     // MARK: Risk register
 
@@ -1386,7 +1397,7 @@ final class SimulationEngine: ObservableObject {
             // here, at four and a half times the price, plus delay.
             ledger.forceSpend(openDefects * CapabilityEffects.reworkCostPerDefect, into: \.rework)
             elapsedDays += openDefects * CapabilityEffects.reworkDaysPerDefect
-            accrueLatePenalties()
+            if !isInGracePeriod { accrueLatePenalties() }
         }
         // Close out anything the client still owed.
         for payment in pendingPayments { ledger.receive(payment.net, retainage: payment.retainage) }
@@ -1462,6 +1473,7 @@ final class SimulationEngine: ObservableObject {
             scenario: brief.scenario,
             exitOffer: exitOffer,
             seasonClose: seasonClose,
+            ventureScoreFactor: brief.ventureScoreFactor,
             incidentsFired: incidentsFired,
             nearMisses: nearMisses,
             lossesAvoided: totalLossesAvoided,
@@ -1539,6 +1551,9 @@ struct RunResult {
     let exitOffer: ExitOffer?
     /// Import runs only. What the season came to once the leftovers went.
     let seasonClose: SeasonClose?
+    /// What the founder's own setup - lean capital, no grace - is worth
+    /// on the leaderboard. Always 1 for work under someone else's contract.
+    let ventureScoreFactor: Double
     /// How the run's risk actually went, for the debrief.
     let incidentsFired: Int
     let nearMisses: Int
@@ -1579,6 +1594,6 @@ struct RunResult {
         // Never launching is not a delivery, however tidy the books look.
         if scenario == .startup, launchDay == nil { return 0 }
         let onTimeBonus = wasOnTime ? 1.1 : 1.0
-        return max(0, profit) * difficulty.scoreMultiplier * onTimeBonus
+        return max(0, profit) * difficulty.scoreMultiplier * ventureScoreFactor * onTimeBonus
     }
 }

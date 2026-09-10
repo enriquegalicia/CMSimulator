@@ -160,7 +160,7 @@ struct TradingPanelView: View {
     private func stat(_ label: String, _ value: Double, suffix: String, tint: Color = .primary) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(label).font(.caption2).foregroundStyle(.secondary)
-            Text("\(value.formatted(.number.precision(.fractionLength(value < 10 ? 1 : 0))))\(suffix)")
+            Text(verbatim: "\(value.formatted(.number.precision(.fractionLength(value < 10 ? 1 : 0))))\(suffix)")
                 .font(.subheadline.bold().monospacedDigit())
                 .foregroundStyle(tint)
         }

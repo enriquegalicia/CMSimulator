@@ -1397,4 +1397,39 @@ final class SourcingTests: XCTestCase {
                               landedCostPerUnit: 7.30, tradingStreamID: "x", niche: .toys)
         XCTAssertGreaterThan(dear.landedCost(from: .chinaWholesale), cheap.landedCost(from: .chinaWholesale))
     }
+
+}
+
+// MARK: - Seeing the thing get built
+
+final class ProgressDrawingTests: XCTestCase {
+
+    /// Each layer is driven by its own stream, not by an overall average.
+    /// The whole point is seeing which parts exist.
+    func testEachStreamDrivesItsOwnLayerIndependently() {
+        let p = StreamProgress(fractions: ["design": 1.0, "structure": 0.5, "ies": 0.0])
+        XCTAssertEqual(p["design"], 1.0, accuracy: 1e-9)
+        XCTAssertEqual(p["structure"], 0.5, accuracy: 1e-9)
+        XCTAssertEqual(p["ies"], 0.0, accuracy: 1e-9)
+        // A stream that does not exist in this scenario reads as absent,
+        // never as complete.
+        XCTAssertEqual(p["mvp"], 0.0, accuracy: 1e-9)
+    }
+
+    /// Values are clamped, because a change order can push completed units
+    /// past the target and a negative or >1 fraction would break the ink.
+    func testProgressIsClampedBothWays() {
+        let p = StreamProgress(fractions: ["a": 1.8, "b": -0.4])
+        XCTAssertEqual(p["a"], 1.0, accuracy: 1e-9)
+        XCTAssertEqual(p["b"], 0.0, accuracy: 1e-9)
+    }
+
+    /// A stream that has barely started must still be visible as a ghost -
+    /// an invisible layer reads as a bug, not as "not started".
+    func testUnstartedWorkIsAGhostRatherThanInvisible() {
+        let p = StreamProgress(fractions: ["design": 0])
+        XCTAssertGreaterThan(p.ink("design"), 0.05)
+        XCTAssertLessThan(p.ink("design"), 0.25)
+        XCTAssertEqual(StreamProgress(fractions: ["design": 1]).ink("design"), 1.0, accuracy: 1e-9)
+    }
 }

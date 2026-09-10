@@ -291,8 +291,23 @@ struct GameView: View {
 
     // MARK: Boards
 
+    /// How far each stream has got, for the progress drawing. Completion
+    /// per stream, not overall - the whole point is seeing which parts
+    /// exist, not one averaged number.
+    private var streamProgress: StreamProgress {
+        StreamProgress(fractions: Dictionary(uniqueKeysWithValues: engine.workPackages.map {
+            ($0.id, $0.units > 0 ? $0.unitsCompleted / $0.units : 0)
+        }))
+    }
+
     private var siteBoard: some View {
         VStack(spacing: 10) {
+            ProgressDrawingView(scenario: engine.brief.scenario, progress: streamProgress)
+                .padding(.horizontal, 8)
+                .padding(.top, 4)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+                .animation(.easeInOut(duration: 0.4), value: engine.totalProgress)
+
             if !engine.fastTrackablePackages.isEmpty {
                 fastTrackBanner
             }

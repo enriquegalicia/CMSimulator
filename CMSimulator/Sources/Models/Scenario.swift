@@ -85,6 +85,51 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// How likely each class of thing is to be what goes wrong, before
+    /// anything the player is doing shifts it.
+    ///
+    /// These used to be flat at 1.0 everywhere, which meant a software
+    /// company was as likely to be hit by an infrastructure failure as by
+    /// its investors - and a building site as likely to have a client
+    /// dispute as a safety incident. Businesses do not fail uniformly:
+    /// each one has a characteristic way of going wrong, and that is most
+    /// of what makes a scenario feel like itself.
+    var baseRiskWeights: [MitigationClass: Double] {
+        switch self {
+        case .construction:
+            // Exposed site, heavy plant, people working at height.
+            return [.weather: 1.30, .safety: 1.35, .technical: 1.00,
+                    .security: 0.85, .client: 1.00]
+        case .startup:
+            // People, money and ownership. The servers are the least of it.
+            return [.weather: 0.50, .safety: 1.15, .technical: 1.25,
+                    .security: 1.20, .client: 1.40]
+        case .importing:
+            // The border, the ocean and the platform you sell on.
+            return [.weather: 1.20, .safety: 0.55, .technical: 1.10,
+                    .security: 1.05, .client: 1.45]
+        }
+    }
+
+    /// What you are running, for copy that has to say "run it well".
+    /// A site, a company and a trading operation are not the same noun.
+    var operationNoun: String {
+        switch self {
+        case .construction: return String(localized: "the job", comment: "What the player is running")
+        case .startup: return String(localized: "the company", comment: "What the player is running")
+        case .importing: return String(localized: "the operation", comment: "What the player is running")
+        }
+    }
+
+    /// Plural noun for the parallel pieces of work in progress.
+    var workStreamsNoun: String {
+        switch self {
+        case .construction: return String(localized: "work packages", comment: "Plural noun for parallel work")
+        case .startup: return String(localized: "workstreams", comment: "Plural noun for parallel work")
+        case .importing: return String(localized: "workstreams", comment: "Plural noun for parallel work")
+        }
+    }
+
     /// The people you hire.
     var staffName: String {
         switch self {

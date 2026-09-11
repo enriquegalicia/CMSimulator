@@ -612,6 +612,24 @@
       },
       "comment": "Site log: capability reduced"
     },
+    "%@ taken out at %@ a day.": {
+      "extractionState": "manual",
+      "comment": "Site log: insurance bought",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ taken out at %@ a day."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ contratada por %2$@ al día."
+          }
+        }
+      }
+    },
     "%@ units are old enough to be charged a penalty storage rate.": {
       "extractionState": "manual",
       "localizations": {
@@ -1439,20 +1457,20 @@
         }
       }
     },
-    "A near miss is the same roll without the bill. Run the job well and you get warnings; run it hot and you get invoices.": {
+    "A near miss is the same roll without the bill. Run %@ well and you get warnings; run it hot and you get invoices.": {
       "extractionState": "manual",
       "comment": "Near miss explanation",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A near miss is the same roll without the bill. Run the job well and you get warnings; run it hot and you get invoices."
+            "value": "A near miss is the same roll without the bill. Run %@ well and you get warnings; run it hot and you get invoices."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un cuasiaccidente es la misma tirada sin la factura. Lleva la obra con orden y recibes avisos; llévala forzada y recibes cobros."
+            "value": "Un cuasiaccidente es la misma tirada sin la factura. Lleva %@ con orden y recibes avisos; llévala forzada y recibes cobros."
           }
         }
       }
@@ -2339,20 +2357,20 @@
       },
       "comment": "Cost of running past the deadline"
     },
-    "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply": {
+    "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply,Quarryside Materials,Render & Finish Supply,Bricklayer's Yard": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of builders merchants selling masonry and finishes. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply"
+            "value": "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply,Quarryside Materials,Render & Finish Supply,Bricklayer's Yard"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Materiales BuildRight,Agregados Puerta Norte,Block y Cuchara,Materiales Piedra Angular,Albañilería Apex"
+            "value": "Materiales BuildRight,Agregados Puerta Norte,Block y Cuchara,Materiales Piedra Angular,Albañilería Apex,Materiales La Cantera,Acabados y Aplanados,Tlapalería del Albañil"
           }
         }
       }
@@ -2446,6 +2464,42 @@
         }
       },
       "comment": "Incident title"
+    },
+    "Buy cover any time, in any scenario. Staffing Risk would make the same policy cheaper and cut the excess you carry.": {
+      "extractionState": "manual",
+      "comment": "Insurance explanation without desk",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy cover any time, in any scenario. Staffing Risk would make the same policy cheaper and cut the excess you carry."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contrata cobertura cuando quieras, en cualquier escenario. Con un área de Riesgo, la misma póliza te saldría más barata y con menor deducible."
+          }
+        }
+      }
+    },
+    "Buy cover any time, in any scenario. Your risk desk is arguing the premium and the excess down for you.": {
+      "extractionState": "manual",
+      "comment": "Insurance explanation with desk",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy cover any time, in any scenario. Your risk desk is arguing the premium and the excess down for you."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contrata cobertura cuando quieras, en cualquier escenario. Tu área de Riesgo está negociando a la baja la prima y el deducible."
+          }
+        }
+      }
     },
     "Buy goods abroad, sell them on a marketplace, and find out where the margin really goes.": {
       "extractionState": "manual",
@@ -3130,24 +3184,6 @@
       },
       "comment": "Mitigation name"
     },
-    "Comes with the Risk capability. Covers this share of any incident above the deductible, in exchange for a daily premium.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comes with the Risk capability. Covers this share of any incident above the deductible, in exchange for a daily premium."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Viene con la capacidad de Riesgo. Cubre esta parte de cualquier incidente por encima del deducible, a cambio de una prima diaria."
-          }
-        }
-      },
-      "comment": "Insurance explanation"
-    },
     "Commercial": {
       "extractionState": "manual",
       "comment": "Worker role",
@@ -3490,20 +3526,20 @@
       },
       "comment": "Capability verb"
     },
-    "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors": {
+    "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors,Cistern & Waste Supply,Boilerhouse Mechanical,Airflow Sheet Metal": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of plumbing and HVAC suppliers. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors"
+            "value": "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors,Cistern & Waste Supply,Boilerhouse Mechanical,Airflow Sheet Metal"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Plomería Línea de Cobre,Muebles y Griferías Hydro,Ductos y Aire Acondicionado,Válvulas y Bridas del Norte,Distribuidora Aire Térmico"
+            "value": "Plomería Línea de Cobre,Muebles y Griferías Hydro,Ductos y Aire Acondicionado,Válvulas y Bridas del Norte,Distribuidora Aire Térmico,Tinacos y Drenajes,Mecánica Calderas,Lámina y Ductos Airflow"
           }
         }
       }
@@ -3580,6 +3616,24 @@
       },
       "comment": "Training effect summary"
     },
+    "Cover": {
+      "extractionState": "manual",
+      "comment": "Insurance picker label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobertura"
+          }
+        }
+      }
+    },
     "Cover against customs holds, cargo loss, tariff changes and a buyer who does not pay.": {
       "extractionState": "manual",
       "localizations": {
@@ -3597,6 +3651,24 @@
         }
       },
       "comment": "Capability summary"
+    },
+    "Cover cancelled. Every loss is yours now.": {
+      "extractionState": "manual",
+      "comment": "Site log: insurance cancelled",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cover cancelled. Every loss is yours now."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobertura cancelada. Cada pérdida es tuya ahora."
+          }
+        }
+      }
     },
     "Cover, mitigation and a well-run operation together kept this off your books. It never shows up as profit, which is why it is worth stating.": {
       "extractionState": "manual",
@@ -3634,6 +3706,42 @@
         }
       }
     },
+    "Covers": {
+      "extractionState": "manual",
+      "comment": "Insurance stat",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cubre"
+          }
+        }
+      }
+    },
+    "Covers a third of the big ones, above a high excess. Thin, but it stops one bad day ending the run.": {
+      "extractionState": "manual",
+      "comment": "Insurance policy description",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers a third of the big ones, above a high excess. Thin, but it stops one bad day ending the run."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cubre un tercio de las grandes, con deducible alto. Es poco, pero evita que un mal día termine la partida."
+          }
+        }
+      }
+    },
     "Covers goods in transit. Stops a lost container becoming a lost season.": {
       "extractionState": "manual",
       "localizations": {
@@ -3651,6 +3759,24 @@
         }
       },
       "comment": "Mitigation description"
+    },
+    "Covers three quarters above a low excess. You will pay for it every single day, most of which nothing happens.": {
+      "extractionState": "manual",
+      "comment": "Insurance policy description",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers three quarters above a low excess. You will pay for it every single day, most of which nothing happens."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cubre tres cuartas partes con deducible bajo. La pagas todos los días, y casi todos no pasa nada."
+          }
+        }
+      }
     },
     "Crash": {
       "extractionState": "manual",
@@ -3903,20 +4029,20 @@
         }
       }
     },
-    "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group": {
+    "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group,Benchmark Geomatics,Plumb & Level Surveys,Sightline Site Investigation": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of surveying and site-investigation firms. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group"
+            "value": "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group,Benchmark Geomatics,Plumb & Level Surveys,Sightline Site Investigation"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Topografía Datum,Levantamientos Trueline,Geodesia del Valle,Cardinal Topográfica,Estudios Meridiano"
+            "value": "Topografía Datum,Levantamientos Trueline,Geodesia del Valle,Cardinal Topográfica,Estudios Meridiano,Geomática Referencia,Topografía Plomada y Nivel,Estudios de Sitio Visual"
           }
         }
       }
@@ -4820,6 +4946,24 @@
       },
       "comment": "Help bullet"
     },
+    "Every loss is yours. Cheapest right up until it is not.": {
+      "extractionState": "manual",
+      "comment": "Insurance policy description",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every loss is yours. Cheapest right up until it is not."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada pérdida es tuya. Lo más barato, hasta que deja de serlo."
+          }
+        }
+      }
+    },
     "Every package has an ideal crew size. Past it the site gets crowded, output per head drops, and incidents get likelier.": {
       "extractionState": "manual",
       "localizations": {
@@ -5342,20 +5486,20 @@
         }
       }
     },
-    "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital": {
+    "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital,Larkspur Partners,Ironwood Seed,Coldharbour Capital,Pinnacle Angels,Wrenfield Ventures,Saltmarsh Fund,Copperbeech Partners,Draycott Capital,Elmgrove Seed,Fairweather Angels,Greyling Ventures,Halyard Fund,Inglewood Partners,Juniper Seed": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of angel investor and fund names. Replace with names that read naturally in your language - do not translate these literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital"
+            "value": "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital,Larkspur Partners,Ironwood Seed,Coldharbour Capital,Pinnacle Angels,Wrenfield Ventures,Saltmarsh Fund,Copperbeech Partners,Draycott Capital,Elmgrove Seed,Fairweather Angels,Greyling Ventures,Halyard Fund,Inglewood Partners,Juniper Seed"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Capital Anáhuac,Ángeles del Bajío,Fondo Tesela,Aurora Ventures,Semilla Roble,Socios Ardiente,Fondo Cernícalo,Ángeles Meridiano,Sable y Cía,Capital Marea Alta"
+            "value": "Capital Anáhuac,Ángeles del Bajío,Fondo Tesela,Aurora Ventures,Semilla Roble,Socios Ardiente,Fondo Cernícalo,Ángeles Meridiano,Sable y Cía,Capital Marea Alta,Socios Espuela,Semilla Encino,Capital Puerto Frío,Ángeles Pináculo,Ventures Garza,Fondo Salitre,Socios Cobre,Capital Draycott,Semilla Olmo,Ángeles Buen Tiempo,Ventures Gavilán,Fondo Driza,Socios Alameda,Semilla Enebro"
           }
         }
       }
@@ -5413,6 +5557,24 @@
         }
       },
       "comment": "Counterparty description"
+    },
+    "Full cover": {
+      "extractionState": "manual",
+      "comment": "Insurance policy tier",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full cover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobertura amplia"
+          }
+        }
+      }
     },
     "Fully staffed": {
       "extractionState": "manual",
@@ -5666,20 +5828,20 @@
       },
       "comment": "End of the run"
     },
-    "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export": {
+    "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export,Can Tho Hoang Gia,Bac Ninh Quang Minh,Long An Thanh Cong": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of Vietnamese exporter names. Keep these recognisably Vietnamese in every language - do not translate or localize them.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export"
+            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export,Can Tho Hoang Gia,Bac Ninh Quang Minh,Long An Thanh Cong"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export"
+            "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export,Can Tho Hoang Gia,Bac Ninh Quang Minh,Long An Thanh Cong"
           }
         }
       }
@@ -6458,37 +6620,37 @@
       },
       "comment": "Incident title"
     },
-    "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork": {
+    "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork,Anvil Reinforcement,Greystone Precast,Trussline Steel": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of concrete, steel and formwork suppliers. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork"
+            "value": "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork,Anvil Reinforcement,Greystone Precast,Trussline Steel"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aceros y Varilla Ironclad,Concretos Premezclados Clave,Concretera La Fundición,Perfiles y Varilla del Centro,Cimbras Bastión"
+            "value": "Aceros y Varilla Ironclad,Concretos Premezclados Clave,Concretera La Fundición,Perfiles y Varilla del Centro,Cimbras Bastión,Armex y Refuerzos Yunque,Prefabricados Peña Gris,Aceros Trussline"
           }
         }
       }
     },
-    "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean": {
+    "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"
+            "value": "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mateo,Sofía,Diego,Valentina,Santiago,Camila,Alejandro,Lucía,Andrés,Renata,Emilio,Ximena,Rodrigo,Isabela,Tomás,Regina,Javier,Paula,Fernanda,Sebastián,Marcus,Grace"
+            "value": "Mateo,Valeria,Santiago,Renata,Emiliano,Ximena,Rodrigo,Camila,Alejandro,Fernanda,Sebastián,Regina,Diego,Andrea,Leonardo,Paulina,Ricardo,Mariana,Joaquín,Daniela,Aisha,Sean,Néstor,Itzel,Bruno,Lucía,Rafael,Elena,Gerardo,Sofía,Álvaro,Citlali,Ignacio,Adriana,Óscar,Mónica,Julián,Estefanía,Hugo,Roxana,Patricio,Gabriela,Aarón,Nuria"
           }
         }
       },
@@ -8420,23 +8582,23 @@
       },
       "comment": "Help bullet"
     },
-    "Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.": {
+    "Overtime, overcrowded %@ and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.": {
       "extractionState": "manual",
+      "comment": "Risk sheet explanation",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off."
+            "value": "Overtime, overcrowded %@ and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Las horas extra, los frentes saturados y el ánimo bajo elevan la exposición. Los incidentes se pueden volver más raros y leves, pero nunca se apagan."
+            "value": "Las horas extra, %@ saturadas y el ánimo bajo elevan la exposición. Los incidentes se pueden volver más raros y más leves, pero nunca se apagan."
           }
         }
-      },
-      "comment": "Risk sheet explanation"
+      }
     },
     "Paid %lld days sooner": {
       "extractionState": "manual",
@@ -8798,20 +8960,20 @@
       },
       "comment": "Work package name - Hydro-sanitary & Air conditioning installations"
     },
-    "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering": {
+    "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering,Vector Soil Mechanics,Lintel Design Office,Compass Code Consultants": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of engineering consultancies and permit expediters. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering"
+            "value": "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering,Vector Soil Mechanics,Lintel Design Office,Compass Code Consultants"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ingeniería Plomada,Consultores Técnicos Axis,Gestoría y Licencias Piedra Angular,Cálculo Estructural,Ingeniería Meridiano"
+            "value": "Ingeniería Plomada,Consultores Técnicos Axis,Gestoría y Licencias Piedra Angular,Cálculo Estructural,Ingeniería Meridiano,Mecánica de Suelos Vector,Despacho de Proyecto Dintel,Consultores Normativos Brújula"
           }
         }
       }
@@ -8869,6 +9031,24 @@
         }
       },
       "comment": "Vendor pitch"
+    },
+    "Premium, per day": {
+      "extractionState": "manual",
+      "comment": "Insurance stat",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premium, per day"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prima, por día"
+          }
+        }
+      }
     },
     "Price level": {
       "extractionState": "manual",
@@ -9266,20 +9446,20 @@
       },
       "comment": "Worker archetype description"
     },
-    "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct": {
+    "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct,BrightBuy Storefront,PrimeDeal Direct,SwiftCart Outlet": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of online marketplace reseller storefront names. Replace with storefront names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct"
+            "value": "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct,BrightBuy Storefront,PrimeDeal Direct,SwiftCart Outlet"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tienda QuickShip Global,Sunrise Directo,Outlet MegaValor,Revendedor FastLane,TopChoice Directo"
+            "value": "Tienda QuickShip Global,Sunrise Directo,Outlet MegaValor,Revendedor FastLane,TopChoice Directo,Tienda BrightBuy,PrimeDeal Directo,Outlet SwiftCart"
           }
         }
       }
@@ -9338,20 +9518,20 @@
       },
       "comment": "Import work stream name"
     },
-    "Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, a bad relationship pulls the client up it.": {
+    "Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, and a strained relationship pulls %@ up it.": {
       "extractionState": "manual",
       "comment": "Risk register explanation",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, a bad relationship pulls the client up it."
+            "value": "Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, and a strained relationship pulls %@ up it."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ordenado por probabilidad contra lo que te costaría. El orden cambia conforme trabajas: las horas extra suben seguridad, y una mala relación sube al cliente."
+            "value": "Ordenado por probabilidad contra lo que te costaría. El orden cambia conforme trabajas: las horas extra suben seguridad, y una relación tensa sube %@."
           }
         }
       }
@@ -9446,20 +9626,20 @@
         }
       }
     },
-    "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors": {
+    "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors,Inland Freight & Supply,Border States Trading,Capital Region Wholesale": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of local, in-country distributor names. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors"
+            "value": "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors,Inland Freight & Supply,Border States Trading,Capital Region Wholesale"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Distribuidora Regional,Comercializadora Anáhuac,Grupo Abastos Nacional,Mayoreo del Bajío,Distribuidores Locales"
+            "value": "Distribuidora Regional,Comercializadora Anáhuac,Grupo Abastos Nacional,Mayoreo del Bajío,Distribuidores Locales,Fletes y Abastos del Interior,Comercializadora Frontera,Mayoreo Valle de México"
           }
         }
       }
@@ -10382,20 +10562,20 @@
       },
       "comment": "Capability summary"
     },
-    "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory": {
+    "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory,Foshan Jinlong Works,Qingdao Haixin Export,Wenzhou Ruifeng Industrial": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of Chinese factory and trading company names. Keep these recognisably Chinese in every language - do not translate or localize them.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory"
+            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory,Foshan Jinlong Works,Qingdao Haixin Export,Wenzhou Ruifeng Industrial"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory"
+            "value": "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory,Foshan Jinlong Works,Qingdao Haixin Export,Wenzhou Ruifeng Industrial"
           }
         }
       }
@@ -10652,23 +10832,23 @@
       },
       "comment": "Button to staff a capability for the first time"
     },
-    "Staff the Risk capability to buy mitigations and insurance.": {
+    "Staff the Risk capability to buy mitigations against named classes of incident.": {
       "extractionState": "manual",
+      "comment": "Risk locked hint",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Staff the Risk capability to buy mitigations and insurance."
+            "value": "Staff the Risk capability to buy mitigations against named classes of incident."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dota la capacidad de Riesgo para comprar mitigaciones y seguro."
+            "value": "Contrata el área de Riesgo para comprar mitigaciones contra clases específicas de incidente."
           }
         }
-      },
-      "comment": "Risk locked hint"
+      }
     },
     "Stand down %@": {
       "extractionState": "manual",
@@ -10705,6 +10885,24 @@
         }
       },
       "comment": "Difficulty name"
+    },
+    "Standard cover": {
+      "extractionState": "manual",
+      "comment": "Insurance policy tier",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard cover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobertura estándar"
+          }
+        }
+      }
     },
     "Start": {
       "extractionState": "manual",
@@ -11138,20 +11336,20 @@
       },
       "comment": "Import work stream name"
     },
-    "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports": {
+    "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports,Tiruppur Knitwear Export,Rajkot Engineering Works,Noida Prime Exports": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of Indian exporter names. Keep these recognisably Indian in every language - do not translate or localize them.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports"
+            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports,Tiruppur Knitwear Export,Rajkot Engineering Works,Noida Prime Exports"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports"
+            "value": "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports,Tiruppur Knitwear Export,Rajkot Engineering Works,Noida Prime Exports"
           }
         }
       }
@@ -11876,6 +12074,24 @@
         }
       }
     },
+    "The usual policy. Covers over half of anything serious.": {
+      "extractionState": "manual",
+      "comment": "Insurance policy description",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The usual policy. Covers over half of anything serious."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La póliza de siempre. Cubre más de la mitad de cualquier cosa seria."
+          }
+        }
+      }
+    },
     "Their experience is lost for good, morale drops across everyone else, and your next applicants will be worse.": {
       "extractionState": "manual",
       "localizations": {
@@ -11911,6 +12127,24 @@
         }
       },
       "comment": "Difficulty description"
+    },
+    "Third party only": {
+      "extractionState": "manual",
+      "comment": "Insurance policy tier",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Third party only"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo daños a terceros"
+          }
+        }
+      }
     },
     "This cannot be undone. Export them first if they have not been sent on yet.": {
       "extractionState": "manual",
@@ -12290,6 +12524,24 @@
       },
       "comment": "Diagnostic report kind"
     },
+    "Uninsured": {
+      "extractionState": "manual",
+      "comment": "Insurance policy tier",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uninsured"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin seguro"
+          }
+        }
+      }
+    },
     "Unit economics": {
       "extractionState": "manual",
       "localizations": {
@@ -12416,20 +12668,20 @@
         }
       }
     },
-    "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors": {
+    "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors,Conduit & Tray Supply,Breakerbox Electrical,Photon Lighting Trade": {
       "extractionState": "manual",
       "comment": "Comma-separated pool of electrical and lighting suppliers. Replace with company names that read naturally in your language - do not translate literally.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors"
+            "value": "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors,Conduit & Tray Supply,Breakerbox Electrical,Photon Lighting Trade"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Material Eléctrico Voltway,Cables y Tableros Cernícalo,Iluminación Lumen,Circuitos y Tableros,Distribuidora Amperaje"
+            "value": "Material Eléctrico Voltway,Cables y Tableros Cernícalo,Iluminación Lumen,Circuitos y Tableros,Distribuidora Amperaje,Tubería Conduit y Charolas,Eléctrica Centro de Carga,Iluminación Fotón"
           }
         }
       }
@@ -12506,19 +12758,19 @@
       },
       "comment": "Mitigation name"
     },
-    "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes": {
+    "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes,Thornton,Baxter,Callaghan,Lindqvist,Mahoney,Whittaker,Pemberton,Osei,Rahman,Delgado,Fairbairn,Hollis,Kerrigan,Marchetti,Nowak,Quinlan,Rutherford,Stavros,Tremayne,Villanueva,Wainwright,Yardley,Zielinski,Bramwell": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes"
+            "value": "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes,Thornton,Baxter,Callaghan,Lindqvist,Mahoney,Whittaker,Pemberton,Osei,Rahman,Delgado,Fairbairn,Hollis,Kerrigan,Marchetti,Nowak,Quinlan,Rutherford,Stavros,Tremayne,Villanueva,Wainwright,Yardley,Zielinski,Bramwell"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "García,Hernández,Martínez,López,González,Rodríguez,Pérez,Sánchez,Ramírez,Torres,Flores,Rivera,Vargas,Castillo,Mendoza,Navarro,Delgado,Aguilar,Webb,Okafor"
+            "value": "Hernández,Martínez,Rodríguez,Gómez,Vázquez,Ramírez,Torres,Aguilar,Mendoza,Castillo,Beltrán,Zamora,Cervantes,Escobar,Guzmán,Lozano,Montoya,Peralta,Quiroz,Salgado,Treviño,Valadez,Ibarra,Contreras,Figueroa,Barrios,Serrano,Robledo,Padilla,Camacho,Alcántara,Nájera,Ochoa,Villalobos,Espinoza,Bustamante,Carranza,Delgadillo,Fuentes,Galindo,Herrera,Jaramillo,Maldonado,Rentería"
           }
         }
       },
@@ -12847,6 +13099,24 @@
         }
       },
       "comment": "Scenario signature lesson"
+    },
+    "You carry the first": {
+      "extractionState": "manual",
+      "comment": "Insurance stat",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You carry the first"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tú absorbes los primeros"
+          }
+        }
+      }
     },
     "You do not know what you are building yet": {
       "extractionState": "manual",
@@ -13190,6 +13460,60 @@
       },
       "comment": "Crew size against the optimal crew for a package"
     },
+    "the company": {
+      "extractionState": "manual",
+      "comment": "What the player is running",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the company"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "la empresa"
+          }
+        }
+      }
+    },
+    "the job": {
+      "extractionState": "manual",
+      "comment": "What the player is running",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the job"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "la obra"
+          }
+        }
+      }
+    },
+    "the operation": {
+      "extractionState": "manual",
+      "comment": "What the player is running",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the operation"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "la operación"
+          }
+        }
+      }
+    },
     "uncovered": {
       "extractionState": "manual",
       "comment": "Risk register cover state",
@@ -13258,6 +13582,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "lo que necesitas"
+          }
+        }
+      }
+    },
+    "work packages": {
+      "extractionState": "manual",
+      "comment": "Plural noun for parallel work",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "work packages"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "partidas"
+          }
+        }
+      }
+    },
+    "workstreams": {
+      "extractionState": "manual",
+      "comment": "Plural noun for parallel work",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "workstreams"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "líneas de trabajo"
           }
         }
       }

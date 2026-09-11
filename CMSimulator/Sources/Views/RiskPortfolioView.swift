@@ -14,6 +14,9 @@ struct RiskPortfolioView: View {
     let scenario: ScenarioKind
     let held: Set<MitigationClass>
     let riskLevel: Int
+    let policy: InsurancePolicy
+    let dailyPremium: Double
+    let deductible: Double
     let insuranceCoverage: Double
     let spendingPower: Double
     let exposure: Double
@@ -26,6 +29,7 @@ struct RiskPortfolioView: View {
     let savedByInsurance: Double
     let savedByNearMiss: Double
     let onBuy: (MitigationClass) -> Void
+    let onSetInsurance: (InsurancePolicy) -> Void
     let onExit: () -> Void
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
@@ -66,7 +70,7 @@ struct RiskPortfolioView: View {
                             .foregroundStyle(.orange)
                     }
                 } footer: {
-                    Text("Overtime, overcrowded workstreams and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.", comment: "Risk sheet explanation")
+                    Text(String(localized: "Overtime, overcrowded \(scenario.workStreamsNoun) and low morale all raise exposure. Incidents can be made rarer and milder, but never switched off.", comment: "Risk sheet explanation"))
                         .font(.caption)
                 }
 
@@ -77,7 +81,7 @@ struct RiskPortfolioView: View {
                 } header: {
                     Text("Risk register", comment: "Risk sheet section header")
                 } footer: {
-                    Text("Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, a bad relationship pulls the client up it.", comment: "Risk register explanation")
+                    Text(String(localized: "Ranked by likelihood against what it would cost you. The order changes as you work — overtime pulls safety up the list, and a strained relationship pulls \(scenario.counterpartyName.lowercased()) up it.", comment: "Risk register explanation"))
                         .font(.caption)
                 }
 
@@ -109,7 +113,51 @@ struct RiskPortfolioView: View {
                 } header: {
                     Text("This run so far", comment: "Risk sheet section header")
                 } footer: {
-                    Text("A near miss is the same roll without the bill. Run the job well and you get warnings; run it hot and you get invoices.", comment: "Near miss explanation")
+                    Text(String(localized: "A near miss is the same roll without the bill. Run \(scenario.operationNoun) well and you get warnings; run it hot and you get invoices.", comment: "Near miss explanation"))
+                        .font(.caption)
+                }
+
+                Section {
+                    Picker(String(localized: "Cover", comment: "Insurance picker label"),
+                           selection: Binding(get: { policy }, set: onSetInsurance)) {
+                        ForEach(InsurancePolicy.allCases) { tier in
+                            Text(tier.name).tag(tier)
+                        }
+                    }
+                    .pickerStyle(.menu)
+
+                    Text(policy.blurb)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    if policy != .none {
+                        LabeledContent {
+                            Text(insuranceCoverage, format: .percent.precision(.fractionLength(0)))
+                                .font(.subheadline.monospacedDigit().bold())
+                        } label: {
+                            Text("Covers", comment: "Insurance stat")
+                        }
+                        LabeledContent {
+                            Text(deductible, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                                .font(.subheadline.monospacedDigit())
+                        } label: {
+                            Text("You carry the first", comment: "Insurance stat")
+                        }
+                        LabeledContent {
+                            Text(dailyPremium, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                                .font(.subheadline.monospacedDigit())
+                                .foregroundStyle(.orange)
+                        } label: {
+                            Text("Premium, per day", comment: "Insurance stat")
+                        }
+                    }
+                } header: {
+                    Text("Insurance", comment: "Risk sheet section header")
+                } footer: {
+                    Text(riskLevel > 0
+                         ? String(localized: "Buy cover any time, in any scenario. Your risk desk is arguing the premium and the excess down for you.", comment: "Insurance explanation with desk")
+                         : String(localized: "Buy cover any time, in any scenario. Staffing Risk would make the same policy cheaper and cut the excess you carry.", comment: "Insurance explanation without desk"))
                         .font(.caption)
                 }
 
@@ -125,20 +173,9 @@ struct RiskPortfolioView: View {
                             .font(.caption)
                     }
 
-                    Section {
-                        HStack {
-                            Label(String(localized: "Insurance", comment: "Risk sheet label"), systemImage: "umbrella.fill")
-                            Spacer()
-                            Text(insuranceCoverage, format: .percent.precision(.fractionLength(0)))
-                                .font(.subheadline.monospacedDigit().bold())
-                        }
-                    } footer: {
-                        Text("Comes with the Risk capability. Covers this share of any incident above the deductible, in exchange for a daily premium.", comment: "Insurance explanation")
-                            .font(.caption)
-                    }
                 } else {
                     Section {
-                        Label(String(localized: "Staff the Risk capability to buy mitigations and insurance.", comment: "Risk locked hint"),
+                        Label(String(localized: "Staff the Risk capability to buy mitigations against named classes of incident.", comment: "Risk locked hint"),
                               systemImage: "lock.fill")
                             .font(.caption)
                             .foregroundStyle(.secondary)

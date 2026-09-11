@@ -524,35 +524,61 @@ extension Candidate {
     /// crew on this kind of job looks like - so an English player meets a
     /// mostly English crew and a Spanish player a mostly Spanish one.
     private static var firstNames: [String] {
-        NamePool.split(String(localized: "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean",
+        NamePool.split(String(localized: "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia",
                           comment: "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."))
     }
 
     private static var lastNames: [String] {
-        NamePool.split(String(localized: "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes",
+        NamePool.split(String(localized: "Webb,Bennett,Clarke,Doyle,Whitfield,Hargreaves,Ellis,Mercer,Ashton,Cole,Radcliffe,Naylor,Prescott,Sutton,Okafor,Patel,Kowalski,Novak,Ferreira,Reyes,Thornton,Baxter,Callaghan,Lindqvist,Mahoney,Whittaker,Pemberton,Osei,Rahman,Delgado,Fairbairn,Hollis,Kerrigan,Marchetti,Nowak,Quinlan,Rutherford,Stavros,Tremayne,Villanueva,Wainwright,Yardley,Zielinski,Bramwell",
                           comment: "Comma-separated pool of worker surnames. Replace with surnames that read naturally in your language - do not translate these literally."))
     }
 
-    static func randomName() -> String {
-        "\(firstNames.randomElement()!) \(lastNames.randomElement()!)"
+    /// A name nobody in this run is already using. Two people with the
+    /// same name read as a bug in a roster you are meant to make decisions
+    /// about, so uniqueness is enforced at the point of generation rather
+    /// than hoped for.
+    ///
+    /// The fallback is a second surname, which is how Spanish naming
+    /// distinguishes people anyway - so a crowded run produces
+    /// "Lucía Ramírez Beltrán" rather than a numbered duplicate.
+    static func randomName(excluding taken: Set<String> = []) -> String {
+        let first = firstNames, last = lastNames
+        for _ in 0..<60 {
+            let name = "\(first.randomElement()!) \(last.randomElement()!)"
+            if !taken.contains(name) { return name }
+        }
+        for _ in 0..<60 {
+            let a = last.randomElement()!, b = last.randomElement()!
+            guard a != b else { continue }
+            let name = "\(first.randomElement()!) \(a) \(b)"
+            if !taken.contains(name) { return name }
+        }
+        // Both spaces exhausted, which needs thousands of live workers.
+        return "\(first.randomElement()!) \(last.randomElement()!)"
     }
 
     /// Angels are funds and individuals, not employees, so they get their
     /// own pool rather than a worker name with "Capital" bolted on.
     private static var investorNames: [String] {
-        NamePool.split(String(localized: "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital",
+        NamePool.split(String(localized: "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital,Larkspur Partners,Ironwood Seed,Coldharbour Capital,Pinnacle Angels,Wrenfield Ventures,Saltmarsh Fund,Copperbeech Partners,Draycott Capital,Elmgrove Seed,Fairweather Angels,Greyling Ventures,Halyard Fund,Inglewood Partners,Juniper Seed",
                           comment: "Comma-separated pool of angel investor and fund names. Replace with names that read naturally in your language - do not translate these literally."))
     }
 
-    static func randomInvestorName() -> String {
-        investorNames.randomElement() ?? "Foundry Lane"
+    /// Angels are firms, so two of them sharing a name is the same bug in
+    /// a different hat.
+    static func randomInvestorName(excluding taken: Set<String> = []) -> String {
+        let pool = investorNames
+        return pool.filter { !taken.contains($0) }.randomElement()
+            ?? pool.randomElement()
+            ?? "Foundry Lane"
     }
 
     /// Three distinct archetypes, so every hire is a real choice rather
     /// than three near-clones. `marketWageFactor` comes from the labour
     /// market: in a tight market the same people cost more.
     static func pool(for packageID: WorkPackage.ID, marketWageFactor: Double, poolQuality: Double,
-                     roles: [WorkerRole] = [.generalist]) -> [Candidate] {
+                     roles: [WorkerRole] = [.generalist],
+                     excluding taken: Set<String> = []) -> [Candidate] {
         // Reputation gates the top of the pool: fire people often enough
         // and the good ones stop applying.
         var available = WorkerArchetype.allCases
@@ -562,9 +588,14 @@ extension Candidate {
             available.removeAll { $0 == .specialist }
         }
         let picked = available.shuffled().prefix(3)
+        // Names are reserved as the panel is built, so the three people in
+        // front of you are never the same person twice either.
+        var used = taken
         return picked.map { archetype in
-            Candidate(worker: Worker(
-                name: randomName(),
+            let name = randomName(excluding: used)
+            used.insert(name)
+            return Candidate(worker: Worker(
+                name: name,
                 archetype: archetype,
                 packageID: packageID,
                 role: roles.randomElement() ?? .generalist,

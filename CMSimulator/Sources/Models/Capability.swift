@@ -179,11 +179,25 @@ enum CapabilityEffects {
     }
 
     /// Insurance covers this share of incident cost above the deductible.
+    /// Kept for the risk desk's own contribution: staffing Risk does not
+    /// *grant* cover any more, it makes the cover you buy cheaper and
+    /// sharper. See `InsurancePolicy`.
     static func insuranceCoverage(level: Int) -> Double {
         [0, 0.30, 0.50, 0.70][min(level, 3)]
     }
 
     static let insuranceDeductible: Double = 22_000
+
+    /// What a staffed risk desk knocks off your premium - they know the
+    /// market and can argue your loss history.
+    static func premiumDiscount(level: Int) -> Double {
+        [1.0, 0.88, 0.78, 0.68][min(level, 3)]
+    }
+
+    /// And what they knock off the excess you carry yourself.
+    static func deductibleFactor(level: Int) -> Double {
+        [1.0, 0.85, 0.70, 0.55][min(level, 3)]
+    }
 
     // Communications - the cash clock.
 

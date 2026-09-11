@@ -133,7 +133,10 @@ struct GameView: View {
             RiskPortfolioView(scenario: engine.brief.scenario,
                               held: engine.mitigationsHeld,
                               riskLevel: engine.level(of: .risk),
-                              insuranceCoverage: CapabilityEffects.insuranceCoverage(level: engine.level(of: .risk)),
+                              policy: engine.insurancePolicy,
+                              dailyPremium: engine.dailyPremium,
+                              deductible: engine.insuranceDeductible,
+                              insuranceCoverage: engine.insuranceCoverage,
                               spendingPower: engine.ledger.spendingPower,
                               exposure: engine.siteExposure,
                               forecast: engine.forecast,
@@ -145,6 +148,7 @@ struct GameView: View {
                               savedByInsurance: engine.savedByInsurance,
                               savedByNearMiss: engine.savedByNearMiss,
                               onBuy: { engine.buyMitigation($0) },
+                              onSetInsurance: { engine.setInsurance($0) },
                               onExit: { showRisk = false })
         }
     }
@@ -393,7 +397,10 @@ struct GameView: View {
 
     private var leversBoard: some View {
         VStack(spacing: 10) {
-            if engine.level(of: .procurement) >= 2 && !engine.market.isLocked {
+            // A software company buys no materials, so there is no price
+            // to lock. Offering the button there is offering a lie.
+            if engine.brief.usesSupplyChain,
+               engine.level(of: .procurement) >= 2, !engine.market.isLocked {
                 Button(action: engine.hedgeMaterialPrice) {
                     Label(String(localized: "Lock the materials price for 30 days", comment: "Hedge button"),
                           systemImage: "lock.fill")

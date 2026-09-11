@@ -141,37 +141,37 @@ enum SupplierTrade: String, CaseIterable, Identifiable {
     var names: [String] {
         switch self {
         case .surveying:
-            return NamePool.split(String(localized: "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group",
+            return NamePool.split(String(localized: "Datum Land Surveys,Trueline Survey Partners,Baseline Site Data,Cardinal Topographic,Meridian Survey Group,Benchmark Geomatics,Plumb & Level Surveys,Sightline Site Investigation",
                 comment: "Comma-separated pool of surveying and site-investigation firms. Replace with company names that read naturally in your language - do not translate literally."))
         case .structural:
-            return NamePool.split(String(localized: "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork",
+            return NamePool.split(String(localized: "Ironclad Steel & Rebar,Keystone Ready-Mix,Foundry Concrete Supply,Girder & Bar Co.,Bastion Formwork,Anvil Reinforcement,Greystone Precast,Trussline Steel",
                 comment: "Comma-separated pool of concrete, steel and formwork suppliers. Replace with company names that read naturally in your language - do not translate literally."))
         case .engineering:
-            return NamePool.split(String(localized: "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering",
+            return NamePool.split(String(localized: "Plumbline Engineering,Axis Technical Consultants,Cornerstone Permitting,Calculus Structural,Meridian Engineering,Vector Soil Mechanics,Lintel Design Office,Compass Code Consultants",
                 comment: "Comma-separated pool of engineering consultancies and permit expediters. Replace with company names that read naturally in your language - do not translate literally."))
         case .builders:
-            return NamePool.split(String(localized: "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply",
+            return NamePool.split(String(localized: "BuildRight Merchants,Northgate Aggregates,Trowel & Block Co.,Cornerstone Builders Merchants,Apex Masonry Supply,Quarryside Materials,Render & Finish Supply,Bricklayer's Yard",
                 comment: "Comma-separated pool of builders merchants selling masonry and finishes. Replace with company names that read naturally in your language - do not translate literally."))
         case .mechanical:
-            return NamePool.split(String(localized: "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors",
+            return NamePool.split(String(localized: "Copperline Plumbing Supply,Hydro Fixtures & Fittings,Ductwork Air Systems,Valve & Flange Supply,Thermal Air Distributors,Cistern & Waste Supply,Boilerhouse Mechanical,Airflow Sheet Metal",
                 comment: "Comma-separated pool of plumbing and HVAC suppliers. Replace with company names that read naturally in your language - do not translate literally."))
         case .electrical:
-            return NamePool.split(String(localized: "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors",
+            return NamePool.split(String(localized: "Voltway Electrical Supply,Kestrel Cable & Panel,Lumen Lighting Supply,Circuit & Switchgear Co.,Amperage Distributors,Conduit & Tray Supply,Breakerbox Electrical,Photon Lighting Trade",
                 comment: "Comma-separated pool of electrical and lighting suppliers. Replace with company names that read naturally in your language - do not translate literally."))
         case .factoryChina:
-            return NamePool.split(String(localized: "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory",
+            return NamePool.split(String(localized: "Shenzhen Hongyu Trading,Guangzhou Weilong Industrial,Ningbo Star Manufacturing,Yiwu Everbright Trading,Dongguan Kaisheng Factory,Foshan Jinlong Works,Qingdao Haixin Export,Wenzhou Ruifeng Industrial",
                 comment: "Comma-separated pool of Chinese factory and trading company names. Keep these recognisably Chinese in every language - do not translate or localize them."))
         case .resellerChina:
-            return NamePool.split(String(localized: "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct",
+            return NamePool.split(String(localized: "QuickShip Global Store,Sunrise Direct Store,MegaValue Outlet,FastLane Reseller,TopChoice Direct,BrightBuy Storefront,PrimeDeal Direct,SwiftCart Outlet",
                 comment: "Comma-separated pool of online marketplace reseller storefront names. Replace with storefront names that read naturally in your language - do not translate literally."))
         case .factoryVietnam:
-            return NamePool.split(String(localized: "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export",
+            return NamePool.split(String(localized: "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export,Can Tho Hoang Gia,Bac Ninh Quang Minh,Long An Thanh Cong",
                 comment: "Comma-separated pool of Vietnamese exporter names. Keep these recognisably Vietnamese in every language - do not translate or localize them."))
         case .factoryIndia:
-            return NamePool.split(String(localized: "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports",
+            return NamePool.split(String(localized: "Surat Textile Exports,Mumbai Shree Traders,Ludhiana Metalworks Export,Chennai Global Sourcing,Jaipur Handicraft Exports,Tiruppur Knitwear Export,Rajkot Engineering Works,Noida Prime Exports",
                 comment: "Comma-separated pool of Indian exporter names. Keep these recognisably Indian in every language - do not translate or localize them."))
         case .distributorDomestic:
-            return NamePool.split(String(localized: "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors",
+            return NamePool.split(String(localized: "Regional Distribution Co.,Nearshore Trade Partners,Domestic Supply Group,Homeland Wholesale,Local Trade Distributors,Inland Freight & Supply,Border States Trading,Capital Region Wholesale",
                 comment: "Comma-separated pool of local, in-country distributor names. Replace with company names that read naturally in your language - do not translate literally."))
         }
     }

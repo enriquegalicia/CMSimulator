@@ -522,11 +522,21 @@ final class LocalizationTests: XCTestCase {
         guard Bundle.main.preferredLocalizations.first?.hasPrefix("en") == true else {
             throw XCTSkip("only meaningful when the test bundle runs in English")
         }
-        let englishGiven = Set(NamePool.split(
-            "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"))
+        // Read the pool the app actually ships rather than keeping a
+        // second copy here - a hardcoded duplicate goes stale the moment
+        // anyone adds a name, and then fails for the wrong reason.
+        guard let path = Bundle.main.path(forResource: "en", ofType: "lproj"),
+              let bundle = Bundle(path: path) else {
+            throw XCTSkip("no English bundle to read the pool from")
+        }
+        let key = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
+        let englishGiven = Set(NamePool.split(bundle.localizedString(forKey: key, value: key, table: "Localizable")))
+        XCTAssertGreaterThan(englishGiven.count, 20, "the shipped English pool looks too small")
 
         var seen = Set<String>()
         for _ in 0..<300 {
+            // A name may fall back to two surnames once the space is
+            // crowded; the given name is always the first component.
             let given = Candidate.randomName().split(separator: " ").first.map(String.init) ?? ""
             seen.insert(given)
             XCTAssertTrue(englishGiven.contains(given),
@@ -547,7 +557,7 @@ final class LocalizationTests: XCTestCase {
             return table == prefix ? nil : table
         }
 
-        let englishFirst = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean"
+        let englishFirst = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
         guard let spanish = pool("es", startingWith: englishFirst) else {
             return XCTFail("Spanish given-name pool missing from the bundle")
         }
@@ -1581,5 +1591,150 @@ final class MaterialCoverageTests: XCTestCase {
                                "\(package.id) in \(scenario.rawValue) wants an order it cannot use")
             }
         }
+    }
+
+}
+
+// MARK: - Risk belongs to its scenario
+
+@MainActor
+final class ScenarioRiskTests: XCTestCase {
+
+    /// Businesses do not fail uniformly. Flat weights made a software
+    /// company as likely to be hit by an infrastructure failure as by its
+    /// investors, which is most of what made the scenarios feel alike.
+    func testEachScenarioWeightsItsOwnFailureModes() {
+        let c = ScenarioKind.construction.baseRiskWeights
+        let s = ScenarioKind.startup.baseRiskWeights
+        let i = ScenarioKind.importing.baseRiskWeights
+
+        for weights in [c, s, i] {
+            XCTAssertEqual(Set(weights.keys), Set(MitigationClass.allCases),
+                           "a scenario left a risk class unweighted")
+            XCTAssertFalse(weights.values.allSatisfy { $0 == weights.values.first },
+                           "flat weights - this scenario has no characteristic failure")
+        }
+        // A site is exposed to the weather; a software company is not.
+        XCTAssertGreaterThan(c[.weather]!, s[.weather]!)
+        // A site's people work at height; a trading desk's do not.
+        XCTAssertGreaterThan(c[.safety]!, i[.safety]!)
+        // A startup lives and dies on its investors.
+        XCTAssertGreaterThan(s[.client]!, s[.weather]!)
+        // An importer lives and dies at the border.
+        XCTAssertGreaterThan(i[.client]!, i[.safety]!)
+    }
+
+    /// Every class must stay reachable in every scenario, or the cover you
+    /// can buy for it is money set on fire.
+    func testEveryRiskClassIsReachableInEveryScenario() {
+        for scenario in ScenarioKind.allCases {
+            let deck = SimEventKind.deck(for: scenario)
+            let reachable = Set(deck.map(\.mitigationClass))
+            XCTAssertEqual(reachable, Set(MitigationClass.allCases),
+                           "\(scenario.rawValue) sells cover against something that cannot happen")
+        }
+    }
+
+    /// No scenario may draw another's incidents.
+    func testDecksDoNotOverlap() {
+        let decks = ScenarioKind.allCases.map { Set(SimEventKind.deck(for: $0)) }
+        for (a, b) in [(0,1),(0,2),(1,2)] {
+            XCTAssertTrue(decks[a].isDisjoint(with: decks[b]))
+        }
+    }
+}
+
+// MARK: - Cover you can actually buy
+
+@MainActor
+final class InsuranceTests: XCTestCase {
+
+    /// Insurance used to arrive only as a side effect of staffing Risk, so
+    /// a player who wanted protection had to buy a whole department, and a
+    /// run that never staffed Risk could not insure anything at all.
+    func testInsuranceIsBuyableWithoutStaffingRisk() {
+        for scenario in ScenarioKind.allCases {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 3))
+            XCTAssertEqual(engine.level(of: .risk), 0, "test assumes an unstaffed risk desk")
+            XCTAssertEqual(engine.insuranceCoverage, 0, accuracy: 1e-9)
+
+            engine.setInsurance(.standard)
+            XCTAssertGreaterThan(engine.insuranceCoverage, 0,
+                                 "\(scenario.rawValue) cannot buy cover without the lever")
+            XCTAssertGreaterThan(engine.dailyPremium, 0, "cover with no premium is free money")
+        }
+    }
+
+    /// Better cover must cost more and carry less excess, or the tiers are
+    /// not a decision.
+    func testBetterCoverCostsMoreAndCarriesLessExcess() {
+        let tiers: [InsurancePolicy] = [.basic, .standard, .full]
+        for (a, b) in zip(tiers, tiers.dropFirst()) {
+            XCTAssertGreaterThan(b.coverage, a.coverage)
+            XCTAssertGreaterThan(b.premiumRate, a.premiumRate)
+            XCTAssertLessThan(b.deductible, a.deductible)
+        }
+        XCTAssertEqual(InsurancePolicy.none.coverage, 0)
+        XCTAssertEqual(InsurancePolicy.none.premiumRate, 0)
+    }
+
+    /// The risk desk must still earn its keep once cover is buyable alone.
+    func testStaffingRiskSharpensThePolicyYouBought() {
+        let bare = SimulationEngine(brief: .make(scenario: .construction, difficulty: .steady, seed: 5))
+        bare.setInsurance(.standard)
+        let staffed = SimulationEngine(brief: .make(scenario: .construction, difficulty: .steady, seed: 5))
+        staffed.setInsurance(.standard)
+        staffed.debugSetCapabilityLevel(.risk, to: 3)
+
+        XCTAssertGreaterThan(staffed.insuranceCoverage, bare.insuranceCoverage)
+        XCTAssertLessThan(staffed.insuranceDeductible, bare.insuranceDeductible)
+        XCTAssertLessThan(staffed.dailyPremium, bare.dailyPremium)
+    }
+
+    /// A software company buys no materials, so there is no price to lock.
+    func testPriceHedgeIsUnavailableWhereNothingIsBought() {
+        let startup = SimulationEngine(brief: .make(scenario: .startup, difficulty: .steady, seed: 2))
+        startup.debugSetCapabilityLevel(.procurement, to: 3)
+        startup.hedgeMaterialPrice()
+        XCTAssertFalse(startup.market.isLocked, "a startup hedged a materials price it never pays")
+    }
+}
+
+// MARK: - Nobody shares a name
+
+@MainActor
+final class NameUniquenessTests: XCTestCase {
+
+    /// Two people with the same name read as a bug in a roster you make
+    /// firing decisions from.
+    func testNobodyEverSharesANameAcrossAWholeRun() {
+        for scenario in ScenarioKind.allCases {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .steady, seed: 4))
+            var seen = Set<String>()
+            for _ in 0..<120 {
+                guard let stream = engine.workPackages.first(where: { $0.isUnlocked && !$0.isComplete })
+                else { break }
+                engine.requestHire(for: stream.id)
+                guard let request = engine.hiringRequest else { continue }
+                // The three in front of you must differ from each other too.
+                let names = request.candidates.map(\.name)
+                XCTAssertEqual(Set(names).count, names.count, "a hiring panel offered the same person twice")
+                if let pick = request.candidates.first {
+                    XCTAssertFalse(seen.contains(pick.name), "\(pick.name) was hired twice in \(scenario.rawValue)")
+                    seen.insert(pick.name)
+                    engine.confirmHire(pick)
+                } else { engine.cancelHiring() }
+                engine.advance(byDays: 0.25)
+            }
+            XCTAssertGreaterThan(seen.count, 20, "test hired too few people to prove anything")
+        }
+    }
+
+    /// Pools have to be deep enough that uniqueness does not degrade into
+    /// three-part names immediately.
+    func testNamePoolsAreDeepEnoughToBeVaried() {
+        var names = Set<String>()
+        for _ in 0..<400 { names.insert(Candidate.randomName()) }
+        XCTAssertGreaterThan(names.count, 300, "the name space is too small to feel varied")
     }
 }

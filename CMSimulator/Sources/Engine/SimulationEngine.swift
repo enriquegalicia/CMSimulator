@@ -108,6 +108,10 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var extensionUsed = false
     /// What Discovery established this company to be. Nil until it lands.
     @Published private(set) var venture: VentureKind?
+    /// Cover you bought yourself, independent of any capability. Every
+    /// scenario can buy it, from day one.
+    @Published var insurancePolicy: InsurancePolicy = .none
+
     /// Where stock is currently bought from. A standing decision, changed
     /// between orders, and the one the whole scenario turns on.
     @Published var sourceOrigin: SourceOrigin = .chinaWholesale
@@ -234,6 +238,7 @@ final class SimulationEngine: ObservableObject {
         eventQueue.removeAll()
         activeEventAge = 0
         venture = nil
+        insurancePolicy = .none
         sourceOrigin = .chinaWholesale
         dutyPaid = 0
         angelProspects.removeAll()
@@ -444,6 +449,19 @@ final class SimulationEngine: ObservableObject {
     /// a trade leaving at the end of its works, not a layoff. Without it,
     /// finished crews would draw full pay to the end of the job and no
     /// amount of good play could turn a profit.
+    /// Every name currently spoken for in this run. Nobody new may take
+    /// one of these, because two people sharing a name in a roster you are
+    /// making firing decisions from reads as a bug.
+    private var namesInPlay: Set<String> {
+        var names = Set(workers.map(\.name))
+        names.formUnion(angelProspects.map(\.name))
+        names.formUnion(vendorPanels.values.flatMap { $0 }.map(\.name))
+        if let request = hiringRequest {
+            names.formUnion(request.candidates.map(\.name))
+        }
+        return names
+    }
+
     /// Every trade the game can buy from gets its own panel up front, so
     /// switching sourcing origin mid-run does not conjure a new set of
     /// firms with freshly rolled terms.
@@ -566,10 +584,8 @@ final class SimulationEngine: ObservableObject {
         let mitigationUpkeep = mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep } * scale
         ledger.forceSpend((capabilityUpkeep + mitigationUpkeep) * step, into: \.capabilities)
 
-        let riskLevel = level(of: .risk)
-        if riskLevel > 0 {
-            let premium = brief.contractValue * 0.00022 * Double(riskLevel) * step
-            ledger.forceSpend(premium, into: \.insurance)
+        if insurancePolicy != .none {
+            ledger.forceSpend(dailyPremium * step, into: \.insurance)
         }
     }
 
@@ -862,6 +878,39 @@ final class SimulationEngine: ObservableObject {
     /// Days of grace still to run, for the HUD.
     var graceDaysRemaining: Double { max(0, brief.gracePeriodDays - elapsedDays) }
 
+    // MARK: Insurance
+
+    /// Share of a loss above the excess that the insurer carries. A
+    /// staffed risk desk adds a little on top of whatever you bought.
+    var insuranceCoverage: Double {
+        guard insurancePolicy != .none else { return 0 }
+        let deskBonus = CapabilityEffects.insuranceCoverage(level: level(of: .risk)) * 0.25
+        return min(0.9, insurancePolicy.coverage + deskBonus)
+    }
+
+    /// The excess you carry yourself. The risk desk argues it down.
+    var insuranceDeductible: Double {
+        insurancePolicy.deductible * CapabilityEffects.deductibleFactor(level: level(of: .risk))
+    }
+
+    /// What cover costs you every day, whether or not anything happens.
+    var dailyPremium: Double {
+        brief.contractValue * insurancePolicy.premiumRate
+            * CapabilityEffects.premiumDiscount(level: level(of: .risk))
+    }
+
+    /// Buy, change or cancel cover. Takes effect immediately, and there is
+    /// no refund for the days you were covered and nothing happened.
+    func setInsurance(_ policy: InsurancePolicy) {
+        guard policy != insurancePolicy else { return }
+        insurancePolicy = policy
+        log(policy == .none
+            ? String(localized: "Cover cancelled. Every loss is yours now.", comment: "Site log: insurance cancelled")
+            : String(localized: "\(policy.name) taken out at \(Int(dailyPremium).formatted()) a day.", comment: "Site log: insurance bought"),
+            symbol: policy == .none ? "umbrella.slash" : "umbrella.fill",
+            tone: policy == .none ? .bad : .good)
+    }
+
     // MARK: Angels
 
     /// Whether this scenario raises money at all. A building has a client
@@ -917,7 +966,7 @@ final class SimulationEngine: ObservableObject {
         // A marquee name pays less per point and is still worth taking.
         let dilution = (amount / brief.contractValue) * Double.random(in: 0.9...1.5) * (marquee ? 0.8 : 1.0)
         let prospect = AngelProspect(
-            name: Candidate.randomInvestorName(),
+            name: Candidate.randomInvestorName(excluding: namesInPlay),
             amount: amount,
             dilution: min(0.35, dilution),
             daysOpen: Double.random(in: 12...26),
@@ -1052,15 +1101,13 @@ final class SimulationEngine: ObservableObject {
     /// categories toward you, so incidents read as consequences rather
     /// than as arbitrary punishment.
     private func incidentClassWeights() -> [MitigationClass: Double] {
-        var weights: [MitigationClass: Double] = [
-            .weather: 1.0, .security: 1.0, .safety: 1.0, .technical: 1.0, .client: 1.0,
-        ]
+        var weights = brief.scenario.baseRiskWeights
         // Bad practice pulls specific categories toward you, so incidents
         // read as consequences rather than as arbitrary punishment.
         let overtimeLoad = workPackages.reduce(0) { $0 + $1.overtime }
         weights[.safety]! += overtimeLoad * 1.6
         weights[.technical]! += Double(workPackages.filter(\.isFastTracked).count) * 1.4
-        weights[.client]! += (1 - clientTrust) * 1.8
+        weights[.client]! += (1 - clientTrust) * 1.0
         weights[.security]! += market.trend > 0.05 ? 0.8 : 0
         // Sitting well above the going rate is an invitation: somebody
         // will list the same goods cheaper. Pricing for margin is a real
@@ -1140,9 +1187,10 @@ final class SimulationEngine: ObservableObject {
         }
 
         var covered = 0.0
-        let coverage = CapabilityEffects.insuranceCoverage(level: level(of: .risk))
-        if coverage > 0, gross > CapabilityEffects.insuranceDeductible {
-            covered = (gross - CapabilityEffects.insuranceDeductible) * coverage
+        let coverage = insuranceCoverage
+        let excess = insuranceDeductible
+        if coverage > 0, gross > excess {
+            covered = (gross - excess) * coverage
             savedByInsurance += covered
             consequences.append(String(localized: "Insurance covered \(Int(covered).formatted()).", comment: "Incident consequence: insurance"))
         }
@@ -1342,7 +1390,8 @@ final class SimulationEngine: ObservableObject {
             id: packageID,
             packageTitle: package.title,
             candidates: Candidate.pool(for: packageID, marketWageFactor: tightness, poolQuality: reputation,
-                                       roles: brief.hiresByRole ? WorkerRole.hireable : [.generalist]),
+                                       roles: brief.hiresByRole ? WorkerRole.hireable : [.generalist],
+                                       excluding: namesInPlay),
             marketWageFactor: tightness
         )
     }
@@ -1548,7 +1597,8 @@ final class SimulationEngine: ObservableObject {
     /// Locks the materials index for 30 days at a premium. Needs a real
     /// procurement desk (Acquisitions level 2) behind it.
     func hedgeMaterialPrice() {
-        guard CapabilityEffects.canHedge(level: level(of: .procurement)), !market.isLocked else { return }
+        guard brief.usesSupplyChain,
+              CapabilityEffects.canHedge(level: level(of: .procurement)), !market.isLocked else { return }
         let exposure = workPackages.reduce(0) { partial, package in
             partial + package.unitsRemaining * package.spec.materialUnitsPerWorkUnit * package.spec.materialCostPerUnit
         }
@@ -1773,6 +1823,14 @@ final class SimulationEngine: ObservableObject {
     }
 
     /// Empties the bank and the credit line, to exercise insolvency.
+    /// Sets a capability level outright, so a test can check what a
+    /// staffed desk changes without playing far enough to afford one.
+    func debugSetCapabilityLevel(_ kind: CapabilityKind, to level: Int) {
+        guard let idx = capabilities.firstIndex(where: { $0.kind == kind }) else { return }
+        capabilities[idx].isUnlocked = true
+        capabilities[idx].level = max(0, min(kind.maxLevel, level))
+    }
+
     /// Grants cover directly, bypassing the Risk capability gate, so the
     /// register can be tested independently of how cover is bought.
     func debugGrantMitigation(_ klass: MitigationClass) { mitigationsHeld.insert(klass) }

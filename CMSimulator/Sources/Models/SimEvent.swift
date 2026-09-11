@@ -67,6 +67,71 @@ enum MitigationClass: String, CaseIterable, Identifiable {
     var severityReduction: Double { 0.6 }
 }
 
+/// Cover you can simply go out and buy. Insurance used to arrive only as
+/// a side effect of staffing the Risk capability, which meant a player who
+/// wanted protection had to buy a whole department to get it - and a
+/// scenario that never staffed Risk could not insure anything at all.
+///
+/// A policy is now its own decision, available in every scenario from day
+/// one. The Risk desk still earns its keep: it makes the same cover
+/// cheaper and cuts the excess you carry.
+enum InsurancePolicy: String, CaseIterable, Identifiable {
+    case none
+    case basic
+    case standard
+    case full
+
+    var id: String { rawValue }
+
+    var name: String {
+        switch self {
+        case .none: return String(localized: "Uninsured", comment: "Insurance policy tier")
+        case .basic: return String(localized: "Third party only", comment: "Insurance policy tier")
+        case .standard: return String(localized: "Standard cover", comment: "Insurance policy tier")
+        case .full: return String(localized: "Full cover", comment: "Insurance policy tier")
+        }
+    }
+
+    /// Share of any loss above the excess that the insurer carries.
+    var coverage: Double {
+        switch self {
+        case .none: return 0
+        case .basic: return 0.35
+        case .standard: return 0.55
+        case .full: return 0.75
+        }
+    }
+
+    /// Daily premium as a share of contract value, before any discount.
+    var premiumRate: Double {
+        switch self {
+        case .none: return 0
+        case .basic: return 0.00016
+        case .standard: return 0.00030
+        case .full: return 0.00052
+        }
+    }
+
+    /// The excess you carry yourself, before the risk desk argues it down.
+    var deductible: Double {
+        switch self {
+        case .none: return 0
+        case .basic: return 34_000
+        case .standard: return 22_000
+        case .full: return 14_000
+        }
+    }
+
+    var blurb: String {
+        switch self {
+        case .none: return String(localized: "Every loss is yours. Cheapest right up until it is not.", comment: "Insurance policy description")
+        case .basic: return String(localized: "Covers a third of the big ones, above a high excess. Thin, but it stops one bad day ending the run.", comment: "Insurance policy description")
+        case .standard: return String(localized: "The usual policy. Covers over half of anything serious.", comment: "Insurance policy description")
+        case .full: return String(localized: "Covers three quarters above a low excess. You will pay for it every single day, most of which nothing happens.", comment: "Insurance policy description")
+        }
+    }
+}
+
 /// One line of the risk register: how likely a class of incident is to be
 /// the next thing that happens, what it would cost, and whether you hold
 /// cover against it. Derived entirely from live engine state.
@@ -307,7 +372,7 @@ enum SimEventKind: CaseIterable {
         case .customsHold: return 0.012...0.030
         case .cloudOutage: return 0.010...0.026
         case .dataBreach: return 0.022...0.050
-        case .keyDeparture: return 0.004...0.010
+        case .keyDeparture: return 0.008...0.022
         case .burnoutWave: return 0.004...0.012
         case .criticalBug: return 0.012...0.030
         case .scalingFailure: return 0.020...0.042

@@ -36,6 +36,24 @@
         }
       }
     },
+    "%@ a day": {
+      "extractionState": "manual",
+      "comment": "Net daily cash, negative",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ a day"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ al día"
+          }
+        }
+      }
+    },
     "%@ already sold will never be paid.": {
       "extractionState": "manual",
       "localizations": {
@@ -126,6 +144,24 @@
       },
       "comment": "Result run parameters"
     },
+    "%@ earned, not yet paid": {
+      "extractionState": "manual",
+      "comment": "Money owed to the player",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ earned, not yet paid"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ganados, aún sin cobrar"
+          }
+        }
+      }
+    },
     "%@ fast-tracked. Expect rework.": {
       "extractionState": "manual",
       "localizations": {
@@ -198,6 +234,24 @@
         }
       }
     },
+    "%@ grew by %lld units, and the round was topped up by %@.": {
+      "extractionState": "manual",
+      "comment": "Incident consequence: scope added, startup",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ grew by %lld units, and the round was topped up by %@."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ creció %2$lld unidades, y la ronda se amplió en %3$@."
+          }
+        }
+      }
+    },
     "%@ grew by %lld units, contract value up %@.": {
       "extractionState": "manual",
       "localizations": {
@@ -215,6 +269,24 @@
         }
       },
       "comment": "Incident consequence: change order"
+    },
+    "%@ grew by %lld units, worth %@ more in orders.": {
+      "extractionState": "manual",
+      "comment": "Incident consequence: scope added, import",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ grew by %lld units, worth %@ more in orders."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ creció %2$lld unidades, %3$@ más en pedidos."
+          }
+        }
+      }
     },
     "%@ hired to %@.": {
       "extractionState": "manual",
@@ -503,6 +575,24 @@
         }
       },
       "comment": "Accessibility label for the market sparkline"
+    },
+    "%@ prices jumped %lld%%.": {
+      "extractionState": "manual",
+      "comment": "Incident consequence: price shock",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ prices jumped %lld%%."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los precios de %1$@ subieron %2$lld%%."
+          }
+        }
+      }
     },
     "%@ raised so far — none of it is revenue.": {
       "extractionState": "manual",
@@ -1169,23 +1259,23 @@
       },
       "comment": "Site log: delivery arrived"
     },
-    "%lld units of material lost.": {
+    "%lld units lost — %@.": {
       "extractionState": "manual",
+      "comment": "Incident consequence: named input lost",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld units of material lost."
+            "value": "%lld units lost — %@."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld unidades de material perdidas."
+            "value": "%1$lld unidades perdidas — %2$@."
           }
         }
-      },
-      "comment": "Incident consequence: material lost"
+      }
     },
     "%lld yrs in the trade": {
       "extractionState": "manual",
@@ -1222,6 +1312,24 @@
         }
       },
       "comment": "HUD runway in days"
+    },
+    "+%@ a day": {
+      "extractionState": "manual",
+      "comment": "Net daily cash, positive",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ a day"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@ al día"
+          }
+        }
+      }
     },
     "/day": {
       "extractionState": "manual",
@@ -1708,6 +1816,24 @@
         }
       },
       "comment": "Acquisition cost explanation"
+    },
+    "Acquisition": {
+      "extractionState": "manual",
+      "comment": "Cashflow line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquisition"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adquisición"
+          }
+        }
+      }
     },
     "Acquisition cost rising faster than anyone stays.": {
       "extractionState": "manual",
@@ -2375,6 +2501,24 @@
         }
       }
     },
+    "Building": {
+      "extractionState": "manual",
+      "comment": "Cash phase",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Building"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Construyendo"
+          }
+        }
+      }
+    },
     "Builds buyer relationships, which decide how fast you are paid and how much of the market you get.": {
       "extractionState": "manual",
       "localizations": {
@@ -2590,6 +2734,42 @@
         }
       },
       "comment": "Who pays the player"
+    },
+    "Buying": {
+      "extractionState": "manual",
+      "comment": "Cash phase",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buying"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprando"
+          }
+        }
+      }
+    },
+    "Buying & selling": {
+      "extractionState": "manual",
+      "comment": "Cash phase",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buying & selling"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprando y vendiendo"
+          }
+        }
+      }
     },
     "Buys information": {
       "extractionState": "manual",
@@ -2842,6 +3022,24 @@
       },
       "comment": "HUD label"
     },
+    "Cash is committed and on the water. It cannot sell until it lands.": {
+      "extractionState": "manual",
+      "comment": "Cash phase explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cash is committed and on the water. It cannot sell until it lands."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El efectivo está comprometido y viajando. No puede venderse hasta que llegue."
+          }
+        }
+      }
+    },
     "Caught during the build these cost a fraction as much. Quality inspections pay for themselves.": {
       "extractionState": "manual",
       "localizations": {
@@ -3075,24 +3273,6 @@
         }
       },
       "comment": "Incident title"
-    },
-    "Client confidence took a hit.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client confidence took a hit."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La confianza del cliente se resintió."
-          }
-        }
-      },
-      "comment": "Incident consequence: trust"
     },
     "Client granted %lld more days.": {
       "extractionState": "manual",
@@ -3378,6 +3558,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Concreto, acero y cimbra"
+          }
+        }
+      }
+    },
+    "Confidence from %@ took a hit.": {
+      "extractionState": "manual",
+      "comment": "Incident consequence: trust",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidence from %@ took a hit."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La confianza de %@ se vio afectada."
           }
         }
       }
@@ -7034,6 +7232,24 @@
       },
       "comment": "Board tab"
     },
+    "Levers & cover": {
+      "extractionState": "manual",
+      "comment": "Cashflow line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levers & cover"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palancas y cobertura"
+          }
+        }
+      }
+    },
     "List price": {
       "extractionState": "manual",
       "localizations": {
@@ -7430,24 +7646,6 @@
       },
       "comment": "Scenario signature lesson"
     },
-    "Materials index jumped %lld%%.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Materials index jumped %lld%%."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El índice de materiales subió %lld%%."
-          }
-        }
-      },
-      "comment": "Incident consequence: price shock"
-    },
     "Materials stolen": {
       "extractionState": "manual",
       "localizations": {
@@ -7610,6 +7808,42 @@
       },
       "comment": "Forecast severity"
     },
+    "Money goes out daily and arrives in lumps when work is certified.": {
+      "extractionState": "manual",
+      "comment": "Cash phase explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Money goes out daily and arrives in lumps when work is certified."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El dinero sale a diario y entra por tramos cuando se certifica el avance."
+          }
+        }
+      }
+    },
+    "Money is only going out. Nothing can sell until the first line is finished.": {
+      "extractionState": "manual",
+      "comment": "Cash phase explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Money is only going out. Nothing can sell until the first line is finished."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El dinero solo sale. Nada puede venderse hasta terminar la primera línea."
+          }
+        }
+      }
+    },
     "Months of pace caught up with the team at once.": {
       "extractionState": "manual",
       "localizations": {
@@ -7664,23 +7898,23 @@
       },
       "comment": "Incident description"
     },
-    "Morale fell across the site.": {
+    "Morale fell across %@.": {
       "extractionState": "manual",
+      "comment": "Incident consequence: morale",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Morale fell across the site."
+            "value": "Morale fell across %@."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El ánimo cayó en toda la obra."
+            "value": "El ánimo bajó en %@."
           }
         }
-      },
-      "comment": "Incident consequence: morale"
+      }
     },
     "More than you can cover": {
       "extractionState": "manual",
@@ -8726,23 +8960,41 @@
       },
       "comment": "Startup work stream name"
     },
-    "Payroll missed. Crews walk if this is not fixed.": {
+    "Payroll": {
       "extractionState": "manual",
+      "comment": "Cashflow line",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Payroll missed. Crews walk if this is not fixed."
+            "value": "Payroll"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se cubrió la nómina. Si no se corrige, las cuadrillas se van."
+            "value": "Nómina"
           }
         }
-      },
-      "comment": "Site log: payroll missed"
+      }
+    },
+    "Payroll missed. %@ walks if this is not fixed.": {
+      "extractionState": "manual",
+      "comment": "Site log: payroll missed",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payroll missed. %@ walks if this is not fixed."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pagó la nómina. %@ se va si esto no se corrige."
+          }
+        }
+      }
     },
     "People in those roles work at a premium here. Everyone else you hired is a specialist doing generalist work.": {
       "extractionState": "manual",
@@ -10022,6 +10274,24 @@
       },
       "comment": "Worker archetype name"
     },
+    "Sales": {
+      "extractionState": "manual",
+      "comment": "Cashflow line",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sales"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ventas"
+          }
+        }
+      }
+    },
     "Sane hours and real time off. Fewer burnouts, fewer resignations.": {
       "extractionState": "manual",
       "localizations": {
@@ -10342,6 +10612,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Autodidacta"
+          }
+        }
+      }
+    },
+    "Selling": {
+      "extractionState": "manual",
+      "comment": "Cash phase",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selling"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vendiendo"
+          }
+        }
+      }
+    },
+    "Selling one shipment while paying for the next. This is where the cash gap opens.": {
+      "extractionState": "manual",
+      "comment": "Cash phase explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selling one shipment while paying for the next. This is where the cash gap opens."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vendiendo un embarque mientras pagas el siguiente. Aquí es donde se abre el hueco de efectivo."
           }
         }
       }
@@ -11065,6 +11371,24 @@
         }
       },
       "comment": "Consumable resource name"
+    },
+    "Stock is shifting. The marketplace pays out on a delay, so sales today are cash later.": {
+      "extractionState": "manual",
+      "comment": "Cash phase explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stock is shifting. The marketplace pays out on a delay, so sales today are cash later."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La mercancía se está moviendo. El marketplace paga con retraso, así que las ventas de hoy son efectivo después."
+          }
+        }
+      }
     },
     "Stock — %@": {
       "extractionState": "manual",
@@ -13334,6 +13658,24 @@
         }
       }
     },
+    "buyers": {
+      "extractionState": "manual",
+      "comment": "Counterparty, in a sentence",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "buyers"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "los compradores"
+          }
+        }
+      }
+    },
     "covered": {
       "extractionState": "manual",
       "comment": "Risk register cover state",
@@ -13406,6 +13748,60 @@
       },
       "comment": "HUD debt caption"
     },
+    "in": {
+      "extractionState": "manual",
+      "comment": "Cashflow direction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "entra"
+          }
+        }
+      }
+    },
+    "investors": {
+      "extractionState": "manual",
+      "comment": "Counterparty, in a sentence",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "investors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "los inversionistas"
+          }
+        }
+      }
+    },
+    "next in %lldd": {
+      "extractionState": "manual",
+      "comment": "Days until the next payment lands",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "next in %lldd"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "siguiente en %lldd"
+          }
+        }
+      }
+    },
     "no forecast": {
       "extractionState": "manual",
       "localizations": {
@@ -13460,6 +13856,42 @@
       },
       "comment": "Crew size against the optimal crew for a package"
     },
+    "out": {
+      "extractionState": "manual",
+      "comment": "Cashflow direction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "out"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sale"
+          }
+        }
+      }
+    },
+    "the client": {
+      "extractionState": "manual",
+      "comment": "Counterparty, in a sentence",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the client"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "el cliente"
+          }
+        }
+      }
+    },
     "the company": {
       "extractionState": "manual",
       "comment": "What the player is running",
@@ -13510,6 +13942,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "la operación"
+          }
+        }
+      }
+    },
+    "the site": {
+      "extractionState": "manual",
+      "comment": "Where the work happens, in a sentence",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the site"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "la obra"
+          }
+        }
+      }
+    },
+    "the team": {
+      "extractionState": "manual",
+      "comment": "Where the work happens, in a sentence",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the team"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "el equipo"
           }
         }
       }

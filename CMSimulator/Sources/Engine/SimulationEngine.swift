@@ -51,6 +51,52 @@ enum RunOutcome: Equatable {
 /// A transient line for the activity feed - deliveries, resignations,
 /// payments. The old build had no way to tell the player that something
 /// happened unless it was a full-screen disaster banner.
+/// One itemised line of money moving, per day.
+struct CashflowLine: Identifiable {
+    let id: String
+    let label: String
+    let amount: Double
+}
+
+/// What the operation is doing with its money right now.
+enum CashPhase {
+    case settingUp
+    case building
+    case buying
+    case selling
+    case buyingAndSelling
+
+    var label: String {
+        switch self {
+        case .settingUp: return String(localized: "Setting up", comment: "Cash phase")
+        case .building: return String(localized: "Building", comment: "Cash phase")
+        case .buying: return String(localized: "Buying", comment: "Cash phase")
+        case .selling: return String(localized: "Selling", comment: "Cash phase")
+        case .buyingAndSelling: return String(localized: "Buying & selling", comment: "Cash phase")
+        }
+    }
+
+    var explanation: String {
+        switch self {
+        case .settingUp: return String(localized: "Money is only going out. Nothing can sell until the first line is finished.", comment: "Cash phase explanation")
+        case .building: return String(localized: "Money goes out daily and arrives in lumps when work is certified.", comment: "Cash phase explanation")
+        case .buying: return String(localized: "Cash is committed and on the water. It cannot sell until it lands.", comment: "Cash phase explanation")
+        case .selling: return String(localized: "Stock is shifting. The marketplace pays out on a delay, so sales today are cash later.", comment: "Cash phase explanation")
+        case .buyingAndSelling: return String(localized: "Selling one shipment while paying for the next. This is where the cash gap opens.", comment: "Cash phase explanation")
+        }
+    }
+
+    var symbolName: String {
+        switch self {
+        case .settingUp: return "hammer.fill"
+        case .building: return "building.2.fill"
+        case .buying: return "arrow.down.circle.fill"
+        case .selling: return "arrow.up.circle.fill"
+        case .buyingAndSelling: return "arrow.up.arrow.down.circle.fill"
+        }
+    }
+}
+
 struct SiteLogEntry: Identifiable {
     enum Tone { case neutral, good, bad }
     let id = UUID()
@@ -559,7 +605,7 @@ final class SimulationEngine: ObservableObject {
             ledger.daysInArrears += step
             // Once per episode, not once per tick.
             if wasSolvent {
-                log(String(localized: "Payroll missed. Crews walk if this is not fixed.", comment: "Site log: payroll missed"),
+                log(String(localized: "Payroll missed. \(brief.scenario.staffName) walks if this is not fixed.", comment: "Site log: payroll missed"),
                     symbol: "exclamationmark.octagon.fill", tone: .bad)
             }
         } else {
@@ -1219,7 +1265,8 @@ final class SimulationEngine: ObservableObject {
                .max(by: { workPackages[$0].materialStock < workPackages[$1].materialStock }) {
             let lost = min(workPackages[idx].materialStock, scaled(range, severityScale))
             workPackages[idx].materialStock -= lost
-            consequences.append(String(localized: "\(Int(lost)) units of material lost.", comment: "Incident consequence: material lost"))
+            let what = workPackages[idx].inputName ?? brief.scenario.supplyName
+            consequences.append(String(localized: "\(Int(lost)) units lost — \(what).", comment: "Incident consequence: named input lost"))
         }
 
         if let range = kind.deliveryDelayRange, !orders.isEmpty {
@@ -1234,7 +1281,7 @@ final class SimulationEngine: ObservableObject {
         if let range = kind.moraleHitRange, !workers.isEmpty {
             let hit = scaled(range, severityScale)
             for i in workers.indices { workers[i].morale = max(0, workers[i].morale - hit) }
-            consequences.append(String(localized: "Morale fell across the site.", comment: "Incident consequence: morale"))
+            consequences.append(String(localized: "Morale fell across \(brief.scenario.placeInProse).", comment: "Incident consequence: morale"))
         }
 
         if let range = kind.receivableLossRange, trading != nil {
@@ -1246,7 +1293,7 @@ final class SimulationEngine: ObservableObject {
 
         if let range = kind.trustHitRange {
             clientTrust = max(0, clientTrust - scaled(range, severityScale))
-            consequences.append(String(localized: "Client confidence took a hit.", comment: "Incident consequence: trust"))
+            consequences.append(String(localized: "Confidence from \(brief.scenario.counterpartyInProse) took a hit.", comment: "Incident consequence: trust"))
         }
 
         if kind == .competitorUndercut, trading != nil {
@@ -1266,7 +1313,7 @@ final class SimulationEngine: ObservableObject {
         if let range = kind.priceShockRange {
             let magnitude = scaled(range, severityScale)
             market.applyShock(magnitude: magnitude, isSpike: true)
-            consequences.append(String(localized: "Materials index jumped \(Int(magnitude * 100))%.", comment: "Incident consequence: price shock"))
+            consequences.append(String(localized: "\(brief.scenario.supplyName) prices jumped \(Int(magnitude * 100))%.", comment: "Incident consequence: price shock"))
         }
 
         if let range = kind.scopeAddedRange {
@@ -1279,7 +1326,18 @@ final class SimulationEngine: ObservableObject {
                 workPackages[idx].addedScope += extra
                 let value = brief.contractValue * 0.012 * extra / 8 * factor
                 scopeRevenue += value
-                consequences.append(String(localized: "\(workPackages[idx].title) grew by \(Int(extra)) units, contract value up \(Int(value).formatted()).", comment: "Incident consequence: change order"))
+                // A client pays for a change order; a board funds a pivot.
+                // The same mechanic, two entirely different sentences.
+                let title = workPackages[idx].title
+                let paid = Int(value).formatted()
+                switch brief.scenario {
+                case .construction:
+                    consequences.append(String(localized: "\(title) grew by \(Int(extra)) units, contract value up \(paid).", comment: "Incident consequence: change order"))
+                case .startup:
+                    consequences.append(String(localized: "\(title) grew by \(Int(extra)) units, and the round was topped up by \(paid).", comment: "Incident consequence: scope added, startup"))
+                case .importing:
+                    consequences.append(String(localized: "\(title) grew by \(Int(extra)) units, worth \(paid) more in orders.", comment: "Incident consequence: scope added, import"))
+                }
             }
         }
 
@@ -1726,12 +1784,88 @@ final class SimulationEngine: ObservableObject {
 
     // MARK: - Derived readouts
 
-    var dailyBurn: Double {
-        let payroll = workers.reduce(0) { $0 + $1.dailyWage }
-        let upkeep = capabilities.reduce(0) { $0 + $1.dailyUpkeep }
-            + mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep }
-        let lateCost = elapsedDays > deadlineDays ? brief.latePenaltyPerDay : 0
-        return payroll + upkeep + lateCost
+    /// Everything leaving the account today, itemised. This used to count
+    /// only payroll, levers and late penalties - it ignored advertising,
+    /// storage, insurance, cost to serve and acquisition spend, and it did
+    /// not apply the organisation-size multiplier to upkeep. A burn figure
+    /// that quietly omits half the burn is worse than none.
+    var outflows: [CashflowLine] {
+        var lines: [CashflowLine] = []
+        func add(_ id: String, _ label: String, _ amount: Double) {
+            if amount > 0.5 { lines.append(CashflowLine(id: id, label: label, amount: amount)) }
+        }
+        add("payroll", String(localized: "Payroll", comment: "Cashflow line"),
+            workers.reduce(0) { $0 + $1.dailyWage })
+        let scale = brief.capabilityCostFactor * organisationLoad
+        add("levers", String(localized: "Levers & cover", comment: "Cashflow line"),
+            (capabilities.reduce(0) { $0 + $1.dailyUpkeep }
+             + mitigationsHeld.reduce(0) { $0 + $1.dailyUpkeep }) * scale)
+        add("insurance", String(localized: "Insurance", comment: "Cashflow line"), dailyPremium)
+        if let trading {
+            add("ads", String(localized: "Advertising", comment: "Cashflow line"), trading.dailyAdSpend)
+            add("storage", String(localized: "Storage", comment: "Cashflow line"), trading.dailyStorageCost)
+        }
+        if let growth {
+            add("serve", String(localized: "Cost to serve", comment: "Cashflow line"), growth.dailyCostToServe)
+            add("acquisition", String(localized: "Acquisition", comment: "Cashflow line"), growth.dailyGrowthSpend)
+        }
+        add("late", String(localized: "Late penalties", comment: "Cashflow line"),
+            elapsedDays > deadlineDays ? brief.latePenaltyPerDay : 0)
+        return lines.sorted { $0.amount > $1.amount }
+    }
+
+    /// Money arriving today at the current run rate. Construction earns in
+    /// lumps rather than a rate, so it reports nothing here and everything
+    /// through `moneyOwed`.
+    var inflows: [CashflowLine] {
+        var lines: [CashflowLine] = []
+        if let trading, trading.isTrading, trading.recentDailyGrossSales > 0.5 {
+            lines.append(CashflowLine(id: "sales",
+                                      label: String(localized: "Sales", comment: "Cashflow line"),
+                                      amount: trading.recentDailyGrossSales))
+        }
+        if let growth, growth.isLaunched, growth.dailyRevenue > 0.5 {
+            lines.append(CashflowLine(id: "subs",
+                                      label: String(localized: "Revenue", comment: "Cashflow line"),
+                                      amount: growth.dailyRevenue))
+        }
+        return lines
+    }
+
+    var dailyBurn: Double { outflows.reduce(0) { $0 + $1.amount } }
+    var dailyIncome: Double { inflows.reduce(0) { $0 + $1.amount } }
+
+    /// Earned but not yet in the bank: marketplace payouts still clearing,
+    /// certified milestones not yet paid, and retainage held back.
+    var moneyOwed: Double {
+        (trading?.receivables ?? 0)
+            + pendingPayments.reduce(0) { $0 + $1.net + $1.retainage }
+            + ledger.retainageHeld
+    }
+
+    /// When the next promised money actually lands.
+    var daysToNextInflow: Double? {
+        var candidates: [Double] = pendingPayments.map { max(0, $0.dueDay - elapsedDays) }
+        if let trading { candidates.append(contentsOf: trading.daysToPayouts(from: elapsedDays)) }
+        return candidates.min()
+    }
+
+    /// What the operation is doing with its money right now. The import
+    /// run in particular is a cycle - commit cash to stock, wait for it to
+    /// land, sell it, wait again to be paid - and it was impossible to
+    /// tell which half you were in.
+    var cashPhase: CashPhase {
+        let inbound = orders.contains { $0.packageID == Self.stockOrderID }
+        let selling = (trading?.isTrading ?? false) && (trading?.unitsOnHand ?? 0) > 0.5
+        if let trading, trading.isTrading == false, !inbound, trading.unitsOnHand < 0.5 {
+            return .settingUp
+        }
+        switch (inbound, selling) {
+        case (true, true): return .buyingAndSelling
+        case (true, false): return .buying
+        case (false, true): return .selling
+        case (false, false): return brief.trade == nil ? .building : .settingUp
+        }
     }
 
     /// Everything going out, net of what comes in. Once subscription

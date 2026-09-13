@@ -111,6 +111,26 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// How the counterparty reads in a sentence about confidence.
+    /// counterpartyName is a label ("Investors"); this is prose.
+    var counterpartyInProse: String {
+        switch self {
+        case .construction: return String(localized: "the client", comment: "Counterparty, in a sentence")
+        case .startup: return String(localized: "investors", comment: "Counterparty, in a sentence")
+        case .importing: return String(localized: "buyers", comment: "Counterparty, in a sentence")
+        }
+    }
+
+    /// Where morale falls. A site, a company and an operation are not the
+    /// same place.
+    var placeInProse: String {
+        switch self {
+        case .construction: return String(localized: "the site", comment: "Where the work happens, in a sentence")
+        case .startup: return String(localized: "the team", comment: "Where the work happens, in a sentence")
+        case .importing: return String(localized: "the operation", comment: "Where the work happens, in a sentence")
+        }
+    }
+
     /// What you are running, for copy that has to say "run it well".
     /// A site, a company and a trading operation are not the same noun.
     var operationNoun: String {

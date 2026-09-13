@@ -1737,4 +1737,71 @@ final class NameUniquenessTests: XCTestCase {
         for _ in 0..<400 { names.insert(Candidate.randomName()) }
         XCTAssertGreaterThan(names.count, 300, "the name space is too small to feel varied")
     }
+
+}
+
+// MARK: - Nothing says "site" to a trader
+
+@MainActor
+final class ScenarioVocabularyTests: XCTestCase {
+
+    /// Words that belong to exactly one scenario's world. If one of these
+    /// turns up in another scenario's log or incident text, something
+    /// shared is speaking the wrong language - which is the bug class that
+    /// put construction risk messages in the import run.
+    private static let forbidden: [ScenarioKind: [String]] = [
+        .construction: ["investor", "runway", "churn", "marketplace", "customs",
+                        "tariff", "shipment", "warehouse", "listing"],
+        .startup:      ["site", "crew", "material", "concrete", "rebar", "contract value",
+                        "handover", "customs", "tariff", "warehouse", "subcontractor"],
+        .importing:    ["site", "crew", "handover", "contract value", "concrete", "rebar",
+                        "runway", "investor", "tech debt", "subcontractor"],
+    ]
+
+    /// Plays each scenario hard enough to fire a lot of incidents, and
+    /// reads every line it produces.
+    func testNoScenarioEverSpeaksAnotherScenariosLanguage() {
+        for scenario in ScenarioKind.allCases {
+            var lines: [String] = []
+            for seed in UInt64(1)...8 {
+                let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: seed))
+                var lastEvent: UUID?
+                for _ in 0..<700 where engine.outcome == nil {
+                    for package in engine.workPackages where package.isUnlocked && !package.isComplete {
+                        guard engine.crew(for: package.id).count < package.optimalCrew else { continue }
+                        engine.requestHire(for: package.id)
+                        if let r = engine.hiringRequest, let pick = r.candidates.first { engine.confirmHire(pick) }
+                        else { engine.cancelHiring() }
+                    }
+                    if engine.brief.usesSupplyChain {
+                        for package in engine.workPackages
+                        where package.isUnlocked && !package.isComplete && package.isStarvedOfMaterials {
+                            engine.requestMaterialOrder(for: package.id)
+                            if let req = engine.orderRequest, let v = req.vendors.first, req.suggestedQuantity > 0 {
+                                engine.placeOrder(vendor: v, quantity: req.suggestedQuantity)
+                            } else { engine.cancelMaterialOrder() }
+                        }
+                    }
+                    engine.advance(byDays: 0.25)
+                    if let event = engine.activeEvent, event.id != lastEvent {
+                        lines.append(event.kind.title)
+                        lines.append(event.message)
+                        lines.append(contentsOf: event.consequences)
+                        lastEvent = event.id
+                    }
+                    engine.dismissEvent()
+                }
+                lines.append(contentsOf: engine.siteLog.map(\.text))
+            }
+
+            XCTAssertGreaterThan(lines.count, 50, "\(scenario.rawValue): not enough output to audit")
+            let banned = Self.forbidden[scenario] ?? []
+            for line in lines {
+                let lower = line.lowercased()
+                for word in banned where lower.contains(word) {
+                    XCTFail("\(scenario.rawValue) said \"\(word)\": \(line)")
+                }
+            }
+        }
+    }
 }

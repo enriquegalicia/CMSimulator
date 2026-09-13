@@ -138,6 +138,16 @@ struct TradingModel {
     private(set) var history: [Double] = []
 
     private var dayAccumulator: Double = 0
+    /// Smoothed units-a-day actually shifting, so the player can see the
+    /// selling rate rather than only the cumulative total.
+    private(set) var recentDailyUnitsSold: Double = 0
+    /// Smoothed gross sales a day, at the current price.
+    var recentDailyGrossSales: Double { recentDailyUnitsSold * listPrice }
+
+    /// What storage costs today on everything sitting in the warehouse.
+    var dailyStorageCost: Double {
+        lots.reduce(0) { $0 + $1.units * spec.storagePerUnitPerDay }
+    }
 
     /// What is being sold. Returns, seasonality and what shoppers expect
     /// to pay all key off it.
@@ -158,6 +168,11 @@ struct TradingModel {
     var unitsOnHand: Double { lots.reduce(0) { $0 + $1.units } }
     var inventoryValueAtCost: Double { lots.reduce(0) { $0 + $1.units * $1.landedCostPerUnit } }
     var receivables: Double { pendingPayouts.reduce(0) { $0 + $1.amount } }
+    /// How long until each marketplace payout clears, so the HUD can say
+    /// when money actually lands rather than only that it is owed.
+    func daysToPayouts(from day: Double) -> [Double] {
+        pendingPayouts.map { max(0, $0.dueDay - day) }
+    }
 
     /// Stock old enough to be costing a penalty rate.
     func agedUnits(on day: Double) -> Double {
@@ -261,6 +276,10 @@ struct TradingModel {
                 result.refunds = returned * (listPrice + spec.fulfilmentFeePerUnit)
 
                 unitsSold += sold
+                if days > 0 {
+                    let rate = sold / days
+                    recentDailyUnitsSold += (rate - recentDailyUnitsSold) * min(1, days / 5)
+                }
                 unitsReturned += returned
                 grossSales += result.grossSales
                 marketplaceFees += result.platformFees

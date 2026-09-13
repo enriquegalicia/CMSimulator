@@ -420,3 +420,152 @@ struct ProgressDrawingView: View {
         }
     }
 }
+
+// MARK: - Cashflow strip
+//
+//  What you are consuming, what is arriving, and which half of the cycle
+//  you are in.
+//
+//  This exists because a player could run the import scenario without ever
+//  being able to tell when they were buying and when they were selling.
+//  The numbers were all in the engine and none of them were on the screen
+//  together: burn was one tile, revenue lived on another board, and money
+//  already earned but not yet paid was nowhere at all.
+//
+//  The bar is deliberately literal - out on the left, in on the right,
+//  sized against each other - because the single most useful fact is which
+//  one is bigger today.
+//
+
+struct CashflowStripView: View {
+    let phase: CashPhase
+    let outflows: [CashflowLine]
+    let inflows: [CashflowLine]
+    let owed: Double
+    let daysToNextInflow: Double?
+
+    @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
+
+    private var money: FloatingPointFormatStyle<Double>.Currency {
+        .currency(code: currencyCode).precision(.fractionLength(0))
+    }
+
+    private var out: Double { outflows.reduce(0) { $0 + $1.amount } }
+    private var incoming: Double { inflows.reduce(0) { $0 + $1.amount } }
+    private var net: Double { incoming - out }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            header
+            balanceBar
+            breakdown
+            if owed > 1 { owedLine }
+        }
+        .padding(14)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private var header: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Label(phase.label, systemImage: phase.symbolName)
+                .font(.subheadline.bold())
+                .foregroundStyle(Color.accentColor)
+            Spacer(minLength: 4)
+            // Zero is not a win. Only colour it once money is actually
+            // moving one way or the other.
+            Text(net > 0.5
+                 ? String(localized: "+\(net, format: money) a day", comment: "Net daily cash, positive")
+                 : String(localized: "\(net, format: money) a day", comment: "Net daily cash, negative"))
+                .font(.subheadline.bold().monospacedDigit())
+                .foregroundStyle(abs(net) < 0.5 ? AnyShapeStyle(.secondary)
+                                 : AnyShapeStyle(net > 0 ? Color.green : Color.red))
+        }
+    }
+
+    /// Out against in, to the same scale. Whichever is longer is the
+    /// answer to "am I making money right now".
+    private var balanceBar: some View {
+        GeometryReader { geo in
+            let span = max(out, incoming, 1)
+            VStack(spacing: 4) {
+                bar(width: geo.size.width * out / span, tint: .red,
+                    label: String(localized: "out", comment: "Cashflow direction"), amount: out)
+                bar(width: geo.size.width * incoming / span, tint: .green,
+                    label: String(localized: "in", comment: "Cashflow direction"), amount: incoming)
+            }
+        }
+        .frame(height: 42)
+    }
+
+    private func bar(width: CGFloat, tint: Color, label: String, amount: Double) -> some View {
+        ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 4)
+                .fill(tint.opacity(0.16))
+                .frame(height: 19)
+            RoundedRectangle(cornerRadius: 4)
+                .fill(tint.gradient)
+                .frame(width: max(2, width), height: 19)
+            HStack(spacing: 5) {
+                Text(label)
+                    .font(.system(size: 9, weight: .bold))
+                    .textCase(.uppercase)
+                Text(amount, format: money)
+                    .font(.caption2.bold().monospacedDigit())
+            }
+            .foregroundStyle(.primary)
+            .padding(.leading, 7)
+        }
+    }
+
+    /// Where it is actually going. Three lines is enough to act on; the
+    /// full ledger lives in the debrief.
+    private var breakdown: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            ForEach(outflows.prefix(3)) { line in
+                HStack(spacing: 6) {
+                    Circle().fill(.red.opacity(0.55)).frame(width: 5, height: 5)
+                    Text(line.label).font(.caption2).foregroundStyle(.secondary)
+                    Spacer(minLength: 4)
+                    Text(line.amount, format: money)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+            ForEach(inflows) { line in
+                HStack(spacing: 6) {
+                    Circle().fill(.green).frame(width: 5, height: 5)
+                    Text(line.label).font(.caption2).foregroundStyle(.secondary)
+                    Spacer(minLength: 4)
+                    Text(line.amount, format: money)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.green)
+                }
+            }
+        }
+    }
+
+    /// Earned but not banked. The gap between the two is the whole reason
+    /// a profitable operation can still run out of money.
+    private var owedLine: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Divider()
+            HStack(spacing: 6) {
+                Image(systemName: "clock.arrow.circlepath")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                Text(String(localized: "\(owed, format: money) earned, not yet paid", comment: "Money owed to the player"))
+                    .font(.caption2.bold())
+                Spacer(minLength: 4)
+                if let days = daysToNextInflow {
+                    Text(String(localized: "next in \(Int(days.rounded()))d", comment: "Days until the next payment lands"))
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Text(phase.explanation)
+                .font(.system(size: 10))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}

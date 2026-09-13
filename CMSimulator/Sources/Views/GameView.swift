@@ -313,6 +313,12 @@ struct GameView: View {
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
                 .animation(.easeInOut(duration: 0.4), value: engine.totalProgress)
 
+            CashflowStripView(phase: engine.cashPhase,
+                              outflows: engine.outflows,
+                              inflows: engine.inflows,
+                              owed: engine.moneyOwed,
+                              daysToNextInflow: engine.daysToNextInflow)
+
             if !engine.fastTrackablePackages.isEmpty {
                 fastTrackBanner
             }

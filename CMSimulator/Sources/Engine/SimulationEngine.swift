@@ -198,6 +198,9 @@ final class SimulationEngine: ObservableObject {
     private var eventQueue: [SimEvent] = []
     /// Sim-days the current banner has been up, so it can retire itself.
     private var activeEventAge: Double = 0
+    /// Speed to restore once a severe incident has been acknowledged, so
+    /// pausing for one does not silently reset the player's pace.
+    private var resumeSpeed: SimSpeed?
     /// Consecutive simulated days with no work happening and no means to
     /// restart it. Without this a project that sheds its whole crew never
     /// misses payroll (there is none to miss) and so never ends - it just
@@ -1097,6 +1100,14 @@ final class SimulationEngine: ObservableObject {
 
     // MARK: Incidents
 
+    /// Net cost at which an incident is bad enough to stop the clock.
+    /// Pitched just over half of the worst card in this scenario's deck,
+    /// which lands roughly one incident in four.
+    private var severeIncidentThreshold: Double {
+        let worst = brief.incidentDeck.map(\.costFractionRange.upperBound).max() ?? 0.05
+        return brief.contractValue * worst * 0.60
+    }
+
     /// How exposed the site is right now. Overtime, crowding, low morale
     /// and a shortage of safety-minded people all make incidents both
     /// likelier and sooner. Unlike the old build - where owning five
@@ -1356,13 +1367,34 @@ final class SimulationEngine: ObservableObject {
         }
 
         incidentsFired += 1
+        // Severe means "this changed the run": a big hit relative to the
+        // contract, or a high-severity roll that also cost real money.
+        // "Severe" has to mean the same thing in each business, so it is
+        // measured against what this scenario's own deck can do rather
+        // than an absolute share of contract value - import incidents are
+        // cheaper than a site fire and should not therefore never pause.
+        let severe = (gross - covered) > severeIncidentThreshold
+            || (severity > 0.86 && (gross - covered) > severeIncidentThreshold * 0.62)
         let event = SimEvent(kind: kind, message: kind.message, grossCost: gross,
-                             insuranceCovered: covered, consequences: consequences)
+                             insuranceCovered: covered, consequences: consequences,
+                             isSevere: severe,
+                             uncoveredBy: (mitigated || !severe) ? nil : kind.mitigationClass)
         if activeEvent == nil {
+            activeEvent = event
+            activeEventAge = 0
+        } else if event.isSevere {
+            // A severe incident never waits behind a slipped delivery.
+            eventQueue.insert(activeEvent!, at: 0)
             activeEvent = event
             activeEventAge = 0
         } else if eventQueue.count < 4 {
             eventQueue.append(event)
+        }
+        // Stop the clock for the ones that matter, so the player actually
+        // sees what happened and can respond before it compounds.
+        if activeEvent?.isSevere == true, speed != .paused {
+            resumeSpeed = speed
+            setSpeed(.paused)
         }
         // Incidents fire after this tick's recompute, so refresh the
         // headline figures here - otherwise destroyed work and added scope
@@ -1377,15 +1409,21 @@ final class SimulationEngine: ObservableObject {
     }
 
     func dismissEvent() {
+        let wasSevere = activeEvent?.isSevere == true
         activeEvent = eventQueue.isEmpty ? nil : eventQueue.removeFirst()
         activeEventAge = 0
+        // Hand the player back the pace they were running at.
+        if wasSevere, activeEvent?.isSevere != true, let resume = resumeSpeed {
+            resumeSpeed = nil
+            setSpeed(resume)
+        }
     }
 
     /// Banners expire on their own after a few simulated days. Before this,
     /// an undismissed banner suppressed every later incident for the rest
     /// of the run - a run played without touching it saw exactly one.
     private func ageActiveEvent(step: Double) {
-        guard activeEvent != nil else { return }
+        guard let event = activeEvent, !event.isSevere else { return }
         activeEventAge += step
         if activeEventAge >= 3.0 || !eventQueue.isEmpty && activeEventAge >= 1.5 {
             dismissEvent()

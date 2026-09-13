@@ -1804,4 +1804,87 @@ final class ScenarioVocabularyTests: XCTestCase {
             }
         }
     }
+
+}
+
+// MARK: - The incidents that change the run make you look at them
+
+@MainActor
+final class SevereIncidentTests: XCTestCase {
+
+    /// A passing banner is right for a slipped delivery and wrong for a
+    /// fire. Severe incidents stop the clock so the player sees what
+    /// happened and can respond before it compounds.
+    func testASevereIncidentPausesTheRun() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 6))
+        engine.play()
+        var sawSevere = false
+        for _ in 0..<1200 where engine.outcome == nil {
+            engine.advance(byDays: 0.25)
+            if engine.activeEvent?.isSevere == true {
+                sawSevere = true
+                XCTAssertEqual(engine.speed, .paused, "a severe incident did not stop the clock")
+                break
+            }
+            engine.dismissEvent()
+        }
+        XCTAssertTrue(sawSevere, "no severe incident in a whole run - the threshold is too high")
+    }
+
+    /// And it must hand the pace back, not silently reset the player to
+    /// paused for the rest of the run.
+    func testAcknowledgingASevereIncidentRestoresThePreviousSpeed() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 6))
+        engine.fastForward()
+        for _ in 0..<1200 where engine.outcome == nil {
+            engine.advance(byDays: 0.25)
+            if engine.activeEvent?.isSevere == true {
+                engine.dismissEvent()
+                XCTAssertEqual(engine.speed, .fast, "the run did not resume at the pace it was running")
+                return
+            }
+            engine.dismissEvent()
+        }
+    }
+
+    /// A severe banner must not be dismissible by simply waiting, or the
+    /// pause is cosmetic.
+    func testSevereBannersDoNotExpireOnTheirOwn() {
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 6))
+        for _ in 0..<1200 where engine.outcome == nil {
+            engine.advance(byDays: 0.25)
+            if engine.activeEvent?.isSevere == true {
+                let id = engine.activeEvent?.id
+                // Far longer than the three days a passing banner lives.
+                for _ in 0..<80 { engine.advance(byDays: 0.25) }
+                XCTAssertEqual(engine.activeEvent?.id, id, "a severe banner timed itself out")
+                return
+            }
+            engine.dismissEvent()
+        }
+    }
+
+    /// Severe must mean the same thing in each business. Measured against
+    /// an absolute share of contract value, import incidents - which are
+    /// cheaper than a site fire - would essentially never pause.
+    func testSeverityIsRelativeToEachScenariosOwnDeck() {
+        for scenario in ScenarioKind.allCases {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 3))
+            var fired = 0, severe = 0
+            var lastID: UUID? = nil
+            for _ in 0..<1600 where engine.outcome == nil {
+                engine.advance(byDays: 0.25)
+                if let e = engine.activeEvent, e.id != lastID {
+                    fired += 1
+                    if e.isSevere { severe += 1 }
+                    lastID = e.id
+                }
+                engine.dismissEvent()
+            }
+            guard fired >= 4 else { continue }
+            let share = Double(severe) / Double(fired)
+            XCTAssertLessThan(share, 0.65,
+                              "\(scenario.rawValue): \(Int(share * 100))% of incidents pause - the pause means nothing")
+        }
+    }
 }

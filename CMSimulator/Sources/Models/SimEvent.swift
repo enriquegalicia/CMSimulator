@@ -529,6 +529,13 @@ struct SimEvent: Identifiable {
     let insuranceCovered: Double
     /// Human-readable list of what else it did.
     let consequences: [String]
+    /// Bad enough to stop the clock for. A passing banner is right for a
+    /// slipped delivery and wrong for a fire: the incidents that change
+    /// the run should make you look at them.
+    let isSevere: Bool
+    /// What you were not holding that would have softened this, so the
+    /// card can say what the lesson was rather than only what it cost.
+    let uncoveredBy: MitigationClass?
 
     var netCost: Double { max(0, grossCost - insuranceCovered) }
 }

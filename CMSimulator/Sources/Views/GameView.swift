@@ -506,13 +506,22 @@ struct GameView: View {
                         Text(event.message).font(.caption).foregroundStyle(.white.opacity(0.9))
                     }
                     Spacer(minLength: 4)
-                    Button(action: engine.dismissEvent) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title3)
-                            .foregroundStyle(.white.opacity(0.85))
+                    if !event.isSevere {
+                        Button(action: engine.dismissEvent) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.white.opacity(0.85))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "Dismiss", comment: "Dismiss incident banner"))
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(String(localized: "Dismiss", comment: "Dismiss incident banner"))
+                }
+
+                if event.isSevere {
+                    Label(String(localized: "Work stopped while you read this.", comment: "Severe incident: run paused"),
+                          systemImage: "pause.circle.fill")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.white)
                 }
                 if event.netCost > 0 {
                     Text(String(localized: "\(event.netCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) out of pocket", comment: "Incident net cost"))
@@ -524,9 +533,37 @@ struct GameView: View {
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.92))
                 }
+
+                // Say what the lesson was, not only what it cost.
+                if let uncovered = event.uncoveredBy {
+                    Label(String(localized: "You were not carrying \(uncovered.name(in: engine.brief.scenario)). It would have cut this.", comment: "Incident: cover you did not hold"),
+                          systemImage: "shield.slash")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.white.opacity(0.95))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                if event.isSevere {
+                    Button(action: engine.dismissEvent) {
+                        Text("Carry on", comment: "Acknowledge a severe incident and resume")
+                            .font(.caption.bold())
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.white)
+                    .foregroundStyle(.red)
+                    .controlSize(.small)
+                    .padding(.top, 2)
+                }
             }
             .padding(12)
             .background(.red.gradient, in: RoundedRectangle(cornerRadius: 14))
+            .overlay {
+                if event.isSevere {
+                    RoundedRectangle(cornerRadius: 14)
+                        .strokeBorder(.white.opacity(0.9), lineWidth: 2)
+                }
+            }
             .padding(.horizontal, isWide ? 40 : 12)
             .frame(maxWidth: isWide ? 700 : .infinity)
             .shadow(radius: 8, y: 4)

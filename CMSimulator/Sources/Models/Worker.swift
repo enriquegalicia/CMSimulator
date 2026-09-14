@@ -347,11 +347,30 @@ struct Worker: Identifiable {
     /// The roster is unreadable without it: skill is a promise, this is
     /// the delivery.
     var recentOutput: Double = 0
+    /// Which portrait this person wears. Assigned at hire against the
+    /// faces already on the roster, same principle as names: a team of
+    /// twelve should not contain the same face twice.
+    var portraitIndex: Int = 1
     /// How many times this person has been moved between streams. Each
     /// move costs ramp, so a history of them explains a weak performer.
     var reassignments: Int = 0
 
     var isOnBench: Bool { packageID == Worker.benchPackageID }
+
+    /// Number of distinct portraits shipped in the asset catalog.
+    static let portraitCount = 24
+    var portraitName: String { String(format: "Portrait%02d", portraitIndex) }
+
+    /// Picks a face nobody on the roster is already wearing. Falls back to
+    /// the least-worn one once the pool is exhausted, so a large team
+    /// degrades evenly rather than clustering on one face.
+    static func portrait(avoiding taken: [Int]) -> Int {
+        let counts = taken.reduce(into: [Int: Int]()) { $0[$1, default: 0] += 1 }
+        let free = (1...portraitCount).filter { counts[$0] == nil }
+        if let pick = free.randomElement() { return pick }
+        let fewest = counts.values.min() ?? 0
+        return (1...portraitCount).filter { counts[$0] == fewest }.randomElement() ?? 1
+    }
 
     /// Multiplier applied when the company's venture values this role -
     /// or does not. Set by the engine once Discovery resolves.
@@ -377,7 +396,9 @@ struct Worker: Identifiable {
          role: WorkerRole = .generalist,
          education: EducationLevel? = nil,
          yearsOfExperience: Int? = nil,
+         portraitIndex: Int = 1,
          marketWageFactor: Double = 1.0) {
+        self.portraitIndex = portraitIndex
         self.name = name
         self.archetype = archetype
         self.role = role
@@ -578,7 +599,8 @@ extension Candidate {
     /// market: in a tight market the same people cost more.
     static func pool(for packageID: WorkPackage.ID, marketWageFactor: Double, poolQuality: Double,
                      roles: [WorkerRole] = [.generalist],
-                     excluding taken: Set<String> = []) -> [Candidate] {
+                     excluding taken: Set<String> = [],
+                     avoidingPortraits usedFaces: [Int] = []) -> [Candidate] {
         // Reputation gates the top of the pool: fire people often enough
         // and the good ones stop applying.
         var available = WorkerArchetype.allCases
@@ -591,14 +613,20 @@ extension Candidate {
         // Names are reserved as the panel is built, so the three people in
         // front of you are never the same person twice either.
         var used = taken
+        // Faces are reserved as the panel is built, exactly like names -
+        // three applicants wearing one face is the same bug in a picture.
+        var faces = usedFaces
         return picked.map { archetype in
             let name = randomName(excluding: used)
             used.insert(name)
+            let face = Worker.portrait(avoiding: faces)
+            faces.append(face)
             return Candidate(worker: Worker(
                 name: name,
                 archetype: archetype,
                 packageID: packageID,
                 role: roles.randomElement() ?? .generalist,
+                portraitIndex: face,
                 marketWageFactor: marketWageFactor
             ))
         }

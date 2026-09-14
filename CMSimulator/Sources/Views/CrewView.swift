@@ -162,6 +162,23 @@ struct CrewView: View {
     }
 
     private func workerRow(_ worker: Worker) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(bundleResource: worker.portraitName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 46, height: 46)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .opacity(worker.isInTraining ? 0.55 : 1)
+                .overlay(alignment: .bottomTrailing) {
+                    if worker.isOnBench {
+                        Image(systemName: "person.badge.clock")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(.white)
+                            .padding(2)
+                            .background(.orange, in: Circle())
+                            .offset(x: 3, y: 3)
+                    }
+                }
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
                 Text(worker.name).font(.subheadline.bold())
@@ -282,6 +299,7 @@ struct CrewView: View {
                 .buttonStyle(.bordered)
             }
             .controlSize(.mini)
+        }
         }
         .padding(.vertical, 3)
     }

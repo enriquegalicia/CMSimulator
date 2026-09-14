@@ -66,6 +66,12 @@ struct CandidatePickerView: View {
         return Button {
             onSelect(candidate)
         } label: {
+            HStack(alignment: .top, spacing: 12) {
+            Image(bundleResource: worker.portraitName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(worker.name).font(.headline)
@@ -139,6 +145,7 @@ struct CandidatePickerView: View {
                         .font(.caption2.bold())
                         .foregroundStyle(.red)
                 }
+            }
             }
             .padding(.vertical, 4)
             .contentShape(Rectangle())

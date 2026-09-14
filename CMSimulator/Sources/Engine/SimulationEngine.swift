@@ -1385,6 +1385,9 @@ final class SimulationEngine: ObservableObject {
         } else if event.isSevere {
             // A severe incident never waits behind a slipped delivery.
             eventQueue.insert(activeEvent!, at: 0)
+            // Still honour the cap - displacing the banner must not be a
+            // way to grow the queue without bound.
+            if eventQueue.count > 4 { eventQueue.removeLast() }
             activeEvent = event
             activeEventAge = 0
         } else if eventQueue.count < 4 {
@@ -1487,7 +1490,8 @@ final class SimulationEngine: ObservableObject {
             packageTitle: package.title,
             candidates: Candidate.pool(for: packageID, marketWageFactor: tightness, poolQuality: reputation,
                                        roles: brief.hiresByRole ? WorkerRole.hireable : [.generalist],
-                                       excluding: namesInPlay),
+                                       excluding: namesInPlay,
+                                       avoidingPortraits: workers.map(\.portraitIndex)),
             marketWageFactor: tightness
         )
     }
@@ -1603,7 +1607,8 @@ final class SimulationEngine: ObservableObject {
             baseLeadTimeDays: origin.leadTimeDays * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
             marketIndex: market.effectiveIndex,
             isLocked: market.isLocked,
-            inputName: nil
+            inputName: nil,
+            trade: origin.supplierTrade
         )
     }
 
@@ -1650,7 +1655,8 @@ final class SimulationEngine: ObservableObject {
                 * CapabilityEffects.leadTimeMultiplier(level: level(of: .procurement)),
             marketIndex: market.effectiveIndex,
             isLocked: market.isLocked,
-            inputName: package.inputName
+            inputName: package.inputName,
+            trade: package.spec.supplierTrade
         )
     }
 

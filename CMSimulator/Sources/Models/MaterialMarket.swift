@@ -135,6 +135,24 @@ enum SupplierTrade: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    /// The mark on this trade's letterhead. A surveyor's logo should
+    /// never sit on an order for rebar.
+    var brandImageName: String {
+        switch self {
+        case .surveying: return "BrandSurveying"
+        case .structural: return "BrandStructural"
+        case .engineering: return "BrandEngineering"
+        case .builders: return "BrandBuilders"
+        case .mechanical: return "BrandMechanical"
+        case .electrical: return "BrandElectrical"
+        case .factoryChina: return "BrandFactoryChina"
+        case .resellerChina: return "BrandResellerChina"
+        case .factoryVietnam: return "BrandFactoryVietnam"
+        case .factoryIndia: return "BrandFactoryIndia"
+        case .distributorDomestic: return "BrandDistributorDomestic"
+        }
+    }
+
     /// Localized as one comma-separated list each, same reasoning as the
     /// worker name pools: suppliers should sound like firms the player
     /// would actually ring up for this particular thing.
@@ -239,4 +257,6 @@ struct MaterialOrderRequest: Identifiable {
     /// What this discipline buys, so the order sheet can say "Pipework,
     /// fixtures & ductwork" rather than a generic "Order".
     let inputName: String?
+    /// Which trade's firms are quoting, so the sheet can show their mark.
+    var trade: SupplierTrade? = nil
 }

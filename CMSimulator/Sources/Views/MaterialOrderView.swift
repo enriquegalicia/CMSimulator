@@ -129,7 +129,15 @@ struct MaterialOrderView: View {
         return Button {
             onOrder(vendor, quantity)
         } label: {
-            VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 10) {
+                if let trade = request.trade {
+                    Image(bundleResource: trade.brandImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 42, height: 42)
+                        .clipShape(RoundedRectangle(cornerRadius: 9))
+                }
+                VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(vendor.name).font(.headline)
                     Spacer()
@@ -156,6 +164,7 @@ struct MaterialOrderView: View {
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.caption2.bold())
                         .foregroundStyle(.red)
+                }
                 }
             }
             .padding(.vertical, 4)

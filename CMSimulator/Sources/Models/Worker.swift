@@ -57,6 +57,24 @@ enum WorkerTuning {
     static let moraleBurnPerOvertimeDay: Double = 0.11
 }
 
+// MARK: - Portraits
+
+/// How a portrait reads. Classified from the rendered art rather than
+/// from the prompt that produced it - several came back androgynous
+/// whatever was asked for, and the picture on screen is what the player
+/// judges the name against.
+///
+/// This exists so a person's name and face agree. A masculine face with a
+/// feminine name reads as a bug in a roster the player is making hiring
+/// and firing decisions from.
+enum PortraitPresentation {
+    case masculine
+    case feminine
+    /// Reads either way. Takes a name from any pool, which is also where
+    /// unisex names belong.
+    case neutral
+}
+
 // MARK: - Background
 
 /// How far someone took their formal training. It is not a proxy for
@@ -359,6 +377,19 @@ struct Worker: Identifiable {
 
     /// Number of distinct portraits shipped in the asset catalog.
     static let portraitCount = 24
+
+    /// Classified by looking at the 24 rendered images, not at the prompts:
+    /// 09, 13, 18 and 22 came back reading either way regardless of what
+    /// was asked for.
+    static func presentation(ofPortrait index: Int) -> PortraitPresentation {
+        switch index {
+        case 2, 4, 6, 8, 10, 11, 15, 17, 19, 21, 23: return .masculine
+        case 1, 3, 5, 7, 12, 14, 16, 20, 24: return .feminine
+        default: return .neutral
+        }
+    }
+
+    var presentation: PortraitPresentation { Worker.presentation(ofPortrait: portraitIndex) }
     var portraitName: String { String(format: "Portrait%02d", portraitIndex) }
 
     /// Picks a face nobody on the roster is already wearing. Falls back to
@@ -544,9 +575,33 @@ extension Candidate {
     /// mostly local with a few names from elsewhere, which is what a real
     /// crew on this kind of job looks like - so an English player meets a
     /// mostly English crew and a Spanish player a mostly Spanish one.
-    private static var firstNames: [String] {
-        NamePool.split(String(localized: "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia",
-                          comment: "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally."))
+    // Given names are split by gender so a face and a name agree. A
+    // masculine portrait wearing a feminine name reads as a bug in a
+    // roster the player makes firing decisions from. Surnames are not
+    // split: they do not inflect for gender in either language.
+    private static var masculineNames: [String] {
+        NamePool.split(String(localized: "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf",
+                          comment: "Comma-separated pool of masculine given names for workers. Replace with masculine given names that read naturally in your language - do not translate these literally. They are paired with masculine-looking portraits, so the names must read as masculine in your language."))
+    }
+
+    private static var feminineNames: [String] {
+        NamePool.split(String(localized: "Emily,Grace,Hannah,Chloe,Olivia,Ruby,Freya,Alice,Priya,Nadia,Martha,Bethany,Sophie,Iris,Maeve,Tessa,Nora,Cerys,Rosa,Anika,Ingrid,Delia",
+                          comment: "Comma-separated pool of feminine given names for workers. Replace with feminine given names that read naturally in your language - do not translate these literally. They are paired with feminine-looking portraits, so the names must read as feminine in your language."))
+    }
+
+    /// Used for the portraits that read either way. Names that are
+    /// genuinely unisex in the language, not a mix of the other two.
+    private static var unisexNames: [String] {
+        NamePool.split(String(localized: "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin",
+                          comment: "Comma-separated pool of unisex given names for workers. Replace with names that genuinely read as either gender in your language - do not translate these literally, and do not simply mix masculine and feminine names here."))
+    }
+
+    static func givenNames(for presentation: PortraitPresentation) -> [String] {
+        switch presentation {
+        case .masculine: return masculineNames + unisexNames
+        case .feminine: return feminineNames + unisexNames
+        case .neutral: return unisexNames + masculineNames + feminineNames
+        }
     }
 
     private static var lastNames: [String] {
@@ -562,8 +617,9 @@ extension Candidate {
     /// The fallback is a second surname, which is how Spanish naming
     /// distinguishes people anyway - so a crowded run produces
     /// "Lucía Ramírez Beltrán" rather than a numbered duplicate.
-    static func randomName(excluding taken: Set<String> = []) -> String {
-        let first = firstNames, last = lastNames
+    static func randomName(excluding taken: Set<String> = [],
+                           matching presentation: PortraitPresentation = .neutral) -> String {
+        let first = givenNames(for: presentation), last = lastNames
         for _ in 0..<60 {
             let name = "\(first.randomElement()!) \(last.randomElement()!)"
             if !taken.contains(name) { return name }
@@ -617,10 +673,12 @@ extension Candidate {
         // three applicants wearing one face is the same bug in a picture.
         var faces = usedFaces
         return picked.map { archetype in
-            let name = randomName(excluding: used)
-            used.insert(name)
+            // Face first, then a name that agrees with it.
             let face = Worker.portrait(avoiding: faces)
             faces.append(face)
+            let name = randomName(excluding: used,
+                                  matching: Worker.presentation(ofPortrait: face))
+            used.insert(name)
             return Candidate(worker: Worker(
                 name: name,
                 archetype: archetype,

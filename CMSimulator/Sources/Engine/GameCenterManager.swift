@@ -10,18 +10,38 @@ import SwiftUI
 @MainActor
 final class GameCenterManager: NSObject, ObservableObject {
     // These exact IDs must exist as Leaderboards in App Store Connect
-    // (App ▸ Features ▸ Game Center) before scores will actually post or
-    // show up - see documentation/GameCenter_Setup.md. All three should be
-    // configured there with ascending sort order (lower is better).
+    // (App ▸ Features ▸ Game Center) before scores will post or appear.
+    // documentation/GameCenter_Setup.md is the configuration contract and
+    // is verified against this file by a test - if you change an ID here,
+    // that test fails until the document is updated to match.
+    //
+    // Profit is per scenario. A building, a software company and a trading
+    // operation are not comparable on one ranking, and the in-app boards
+    // have always been filtered by scenario - Game Center simply was not.
+    static let profitPrefix = "com.aguach1leLabs.CriticalPathSim.profit"
+
+    /// Descending: higher profit is better.
+    static func profitLeaderboardID(for scenario: ScenarioKind) -> String {
+        "\(profitPrefix).\(scenario.rawValue.lowercased())"
+    }
+
+    static var allProfitLeaderboardIDs: [String] {
+        ScenarioKind.allCases.map(profitLeaderboardID(for:))
+    }
+
+    /// Ascending, and construction only. "Built it for less" and "built it
+    /// in fewer days" are coherent rankings on a contract with a fixed
+    /// scope and a deadline. They are not coherent for a startup, whose
+    /// length is a strategic choice, or for an import season, whose length
+    /// is fixed by the calendar - submitting those to a shared board
+    /// ranked noise.
     static let costLeaderboardID = "com.aguach1leLabs.CriticalPathSim.costmaster"
     static let timeLeaderboardID = "com.aguach1leLabs.CriticalPathSim.timemaster"
-    static let combinedLeaderboardID = "com.aguach1leLabs.CriticalPathSim.constructionmaster"
-    /// New for the profit-based scoring. Must be created in App Store
-    /// Connect with *descending* sort (higher is better) before it will
-    /// accept scores - the other three are ascending and cannot be reused
-    /// for profit. Submissions to a leaderboard that does not exist fail
-    /// silently and are logged, so shipping before it exists is safe.
-    static let profitLeaderboardID = "com.aguach1leLabs.CriticalPathSim.profit"
+
+    /// Every board the app can post to, for the setup document and its test.
+    static var allLeaderboardIDs: [String] {
+        allProfitLeaderboardIDs + [costLeaderboardID, timeLeaderboardID]
+    }
 
     @Published var isAuthenticated = false
     @Published var authViewController: UIViewController?
@@ -47,24 +67,24 @@ final class GameCenterManager: NSObject, ObservableObject {
 
     /// Reports a completed run. Only deliveries are submitted - an
     /// insolvent run has no meaningful profit to rank.
-    ///
-    /// Total cost and elapsed days still go to the two existing ascending
-    /// boards, where "lower is better" remains the right reading. The old
-    /// combined board is deliberately not submitted to any more: it was an
-    /// ascending normalized cost+days sum, and posting profit to it would
-    /// rank the worst runs first.
     func report(_ result: RunResult) {
         guard GKLocalPlayer.local.isAuthenticated, result.outcome == .delivered else { return }
-        let costScore = Int(result.costs.total.rounded())
-        // Tenths of a day, so the board has finer precision than whole days.
-        let timeScore = Int((result.days * 10).rounded())
+
         let profitScore = Int(result.score.rounded())
+        let profitBoard = Self.profitLeaderboardID(for: result.scenario)
+        // Cost and days only rank meaningfully against a fixed scope and a
+        // contractual deadline, which is construction and nothing else.
+        let costBoards: [(Int, String)] = result.scenario == .construction
+            ? [(Int(result.costs.total.rounded()), Self.costLeaderboardID),
+               // Tenths of a day, for finer precision than whole days.
+               (Int((result.days * 10).rounded()), Self.timeLeaderboardID)]
+            : []
 
         Task {
-            async let costResult: Void = submit(costScore, to: Self.costLeaderboardID)
-            async let timeResult: Void = submit(timeScore, to: Self.timeLeaderboardID)
-            async let profitResult: Void = submit(profitScore, to: Self.profitLeaderboardID)
-            _ = await (costResult, timeResult, profitResult)
+            await submit(profitScore, to: profitBoard)
+            for (score, board) in costBoards {
+                await submit(score, to: board)
+            }
         }
     }
 

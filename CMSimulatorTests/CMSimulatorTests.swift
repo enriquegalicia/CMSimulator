@@ -530,18 +530,25 @@ final class LocalizationTests: XCTestCase {
               let bundle = Bundle(path: path) else {
             throw XCTSkip("no English bundle to read the pool from")
         }
-        let key = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
-        let englishGiven = Set(NamePool.split(bundle.localizedString(forKey: key, value: key, table: "Localizable")))
-        XCTAssertGreaterThan(englishGiven.count, 20, "the shipped English pool looks too small")
+        // A masculine draw legitimately includes unisex names - the pool
+        // is masculine + unisex by design - so check against the union.
+        func pool(_ key: String) -> [String] {
+            NamePool.split(bundle.localizedString(forKey: key, value: key, table: "Localizable"))
+        }
+        let masculineKey = "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf"
+        let unisexKey = "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin"
+        let englishGiven = Set(pool(masculineKey) + pool(unisexKey))
+        XCTAssertGreaterThan(englishGiven.count, 15, "the shipped English pool looks too small")
 
         var seen = Set<String>()
         for _ in 0..<300 {
             // A name may fall back to two surnames once the space is
             // crowded; the given name is always the first component.
-            let given = Candidate.randomName().split(separator: " ").first.map(String.init) ?? ""
+            let given = Candidate.randomName(matching: .masculine)
+                .split(separator: " ").first.map(String.init) ?? ""
             seen.insert(given)
             XCTAssertTrue(englishGiven.contains(given),
-                          "\(given) is not in the English pool - the generator is reading the wrong language")
+                          "\(given) is not in the English masculine or unisex pool - the generator is reading the wrong language")
         }
         XCTAssertGreaterThan(seen.count, 5, "the pool should actually be varying")
     }
@@ -558,13 +565,13 @@ final class LocalizationTests: XCTestCase {
             return table == prefix ? nil : table
         }
 
-        let englishFirst = "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
+        let englishFirst = "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf"
         guard let spanish = pool("es", startingWith: englishFirst) else {
             return XCTFail("Spanish given-name pool missing from the bundle")
         }
         XCTAssertNotEqual(spanish, englishFirst,
                           "the Spanish pool must be its own set of names, not a copy of the English one")
-        XCTAssertTrue(spanish.contains("Mateo"), "expected Spanish given names")
+        XCTAssertTrue(spanish.contains("Mateo"), "expected Spanish masculine given names")
         XCTAssertFalse(NamePool.split(spanish).isEmpty)
     }
 
@@ -1967,5 +1974,165 @@ final class ArtworkTests: XCTestCase {
         let faces = engine.workers.map(\.portraitIndex)
         XCTAssertGreaterThan(faces.count, 8, "test hired too few people to prove anything")
         XCTAssertEqual(Set(faces).count, faces.count, "the same face appears twice on one roster")
+    }
+
+}
+
+// MARK: - Game Center is a contract with App Store Connect
+
+@MainActor
+final class LeaderboardTests: XCTestCase {
+
+    /// Each scenario ranks on its own board. A building, a software
+    /// company and a trading operation are not comparable on one ranking,
+    /// and the in-app boards have always been filtered by scenario -
+    /// Game Center was the half that was not.
+    func testEveryScenarioHasItsOwnProfitBoard() {
+        let ids = ScenarioKind.allCases.map(GameCenterManager.profitLeaderboardID(for:))
+        XCTAssertEqual(Set(ids).count, ScenarioKind.allCases.count,
+                       "two scenarios share a profit leaderboard")
+        for id in ids {
+            XCTAssertTrue(id.hasPrefix("com.aguach1leLabs.CriticalPathSim."),
+                          "\(id) is not under this app's bundle ID")
+            XCTAssertFalse(id.hasSuffix("."), "\(id) looks malformed")
+        }
+    }
+
+    /// IDs are typed by hand into App Store Connect; a mismatch fails
+    /// silently at runtime and is visible only in a device log. Freezing
+    /// them here makes an accidental rename a test failure instead.
+    func testLeaderboardIDsAreExactlyWhatTheSetupDocumentPromises() {
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .construction),
+                       "com.aguach1leLabs.CriticalPathSim.profit.construction")
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .startup),
+                       "com.aguach1leLabs.CriticalPathSim.profit.startup")
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .importing),
+                       "com.aguach1leLabs.CriticalPathSim.profit.importing")
+        XCTAssertEqual(GameCenterManager.costLeaderboardID,
+                       "com.aguach1leLabs.CriticalPathSim.costmaster")
+        XCTAssertEqual(GameCenterManager.timeLeaderboardID,
+                       "com.aguach1leLabs.CriticalPathSim.timemaster")
+        XCTAssertEqual(GameCenterManager.allLeaderboardIDs.count, 5)
+    }
+
+    /// The setup document is the configuration contract. If it does not
+    /// name every board the app posts to, somebody will ship with a board
+    /// missing and never see an error.
+    func testTheSetupDocumentNamesEveryBoardTheAppPostsTo() throws {
+        // Walk up from the test bundle to the repo, so this works wherever
+        // the checkout lives.
+        var dir = URL(fileURLWithPath: #filePath)
+        var doc: String?
+        for _ in 0..<6 {
+            dir.deleteLastPathComponent()
+            let candidate = dir.appendingPathComponent("documentation/GameCenter_Setup.md")
+            if let text = try? String(contentsOf: candidate, encoding: .utf8) { doc = text; break }
+        }
+        let text = try XCTUnwrap(doc, "documentation/GameCenter_Setup.md not found")
+
+        for id in GameCenterManager.allLeaderboardIDs {
+            XCTAssertTrue(text.contains(id),
+                          "\(id) is submitted by the app but missing from the setup document")
+        }
+        // The retired board should still be mentioned - somebody may have
+        // created it already and needs telling - but only as retired,
+        // never as one to create.
+        if let range = text.range(of: "constructionmaster") {
+            XCTAssertTrue(text[..<range.lowerBound].contains("Retired"),
+                          "the retired combined board is listed before the Retired section, as if it should be created")
+            XCTAssertTrue(text.contains("do not create"),
+                          "the retired board is named without telling the reader not to create it")
+        }
+    }
+
+    /// Local history keeps the scenario, so the in-app boards can filter.
+    func testSavedScoresRecordWhichScenarioTheyCameFrom() {
+        for scenario in ScenarioKind.allCases {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 1))
+            let entry = ScoreEntry(playerName: "E",
+                                   result: engine.result,
+                                   scenarioName: engine.brief.scenarioName)
+            XCTAssertEqual(entry.scenarioKind, scenario,
+                           "a saved score lost which scenario it came from")
+        }
+    }
+
+}
+
+// MARK: - A name has to fit the face
+
+@MainActor
+final class NameAndFaceTests: XCTestCase {
+
+    /// A masculine portrait must not be introduced with a feminine name.
+    /// Reviewing the shipped art, four of the twenty-four read either way
+    /// whatever the prompt asked for, so they are classified separately
+    /// and take unisex names.
+    func testNamesAgreeWithTheFaceTheyAreGiven() {
+        let masculine = Set(Candidate.givenNames(for: .masculine))
+        let feminine = Set(Candidate.givenNames(for: .feminine))
+
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .steady, seed: 3))
+        guard let stream = engine.workPackages.first(where: \.isUnlocked) else { return XCTFail("no stream") }
+        var checked = 0
+        for _ in 0..<40 {
+            engine.requestHire(for: stream.id)
+            guard let request = engine.hiringRequest else { continue }
+            for candidate in request.candidates {
+                let given = candidate.name.split(separator: " ").first.map(String.init) ?? ""
+                switch candidate.worker.presentation {
+                case .masculine:
+                    XCTAssertTrue(masculine.contains(given),
+                                  "\(given) on a masculine portrait")
+                case .feminine:
+                    XCTAssertTrue(feminine.contains(given),
+                                  "\(given) on a feminine portrait")
+                case .neutral:
+                    break  // any pool is fine
+                }
+                checked += 1
+            }
+            engine.cancelHiring()
+        }
+        XCTAssertGreaterThan(checked, 60, "not enough candidates seen to prove anything")
+    }
+
+    /// The masculine and feminine pools must be genuinely disjoint, or
+    /// "matching" means nothing.
+    func testTheGenderedPoolsDoNotOverlap() {
+        let masculine = Set(Candidate.givenNames(for: .masculine))
+        let feminine = Set(Candidate.givenNames(for: .feminine))
+        let shared = masculine.intersection(feminine)
+        // Only the unisex pool may appear in both.
+        let unisex = Set(Candidate.givenNames(for: .neutral))
+            .subtracting(masculine.symmetricDifference(feminine))
+        XCTAssertEqual(shared, shared.intersection(unisex),
+                       "a gendered name appears in both pools: \(shared.subtracting(unisex))")
+        XCTAssertGreaterThan(masculine.count, 12)
+        XCTAssertGreaterThan(feminine.count, 12)
+    }
+
+    /// Both languages, since the pools are localized independently and a
+    /// translator could easily put masculine names in the feminine list.
+    func testEveryPortraitCanBeNamedInBothLanguages() throws {
+        for language in ["en", "es"] {
+            guard let path = Bundle.main.path(forResource: language, ofType: "lproj"),
+                  let bundle = Bundle(path: path) else {
+                throw XCTSkip("\(language) bundle not present")
+            }
+            for key in [Candidate.givenNames(for: .masculine), Candidate.givenNames(for: .feminine)] {
+                _ = key
+            }
+            // Each of the three pools must be non-trivial in this language.
+            for probe in [
+                "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf",
+                "Emily,Grace,Hannah,Chloe,Olivia,Ruby,Freya,Alice,Priya,Nadia,Martha,Bethany,Sophie,Iris,Maeve,Tessa,Nora,Cerys,Rosa,Anika,Ingrid,Delia",
+                "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin",
+            ] {
+                let localized = bundle.localizedString(forKey: probe, value: probe, table: "Localizable")
+                XCTAssertGreaterThanOrEqual(NamePool.split(localized).count, 8,
+                                            "a given-name pool is too thin in \(language)")
+            }
+        }
     }
 }

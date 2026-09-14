@@ -1,72 +1,131 @@
-# Game Center setup — what's left to do in App Store Connect
+# Game Center — leaderboard configuration
 
-> **Bundle ID changed twice** (2026-08-23): first from
-> `com.magarchitecture.CMSimulator` to `com.aguach1leLabs.CMSimulator` (to
-> match the Aguach1leLabs naming convention used by your other apps), then
-> to `com.aguach1leLabs.CriticalPathSim` (to match the app's product name,
-> "Critical Path", after the Xcode target itself was renamed from
-> CMSimulator to CriticalPathSim). If leaderboards were ever registered in
-> App Store Connect under either older bundle ID, they belong to a
-> different app record and won't carry over — this app needs a fresh App
-> Store Connect record under the current ID, with the three leaderboards
-> below created there from scratch.
+This document is the configuration contract between the app and App Store
+Connect. `CMSimulatorTests.LeaderboardTests` reads this file and fails if
+the app submits to a board that is not listed here, so the two cannot
+drift apart.
 
-The app-side code is done: authentication, three leaderboard submissions
-per completed run, and a working "view leaderboard" button. What's *not*
-done, and can't be done from code, is registering the leaderboards
-themselves — that only exists in App Store Connect, tied to your Apple
-Developer account and this app's bundle ID.
+> **Bundle ID:** `com.aguach1leLabs.CriticalPathSim`
+>
+> It changed twice during development (from `com.magarchitecture.CMSimulator`,
+> then from `com.aguach1leLabs.CMSimulator`). Leaderboards registered under
+> either older ID belong to a different app record and do not carry over.
+> This app needs its own App Store Connect record under the current ID,
+> with the five boards below created there from scratch.
 
-## 1. Enable the Game Center capability
+## What the app does automatically
 
-Already wired in code (`CMSimulator.entitlements` has
-`com.apple.developer.game-center = true`, `GameKit.framework` is linked).
-In App Store Connect: **App ▸ [Critical Path] ▸ Features ▸ Game Center**,
-turn it on if it isn't already, for the same bundle ID
-(`com.aguach1leLabs.CriticalPathSim`) this Xcode project uses.
+Authentication, submission on every completed run, and the in-app
+dashboard button are all done in `GameCenterManager.swift`. Nothing below
+can be done from code — leaderboards exist only in App Store Connect.
 
-## 2. Create three leaderboards with these exact IDs
+Submissions happen when the player saves a result. **Only delivered runs
+are submitted**; an insolvent run has no profit worth ranking. A
+submission to a board that does not exist yet fails silently and is
+logged, so shipping before these are configured is safe — scores simply
+do not appear.
 
-The code in `GameCenterManager.swift` submits to these IDs verbatim — a
-typo here means scores silently fail to post (visible only in a device
-log, not a user-facing error). Same screen: **Features ▸ Game Center ▸
-Leaderboards ▸ +**.
+## The five leaderboards
 
-| Leaderboard ID | Matches | Sort order |
+Create each at **App ▸ Critical Path ▸ Features ▸ Game Center ▸
+Leaderboards ▸ +**, as a **Classic** leaderboard. Copy the IDs — do not
+retype them. A typo produces no user-facing error, only a line in the
+device log.
+
+### Profit, one per scenario — sort **High to Low**
+
+Profit is the only metric every scenario shares. A building, a software
+company and a trading operation are not comparable on one ranking, so
+each gets its own board. This mirrors the in-app boards, which have
+always been filtered by scenario.
+
+| Leaderboard ID | Reference name | Sort | Score format |
+|---|---|---|---|
+| `com.aguach1leLabs.CriticalPathSim.profit.construction` | Construction Profit | **High to Low** | Money |
+| `com.aguach1leLabs.CriticalPathSim.profit.startup` | Startup Profit | **High to Low** | Money |
+| `com.aguach1leLabs.CriticalPathSim.profit.importing` | Import Profit | **High to Low** | Money |
+
+The submitted value is `RunResult.score`, rounded to a whole number:
+profit, multiplied by the difficulty multiplier (Steady 0.8, Standard 1.0,
+Tight 1.35), then by the venture setup factor (startup and import only —
+lean opening capital and no grace period score above 1.0), then by 1.1 if
+the run finished on time. Never negative; a loss-making delivery posts 0.
+
+### Cost and time — construction only, sort **Low to High**
+
+Submitted **only for construction runs**. "Built it for less" and "built
+it in fewer days" rank coherently against a fixed scope and a contractual
+deadline. They do not for a startup, whose length is a strategic choice,
+or for an import season, whose length is fixed by the calendar.
+
+| Leaderboard ID | Reference name | Sort | Score format |
+|---|---|---|---|
+| `com.aguach1leLabs.CriticalPathSim.costmaster` | Cost Master | **Low to High** | Money |
+| `com.aguach1leLabs.CriticalPathSim.timemaster` | Time Master | **Low to High** | Elapsed time — see note |
+
+- **Cost Master** submits `RunResult.costs.total`, rounded — every peso
+  spent, all sixteen cost lines.
+- **Time Master** submits **days × 10**, so the board has tenth-of-a-day
+  precision. Configure the score format so the value reads correctly:
+  either a custom format showing one decimal, or Integer with the
+  understanding that 1,412 means 141.2 days.
+
+> **Sort order defaults to High to Low in App Store Connect.** The three
+> profit boards want that default. The two ascending boards must be
+> changed — they are "lower is better," the opposite of a points board.
+
+### Retired — do not create
+
+`com.aguach1leLabs.CriticalPathSim.constructionmaster` was a combined
+ascending cost-plus-days score. It has no code path any more and posting
+profit to an ascending board would rank the worst runs first. If it was
+already created, leave it unused or delete it.
+
+## Localization
+
+Each board needs at least one **Leaderboard Localization** (display name
+and score format). The app ships English and Spanish, so add both:
+
+| Board | English | Spanish |
 |---|---|---|
-| `com.aguach1leLabs.CriticalPathSim.costmaster` | Cost Master board | **Low to High** (lower cost wins) |
-| `com.aguach1leLabs.CriticalPathSim.timemaster` | Time Master board | **Low to High** (fewer days wins) |
-| `com.aguach1leLabs.CriticalPathSim.constructionmaster` | Construction Master (combined) board | **Low to High** |
+| Construction Profit | Construction — Profit | Construcción — Utilidad |
+| Startup Profit | Startup — Profit | Startup — Utilidad |
+| Import Profit | Import & Resale — Profit | Importación — Utilidad |
+| Cost Master | Cost Master | Maestro del Costo |
+| Time Master | Time Master | Maestro del Tiempo |
 
-For each: give it a **Reference Name** (internal, e.g. "Cost Master") and
-at least one **Leaderboard Localization** (display name + score format —
-use "Money" for the cost board with your app's currency, and "Numeric"
-or a custom time format for the other two, since the values submitted are
-integers: cost in whole currency units, days×10, and a scaled combined
-score respectively — see the comments in `GameCenterManager.reportScore`
-for exactly how each is computed).
+Set the currency on the four Money-formatted boards to match what players
+actually see; the app's display currency is configurable in Settings, so
+pick the one your primary market uses and accept that the board's unit is
+fixed while the in-app figure is not.
 
-**Sort order defaults to High to Low in the UI — you must change it.** All
-three of these are "lower is better," the opposite of a typical points
-leaderboard.
+## Local scores are separate and already work
 
-## 3. Test it
+The in-app boards (trophy icon) are SwiftData, not Game Center. They
+persist every saved run with its scenario, difficulty, persona, seed and
+full result, and filter by scenario. They work offline, with no Apple
+account, and are unaffected by anything in this document.
 
-Leaderboards work in Sandbox / TestFlight once created, even before the
-app is live. On a real device (Game Center doesn't authenticate
-meaningfully in the simulator without a signed-in sandbox tester):
+## Testing
 
-1. Sign into a **Sandbox Apple Account** (Settings ▸ Game Center on the
-   test device, or Xcode will prompt in-app on first launch).
-2. Play a run to completion, save a result.
-3. Tap the trophy or Game Center icon in-app to open the dashboard and
-   confirm the score landed on all three boards.
+Game Center does not authenticate meaningfully in the Simulator. On a
+real device:
 
-## 4. If scores don't appear
+1. Sign into a **Sandbox Apple Account** (Settings ▸ Game Center).
+2. Play a run to completion and save the result.
+3. Tap the trophy in-app to open the dashboard and confirm the score
+   landed on the board for **that scenario**.
+4. Play a second scenario and confirm it lands on a *different* board.
 
-- Double-check the three IDs above match **exactly** (copy-paste, not
-  retyped) — this is the most common failure.
-- Confirm Game Center is turned on for this app in App Store Connect, not
-  just the entitlement in Xcode.
-- Check the device console log for `Game Center score submission failed`
-  — `GameCenterManager.reportScore` prints the underlying `GKError` there.
+Boards work in Sandbox and TestFlight as soon as they are created, before
+the app is live.
+
+## If scores do not appear
+
+- Check the IDs match exactly — this is the most common failure, and it
+  is silent.
+- Confirm Game Center is enabled for this app in App Store Connect, not
+  just the `com.apple.developer.game-center` entitlement in Xcode.
+- Look for `Game Center score submission failed` in the device console;
+  `GameCenterManager.submit(_:to:)` logs the underlying `GKError` there.
+- Remember insolvent runs are never submitted. Deliver a run to test.

@@ -1943,6 +1943,24 @@
         }
       }
     },
+    "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of unisex given names for workers. Replace with names that genuinely read as either gender in your language - do not translate these literally, and do not simply mix masculine and feminine names here.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guadalupe,Cruz,Trinidad,Ariel,Alexis,René,Yael,Noa,Amaury,Denis"
+          }
+        }
+      }
+    },
     "AliExpress and Temu-style resellers": {
       "comment": "Sourcing channel",
       "extractionState": "manual",
@@ -5036,6 +5054,24 @@
         }
       }
     },
+    "Emily,Grace,Hannah,Chloe,Olivia,Ruby,Freya,Alice,Priya,Nadia,Martha,Bethany,Sophie,Iris,Maeve,Tessa,Nora,Cerys,Rosa,Anika,Ingrid,Delia": {
+      "extractionState": "manual",
+      "comment": "Comma-separated pool of feminine given names for workers. Replace with feminine given names that read naturally in your language - do not translate these literally. They are paired with feminine-looking portraits, so the names must read as feminine in your language.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emily,Grace,Hannah,Chloe,Olivia,Ruby,Freya,Alice,Priya,Nadia,Martha,Bethany,Sophie,Iris,Maeve,Tessa,Nora,Cerys,Rosa,Anika,Ingrid,Delia"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valeria,Renata,Ximena,Camila,Fernanda,Regina,Andrea,Paulina,Mariana,Daniela,Itzel,Lucía,Elena,Sofía,Citlali,Adriana,Mónica,Estefanía,Roxana,Gabriela,Nuria,Aisha"
+          }
+        }
+      }
+    },
     "Engineer": {
       "comment": "Worker role",
       "extractionState": "manual",
@@ -6854,20 +6890,20 @@
         }
       }
     },
-    "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia": {
-      "comment": "Comma-separated pool of worker first names. Replace with given names that read naturally in your language - do not translate these literally.",
+    "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf": {
       "extractionState": "manual",
+      "comment": "Comma-separated pool of masculine given names for workers. Replace with masculine given names that read naturally in your language - do not translate these literally. They are paired with masculine-looking portraits, so the names must read as masculine in your language.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "James,Emily,Owen,Grace,Daniel,Hannah,Marcus,Chloe,Thomas,Olivia,Nathan,Ruby,Callum,Freya,Ethan,Alice,Diego,Priya,Nadia,Sean,Isaac,Martha,Leo,Bethany,Aaron,Sophie,Elliot,Iris,Jonah,Maeve,Rory,Tessa,Felix,Nora,Duncan,Cerys,Malachi,Rosa,Kwame,Anika,Tomasz,Ingrid,Yusuf,Delia"
+            "value": "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mateo,Valeria,Santiago,Renata,Emiliano,Ximena,Rodrigo,Camila,Alejandro,Fernanda,Sebastián,Regina,Diego,Andrea,Leonardo,Paulina,Ricardo,Mariana,Joaquín,Daniela,Aisha,Sean,Néstor,Itzel,Bruno,Lucía,Rafael,Elena,Gerardo,Sofía,Álvaro,Citlali,Ignacio,Adriana,Óscar,Mónica,Julián,Estefanía,Hugo,Roxana,Patricio,Gabriela,Aarón,Nuria"
+            "value": "Mateo,Santiago,Emiliano,Rodrigo,Alejandro,Sebastián,Diego,Leonardo,Ricardo,Joaquín,Néstor,Bruno,Rafael,Gerardo,Álvaro,Ignacio,Óscar,Julián,Hugo,Patricio,Aarón,Andrés"
           }
         }
       }

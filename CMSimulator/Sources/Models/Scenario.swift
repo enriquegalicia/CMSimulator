@@ -131,6 +131,21 @@ enum ScenarioKind: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// How this business counts someone's experience. "In the trade"
+    /// means commerce, which belongs to import and export - on a building
+    /// site it is years in the field, and in software it is years with
+    /// the tools, because that is what actually transfers there.
+    func experienceLabel(years: Int) -> String {
+        switch self {
+        case .construction:
+            return String(localized: "\(years) yrs in the field", comment: "Candidate experience, construction")
+        case .startup:
+            return String(localized: "\(years) yrs with the tools", comment: "Candidate experience, software")
+        case .importing:
+            return String(localized: "\(years) yrs in the trade", comment: "Candidate experience, import and export")
+        }
+    }
+
     /// What you are running, for copy that has to say "run it well".
     /// A site, a company and a trading operation are not the same noun.
     var operationNoun: String {

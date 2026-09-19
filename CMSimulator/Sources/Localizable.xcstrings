@@ -1277,6 +1277,24 @@
         }
       }
     },
+    "%lld yrs in the field": {
+      "extractionState": "manual",
+      "comment": "Candidate experience, construction",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld yrs in the field"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld años en el ramo"
+          }
+        }
+      }
+    },
     "%lld yrs in the trade": {
       "comment": "Candidate years of experience",
       "extractionState": "manual",
@@ -1291,6 +1309,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld años en el oficio"
+          }
+        }
+      }
+    },
+    "%lld yrs with the tools": {
+      "extractionState": "manual",
+      "comment": "Candidate experience, software",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld yrs with the tools"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld años con las herramientas"
           }
         }
       }
@@ -3414,6 +3450,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Comercial"
+          }
+        }
+      }
+    },
+    "Commercial certificate": {
+      "extractionState": "manual",
+      "comment": "Education level, import and export",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commercial certificate"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certificado comercial"
           }
         }
       }
@@ -7138,6 +7192,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Puntaje de la tabla"
+          }
+        }
+      }
+    },
+    "Learned on the job": {
+      "extractionState": "manual",
+      "comment": "Education level, import and export",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learned on the job"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aprendido en el negocio"
           }
         }
       }

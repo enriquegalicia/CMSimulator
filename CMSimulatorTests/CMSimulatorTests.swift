@@ -1081,13 +1081,25 @@ final class IncidentDeliveryTests: XCTestCase {
     /// `advance(byDays: 200)` is a single 200-day tick that can fire at most
     /// one incident. Drive it the way the app does - small steps - or the
     /// test measures the harness rather than the engine.
+    ///
+    /// Summed across seeds rather than pinned to one: a single run can end
+    /// early on its own, and anything that draws from the global RNG shifts
+    /// the incident sequence. The property under test is that leaving the
+    /// banner up does not gate firing - not that one particular run is
+    /// eventful.
     func testIncidentsKeepFiringWhenTheBannerIsNeverDismissed() {
         for scenario in ScenarioKind.allCases {
-            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 7))
-            // Deliberately never call dismissEvent().
-            for _ in 0..<800 where engine.outcome == nil { engine.advance(byDays: 0.25) }
-            XCTAssertGreaterThan(engine.incidentsFired, 1,
-                                 "\(scenario.rawValue): only \(engine.incidentsFired) incident(s) fired with the banner left up")
+            var total = 0
+            let seeds: [UInt64] = [1, 2, 3, 4, 5, 6, 7, 8]
+            for seed in seeds {
+                let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: seed))
+                // Deliberately never call dismissEvent().
+                for _ in 0..<800 where engine.outcome == nil { engine.advance(byDays: 0.25) }
+                total += engine.incidentsFired
+            }
+            // Before the fix this was exactly one per run, every time.
+            XCTAssertGreaterThan(total, seeds.count * 2,
+                                 "\(scenario.rawValue): only \(total) incidents across \(seeds.count) runs with the banner left up")
         }
     }
 
@@ -1758,13 +1770,52 @@ final class ScenarioVocabularyTests: XCTestCase {
     /// shared is speaking the wrong language - which is the bug class that
     /// put construction risk messages in the import run.
     private static let forbidden: [ScenarioKind: [String]] = [
+        // "in the trade" means commerce. It belongs to import and export,
+        // and read as a building-site word for far too long.
         .construction: ["investor", "runway", "churn", "marketplace", "customs",
-                        "tariff", "shipment", "warehouse", "listing"],
+                        "tariff", "shipment", "warehouse", "listing", "in the trade"],
         .startup:      ["site", "crew", "material", "concrete", "rebar", "contract value",
-                        "handover", "customs", "tariff", "warehouse", "subcontractor"],
+                        "handover", "customs", "tariff", "warehouse", "subcontractor",
+                        "in the trade", "apprenticeship"],
         .importing:    ["site", "crew", "handover", "contract value", "concrete", "rebar",
-                        "runway", "investor", "tech debt", "subcontractor"],
+                        "runway", "investor", "tech debt", "subcontractor",
+                        "in the field", "bootcamp", "apprenticeship"],
     ]
+
+    /// The runtime audit below reads the site log and incident text. It
+    /// cannot see static UI labels, which is exactly how "15 yrs in the
+    /// trade" survived on a building site: it never appears in a log line.
+    /// This reads the vocabulary surface itself.
+    func testScenarioVocabularySurfaceStaysInItsOwnLanguage() {
+        for scenario in ScenarioKind.allCases {
+            var vocabulary: [String] = [
+                scenario.experienceLabel(years: 15),
+                scenario.operationNoun,
+                scenario.workStreamsNoun,
+                scenario.boardName,
+                scenario.staffName,
+                scenario.supplyName,
+                scenario.supplyOrderVerb,
+                scenario.counterpartyName,
+                scenario.debtName,
+                scenario.handoverName,
+                scenario.overrunName,
+                scenario.suppliersName,
+            ]
+            vocabulary += EducationLevel.allCases.map { $0.name(in: scenario) }
+            vocabulary += MitigationClass.allCases.flatMap {
+                [$0.name(in: scenario), $0.blurb(in: scenario)]
+            }
+
+            let banned = Self.forbidden[scenario] ?? []
+            for phrase in vocabulary {
+                let lower = phrase.lowercased()
+                for word in banned where lower.contains(word) {
+                    XCTFail("\(scenario.rawValue) vocabulary said \"\(word)\": \(phrase)")
+                }
+            }
+        }
+    }
 
     /// Plays each scenario hard enough to fire a lot of incidents, and
     /// reads every line it produces.

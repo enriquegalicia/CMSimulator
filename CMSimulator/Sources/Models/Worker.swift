@@ -94,9 +94,11 @@ enum EducationLevel: String, CaseIterable, Identifiable, Comparable {
     func name(in scenario: ScenarioKind) -> String {
         switch (self, scenario) {
         case (.trade, .construction): return String(localized: "Apprenticeship", comment: "Education level, construction")
-        case (.trade, _): return String(localized: "Self-taught", comment: "Education level, non-construction")
+        case (.trade, .startup): return String(localized: "Self-taught", comment: "Education level, software")
+        case (.trade, .importing): return String(localized: "Learned on the job", comment: "Education level, import and export")
         case (.technician, .construction): return String(localized: "Technical certificate", comment: "Education level, construction")
-        case (.technician, _): return String(localized: "Bootcamp or diploma", comment: "Education level, non-construction")
+        case (.technician, .startup): return String(localized: "Bootcamp or diploma", comment: "Education level, software")
+        case (.technician, .importing): return String(localized: "Commercial certificate", comment: "Education level, import and export")
         case (.degree, _): return String(localized: "Degree", comment: "Education level")
         case (.postgraduate, _): return String(localized: "Postgraduate", comment: "Education level")
         }

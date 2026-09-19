@@ -107,7 +107,7 @@ struct CandidatePickerView: View {
                 HStack(spacing: 6) {
                     Label(worker.education.name(in: scenario), systemImage: "graduationcap")
                     Text(verbatim: "·").foregroundStyle(.secondary)
-                    Label(String(localized: "\(worker.yearsOfExperience) yrs in the trade", comment: "Candidate years of experience"),
+                    Label(scenario.experienceLabel(years: worker.yearsOfExperience),
                           systemImage: "clock.arrow.circlepath")
                 }
                 .font(.caption2)

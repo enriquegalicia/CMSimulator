@@ -287,6 +287,7 @@ final class SimulationEngine: ObservableObject {
         eventQueue.removeAll()
         activeEventAge = 0
         venture = nil
+        namesEverUsed.removeAll()
         insurancePolicy = .none
         sourceOrigin = .chinaWholesale
         dutyPaid = 0
@@ -498,11 +499,18 @@ final class SimulationEngine: ObservableObject {
     /// a trade leaving at the end of its works, not a layoff. Without it,
     /// finished crews would draw full pay to the end of the job and no
     /// amount of good play could turn a profit.
+    /// Every name this run has ever issued, including people who have
+    /// since quit or been let go. Names must not come back round: a
+    /// departed worker and a new hire sharing a name reads as one person
+    /// rehired, and the site log keeps both.
+    private var namesEverUsed: Set<String> = []
+
     /// Every name currently spoken for in this run. Nobody new may take
     /// one of these, because two people sharing a name in a roster you are
     /// making firing decisions from reads as a bug.
     private var namesInPlay: Set<String> {
-        var names = Set(workers.map(\.name))
+        var names = namesEverUsed
+        names.formUnion(workers.map(\.name))
         names.formUnion(angelProspects.map(\.name))
         names.formUnion(vendorPanels.values.flatMap { $0 }.map(\.name))
         if let request = hiringRequest {
@@ -1030,6 +1038,7 @@ final class SimulationEngine: ObservableObject {
     /// Take the money. Cash today against a slice of whatever you build.
     func acceptAngel(_ id: AngelProspect.ID) {
         guard let offer = angelProspects.first(where: { $0.id == id }) else { return }
+        namesEverUsed.insert(offer.name)
         ledger.raise(offer.amount, dilution: offer.dilution)
         angelProspects.removeAll { $0.id == id }
         isSearchingForAngels = false
@@ -1503,6 +1512,7 @@ final class SimulationEngine: ObservableObject {
                 symbol: "xmark.circle.fill", tone: .bad)
             return
         }
+        namesEverUsed.insert(candidate.name)
         workers.append(candidate.worker)
         log(String(localized: "\(candidate.name) hired to \(workPackages.first { $0.id == candidate.worker.packageID }?.title ?? "").", comment: "Site log: hired"),
             symbol: "person.badge.plus", tone: .neutral)

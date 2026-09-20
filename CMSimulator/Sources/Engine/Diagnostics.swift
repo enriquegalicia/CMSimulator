@@ -347,10 +347,19 @@ final class Diagnostics: ObservableObject {
 
     /// Writes the export to a temporary file so it can go through a share
     /// sheet as a real attachment rather than a wall of pasted text.
+    /// A one-line Game Center verdict, set by the diagnostics panel so the
+    /// exported file says whether the boards were reachable. Without it an
+    /// export of a leaderboard problem contains no trace of the problem.
+    var gameCenterHealth: String?
+
     func writeExportFile() -> URL? {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("critical-path-diagnostics.txt")
-        guard let data = exportText.data(using: .utf8) else { return nil }
+        var text = exportText
+        if let health = gameCenterHealth {
+            text += "\n\n\(health)\n"
+        }
+        guard let data = text.data(using: .utf8) else { return nil }
         do {
             try data.write(to: url, options: .atomic)
             return url

@@ -7,6 +7,9 @@ import SwiftUI
 
 struct SettingsView: View {
     let onExit: () -> Void
+    /// The live manager, so the diagnostics panel reports on the same
+    /// Game Center session the game submits through.
+    @ObservedObject var gameCenter: GameCenterManager
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -29,7 +32,7 @@ struct SettingsView: View {
 
                 Section {
                     NavigationLink {
-                        DiagnosticsView()
+                        DiagnosticsView(gameCenter: gameCenter)
                     } label: {
                         HStack {
                             Label(String(localized: "Diagnostics", comment: "Settings row"), systemImage: "stethoscope")

@@ -38,7 +38,7 @@ struct RootView: View {
             ScoresView(onExit: { showScores = false })
         }
         .sheet(isPresented: $showSettings) {
-            SettingsView(onExit: { showSettings = false })
+            SettingsView(onExit: { showSettings = false }, gameCenter: gameCenter)
         }
         .fullScreenCover(isPresented: $showResult) {
             ResultView(

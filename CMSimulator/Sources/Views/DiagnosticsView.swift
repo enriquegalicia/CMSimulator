@@ -11,8 +11,67 @@ import SwiftUI
 
 struct DiagnosticsView: View {
     @ObservedObject private var diagnostics = Diagnostics.shared
+    /// Passed in so the panel reports on the same manager the game uses,
+    /// rather than a second one with its own empty history.
+    @ObservedObject var gameCenter: GameCenterManager
     @State private var exportURL: URL?
     @State private var showClearConfirm = false
+
+    /// Turns "the leaderboards do not work" into a specific answer.
+    /// Game Center reports submission failures nowhere the player can see,
+    /// so without this the only symptom is scores never appearing.
+    @ViewBuilder
+    private var gameCenterSection: some View {
+        Section {
+            LabeledContent(String(localized: "Signed in", comment: "Game Center diagnostics row")) {
+                Label(gameCenter.isAuthenticated
+                      ? (gameCenter.playerAlias ?? String(localized: "Yes", comment: "Signed in"))
+                      : String(localized: "No", comment: "Not signed in"),
+                      systemImage: gameCenter.isAuthenticated ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .foregroundStyle(gameCenter.isAuthenticated ? .green : .red)
+                    .labelStyle(.titleAndIcon)
+            }
+
+            ForEach(gameCenter.boards) { board in
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 6) {
+                        Image(systemName: board.isHealthy ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                            .foregroundStyle(board.isHealthy ? .green : .orange)
+                        Text(board.id.replacingOccurrences(of: "com.aguach1leLabs.CriticalPath.", with: ""))
+                            .font(.subheadline.bold())
+                    }
+                    Text(board.summary)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.vertical, 1)
+            }
+
+            Button {
+                Task { await gameCenter.checkBoards() }
+            } label: {
+                if gameCenter.isCheckingBoards {
+                    ProgressView()
+                } else {
+                    Label(String(localized: "Check the boards exist", comment: "Game Center diagnostics button"),
+                          systemImage: "antenna.radiowaves.left.and.right")
+                }
+            }
+            .disabled(!gameCenter.isAuthenticated || gameCenter.isCheckingBoards)
+
+            if let error = gameCenter.lastCheckError {
+                Label(error, systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } header: {
+            Text("Game Center", comment: "Diagnostics section header")
+        } footer: {
+            Text("Checking asks Game Center which boards are registered. It posts no score, so it is safe to run any time. A board shown as not registered has not been created in App Store Connect — that is the usual reason scores never appear.", comment: "Game Center diagnostics explanation")
+        }
+    }
 
     var body: some View {
         List {
@@ -46,6 +105,9 @@ struct DiagnosticsView: View {
 
                 Section {
                     Button {
+                        // Stamp the current Game Center verdict in, so an
+                        // export of a leaderboard problem contains it.
+                        diagnostics.gameCenterHealth = gameCenter.healthSummary
                         exportURL = diagnostics.writeExportFile()
                     } label: {
                         Label(String(localized: "Export all reports", comment: "Diagnostics export button"),
@@ -60,6 +122,8 @@ struct DiagnosticsView: View {
                     }
                 }
             }
+
+            gameCenterSection
 
             Section {
                 LabeledContent(String(localized: "App version", comment: "Diagnostics environment row"),

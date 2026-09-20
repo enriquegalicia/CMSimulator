@@ -2043,9 +2043,24 @@ final class LeaderboardTests: XCTestCase {
         XCTAssertEqual(Set(ids).count, ScenarioKind.allCases.count,
                        "two scenarios share a profit leaderboard")
         for id in ids {
-            XCTAssertTrue(id.hasPrefix("com.aguach1leLabs.CriticalPathSim."),
+            XCTAssertTrue(id.hasPrefix("com.aguach1leLabs.CriticalPath."),
                           "\(id) is not under this app's bundle ID")
             XCTAssertFalse(id.hasSuffix("."), "\(id) looks malformed")
+        }
+    }
+
+    /// Every board ID must sit under the app's real bundle identifier.
+    /// They drifted to a "CriticalPathSim" prefix while the app itself
+    /// shipped as "CriticalPath", which is invisible in code and fatal in
+    /// App Store Connect: boards created under the bundle convention
+    /// could never match what the app submits.
+    func testLeaderboardIDsSitUnderTheAppsRealBundleID() throws {
+        let bundleID = try XCTUnwrap(Bundle.main.bundleIdentifier)
+        // The test bundle is hosted by the app, so strip any test suffix.
+        let appID = bundleID.replacingOccurrences(of: ".xctest", with: "")
+        for id in GameCenterManager.allLeaderboardIDs {
+            XCTAssertTrue(id.hasPrefix(appID + "."),
+                          "\(id) is not under the app bundle \(appID) - App Store Connect will never match it")
         }
     }
 
@@ -2054,15 +2069,15 @@ final class LeaderboardTests: XCTestCase {
     /// them here makes an accidental rename a test failure instead.
     func testLeaderboardIDsAreExactlyWhatTheSetupDocumentPromises() {
         XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .construction),
-                       "com.aguach1leLabs.CriticalPathSim.profit.construction")
+                       "com.aguach1leLabs.CriticalPath.profit.construction")
         XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .startup),
-                       "com.aguach1leLabs.CriticalPathSim.profit.startup")
+                       "com.aguach1leLabs.CriticalPath.profit.startup")
         XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .importing),
-                       "com.aguach1leLabs.CriticalPathSim.profit.importing")
+                       "com.aguach1leLabs.CriticalPath.profit.importing")
         XCTAssertEqual(GameCenterManager.costLeaderboardID,
-                       "com.aguach1leLabs.CriticalPathSim.costmaster")
+                       "com.aguach1leLabs.CriticalPath.costmaster")
         XCTAssertEqual(GameCenterManager.timeLeaderboardID,
-                       "com.aguach1leLabs.CriticalPathSim.timemaster")
+                       "com.aguach1leLabs.CriticalPath.timemaster")
         XCTAssertEqual(GameCenterManager.allLeaderboardIDs.count, 5)
     }
 

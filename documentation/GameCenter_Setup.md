@@ -5,13 +5,21 @@ Connect. `CMSimulatorTests.LeaderboardTests` reads this file and fails if
 the app submits to a board that is not listed here, so the two cannot
 drift apart.
 
-> **Bundle ID:** `com.aguach1leLabs.CriticalPathSim`
+> **Bundle ID:** `com.aguach1leLabs.CriticalPath`
 >
-> It changed twice during development (from `com.magarchitecture.CMSimulator`,
-> then from `com.aguach1leLabs.CMSimulator`). Leaderboards registered under
-> either older ID belong to a different app record and do not carry over.
-> This app needs its own App Store Connect record under the current ID,
-> with the five boards below created there from scratch.
+> It changed three times during development (`com.magarchitecture.CMSimulator`,
+> then `com.aguach1leLabs.CMSimulator`, then the current one). Leaderboards
+> registered under an older ID belong to a different app record and do not
+> carry over.
+>
+> **The board IDs were wrong until 2026-09-20.** They were prefixed
+> `com.aguach1leLabs.CriticalPathSim.` — the *Xcode target* name — while
+> the app ships as `com.aguach1leLabs.CriticalPath`. If you created boards
+> following the bundle-ID convention, nothing the app submitted could ever
+> match them, and the failure is silent. Every ID below is now aligned to
+> the real bundle ID, and a test enforces it. **If you already created
+> boards under the `…CriticalPathSim…` prefix, they are orphaned — create
+> the ones below instead.**
 
 ## What the app does automatically
 
@@ -41,9 +49,9 @@ always been filtered by scenario.
 
 | Leaderboard ID | Reference name | Sort | Score format |
 |---|---|---|---|
-| `com.aguach1leLabs.CriticalPathSim.profit.construction` | Construction Profit | **High to Low** | Money |
-| `com.aguach1leLabs.CriticalPathSim.profit.startup` | Startup Profit | **High to Low** | Money |
-| `com.aguach1leLabs.CriticalPathSim.profit.importing` | Import Profit | **High to Low** | Money |
+| `com.aguach1leLabs.CriticalPath.profit.construction` | Construction Profit | **High to Low** | Money |
+| `com.aguach1leLabs.CriticalPath.profit.startup` | Startup Profit | **High to Low** | Money |
+| `com.aguach1leLabs.CriticalPath.profit.importing` | Import Profit | **High to Low** | Money |
 
 The submitted value is `RunResult.score`, rounded to a whole number:
 profit, multiplied by the difficulty multiplier (Steady 0.8, Standard 1.0,
@@ -60,8 +68,8 @@ or for an import season, whose length is fixed by the calendar.
 
 | Leaderboard ID | Reference name | Sort | Score format |
 |---|---|---|---|
-| `com.aguach1leLabs.CriticalPathSim.costmaster` | Cost Master | **Low to High** | Money |
-| `com.aguach1leLabs.CriticalPathSim.timemaster` | Time Master | **Low to High** | Elapsed time — see note |
+| `com.aguach1leLabs.CriticalPath.costmaster` | Cost Master | **Low to High** | Money |
+| `com.aguach1leLabs.CriticalPath.timemaster` | Time Master | **Low to High** | Elapsed time — see note |
 
 - **Cost Master** submits `RunResult.costs.total`, rounded — every peso
   spent, all sixteen cost lines.
@@ -76,7 +84,7 @@ or for an import season, whose length is fixed by the calendar.
 
 ### Retired — do not create
 
-`com.aguach1leLabs.CriticalPathSim.constructionmaster` was a combined
+`com.aguach1leLabs.CriticalPath.constructionmaster` was a combined
 ascending cost-plus-days score. It has no code path any more and posting
 profit to an ascending board would rank the worst runs first. If it was
 already created, leave it unused or delete it.
@@ -106,16 +114,70 @@ persist every saved run with its scenario, difficulty, persona, seed and
 full result, and filter by scenario. They work offline, with no Apple
 account, and are unaffected by anything in this document.
 
-## Testing
+## How to test this properly
 
-Game Center does not authenticate meaningfully in the Simulator. On a
-real device:
+Game Center reports submission failures nowhere a player can see, so
+"scores are not appearing" has several possible causes that look
+identical. Work through these in order — each step rules one out, and
+you should not move on until the current one passes.
 
-1. Sign into a **Sandbox Apple Account** (Settings ▸ Game Center).
-2. Play a run to completion and save the result.
-3. Tap the trophy in-app to open the dashboard and confirm the score
-   landed on the board for **that scenario**.
-4. Play a second scenario and confirm it lands on a *different* board.
+Game Center does not authenticate meaningfully in the Simulator, so all
+of this happens on a real device.
+
+### Step 1 — Are you signed in?
+
+Settings ▸ Game Center on the device, signed into a **Sandbox Apple
+Account**. Then in the app: **Settings ▸ Diagnostics ▸ Game Center**. The
+first row must show your player alias, not "No".
+
+If it says No, nothing else can work. Sign in and relaunch.
+
+### Step 2 — Do the boards actually exist?
+
+Same panel, tap **Check the boards exist**. This asks Game Center which
+of the five IDs are registered. It posts no score, so run it as often as
+you like.
+
+- All five **Registered and reachable** → configuration is correct, go to
+  step 3.
+- Any **Not registered in App Store Connect** → that board has not been
+  created, or its ID does not match character-for-character. This is the
+  most common cause by far. Copy the ID from the table above; do not
+  retype it.
+
+Do not proceed until all five are green. Playing runs against
+unregistered boards tells you nothing.
+
+### Step 3 — Does a real run post?
+
+1. Play **construction** to a delivered finish (an insolvent run is never
+   submitted — that is deliberate, not a bug).
+2. Save the result.
+3. Return to **Diagnostics ▸ Game Center**. The construction profit board
+   should now read **Last score sent: …**, and Cost Master and Time Master
+   should too.
+4. Tap the trophy in-app to open the Game Center dashboard and confirm
+   the score is visible there.
+
+If the panel shows a **failure message** instead, that is the real
+GKError — it will name the actual problem.
+
+### Step 4 — Does each scenario reach its own board?
+
+1. Play **import & resale** to a finish and save.
+2. In the panel, `profit.importing` should update and
+   `profit.construction` should be unchanged.
+3. Cost Master and Time Master should also be unchanged — they take
+   construction runs only, by design.
+
+That last check is the one that proves the boards are genuinely separated
+rather than all fed from one place.
+
+### Step 5 — Export if it still fails
+
+Diagnostics ▸ share. The export includes the Game Center health line and
+every submission attempt with its error, which is what to send on if the
+problem is not obvious from the panel.
 
 Boards work in Sandbox and TestFlight as soon as they are created, before
 the app is live.

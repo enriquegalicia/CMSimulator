@@ -3220,6 +3220,42 @@
         }
       }
     },
+    "Check the boards exist": {
+      "extractionState": "manual",
+      "comment": "Game Center diagnostics button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check the boards exist"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificar que existan las tablas"
+          }
+        }
+      }
+    },
+    "Checking asks Game Center which boards are registered. It posts no score, so it is safe to run any time. A board shown as not registered has not been created in App Store Connect — that is the usual reason scores never appear.": {
+      "extractionState": "manual",
+      "comment": "Game Center diagnostics explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking asks Game Center which boards are registered. It posts no score, so it is safe to run any time. A board shown as not registered has not been created in App Store Connect — that is the usual reason scores never appear."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La verificación le pregunta a Game Center qué tablas están registradas. No envía ninguna puntuación, así que puedes hacerla cuando quieras. Una tabla que aparezca como no registrada no se ha creado en App Store Connect: esa es la causa habitual de que las puntuaciones nunca aparezcan."
+          }
+        }
+      }
+    },
     "Checks goods at the factory. Catches bad stock before you have paid to ship it.": {
       "comment": "Mitigation description",
       "extractionState": "manual",
@@ -5936,6 +5972,24 @@
         }
       }
     },
+    "Game Center": {
+      "extractionState": "manual",
+      "comment": "Diagnostics section header",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center"
+          }
+        }
+      }
+    },
     "Generalist": {
       "comment": "Worker role",
       "extractionState": "manual",
@@ -6958,6 +7012,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mateo,Santiago,Emiliano,Rodrigo,Alejandro,Sebastián,Diego,Leonardo,Ricardo,Joaquín,Néstor,Bruno,Rafael,Gerardo,Álvaro,Ignacio,Óscar,Julián,Hugo,Patricio,Aarón,Andrés"
+          }
+        }
+      }
+    },
+    "Last score sent: %lld": {
+      "extractionState": "manual",
+      "comment": "Leaderboard status",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last score sent: %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última puntuación enviada: %lld"
           }
         }
       }
@@ -8258,6 +8330,24 @@
         }
       }
     },
+    "No": {
+      "extractionState": "manual",
+      "comment": "Not signed in",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        }
+      }
+    },
     "No %@ assigned": {
       "comment": "Work package status",
       "extractionState": "manual",
@@ -8420,6 +8510,24 @@
         }
       }
     },
+    "Not checked yet": {
+      "extractionState": "manual",
+      "comment": "Leaderboard status",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not checked yet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin verificar"
+          }
+        }
+      }
+    },
     "Not enough cash to run a raise.": {
       "comment": "Site log: angel search unaffordable",
       "extractionState": "manual",
@@ -8542,6 +8650,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aún sin publicar"
+          }
+        }
+      }
+    },
+    "Not registered in App Store Connect": {
+      "extractionState": "manual",
+      "comment": "Leaderboard status",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not registered in App Store Connect"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No registrada en App Store Connect"
+          }
+        }
+      }
+    },
+    "Not signed in to Game Center.": {
+      "extractionState": "manual",
+      "comment": "Leaderboard check error",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not signed in to Game Center."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No has iniciado sesión en Game Center."
           }
         }
       }
@@ -10022,6 +10166,24 @@
         }
       }
     },
+    "Registered and reachable": {
+      "extractionState": "manual",
+      "comment": "Leaderboard status",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registered and reachable"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrada y accesible"
+          }
+        }
+      }
+    },
     "Regulatory delay, and fraud losses you did not price.": {
       "comment": "Venture hazard",
       "extractionState": "manual",
@@ -11026,6 +11188,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Los compradores esperan alrededor de %@. Si bajas el precio mueves más unidades con menos margen; si lo subes cae el volumen."
+          }
+        }
+      }
+    },
+    "Signed in": {
+      "extractionState": "manual",
+      "comment": "Game Center diagnostics row",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signed in"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesión iniciada"
           }
         }
       }
@@ -13510,6 +13690,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "La gente se vuelve más rápida mientras más tiempo lleva en una partida. Alguien con oficio produce más del doble que en su primer día."
+          }
+        }
+      }
+    },
+    "Yes": {
+      "extractionState": "manual",
+      "comment": "Signed in",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sí"
           }
         }
       }

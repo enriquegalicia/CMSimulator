@@ -33,6 +33,16 @@ submission to a board that does not exist yet fails silently and is
 logged, so shipping before these are configured is safe — scores simply
 do not appear.
 
+**Scores are queued, not fired and forgotten.** A saved result is written
+to a local queue first, then sent. If Game Center has not finished
+authenticating, or the device is offline, the score stays in the queue
+and goes up on the next successful authentication or when the app next
+comes to the foreground. Before this existed, any score saved before
+authentication completed was silently discarded with no retry — boards
+could be configured perfectly and still never receive anything. The queue
+survives relaunches, and Diagnostics shows how many scores are waiting
+with a button to send them immediately.
+
 ## The five leaderboards
 
 Create each at **App ▸ Critical Path ▸ Features ▸ Game Center ▸
@@ -237,6 +247,49 @@ problem is not obvious from the panel.
 
 Boards work in Sandbox and TestFlight as soon as they are created, before
 the app is live.
+
+## Things that look like bugs and are not
+
+**A worse score does not change the board.** Game Center keeps each
+player's *best* score per leaderboard. Playing a bad run after a good one
+leaves the board showing the good one. This is Game Center's behaviour,
+not the app's, and there is no way to overwrite a better score from the
+app.
+
+**An insolvent run posts nothing.** Deliberate — there is no profit worth
+ranking. If you are testing and see nothing, check the run actually
+delivered.
+
+**A score can appear later than you expect.** It is queued first (see
+above). If the device was offline or Game Center was still authenticating,
+the score lands on the next foreground rather than instantly.
+
+**Sandbox scores are separate from production.** Anything posted by a
+Sandbox Apple Account lives in the sandbox leaderboard and never appears
+on the live board. That is correct and expected; do not try to "clean"
+production because sandbox scores are missing from it.
+
+**The Simulator cannot test this.** Game Center does not authenticate
+meaningfully there. Everything in the test procedure needs a real device.
+
+### Clearing test scores
+
+Sandbox scores accumulate while you test. To start clean, on the device:
+**Settings ▸ Game Center ▸ scroll down ▸ remove the Sandbox account**,
+then sign back in — a different sandbox account has its own scores. There
+is no in-app way to delete a submitted score, and no way at all to delete
+one from production.
+
+## What is deliberately not implemented
+
+App Store Connect will also offer these. None are wired up, and none are
+needed for leaderboards to work — do not configure them expecting the app
+to use them:
+
+- **Achievements** — no achievement is defined or reported.
+- **Challenges** — not used.
+- **Leaderboard Sets** — optional grouping. The five boards stand alone.
+- **Multiplayer / matchmaking** — the game is single-player.
 
 ## If scores do not appear
 

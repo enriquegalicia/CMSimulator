@@ -116,12 +116,40 @@ final class GameCenterManager: NSObject, ObservableObject {
         }
     }
 
+    /// Pure, so the queue's behaviour can be tested without a manager -
+    /// constructing one in a test touches GKLocalPlayer and hangs on an
+    /// authentication alert.
+    ///
+    /// Only the best score per board matters to Game Center, so a better
+    /// score replaces a queued one rather than stacking up, and a worse
+    /// one is dropped.
+    static func queueing(_ existing: [PendingScore],
+                         adding score: Int,
+                         to boardID: String,
+                         at date: Date = Date()) -> [PendingScore] {
+        var next = existing
+        if let current = next.first(where: { $0.boardID == boardID }) {
+            guard score > current.score else { return next }
+            next.removeAll { $0.boardID == boardID }
+        }
+        next.append(PendingScore(boardID: boardID, score: score, queuedAt: date))
+        return next
+    }
+
+    /// Which boards a delivered run posts to, and with what. Pure, so the
+    /// routing is testable without Game Center.
+    static func submissions(for result: RunResult) -> [(score: Int, boardID: String)] {
+        guard result.outcome == .delivered else { return [] }
+        var out = [(Int(result.score.rounded()), profitLeaderboardID(for: result.scenario))]
+        if result.scenario == .construction {
+            out.append((Int(result.costs.total.rounded()), costLeaderboardID))
+            out.append((Int((result.days * 10).rounded()), timeLeaderboardID))
+        }
+        return out
+    }
+
     private func enqueue(_ score: Int, to boardID: String) {
-        // Only the best score per board matters, so a newer score for the
-        // same board replaces an older queued one rather than stacking up.
-        pending.removeAll { $0.boardID == boardID && $0.score <= score }
-        guard !pending.contains(where: { $0.boardID == boardID }) else { return }
-        pending.append(PendingScore(boardID: boardID, score: score, queuedAt: Date()))
+        pending = Self.queueing(pending, adding: score, to: boardID)
         savePending()
     }
 
@@ -165,23 +193,11 @@ final class GameCenterManager: NSObject, ObservableObject {
     /// Reports a completed run. Only deliveries are submitted - an
     /// insolvent run has no meaningful profit to rank.
     func report(_ result: RunResult) {
-        guard result.outcome == .delivered else { return }
-
-        let profitScore = Int(result.score.rounded())
-        let profitBoard = Self.profitLeaderboardID(for: result.scenario)
-        // Cost and days only rank meaningfully against a fixed scope and a
-        // contractual deadline, which is construction and nothing else.
-        let costBoards: [(Int, String)] = result.scenario == .construction
-            ? [(Int(result.costs.total.rounded()), Self.costLeaderboardID),
-               // Tenths of a day, for finer precision than whole days.
-               (Int((result.days * 10).rounded()), Self.timeLeaderboardID)]
-            : []
-
         // Queue first, always. If Game Center is not ready the score
         // survives to the next launch instead of vanishing.
-        enqueue(profitScore, to: profitBoard)
-        for (score, board) in costBoards { enqueue(score, to: board) }
-
+        let work = Self.submissions(for: result)
+        guard !work.isEmpty else { return }
+        for (score, board) in work { enqueue(score, to: board) }
         Task { await flushPending() }
     }
 

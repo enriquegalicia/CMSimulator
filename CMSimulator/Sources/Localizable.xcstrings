@@ -1205,6 +1205,24 @@
         }
       }
     },
+    "%lld score(s) waiting to be sent": {
+      "extractionState": "manual",
+      "comment": "Queued Game Center scores",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld score(s) waiting to be sent"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld puntuación(es) pendientes de enviar"
+          }
+        }
+      }
+    },
     "%lld still onboarding — slowing the others": {
       "comment": "Mentoring drag warning",
       "extractionState": "manual",
@@ -10936,6 +10954,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vendiendo un embarque mientras pagas el siguiente. Aquí es donde se abre el hueco de efectivo."
+          }
+        }
+      }
+    },
+    "Send them now": {
+      "extractionState": "manual",
+      "comment": "Flush queued scores button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send them now"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviarlas ahora"
           }
         }
       }

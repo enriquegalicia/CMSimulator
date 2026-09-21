@@ -2115,29 +2115,60 @@ final class LeaderboardTests: XCTestCase {
     /// survive. It used to be dropped behind an isAuthenticated guard with
     /// no retry, so boards could be configured perfectly and still never
     /// receive anything.
-    func testScoresQueueWhenGameCenterIsNotReady() {
-        let manager = GameCenterManager()
-        // Not signed in during tests, which is exactly the condition that
-        // used to lose the score.
-        XCTAssertFalse(manager.isAuthenticated)
-
+    ///
+    /// Tested through the pure queue rather than a live manager: building
+    /// a GameCenterManager in a test touches GKLocalPlayer and hangs the
+    /// test process on an authentication alert.
+    func testADeliveredRunQueuesForItsOwnBoards() {
         let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 1))
         engine.debugFinish(.delivered)
-        manager.report(engine.result)
+        let work = GameCenterManager.submissions(for: engine.result)
 
-        XCTAssertFalse(manager.pending.isEmpty, "the score was dropped instead of queued")
-        XCTAssertTrue(manager.pending.contains { $0.boardID == GameCenterManager.profitLeaderboardID(for: .construction) },
-                      "the construction profit board has nothing queued for it")
+        let boards = Set(work.map(\.boardID))
+        XCTAssertTrue(boards.contains(GameCenterManager.profitLeaderboardID(for: .construction)))
+        XCTAssertTrue(boards.contains(GameCenterManager.costLeaderboardID))
+        XCTAssertTrue(boards.contains(GameCenterManager.timeLeaderboardID))
+    }
+
+    /// Non-construction scenarios post profit only - cost and days do not
+    /// rank against a season or a strategic runway.
+    func testOtherScenariosPostProfitOnly() {
+        for scenario in [ScenarioKind.startup, .importing] {
+            let engine = SimulationEngine(brief: .make(scenario: scenario, difficulty: .standard, seed: 2))
+            engine.debugFinish(.delivered)
+            let boards = GameCenterManager.submissions(for: engine.result).map(\.boardID)
+            XCTAssertEqual(boards, [GameCenterManager.profitLeaderboardID(for: scenario)],
+                           "\(scenario.rawValue) posted to a board it should not")
+        }
     }
 
     /// An insolvent run still must not be submitted - that is deliberate,
     /// and queueing must not quietly change it.
     func testInsolventRunsAreNeverQueued() {
-        let manager = GameCenterManager()
         let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .standard, seed: 2))
         engine.debugFinish(.insolvent)
-        manager.report(engine.result)
-        XCTAssertTrue(manager.pending.isEmpty, "an insolvent run was queued for submission")
+        XCTAssertTrue(GameCenterManager.submissions(for: engine.result).isEmpty,
+                      "an insolvent run was queued for submission")
+    }
+
+    /// Game Center keeps only a player's best score, so the queue must
+    /// too - otherwise a bad run behind a good one wastes a submission
+    /// and, worse, could overwrite nothing while looking like it worked.
+    func testTheQueueKeepsOnlyTheBestScorePerBoard() {
+        let board = GameCenterManager.profitLeaderboardID(for: .construction)
+        var queue = GameCenterManager.queueing([], adding: 500, to: board)
+        XCTAssertEqual(queue.count, 1)
+
+        queue = GameCenterManager.queueing(queue, adding: 900, to: board)
+        XCTAssertEqual(queue.count, 1, "a better score should replace, not stack")
+        XCTAssertEqual(queue.first?.score, 900)
+
+        queue = GameCenterManager.queueing(queue, adding: 100, to: board)
+        XCTAssertEqual(queue.first?.score, 900, "a worse score displaced the better one")
+
+        // Different boards queue independently.
+        queue = GameCenterManager.queueing(queue, adding: 42, to: GameCenterManager.costLeaderboardID)
+        XCTAssertEqual(queue.count, 2)
     }
 
     /// Local history keeps the scenario, so the in-app boards can filter.

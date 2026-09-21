@@ -89,23 +89,79 @@ ascending cost-plus-days score. It has no code path any more and posting
 profit to an ascending board would rank the worst runs first. If it was
 already created, leave it unused or delete it.
 
-## Localization
+## Filling in the Localization form
 
-Each board needs at least one **Leaderboard Localization** (display name
-and score format). The app ships English and Spanish, so add both:
+Each board needs at least one Leaderboard Localization, and App Store
+Connect will not let you save one without an **image**. Every field it
+asks for is below.
 
-| Board | English | Spanish |
+### Score Format — use Integer, not Money
+
+The app's display currency follows the device locale and the player can
+change it in Settings. The underlying numbers are identical either way —
+only the symbol changes — so a Money-formatted board would stamp one
+currency on scores from players who never chose it. Integer keeps the
+ranking honest and currency-neutral.
+
+Time Master is the exception: it submits **days × 10**, so it needs a
+fixed-point format to read correctly.
+
+| Board | Score Format | Suffix (singular) | Suffix (plural) |
+|---|---|---|---|
+| Construction Profit | Integer | *leave blank* | *leave blank* |
+| Startup Profit | Integer | *leave blank* | *leave blank* |
+| Import Profit | Integer | *leave blank* | *leave blank* |
+| Cost Master | Integer | *leave blank* | *leave blank* |
+| Time Master | **Fixed Point, 1 decimal** | `day` | `days` |
+
+With Fixed Point at one decimal, a submitted 1412 displays as
+**141.2 days** — which is why the app multiplies by ten before sending.
+
+### English
+
+| Board | Display Name (max 9!) | Description (max 120) |
 |---|---|---|
-| Construction Profit | Construction — Profit | Construcción — Utilidad |
-| Startup Profit | Startup — Profit | Startup — Utilidad |
-| Import Profit | Import & Resale — Profit | Importación — Utilidad |
-| Cost Master | Cost Master | Maestro del Costo |
-| Time Master | Time Master | Maestro del Tiempo |
+| Construction Profit | `Building` | Profit from delivered construction contracts. Difficulty and finishing on time both raise it. |
+| Startup Profit | `Startup` | What the company sold for, against what it cost to get there. |
+| Import Profit | `Importing` | Margin left after the marketplace, the duty, the returns and the stock nobody wanted. |
+| Cost Master | `Cost` | Total spent on a delivered building. Lower is better. |
+| Time Master | `Time` | Days taken to hand over a building. Lower is better. |
 
-Set the currency on the four Money-formatted boards to match what players
-actually see; the app's display currency is configurable in Settings, so
-pick the one your primary market uses and accept that the board's unit is
-fixed while the in-app figure is not.
+> **Display Name is capped at 9 characters.** That is why these are single
+> words rather than "Construction — Profit". The longer name belongs in
+> the Description, which has 120.
+
+### Spanish
+
+| Board | Display Name (max 9) | Description (max 120) |
+|---|---|---|
+| Construction Profit | `Obra` | Utilidad de contratos de obra entregados. La dificultad y entregar a tiempo la aumentan. |
+| Startup Profit | `Startup` | En cuánto se vendió la empresa, contra lo que costó llegar ahí. |
+| Import Profit | `Importar` | Margen que queda después del marketplace, los aranceles, las devoluciones y la mercancía que nadie quiso. |
+| Cost Master | `Costo` | Total gastado en una obra entregada. Menos es mejor. |
+| Time Master | `Tiempo` | Días que tomó entregar la obra. Menos es mejor. |
+
+### Images
+
+App Store Connect requires one image per localization and will not save
+without it. Apple's spec: **512×512 or 1024×1024 px, PNG or JPEG, RGB,
+flattened, no alpha, no rounded corners** — Game Center masks the corners
+itself.
+
+Five are ready in `documentation/leaderboard-art/`, drawn in the game's
+own style at 1024×1024:
+
+| Board | File |
+|---|---|
+| Construction Profit | `profit-construction.png` |
+| Startup Profit | `profit-startup.png` |
+| Import Profit | `profit-importing.png` |
+| Cost Master | `costmaster.png` |
+| Time Master | `timemaster.png` |
+
+The same image works for both languages — there is no text in them, which
+is deliberate. Regenerate with `Scripts/generate_leaderboard_art.py`
+(`--dry-run` prints the cost first).
 
 ## Local scores are separate and already work
 

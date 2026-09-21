@@ -13,6 +13,7 @@ import SwiftData
 struct RootView: View {
     @StateObject private var engine = SimulationEngine()
     @StateObject private var gameCenter = GameCenterManager()
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
 
     @State private var showHelp = false
@@ -70,6 +71,13 @@ struct RootView: View {
                 },
                 onCancel: { showScenarioPicker = false }
             )
+        }
+        // A score queued while offline should land when the app comes
+        // back, not wait for the next cold launch.
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                Task { await gameCenter.flushPending() }
+            }
         }
         .task {
             gameCenter.authenticate()

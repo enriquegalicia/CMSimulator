@@ -2111,6 +2111,35 @@ final class LeaderboardTests: XCTestCase {
         }
     }
 
+    /// A score saved before Game Center finishes authenticating must
+    /// survive. It used to be dropped behind an isAuthenticated guard with
+    /// no retry, so boards could be configured perfectly and still never
+    /// receive anything.
+    func testScoresQueueWhenGameCenterIsNotReady() {
+        let manager = GameCenterManager()
+        // Not signed in during tests, which is exactly the condition that
+        // used to lose the score.
+        XCTAssertFalse(manager.isAuthenticated)
+
+        let engine = SimulationEngine(brief: .make(scenario: .construction, difficulty: .standard, seed: 1))
+        engine.debugFinish(.delivered)
+        manager.report(engine.result)
+
+        XCTAssertFalse(manager.pending.isEmpty, "the score was dropped instead of queued")
+        XCTAssertTrue(manager.pending.contains { $0.boardID == GameCenterManager.profitLeaderboardID(for: .construction) },
+                      "the construction profit board has nothing queued for it")
+    }
+
+    /// An insolvent run still must not be submitted - that is deliberate,
+    /// and queueing must not quietly change it.
+    func testInsolventRunsAreNeverQueued() {
+        let manager = GameCenterManager()
+        let engine = SimulationEngine(brief: .make(scenario: .startup, difficulty: .standard, seed: 2))
+        engine.debugFinish(.insolvent)
+        manager.report(engine.result)
+        XCTAssertTrue(manager.pending.isEmpty, "an insolvent run was queued for submission")
+    }
+
     /// Local history keeps the scenario, so the in-app boards can filter.
     func testSavedScoresRecordWhichScenarioTheyCameFrom() {
         for scenario in ScenarioKind.allCases {

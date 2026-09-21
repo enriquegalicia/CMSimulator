@@ -48,6 +48,20 @@ struct DiagnosticsView: View {
                 .padding(.vertical, 1)
             }
 
+            if !gameCenter.pending.isEmpty {
+                Label(String(localized: "\(gameCenter.pending.count) score(s) waiting to be sent", comment: "Queued Game Center scores"),
+                      systemImage: "tray.full.fill")
+                    .font(.caption.bold())
+                    .foregroundStyle(.orange)
+                Button {
+                    Task { await gameCenter.flushPending() }
+                } label: {
+                    Label(String(localized: "Send them now", comment: "Flush queued scores button"),
+                          systemImage: "paperplane.fill")
+                }
+                .disabled(!gameCenter.isAuthenticated)
+            }
+
             Button {
                 Task { await gameCenter.checkBoards() }
             } label: {

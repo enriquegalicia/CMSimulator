@@ -2011,6 +2011,10 @@ final class SimulationEngine: ObservableObject {
     }
 
     /// Empties the bank and the credit line, to exercise insolvency.
+    /// Ends the run outright, so a test can build a RunResult of a given
+    /// outcome without playing to it.
+    func debugFinish(_ outcome: RunOutcome) { finish(outcome) }
+
     /// Sets a capability level outright, so a test can check what a
     /// staffed desk changes without playing far enough to afford one.
     func debugSetCapabilityLevel(_ kind: CapabilityKind, to level: Int) {

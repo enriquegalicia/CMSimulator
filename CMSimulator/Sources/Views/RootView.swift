@@ -21,7 +21,9 @@ struct RootView: View {
     @State private var showResult = false
     @State private var showSettings = false
     @State private var showScenarioPicker = false
+    @State private var pendingEntry: ScoreEntry?
     @AppStorage(AppSettings.hasSeenScenarioPickerKey) private var hasSeenScenarioPicker = false
+    @AppStorage(AppSettings.lastPlayerNameKey) private var lastPlayerName = ""
 
     var body: some View {
         GameView(
@@ -30,7 +32,22 @@ struct RootView: View {
             onShowScores: { showScores = true },
             onShowSettings: { showSettings = true },
             onGameCenter: { gameCenter.showDashboard() },
-            onComplete: { showResult = true }
+            // Record the run the moment it ends, win or lose - waiting on
+            // the debrief's "Save score" button meant a run tapped past
+            // (or one that went insolvent, which never showed that button
+            // at all) left no trace anywhere, local or Game Center.
+            onComplete: {
+                let result = engine.result
+                let entry = ScoreEntry(playerName: lastPlayerName.isEmpty
+                                        ? String(localized: "Player", comment: "Default score entry name")
+                                        : lastPlayerName,
+                                       result: result,
+                                       scenarioName: engine.brief.scenarioName)
+                modelContext.insert(entry)
+                pendingEntry = entry
+                gameCenter.report(result)
+                showResult = true
+            }
         )
         .sheet(isPresented: $showHelp) {
             HelpView(onExit: { showHelp = false })
@@ -45,14 +62,14 @@ struct RootView: View {
             ResultView(
                 result: engine.result,
                 onSave: { name in
-                    let result = engine.result
+                    // The run was already saved and reported the instant it
+                    // ended (see onComplete above) - this just attaches the
+                    // name the player typed to that same entry.
                     let finalName = name.isEmpty
                         ? String(localized: "Player", comment: "Default score entry name when the player leaves the name field blank")
                         : name
-                    modelContext.insert(ScoreEntry(playerName: finalName,
-                                                   result: result,
-                                                   scenarioName: engine.brief.scenarioName))
-                    gameCenter.report(result)
+                    pendingEntry?.playerName = finalName
+                    lastPlayerName = finalName
                     showResult = false
                     showScores = true
                 },

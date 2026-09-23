@@ -84,7 +84,7 @@ struct ScoresView: View {
 
             if ranked.isEmpty {
                 Spacer()
-                Text("No runs yet — deliver a project to appear here.", comment: "Empty leaderboard")
+                Text("No runs yet — finish one, delivered or not, to appear here.", comment: "Empty leaderboard")
                     .foregroundStyle(.secondary)
                 Spacer()
             } else {

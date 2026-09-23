@@ -1206,8 +1206,8 @@
       }
     },
     "%lld score(s) waiting to be sent": {
-      "extractionState": "manual",
       "comment": "Queued Game Center scores",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1296,8 +1296,8 @@
       }
     },
     "%lld yrs in the field": {
-      "extractionState": "manual",
       "comment": "Candidate experience, construction",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1332,8 +1332,8 @@
       }
     },
     "%lld yrs with the tools": {
-      "extractionState": "manual",
       "comment": "Candidate experience, software",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1998,8 +1998,8 @@
       }
     },
     "Alex,Jordan,Sam,Riley,Casey,Rowan,Quinn,Frankie,Charlie,Robin": {
-      "extractionState": "manual",
       "comment": "Comma-separated pool of unisex given names for workers. Replace with names that genuinely read as either gender in your language - do not translate these literally, and do not simply mix masculine and feminine names here.",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3077,8 +3077,8 @@
       }
     },
     "Carry on": {
-      "extractionState": "manual",
       "comment": "Acknowledge a severe incident and resume",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3239,8 +3239,8 @@
       }
     },
     "Check the boards exist": {
-      "extractionState": "manual",
       "comment": "Game Center diagnostics button",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3257,8 +3257,8 @@
       }
     },
     "Checking asks Game Center which boards are registered. It posts no score, so it is safe to run any time. A board shown as not registered has not been created in App Store Connect — that is the usual reason scores never appear.": {
-      "extractionState": "manual",
       "comment": "Game Center diagnostics explanation",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3509,8 +3509,8 @@
       }
     },
     "Commercial certificate": {
-      "extractionState": "manual",
       "comment": "Education level, import and export",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -5163,8 +5163,8 @@
       }
     },
     "Emily,Grace,Hannah,Chloe,Olivia,Ruby,Freya,Alice,Priya,Nadia,Martha,Bethany,Sophie,Iris,Maeve,Tessa,Nora,Cerys,Rosa,Anika,Ingrid,Delia": {
-      "extractionState": "manual",
       "comment": "Comma-separated pool of feminine given names for workers. Replace with feminine given names that read naturally in your language - do not translate these literally. They are paired with feminine-looking portraits, so the names must read as feminine in your language.",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -5991,8 +5991,8 @@
       }
     },
     "Game Center": {
-      "extractionState": "manual",
       "comment": "Diagnostics section header",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -7017,8 +7017,8 @@
       }
     },
     "James,Owen,Daniel,Marcus,Thomas,Nathan,Callum,Ethan,Diego,Sean,Isaac,Leo,Aaron,Elliot,Jonah,Rory,Felix,Duncan,Malachi,Kwame,Tomasz,Yusuf": {
-      "extractionState": "manual",
       "comment": "Comma-separated pool of masculine given names for workers. Replace with masculine given names that read naturally in your language - do not translate these literally. They are paired with masculine-looking portraits, so the names must read as masculine in your language.",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -7035,8 +7035,8 @@
       }
     },
     "Last score sent: %lld": {
-      "extractionState": "manual",
       "comment": "Leaderboard status",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -7287,8 +7287,8 @@
       }
     },
     "Learned on the job": {
-      "extractionState": "manual",
       "comment": "Education level, import and export",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8349,8 +8349,8 @@
       }
     },
     "No": {
-      "extractionState": "manual",
       "comment": "Not signed in",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8456,20 +8456,20 @@
         }
       }
     },
-    "No runs yet — deliver a project to appear here.": {
+    "No runs yet — finish one, delivered or not, to appear here.": {
       "comment": "Empty leaderboard",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No runs yet — deliver a project to appear here."
+            "value": "No runs yet — finish one, delivered or not, to appear here."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aún no hay partidas — entrega un proyecto para aparecer aquí."
+            "value": "Aún no hay partidas — termina una, entregada o no, para que aparezca aquí."
           }
         }
       }
@@ -8529,8 +8529,8 @@
       }
     },
     "Not checked yet": {
-      "extractionState": "manual",
       "comment": "Leaderboard status",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8673,8 +8673,8 @@
       }
     },
     "Not registered in App Store Connect": {
-      "extractionState": "manual",
       "comment": "Leaderboard status",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8691,8 +8691,8 @@
       }
     },
     "Not signed in to Game Center.": {
-      "extractionState": "manual",
       "comment": "Leaderboard check error",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -10185,8 +10185,8 @@
       }
     },
     "Registered and reachable": {
-      "extractionState": "manual",
       "comment": "Leaderboard status",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -10959,8 +10959,8 @@
       }
     },
     "Send them now": {
-      "extractionState": "manual",
       "comment": "Flush queued scores button",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -11229,8 +11229,8 @@
       }
     },
     "Signed in": {
-      "extractionState": "manual",
       "comment": "Game Center diagnostics row",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -13677,8 +13677,8 @@
       }
     },
     "Work stopped while you read this.": {
-      "extractionState": "manual",
       "comment": "Severe incident: run paused",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -13731,8 +13731,8 @@
       }
     },
     "Yes": {
-      "extractionState": "manual",
       "comment": "Signed in",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -13965,8 +13965,8 @@
       }
     },
     "You were not carrying %@. It would have cut this.": {
-      "extractionState": "manual",
       "comment": "Incident: cover you did not hold",
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {

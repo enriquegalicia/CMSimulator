@@ -12,6 +12,10 @@ enum AppSettings {
     /// Set once the player has been shown the scenario list, so the
     /// picker greets a first-time player and never nags after that.
     static let hasSeenScenarioPickerKey = "hasSeenScenarioPicker"
+    /// The name typed on the last saved score, reused as the default so a
+    /// run that ends before the player revisits the debrief still saves
+    /// under a recognizable name rather than "Player" every time.
+    static let lastPlayerNameKey = "lastPlayerName"
 
     /// The device's own currency, used the first time the app runs before
     /// the player has ever opened Settings. Falls back to USD if the

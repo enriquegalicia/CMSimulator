@@ -81,11 +81,14 @@ struct RunDetailView: View {
     private func comparison(to previous: ScoreEntry) -> some View {
         let profitDelta = entry.profit - previous.profit
         let improved = profitDelta > 0
+        let amount = abs(profitDelta).formatted(.currency(code: currencyCode).precision(.fractionLength(0)))
+        let text = improved
+            ? String(localized: "\(amount) better than your last \(entry.scenarioName) run", comment: "Run detail: improved vs previous run")
+            : String(localized: "\(amount) worse than your last \(entry.scenarioName) run", comment: "Run detail: declined vs previous run")
         return HStack(spacing: 8) {
             Image(systemName: improved ? "arrow.up.right" : "arrow.down.right")
                 .foregroundStyle(improved ? .green : .red)
-            Text(String(localized: "\(abs(profitDelta), format: .currency(code: currencyCode).precision(.fractionLength(0))) \(improved ? "better" : "worse") than your last \(entry.scenarioName) run", comment: "Run detail comparison to previous run"))
-                .font(.subheadline)
+            Text(text).font(.subheadline)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)

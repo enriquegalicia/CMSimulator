@@ -38,6 +38,7 @@
 		A1A097645B27F493EE42E5E3 /* ScoreEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA91F548631C0FBDFC1577F /* ScoreEntry.swift */; };
 		AD15FC921304BF858F6FEA6B /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC2B7CC758D040FA71E526A /* ResultView.swift */; };
 		D0686BEDACC10D7CDCC19634 /* ScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE196F477B0F3638FA696F86 /* ScoresView.swift */; };
+		DE8084AD4FF5588B5FA45136 /* RunDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637364F294FD2495A851A5EF /* RunDetailView.swift */; };
 		D0C4E7FE5ABE48F1A1588F0A /* CandidatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E872E257ED4D3C9F28E00B /* CandidatePickerView.swift */; };
 		EC1A1B4E8CEE4B5092978CAC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 790985F08AA449E7A53C869F /* Localizable.xcstrings */; };
 		F390C3FC1E45F2F61C01A68F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB3C786E8B5BBC3589D34FF /* SettingsView.swift */; };
@@ -135,6 +136,7 @@
 		F1A596F4FA5261466C7BFA31 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		FAC2B7CC758D040FA71E526A /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		FE196F477B0F3638FA696F86 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
+		637364F294FD2495A851A5EF /* RunDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunDetailView.swift; sourceTree = "<group>"; };
 		6E8495D0F8C84AD6A0B177A3 /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		193D6E08585A49D181A2DF3F /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
 		11E33BBA18764F1FB08982BF /* ProjectBrief.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectBrief.swift; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 				DFA57C569A674C7CA2021749 /* CrewView.swift */,
 				101416A002AC478895FC7B8C /* RiskPortfolioView.swift */,
 				FAC2B7CC758D040FA71E526A /* ResultView.swift */,
+				637364F294FD2495A851A5EF /* RunDetailView.swift */,
 				FE196F477B0F3638FA696F86 /* ScoresView.swift */,
 				E02753B52D363181F36E257F /* HelpView.swift */,
 				F1A596F4FA5261466C7BFA31 /* RootView.swift */,
@@ -538,6 +541,7 @@
 				C8868EB3B6374C95A5A0E822 /* CrewView.swift in Sources */,
 				291B940079D94C5DA1B33F09 /* RiskPortfolioView.swift in Sources */,
 				AD15FC921304BF858F6FEA6B /* ResultView.swift in Sources */,
+				DE8084AD4FF5588B5FA45136 /* RunDetailView.swift in Sources */,
 				D0686BEDACC10D7CDCC19634 /* ScoresView.swift in Sources */,
 				351B07DB8FAFC27C14CB1288 /* HelpView.swift in Sources */,
 				08A09CA15BB30E09AA12EA04 /* RootView.swift in Sources */,

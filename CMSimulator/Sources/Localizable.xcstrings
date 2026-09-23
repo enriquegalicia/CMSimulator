@@ -72,6 +72,24 @@
         }
       }
     },
+    "%@ better than your last %@ run": {
+      "comment": "Run detail: improved vs previous run",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ better than your last %@ run"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ mejor que tu última partida de %@"
+          }
+        }
+      }
+    },
     "%@ can now start.": {
       "comment": "Site log: package unlocked",
       "extractionState": "manual",
@@ -810,6 +828,24 @@
         }
       }
     },
+    "%@ worse than your last %@ run": {
+      "comment": "Run detail: declined vs previous run",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ worse than your last %@ run"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ peor que tu última partida de %@"
+          }
+        }
+      }
+    },
     "%@ · %@": {
       "comment": "Result scenario and counterparty",
       "extractionState": "manual",
@@ -1025,6 +1061,24 @@
         }
       }
     },
+    "%lld idle days": {
+      "comment": "Run detail stat",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld idle days"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld días inactivos"
+          }
+        }
+      }
+    },
     "%lld late": {
       "comment": "HUD days late caption",
       "extractionState": "manual",
@@ -1129,6 +1183,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld en nómina al cierre"
+          }
+        }
+      }
+    },
+    "%lld open defects": {
+      "comment": "Run detail stat",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld open defects"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld defectos abiertos"
           }
         }
       }
@@ -7070,6 +7142,24 @@
         }
       }
     },
+    "Late": {
+      "comment": "Run detail stat",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Late"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarde"
+          }
+        }
+      }
+    },
     "Late penalties": {
       "comment": "Cost of running past the deadline",
       "extractionState": "manual",
@@ -8434,6 +8524,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sin arancel, sin riesgo cambiario, aquí en una semana. Pagas la mitad más por todo eso."
+          }
+        }
+      }
+    },
+    "No log was kept for this run.": {
+      "comment": "Empty run log",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No log was kept for this run."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se guardó una bitácora de esta partida."
           }
         }
       }
@@ -13456,6 +13564,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bien llevada"
+          }
+        }
+      }
+    },
+    "What happened": {
+      "comment": "Run detail section header",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What happened"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qué pasó"
           }
         }
       }

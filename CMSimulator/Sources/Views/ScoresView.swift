@@ -64,41 +64,47 @@ struct ScoresView: View {
     }
 
     var body: some View {
-        VStack(spacing: isWide ? 20 : 12) {
-            HStack {
-                Text(board.title).font(isWide ? .largeTitle.bold() : .title2.bold())
-                Spacer()
-                Button("Exit", action: onExit)
-                    .controlSize(isWide ? .large : .regular)
-            }
-
-            Picker(String(localized: "Scenario", comment: "Leaderboard scenario filter"), selection: $scenarioFilter) {
-                ForEach(ScenarioKind.allCases) { Text($0.name).tag($0) }
-            }
-            .pickerStyle(.segmented)
-
-            Picker(String(localized: "Leaderboard", comment: "Accessibility label for the leaderboard switcher"), selection: $board) {
-                ForEach(ScoreBoard.allCases) { Text($0.shortTitle).tag($0) }
-            }
-            .pickerStyle(.segmented)
-
-            if ranked.isEmpty {
-                Spacer()
-                Text("No runs yet — finish one, delivered or not, to appear here.", comment: "Empty leaderboard")
-                    .foregroundStyle(.secondary)
-                Spacer()
-            } else {
-                List {
-                    ForEach(Array(ranked.enumerated()), id: \.element.id) { index, entry in
-                        row(rank: index + 1, entry: entry)
-                    }
+        NavigationStack {
+            VStack(spacing: isWide ? 20 : 12) {
+                HStack {
+                    Text(board.title).font(isWide ? .largeTitle.bold() : .title2.bold())
+                    Spacer()
+                    Button("Exit", action: onExit)
+                        .controlSize(isWide ? .large : .regular)
                 }
-                .listStyle(.plain)
+
+                Picker(String(localized: "Scenario", comment: "Leaderboard scenario filter"), selection: $scenarioFilter) {
+                    ForEach(ScenarioKind.allCases) { Text($0.name).tag($0) }
+                }
+                .pickerStyle(.segmented)
+
+                Picker(String(localized: "Leaderboard", comment: "Accessibility label for the leaderboard switcher"), selection: $board) {
+                    ForEach(ScoreBoard.allCases) { Text($0.shortTitle).tag($0) }
+                }
+                .pickerStyle(.segmented)
+
+                if ranked.isEmpty {
+                    Spacer()
+                    Text("No runs yet — finish one, delivered or not, to appear here.", comment: "Empty leaderboard")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(Array(ranked.enumerated()), id: \.element.id) { index, entry in
+                            NavigationLink {
+                                RunDetailView(entry: entry)
+                            } label: {
+                                row(rank: index + 1, entry: entry)
+                            }
+                        }
+                    }
+                    .listStyle(.plain)
+                }
             }
+            .padding(isWide ? 32 : 16)
+            .frame(maxWidth: isWide ? 700 : .infinity)
+            .frame(maxWidth: .infinity)
         }
-        .padding(isWide ? 32 : 16)
-        .frame(maxWidth: isWide ? 700 : .infinity)
-        .frame(maxWidth: .infinity)
     }
 
     private func row(rank: Int, entry: ScoreEntry) -> some View {

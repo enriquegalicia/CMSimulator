@@ -42,7 +42,8 @@ struct RootView: View {
                                         ? String(localized: "Player", comment: "Default score entry name")
                                         : lastPlayerName,
                                        result: result,
-                                       scenarioName: engine.brief.scenarioName)
+                                       scenarioName: engine.brief.scenarioName,
+                                       log: engine.siteLog)
                 modelContext.insert(entry)
                 pendingEntry = entry
                 gameCenter.report(result)

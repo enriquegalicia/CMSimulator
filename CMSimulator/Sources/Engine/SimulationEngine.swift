@@ -97,8 +97,8 @@ enum CashPhase {
     }
 }
 
-struct SiteLogEntry: Identifiable {
-    enum Tone { case neutral, good, bad }
+struct SiteLogEntry: Identifiable, Codable {
+    enum Tone: Codable { case neutral, good, bad }
     let id = UUID()
     let day: Int
     let text: String

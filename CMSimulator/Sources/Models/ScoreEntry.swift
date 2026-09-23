@@ -35,9 +35,16 @@ final class ScoreEntry {
     var scenarioKindRaw: String = ScenarioKind.construction.rawValue
     var seed: String
     var completedAt: Date
+    /// The run's own narrative, in the player's own words - what the site
+    /// log showed as it happened. Kept so a finished run can be reopened
+    /// and read back, not just ranked; text is stored already-localized, so
+    /// an old entry keeps whatever language it was played in.
+    var log: [SiteLogEntry] = []
 
-    init(playerName: String, result: RunResult, scenarioName: String, completedAt: Date = Date()) {
+    init(playerName: String, result: RunResult, scenarioName: String,
+         log: [SiteLogEntry] = [], completedAt: Date = Date()) {
         self.playerName = playerName
+        self.log = log
         self.score = result.score
         self.profit = result.profit
         self.revenue = result.revenue

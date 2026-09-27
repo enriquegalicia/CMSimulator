@@ -129,7 +129,7 @@ struct ScoresView: View {
             Spacer(minLength: 4)
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text(entry.profit, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                Text(entry.profit, format: .marketCurrency(currencyCode))
                     .font((isWide ? Font.body : Font.caption).monospacedDigit().bold())
                     .foregroundStyle(entry.profit >= 0 ? .green : .red)
                 HStack(spacing: 6) {

@@ -3994,20 +3994,20 @@
         }
       }
     },
-    "Costs throughout the simulator display in this currency. Defaults to your device's own currency.": {
+    "Costs throughout the simulator convert to this currency's real market value, not just its symbol. Defaults to your device's own currency.": {
       "comment": "Settings currency footer",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Costs throughout the simulator display in this currency. Defaults to your device's own currency."
+            "value": "Costs throughout the simulator convert to this currency's real market value, not just its symbol. Defaults to your device's own currency."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Los costos en todo el simulador se muestran en esta moneda. Por defecto, se usa la moneda de tu dispositivo."
+            "value": "Los costos de todo el simulador se convierten al valor real de mercado de esta moneda, no solo a su símbolo. Usa por defecto la moneda de tu dispositivo."
           }
         }
       }

@@ -105,7 +105,7 @@ struct ResultView: View {
                 Divider()
                 row(String(localized: "Company sold for", comment: "Exit line"), offer.netValuation, bold: true)
                 HStack {
-                    Text(String(localized: "Your share after \(result.capitalRaised, format: .currency(code: currencyCode).precision(.fractionLength(0))) raised", comment: "Exit line: founder equity")).font(.subheadline)
+                    Text(String(localized: "Your share after \(result.capitalRaised, format: .marketCurrency(currencyCode)) raised", comment: "Exit line: founder equity")).font(.subheadline)
                     Spacer()
                     Text(result.founderEquity, format: .percent.precision(.fractionLength(0)))
                         .font(.subheadline.monospacedDigit())
@@ -200,7 +200,7 @@ struct ResultView: View {
             Text("Profit", comment: "Result headline label")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(result.profit, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+            Text(result.profit, format: .marketCurrency(currencyCode))
                 .font(.system(size: 40, weight: .bold).monospacedDigit())
                 .foregroundStyle(result.profit >= 0 ? .green : .red)
             HStack(spacing: 12) {
@@ -242,7 +242,7 @@ struct ResultView: View {
                 .font(bold ? .subheadline.bold() : .subheadline)
             Spacer()
             Text(isCurrency
-                 ? amount.formatted(.currency(code: currencyCode).precision(.fractionLength(0)))
+                 ? amount.formatted(.marketCurrency(currencyCode))
                  : Int(amount).formatted())
                 .font((bold ? Font.subheadline.bold() : Font.subheadline).monospacedDigit())
                 .foregroundStyle(tint == .primary && amount < 0 ? .secondary : tint)

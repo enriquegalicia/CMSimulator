@@ -27,7 +27,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Currency", comment: "Settings section header")
                 } footer: {
-                    Text("Costs throughout the simulator display in this currency. Defaults to your device's own currency.", comment: "Settings currency footer")
+                    Text("Costs throughout the simulator convert to this currency's real market value, not just its symbol. Defaults to your device's own currency.", comment: "Settings currency footer")
                 }
 
                 Section {

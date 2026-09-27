@@ -48,8 +48,8 @@ struct ScenarioPickerView: View {
         isFounded ? VentureSetup(openingCapital: openingCapital, graceDays: graceDays) : .default
     }
 
-    private var money: FloatingPointFormatStyle<Double>.Currency {
-        .currency(code: currencyCode).precision(.fractionLength(0))
+    private var money: MarketCurrencyFormatStyle {
+        .marketCurrency(currencyCode)
     }
 
     var body: some View {

@@ -89,7 +89,7 @@ struct CapabilityCardView: View {
         VStack(spacing: 5) {
             if capability.level > 0 {
                 HStack {
-                    Label(String(localized: "\(capability.dailyUpkeep, format: .currency(code: currencyCode).precision(.fractionLength(0)))/day upkeep", comment: "Capability daily upkeep"),
+                    Label(String(localized: "\(capability.dailyUpkeep, format: .marketCurrency(currencyCode))/day upkeep", comment: "Capability daily upkeep"),
                           systemImage: "calendar")
                     Spacer()
                 }
@@ -110,7 +110,7 @@ struct CapabilityCardView: View {
                                  ? String(localized: "Staff", comment: "Button to staff a capability for the first time")
                                  : String(localized: "Step up", comment: "Button to raise a capability level"))
                                 .font(.caption.bold())
-                            Text(capability.nextLevelCost, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                            Text(capability.nextLevelCost, format: .marketCurrency(currencyCode))
                                 .font(.caption2.monospacedDigit())
                         }
                         .frame(maxWidth: .infinity)

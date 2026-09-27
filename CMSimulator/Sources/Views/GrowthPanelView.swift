@@ -30,8 +30,8 @@ struct GrowthPanelView: View {
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
 
-    private var money: FloatingPointFormatStyle<Double>.Currency {
-        .currency(code: currencyCode).precision(.fractionLength(0))
+    private var money: MarketCurrencyFormatStyle {
+        .marketCurrency(currencyCode)
     }
 
     /// Revenue against everything going out. Reaching parity is the moment
@@ -111,7 +111,7 @@ struct GrowthPanelView: View {
                     .foregroundStyle(founderEquity < 0.4 ? .orange : .primary)
             }
             if capitalRaised > 0 {
-                Text(String(localized: "\(capitalRaised, format: .currency(code: currencyCode).precision(.fractionLength(0))) raised so far — none of it is revenue.", comment: "Capital raised note"))
+                Text(String(localized: "\(capitalRaised, format: .marketCurrency(currencyCode)) raised so far — none of it is revenue.", comment: "Capital raised note"))
                     .font(.caption2).foregroundStyle(.secondary)
             }
 

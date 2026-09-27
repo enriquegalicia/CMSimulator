@@ -49,7 +49,7 @@ struct RunDetailView: View {
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(entry.profit, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                    Text(entry.profit, format: .marketCurrency(currencyCode))
                         .font(.title2.bold().monospacedDigit())
                         .foregroundStyle(entry.profit >= 0 ? .green : .red)
                     if let difficulty = entry.difficulty {
@@ -81,7 +81,7 @@ struct RunDetailView: View {
     private func comparison(to previous: ScoreEntry) -> some View {
         let profitDelta = entry.profit - previous.profit
         let improved = profitDelta > 0
-        let amount = abs(profitDelta).formatted(.currency(code: currencyCode).precision(.fractionLength(0)))
+        let amount = abs(profitDelta).formatted(.marketCurrency(currencyCode))
         let text = improved
             ? String(localized: "\(amount) better than your last \(entry.scenarioName) run", comment: "Run detail: improved vs previous run")
             : String(localized: "\(amount) worse than your last \(entry.scenarioName) run", comment: "Run detail: declined vs previous run")

@@ -76,7 +76,7 @@ struct CandidatePickerView: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text(worker.name).font(.headline)
                     Spacer()
-                    Text(worker.dailyWage, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                    Text(worker.dailyWage, format: .marketCurrency(currencyCode))
                         .font(.subheadline.monospacedDigit().bold())
                     Text("/day", comment: "Per-day wage suffix")
                         .font(.caption)
@@ -129,7 +129,7 @@ struct CandidatePickerView: View {
                 }
 
                 HStack(spacing: 12) {
-                    Label(String(localized: "Signing \(worker.signingCost, format: .currency(code: currencyCode).precision(.fractionLength(0)))", comment: "Candidate signing cost"),
+                    Label(String(localized: "Signing \(worker.signingCost, format: .marketCurrency(currencyCode))", comment: "Candidate signing cost"),
                           systemImage: "creditcard")
                     if worker.experience > 0.3 {
                         Label(String(localized: "Experienced", comment: "Candidate badge"), systemImage: "star.fill")

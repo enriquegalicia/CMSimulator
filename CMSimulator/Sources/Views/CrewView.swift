@@ -68,7 +68,7 @@ struct CrewView: View {
 
                         if !bench.isEmpty {
                             Section {
-                                Label(String(localized: "\(bench.count) people with nothing to work on, costing \(benchCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) a day.", comment: "Bench warning"),
+                                Label(String(localized: "\(bench.count) people with nothing to work on, costing \(benchCost, format: .marketCurrency(currencyCode)) a day.", comment: "Bench warning"),
                                       systemImage: "person.badge.clock")
                                     .font(.caption.bold())
                                     .foregroundStyle(.orange)
@@ -123,7 +123,7 @@ struct CrewView: View {
                 titleVisibility: .visible
             ) {
                 if let worker = confirmingFire {
-                    Button(String(localized: "Pay \(worker.severanceCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) severance", comment: "Fire confirmation action"), role: .destructive) {
+                    Button(String(localized: "Pay \(worker.severanceCost, format: .marketCurrency(currencyCode)) severance", comment: "Fire confirmation action"), role: .destructive) {
                         onFire(worker.id)
                         confirmingFire = nil
                     }
@@ -144,7 +144,7 @@ struct CrewView: View {
                 Text("Daily payroll", comment: "Crew summary label")
                     .font(.subheadline)
                 Spacer()
-                Text(daily, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                Text(daily, format: .marketCurrency(currencyCode))
                     .font(.headline.monospacedDigit())
             }
             HStack(spacing: 14) {
@@ -188,7 +188,7 @@ struct CrewView: View {
                         .foregroundStyle(.purple)
                 }
                 Spacer()
-                Text(worker.dailyWage, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                Text(worker.dailyWage, format: .marketCurrency(currencyCode))
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(.secondary)
             }

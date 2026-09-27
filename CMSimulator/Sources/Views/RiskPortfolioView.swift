@@ -103,7 +103,7 @@ struct RiskPortfolioView: View {
                     }
                     if totalAvoided > 1 {
                         LabeledContent {
-                            Text(totalAvoided, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                            Text(totalAvoided, format: .marketCurrency(currencyCode))
                                 .font(.subheadline.monospacedDigit().bold())
                                 .foregroundStyle(.green)
                         } label: {
@@ -139,13 +139,13 @@ struct RiskPortfolioView: View {
                             Text("Covers", comment: "Insurance stat")
                         }
                         LabeledContent {
-                            Text(deductible, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                            Text(deductible, format: .marketCurrency(currencyCode))
                                 .font(.subheadline.monospacedDigit())
                         } label: {
                             Text("You carry the first", comment: "Insurance stat")
                         }
                         LabeledContent {
-                            Text(dailyPremium, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                            Text(dailyPremium, format: .marketCurrency(currencyCode))
                                 .font(.subheadline.monospacedDigit())
                                 .foregroundStyle(.orange)
                         } label: {
@@ -212,7 +212,7 @@ struct RiskPortfolioView: View {
             }
             Spacer(minLength: 4)
             VStack(alignment: .trailing, spacing: 2) {
-                Text(row.worstCaseCost, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                Text(row.worstCaseCost, format: .marketCurrency(currencyCode))
                     .font(.subheadline.monospacedDigit())
                 Text(row.isCovered
                      ? String(localized: "covered", comment: "Risk register cover state")
@@ -240,14 +240,14 @@ struct RiskPortfolioView: View {
                 .font(.caption2)
                 .foregroundStyle(.secondary)
             if owned {
-                Text(String(localized: "In place — \(mitigation.dailyUpkeep, format: .currency(code: currencyCode).precision(.fractionLength(0)))/day", comment: "Mitigation held status"))
+                Text(String(localized: "In place — \(mitigation.dailyUpkeep, format: .marketCurrency(currencyCode))/day", comment: "Mitigation held status"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             } else {
                 Button {
                     onBuy(mitigation)
                 } label: {
-                    Text(String(localized: "Put in place — \(mitigation.purchaseCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) plus \(mitigation.dailyUpkeep, format: .currency(code: currencyCode).precision(.fractionLength(0)))/day", comment: "Buy mitigation button"))
+                    Text(String(localized: "Put in place — \(mitigation.purchaseCost, format: .marketCurrency(currencyCode)) plus \(mitigation.dailyUpkeep, format: .marketCurrency(currencyCode))/day", comment: "Buy mitigation button"))
                         .font(.caption.bold())
                 }
                 .buttonStyle(.bordered)

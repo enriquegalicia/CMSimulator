@@ -33,11 +33,11 @@ struct TradingPanelView: View {
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
 
-    private var money: FloatingPointFormatStyle<Double>.Currency {
-        .currency(code: currencyCode).precision(.fractionLength(0))
+    private var money: MarketCurrencyFormatStyle {
+        .marketCurrency(currencyCode)
     }
-    private var cents: FloatingPointFormatStyle<Double>.Currency {
-        .currency(code: currencyCode).precision(.fractionLength(2))
+    private var cents: MarketCurrencyFormatStyle {
+        .marketCurrency(currencyCode, fractionLength: 2)
     }
 
     var body: some View {

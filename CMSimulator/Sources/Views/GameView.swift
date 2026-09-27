@@ -210,18 +210,18 @@ struct GameView: View {
 
             HStack(alignment: .top, spacing: 8) {
                 StatTile(label: String(localized: "Cash", comment: "HUD label"),
-                         value: engine.ledger.cash.formatted(.currency(code: currencyCode).precision(.fractionLength(0))),
+                         value: engine.ledger.cash.formatted(.marketCurrency(currencyCode)),
                          tint: cashTint,
                          caption: engine.ledger.debt > 1
-                            ? String(localized: "debt \(engine.ledger.debt, format: .currency(code: currencyCode).precision(.fractionLength(0)))", comment: "HUD debt caption")
-                            : String(localized: "credit \(engine.ledger.availableCredit, format: .currency(code: currencyCode).precision(.fractionLength(0)))", comment: "HUD available credit caption"))
+                            ? String(localized: "debt \(engine.ledger.debt, format: .marketCurrency(currencyCode))", comment: "HUD debt caption")
+                            : String(localized: "credit \(engine.ledger.availableCredit, format: .marketCurrency(currencyCode))", comment: "HUD available credit caption"))
 
                 StatTile(label: String(localized: "Runway", comment: "HUD label"),
                          value: engine.runwayDays.isFinite
                             ? String(localized: "\(Int(engine.runwayDays))d", comment: "HUD runway in days")
                             : "—",
                          tint: cashTint,
-                         caption: String(localized: "\(engine.dailyBurn, format: .currency(code: currencyCode).precision(.fractionLength(0)))/day", comment: "HUD daily burn caption"),
+                         caption: String(localized: "\(engine.dailyBurn, format: .marketCurrency(currencyCode))/day", comment: "HUD daily burn caption"),
                          alignment: .center)
 
                 StatTile(label: String(localized: "Day", comment: "HUD label"),
@@ -524,7 +524,7 @@ struct GameView: View {
                         .foregroundStyle(.white)
                 }
                 if event.netCost > 0 {
-                    Text(String(localized: "\(event.netCost, format: .currency(code: currencyCode).precision(.fractionLength(0))) out of pocket", comment: "Incident net cost"))
+                    Text(String(localized: "\(event.netCost, format: .marketCurrency(currencyCode)) out of pocket", comment: "Incident net cost"))
                         .font(.caption.bold())
                         .foregroundStyle(.white)
                 }

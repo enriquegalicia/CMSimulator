@@ -446,8 +446,8 @@ struct CashflowStripView: View {
 
     @AppStorage(AppSettings.currencyCodeKey) private var currencyCode: String = AppSettings.defaultCurrencyCode
 
-    private var money: FloatingPointFormatStyle<Double>.Currency {
-        .currency(code: currencyCode).precision(.fractionLength(0))
+    private var money: MarketCurrencyFormatStyle {
+        .marketCurrency(currencyCode)
     }
 
     private var out: Double { outflows.reduce(0) { $0 + $1.amount } }

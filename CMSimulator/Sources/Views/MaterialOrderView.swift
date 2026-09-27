@@ -141,7 +141,7 @@ struct MaterialOrderView: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text(vendor.name).font(.headline)
                     Spacer()
-                    Text(total, format: .currency(code: currencyCode).precision(.fractionLength(0)))
+                    Text(total, format: .marketCurrency(currencyCode))
                         .font(.subheadline.monospacedDigit().bold())
                 }
                 Text(vendor.pitch)
@@ -153,7 +153,7 @@ struct MaterialOrderView: View {
                         .foregroundStyle(days > request.baseLeadTimeDays * 1.2 ? .orange : .secondary)
                     Label(vendor.reliabilityLabel, systemImage: "checkmark.shield")
                         .foregroundStyle(vendor.unreliability > 0.15 ? .orange : .secondary)
-                    Label(String(localized: "\(unitPrice(vendor), format: .currency(code: currencyCode).precision(.fractionLength(0))) per unit", comment: "Vendor unit price"),
+                    Label(String(localized: "\(unitPrice(vendor), format: .marketCurrency(currencyCode)) per unit", comment: "Vendor unit price"),
                           systemImage: "tag")
                         .foregroundStyle(.secondary)
                 }

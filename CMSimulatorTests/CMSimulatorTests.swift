@@ -2042,42 +2042,45 @@ final class LeaderboardTests: XCTestCase {
         let ids = ScenarioKind.allCases.map(GameCenterManager.profitLeaderboardID(for:))
         XCTAssertEqual(Set(ids).count, ScenarioKind.allCases.count,
                        "two scenarios share a profit leaderboard")
-        for id in ids {
-            XCTAssertTrue(id.hasPrefix("com.aguach1leLabs.CriticalPath."),
-                          "\(id) is not under this app's bundle ID")
-            XCTAssertFalse(id.hasSuffix("."), "\(id) looks malformed")
+    }
+
+    /// GameKit matches the *Leaderboard ID* column, not the Reference
+    /// Name. The boards were registered with the bundle-style strings as
+    /// reference names and CP001-CP005 as IDs, while the app submitted
+    /// the reference names - nothing could ever match. Guard against
+    /// drifting back.
+    func testTheAppSubmitsLeaderboardIDsNotReferenceNames() {
+        for id in GameCenterManager.allLeaderboardIDs {
+            XCTAssertFalse(id.contains("aguach1le"),
+                           "\(id) is a Reference Name - Game Center matches the Leaderboard ID")
         }
     }
 
-    /// Every board ID must sit under the app's real bundle identifier.
-    /// They drifted to a "CriticalPathSim" prefix while the app itself
-    /// shipped as "CriticalPath", which is invisible in code and fatal in
-    /// App Store Connect: boards created under the bundle convention
-    /// could never match what the app submits.
-    func testLeaderboardIDsSitUnderTheAppsRealBundleID() throws {
-        let bundleID = try XCTUnwrap(Bundle.main.bundleIdentifier)
-        // The test bundle is hosted by the app, so strip any test suffix.
-        let appID = bundleID.replacingOccurrences(of: ".xctest", with: "")
-        for id in GameCenterManager.allLeaderboardIDs {
-            XCTAssertTrue(id.hasPrefix(appID + "."),
-                          "\(id) is not under the app bundle \(appID) - App Store Connect will never match it")
-        }
+    /// Scores queued by builds that submitted the reference names must
+    /// move to the real board instead of retrying against nothing forever.
+    func testScoresQueuedUnderOldIDsMoveToTheRealBoards() {
+        let date = Date(timeIntervalSince1970: 0)
+        let saved = [
+            GameCenterManager.PendingScore(boardID: "com.aguach1leLabs.CriticalPath.profit.startup", score: 700, queuedAt: date),
+            GameCenterManager.PendingScore(boardID: "CP002", score: 300, queuedAt: date),
+            GameCenterManager.PendingScore(boardID: "com.aguach1leLabs.CriticalPath.timemaster", score: 1412, queuedAt: date),
+            GameCenterManager.PendingScore(boardID: "com.aguach1leLabs.CriticalPathSim.bogus", score: 5, queuedAt: date),
+        ]
+        let migrated = GameCenterManager.migratingLegacyIDs(saved)
+        XCTAssertEqual(Set(migrated.map(\.boardID)), ["CP002", "CP005"])
+        XCTAssertEqual(migrated.first { $0.boardID == "CP002" }?.score, 700,
+                       "the migrated score and the new one should collapse to the best")
     }
 
     /// IDs are typed by hand into App Store Connect; a mismatch fails
     /// silently at runtime and is visible only in a device log. Freezing
     /// them here makes an accidental rename a test failure instead.
     func testLeaderboardIDsAreExactlyWhatTheSetupDocumentPromises() {
-        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .construction),
-                       "com.aguach1leLabs.CriticalPath.profit.construction")
-        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .startup),
-                       "com.aguach1leLabs.CriticalPath.profit.startup")
-        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .importing),
-                       "com.aguach1leLabs.CriticalPath.profit.importing")
-        XCTAssertEqual(GameCenterManager.costLeaderboardID,
-                       "com.aguach1leLabs.CriticalPath.costmaster")
-        XCTAssertEqual(GameCenterManager.timeLeaderboardID,
-                       "com.aguach1leLabs.CriticalPath.timemaster")
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .construction), "CP001")
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .startup), "CP002")
+        XCTAssertEqual(GameCenterManager.profitLeaderboardID(for: .importing), "CP003")
+        XCTAssertEqual(GameCenterManager.costLeaderboardID, "CP004")
+        XCTAssertEqual(GameCenterManager.timeLeaderboardID, "CP005")
         XCTAssertEqual(GameCenterManager.allLeaderboardIDs.count, 5)
     }
 

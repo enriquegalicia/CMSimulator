@@ -21,6 +21,15 @@ drift apart.
 > boards under the `…CriticalPathSim…` prefix, they are orphaned — create
 > the ones below instead.**
 
+> **The app submits the Leaderboard ID, never the Reference Name.**
+> App Store Connect has two columns: *Reference Name* (an internal label
+> GameKit never sees) and *Leaderboard ID* (what `GKLeaderboard.submitScore`
+> must match). The boards were created with the `com.aguach1leLabs.…`
+> strings as reference names and `CP001`–`CP005` as IDs, while the app
+> submitted the reference names — so nothing could match. As of
+> 2026-09-27 the app submits `CP001`–`CP005`, and scores already queued
+> under the old strings are carried over on launch.
+
 ## What the app does automatically
 
 Authentication, submission on every completed run, and the in-app
@@ -59,9 +68,9 @@ always been filtered by scenario.
 
 | Leaderboard ID | Reference name | Sort | Score format |
 |---|---|---|---|
-| `com.aguach1leLabs.CriticalPath.profit.construction` | Construction Profit | **High to Low** | Money |
-| `com.aguach1leLabs.CriticalPath.profit.startup` | Startup Profit | **High to Low** | Money |
-| `com.aguach1leLabs.CriticalPath.profit.importing` | Import Profit | **High to Low** | Money |
+| `CP001` | `com.aguach1leLabs.CriticalPath.profit.construction` | **High to Low** | Money |
+| `CP002` | `com.aguach1leLabs.CriticalPath.profit.startup` | **High to Low** | Money |
+| `CP003` | `com.aguach1leLabs.CriticalPath.profit.importing` | **High to Low** | Money |
 
 The submitted value is `RunResult.score`, rounded to a whole number:
 profit, multiplied by the difficulty multiplier (Steady 0.8, Standard 1.0,
@@ -78,8 +87,8 @@ or for an import season, whose length is fixed by the calendar.
 
 | Leaderboard ID | Reference name | Sort | Score format |
 |---|---|---|---|
-| `com.aguach1leLabs.CriticalPath.costmaster` | Cost Master | **Low to High** | Money |
-| `com.aguach1leLabs.CriticalPath.timemaster` | Time Master | **Low to High** | Elapsed time — see note |
+| `CP004` | `com.aguach1leLabs.CriticalPath.costmaster` | **Low to High** | Money |
+| `CP005` | `com.aguach1leLabs.CriticalPath.timemaster` | **Low to High** | Elapsed time — see note |
 
 - **Cost Master** submits `RunResult.costs.total`, rounded — every peso
   spent, all sixteen cost lines.

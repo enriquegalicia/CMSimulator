@@ -15,14 +15,22 @@ final class GameCenterManager: NSObject, ObservableObject {
     // is verified against this file by a test - if you change an ID here,
     // that test fails until the document is updated to match.
     //
+    // GameKit matches on the *Leaderboard ID* column only. The
+    // "com.aguach1leLabs.CriticalPath.…" strings are the *Reference Name*
+    // column - an internal label GameKit never sees. The app used to
+    // submit the reference names, which matched nothing.
+    //
     // Profit is per scenario. A building, a software company and a trading
     // operation are not comparable on one ranking, and the in-app boards
     // have always been filtered by scenario - Game Center simply was not.
-    static let profitPrefix = "com.aguach1leLabs.CriticalPath.profit"
 
     /// Descending: higher profit is better.
     static func profitLeaderboardID(for scenario: ScenarioKind) -> String {
-        "\(profitPrefix).\(scenario.rawValue.lowercased())"
+        switch scenario {
+        case .construction: return "CP001"  // com.aguach1leLabs.CriticalPath.profit.construction
+        case .startup: return "CP002"       // com.aguach1leLabs.CriticalPath.profit.startup
+        case .importing: return "CP003"     // com.aguach1leLabs.CriticalPath.profit.importing
+        }
     }
 
     static var allProfitLeaderboardIDs: [String] {
@@ -35,8 +43,19 @@ final class GameCenterManager: NSObject, ObservableObject {
     /// length is a strategic choice, or for an import season, whose length
     /// is fixed by the calendar - submitting those to a shared board
     /// ranked noise.
-    static let costLeaderboardID = "com.aguach1leLabs.CriticalPath.costmaster"
-    static let timeLeaderboardID = "com.aguach1leLabs.CriticalPath.timemaster"
+    static let costLeaderboardID = "CP004"  // com.aguach1leLabs.CriticalPath.costmaster
+    static let timeLeaderboardID = "CP005"  // com.aguach1leLabs.CriticalPath.timemaster
+
+    /// Builds before the CP IDs queued scores under the reference names.
+    /// Those would retry forever against boards that do not exist, so
+    /// they are carried over to the real ID when the queue loads.
+    static let legacyLeaderboardIDs: [String: String] = [
+        "com.aguach1leLabs.CriticalPath.profit.construction": "CP001",
+        "com.aguach1leLabs.CriticalPath.profit.startup": "CP002",
+        "com.aguach1leLabs.CriticalPath.profit.importing": "CP003",
+        "com.aguach1leLabs.CriticalPath.costmaster": "CP004",
+        "com.aguach1leLabs.CriticalPath.timemaster": "CP005",
+    ]
 
     /// Every board the app can post to, for the setup document and its test.
     static var allLeaderboardIDs: [String] {
@@ -107,7 +126,20 @@ final class GameCenterManager: NSObject, ObservableObject {
     private func loadPending() {
         guard let data = UserDefaults.standard.data(forKey: Self.pendingKey),
               let saved = try? JSONDecoder().decode([PendingScore].self, from: data) else { return }
-        pending = saved
+        pending = Self.migratingLegacyIDs(saved)
+        savePending()
+    }
+
+    /// Pure, so the migration is testable without a manager. Re-queues
+    /// through `queueing` so a migrated score and a new one on the same
+    /// board still collapse to the best.
+    static func migratingLegacyIDs(_ saved: [PendingScore]) -> [PendingScore] {
+        let known = Set(allLeaderboardIDs)
+        return saved.reduce(into: []) { out, item in
+            guard let board = legacyLeaderboardIDs[item.boardID]
+                    ?? (known.contains(item.boardID) ? item.boardID : nil) else { return }
+            out = queueing(out, adding: item.score, to: board, at: item.queuedAt)
+        }
     }
 
     private func savePending() {

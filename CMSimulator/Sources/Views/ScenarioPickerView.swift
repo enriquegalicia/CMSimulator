@@ -62,7 +62,7 @@ struct ScenarioPickerView: View {
                 } header: {
                     Text("Scenario", comment: "Scenario picker section header")
                 } footer: {
-                    Text("Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.", comment: "Scenario picker explanation")
+                    Text("Every scenario runs on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.", comment: "Scenario picker explanation")
                 }
 
                 Section {
@@ -122,9 +122,6 @@ struct ScenarioPickerView: View {
                             .foregroundStyle(.secondary)
                     } header: {
                         Text("Setting up", comment: "Venture setup section header")
-                    } footer: {
-                        Text("Founding your own practice — choosing your capital and your runway — is the design firm scenario, which is not built yet.", comment: "Design firm teaser")
-                            .font(.caption)
                     }
                 }
 

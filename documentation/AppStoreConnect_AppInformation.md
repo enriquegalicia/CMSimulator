@@ -93,8 +93,8 @@ not guessed from a generic ASC template.
 
 | Field | Status |
 |---|---|
-| Screenshots — iPhone 6.5" (**Required**) | **Missing — blocks submission.** Needs up to 3 App Previews and 10 screenshots at 1242×2688, 2688×1242, 1284×2778, or 2778×1284px. Only the **first 3** screenshots appear on the install sheet, so lead with the three that sell the game fastest — e.g. a mid-run board, the debrief/profit screen, and the scenario picker. This needs a built app on a real device or simulator at that size; not something this document can produce. |
-| Screenshots — iPad, Apple Watch | Not required (iPhone 6.5" is the only tab marked Required in the draft). Skip unless an iPad-specific layout is worth showing separately. |
+| Screenshots — iPhone 6.3" (**Required**, updated 2026-10-06) | **Missing — blocks submission.** Apple now requires the iPhone with Dynamic Island (medium) size: 1206×2622 or 1179×2556 px (6.9" 1320×2868 optional). Up to 10 screenshots and 3 App Previews; up to **3** screenshots can show in search, so lead with a mid-run board, the debrief/profit screen and the scenario picker. Plan, captions and creative assets: [AppStore_Assets.md](AppStore_Assets.md). |
+| Screenshots — iPad 13" (**Required**) | The target is `TARGETED_DEVICE_FAMILY = "1,2"`, so iPad 13" (2064×2752 or 2048×2732) is required too. Capture on an iPad Pro 13-inch (M5) simulator, or drop iPad from the target. Apple Watch: N/A. |
 | Promotional Text / Description / Keywords | Drafted above — paste in. |
 | Support URL / Marketing URL | Already covered above — the three new pages. |
 | Version | `1.0`, already correct. |

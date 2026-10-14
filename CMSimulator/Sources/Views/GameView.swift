@@ -23,6 +23,7 @@ struct GameView: View {
     let onShowScores: () -> Void
     let onShowSettings: () -> Void
     let onGameCenter: () -> Void
+    let onChangeScenario: () -> Void
     let onComplete: () -> Void
 
     enum Board: String, CaseIterable, Identifiable {
@@ -39,10 +40,11 @@ struct GameView: View {
         }
     }
 
-    @State private var board: Board = .site
-    @State private var showScenarioPicker = false
-    @State private var showCrew = false
-    @State private var showRisk = false
+    // A staged App Store screenshot can open on any tab or sheet; in a
+    // normal launch `StoreScreenshots.requested` is nil.
+    @State private var board: Board = StoreScreenshots.requested?.board ?? .site
+    @State private var showCrew = StoreScreenshots.requested?.opens == .crew
+    @State private var showRisk = StoreScreenshots.requested?.opens == .risk
 
     private var isWide: Bool { horizontalSizeClass == .regular }
 
@@ -85,16 +87,6 @@ struct GameView: View {
         }
         .overlay(alignment: .top) { eventOverlay }
         .animation(.spring(duration: 0.3), value: engine.activeEvent?.id)
-        .sheet(isPresented: $showScenarioPicker) {
-            ScenarioPickerView(
-                current: engine.brief,
-                onStart: { kind, level, setup in
-                    engine.restart(with: .make(scenario: kind, difficulty: level, setup: setup))
-                    showScenarioPicker = false
-                },
-                onCancel: { showScenarioPicker = false }
-            )
-        }
         .sheet(item: Binding(get: { engine.hiringRequest }, set: { if $0 == nil { engine.cancelHiring() } })) { request in
             CandidatePickerView(request: request,
                                 spendingPower: engine.ledger.spendingPower,
@@ -174,9 +166,7 @@ struct GameView: View {
     /// signpost to the scenario list, so it is deliberately a labelled
     /// control rather than another icon in the row below.
     private var scenarioChip: some View {
-        Button {
-            showScenarioPicker = true
-        } label: {
+        Button(action: onChangeScenario) {
             HStack(spacing: 6) {
                 Image(systemName: engine.brief.scenario.symbolName)
                     .font(.caption)

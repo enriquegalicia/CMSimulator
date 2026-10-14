@@ -54,6 +54,7 @@
 		C8868EB3B6374C95A5A0E822 /* CrewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA57C569A674C7CA2021749 /* CrewView.swift */; };
 		291B940079D94C5DA1B33F09 /* RiskPortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101416A002AC478895FC7B8C /* RiskPortfolioView.swift */; };
 		54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248A5DF56F94249953EA28E /* Diagnostics.swift */; };
+		5C0A1E2F3D4B4A6E8F901234 /* StoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0A1E2F3D4B4A6E8F905678 /* StoreScreenshots.swift */; };
 		2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */; };
 		E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E24CE241D476797D81FCE /* Scenario.swift */; };
 		341E194F261A4BD1ADB7A2E4 /* ScenarioPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */; };
@@ -147,6 +148,7 @@
 		DFA57C569A674C7CA2021749 /* CrewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewView.swift; sourceTree = "<group>"; };
 		101416A002AC478895FC7B8C /* RiskPortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskPortfolioView.swift; sourceTree = "<group>"; };
 		0248A5DF56F94249953EA28E /* Diagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostics.swift; sourceTree = "<group>"; };
+		5C0A1E2F3D4B4A6E8F905678 /* StoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreScreenshots.swift; sourceTree = "<group>"; };
 		F75E0D0A8A50406B914A16B5 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 		888E24CE241D476797D81FCE /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
 		F18042BDBD6644E1A93AD786 /* ScenarioPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPickerView.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			children = (
 				378A50C23684A218625CD8C9 /* SimulationEngine.swift */,
 				0248A5DF56F94249953EA28E /* Diagnostics.swift */,
+				5C0A1E2F3D4B4A6E8F905678 /* StoreScreenshots.swift */,
 				00A9D8F37A1831C1DC972A12 /* GameCenterManager.swift */,
 			);
 			path = Engine;
@@ -530,6 +533,7 @@
 				E1650B19CC5B48B89450FDE1 /* Scenario.swift in Sources */,
 				341E194F261A4BD1ADB7A2E4 /* ScenarioPickerView.swift in Sources */,
 				54E103176CF046E3A200DDDF /* Diagnostics.swift in Sources */,
+				5C0A1E2F3D4B4A6E8F901234 /* StoreScreenshots.swift in Sources */,
 				2B298B33EFE14593834A049B /* DiagnosticsView.swift in Sources */,
 				C01548353C07455C9ECF3BB8 /* Worker.swift in Sources */,
 				0A8D1583ABDE441D91AA4CA5 /* Ledger.swift in Sources */,

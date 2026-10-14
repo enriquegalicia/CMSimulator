@@ -1637,6 +1637,24 @@
         }
       }
     },
+    "A domestic distributor costs more per unit and arrives quickly. Buying blind from a reseller is cheap until the returns come back.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A domestic distributor costs more per unit and arrives quickly. Buying blind from a reseller is cheap until the returns come back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un distribuidor nacional cuesta más por unidad y entrega rápido. Comprarle a ciegas a un revendedor sale barato hasta que llegan las devoluciones."
+          }
+        }
+      }
+    },
     "A key engineer resigns": {
       "comment": "Incident title",
       "extractionState": "manual",
@@ -1813,6 +1831,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un choque de suministro disparó el índice de materiales."
+          }
+        }
+      }
+    },
+    "A thin product charges less and spreads slower. Tech debt makes customers leave long before any buyer sees it.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A thin product charges less and spreads slower. Tech debt makes customers leave long before any buyer sees it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un producto incompleto cobra menos y se recomienda menos. La deuda técnica hace que los clientes se vayan mucho antes de que un comprador la vea."
           }
         }
       }
@@ -2587,24 +2623,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bootcamp o diplomado"
-          }
-        }
-      }
-    },
-    "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.": {
-      "comment": "Scenario picker explanation",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Both run on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ambos corren sobre la misma simulación, pero no son el mismo juego. Cada uno tiene su propio trabajo, su propia forma de ganar dinero, sus propios problemas — y su propia tabla de posiciones."
           }
         }
       }
@@ -4713,6 +4731,24 @@
         }
       }
     },
+    "Demand follows a season. Demand planning tells you when it peaks; without it you are buying stock on a guess.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demand follows a season. Demand planning tells you when it peaks; without it you are buying stock on a guess."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La demanda sigue una temporada. La planeación de demanda te dice cuándo llega al pico; sin ella compras mercancía a ciegas."
+          }
+        }
+      }
+    },
     "Demand looks like it peaks around day %lld.": {
       "comment": "Trading panel: sharp season forecast",
       "extractionState": "manual",
@@ -5360,6 +5396,24 @@
         }
       }
     },
+    "Every hire costs a signing fee today and a salary every day after, whether or not there is work for them.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every hire costs a signing fee today and a salary every day after, whether or not there is work for them."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada contratación cuesta un bono de firma hoy y un sueldo todos los días después, haya o no trabajo para esa persona."
+          }
+        }
+      }
+    },
     "Every level charges upkeep every day. A lever you cannot afford to run is one you should not have staffed.": {
       "comment": "Help bullet",
       "extractionState": "manual",
@@ -5410,6 +5464,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cada partida tiene una cuadrilla ideal. Pasado ese punto la obra se satura, cae el rendimiento por persona y suben los incidentes."
+          }
+        }
+      }
+    },
+    "Every scenario runs on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard.": {
+      "comment": "Scenario picker explanation",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every scenario runs on the same simulation, but they are not the same game. Each has its own work, its own way of making money, its own things that go wrong — and its own leaderboard."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos los escenarios corren sobre la misma simulación, pero no son el mismo juego. Cada uno tiene su propio trabajo, su propia forma de ganar dinero, sus propios problemas — y su propia tabla de posiciones."
           }
         }
       }
@@ -5558,6 +5630,42 @@
         }
       }
     },
+    "Fall four days behind on payroll and the company is insolvent. That is the only way to truly lose.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fall four days behind on payroll and the company is insolvent. That is the only way to truly lose."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si acumulas cuatro días sin cubrir la nómina, la empresa cae en insolvencia. Es la única forma real de perder."
+          }
+        }
+      }
+    },
+    "Fall four days behind on payroll and the run ends in insolvency. That is the only way to truly lose.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fall four days behind on payroll and the run ends in insolvency. That is the only way to truly lose."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si acumulas cuatro días sin cubrir la nómina, la partida termina en insolvencia. Es la única forma real de perder."
+          }
+        }
+      }
+    },
     "Fast, cuts corners": {
       "comment": "Worker archetype name",
       "extractionState": "manual",
@@ -5680,6 +5788,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cerco, iluminación y velador. Evita que el material se camine."
+          }
+        }
+      }
+    },
+    "Finding investors is a search that costs time you could spend building, and offers go cold.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding investors is a search that costs time you could spend building, and offers go cold."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encontrar inversionistas es una búsqueda que te quita tiempo para construir, y las ofertas se enfrían."
           }
         }
       }
@@ -5900,24 +6026,6 @@
         }
       }
     },
-    "Founding your own practice — choosing your capital and your runway — is the design firm scenario, which is not built yet.": {
-      "comment": "Design firm teaser",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Founding your own practice — choosing your capital and your runway — is the design firm scenario, which is not built yet."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fundar tu propio despacho —elegir tu capital y tu autonomía— es el escenario de despacho de diseño, que todavía no está hecho."
-          }
-        }
-      }
-    },
     "Foundry Lane,Northgate Angels,Tessera Capital,Bluebird Ventures,Redwood Seed,Ardent Partners,Kestrel Fund,Meridian Angels,Sable & Co,Highwater Capital,Larkspur Partners,Ironwood Seed,Coldharbour Capital,Pinnacle Angels,Wrenfield Ventures,Saltmarsh Fund,Copperbeech Partners,Draycott Capital,Elmgrove Seed,Fairweather Angels,Greyling Ventures,Halyard Fund,Inglewood Partners,Juniper Seed": {
       "comment": "Comma-separated pool of angel investor and fund names. Replace with names that read naturally in your language - do not translate these literally.",
       "extractionState": "manual",
@@ -6022,6 +6130,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Totalmente dotada"
+          }
+        }
+      }
+    },
+    "Funding": {
+      "comment": "Help section title",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funding"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Financiamiento"
           }
         }
       }
@@ -6292,6 +6418,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hanoi Phuc Loi Trading,Saigon Minh Anh Export,Da Nang Truong Thinh,Binh Duong Tan Phat,Haiphong Dai Loc Export,Can Tho Hoang Gia,Bac Ninh Quang Minh,Long An Thanh Cong"
+          }
+        }
+      }
+    },
+    "Harder difficulty and leaner founding terms score higher on the leaderboard.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harder difficulty and leaner founding terms score higher on the leaderboard."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una dificultad mayor y condiciones de fundación más austeras puntúan más alto en la tabla de posiciones."
           }
         }
       }
@@ -7052,6 +7196,24 @@
         }
       }
     },
+    "Investors add cash, never revenue. Every round you take dilutes what you own at the exit.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investors add cash, never revenue. Every round you take dilutes what you own at the exit."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los inversionistas aportan efectivo, nunca ingresos. Cada ronda que aceptas diluye lo que te toca en la venta."
+          }
+        }
+      }
+    },
     "Investors push back": {
       "comment": "Incident title",
       "extractionState": "manual",
@@ -7574,6 +7736,24 @@
         }
       }
     },
+    "List price trades margin against volume. Advertising buys visibility, and past a point it costs more than it sells.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List price trades margin against volume. Advertising buys visibility, and past a point it costs more than it sells."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El precio de lista intercambia margen por volumen. La publicidad compra visibilidad, y pasado cierto punto cuesta más de lo que vende."
+          }
+        }
+      }
+    },
     "Listings are live. Stock can start selling.": {
       "comment": "Site log: trading opens",
       "extractionState": "manual",
@@ -8020,24 +8200,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mínimo"
-          }
-        }
-      }
-    },
-    "Miss payroll two days running and the run ends in insolvency. That is the only way to truly lose.": {
-      "comment": "Help bullet",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Miss payroll two days running and the run ends in insolvency. That is the only way to truly lose."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Si no cubres la nómina varios días seguidos, la partida termina en insolvencia. Es la única forma real de perder."
           }
         }
       }
@@ -8600,6 +8762,24 @@
         }
       }
     },
+    "Nobody can buy a product that is not launched. Launch is the most important gate in the run, and every day before it is growth you never get back.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nobody can buy a product that is not launched. Launch is the most important gate in the run, and every day before it is growth you never get back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nadie puede comprar un producto que no se ha lanzado. El lanzamiento es la puerta más importante de la partida, y cada día antes de él es crecimiento que no recuperas."
+          }
+        }
+      }
+    },
     "Nobody hired yet": {
       "comment": "Empty crew state title",
       "extractionState": "manual",
@@ -8920,6 +9100,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "En inducción — al %lld%% y frenando a los demás"
+          }
+        }
+      }
+    },
+    "Once you launch, a few customers find you on their own, and word of mouth compounds off the ones you already have.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Once you launch, a few customers find you on their own, and word of mouth compounds off the ones you already have."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una vez que lanzas, algunos clientes te encuentran por su cuenta, y la recomendación de boca en boca se multiplica a partir de los que ya tienes."
           }
         }
       }
@@ -9248,6 +9446,24 @@
         }
       }
     },
+    "Paid acquisition speeds that up, but each new customer costs more as the obvious ones are used up.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paid acquisition speeds that up, but each new customer costs more as the obvious ones are used up."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La adquisición pagada lo acelera, pero cada cliente nuevo cuesta más conforme se agotan los más obvios."
+          }
+        }
+      }
+    },
     "Paperwork queries. The goods sit in a bonded warehouse, paid for and unsellable.": {
       "comment": "Incident description",
       "extractionState": "manual",
@@ -9388,6 +9604,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "No se pagó la nómina. %@ se va si esto no se corrige."
+          }
+        }
+      }
+    },
+    "People in the roles this venture actually needs compound. Specialists it does not need are expensive generalists.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People in the roles this venture actually needs compound. Specialists it does not need are expensive generalists."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las personas en los roles que este negocio realmente necesita rinden cada vez más. Los especialistas que no necesita son generalistas caros."
           }
         }
       }
@@ -10468,6 +10702,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Las devoluciones van en %@, y cada una cuesta el reembolso más el envío otra vez."
+          }
+        }
+      }
+    },
+    "Returns cost the refund and the shipping again, and drag your rating down. A poor rating throttles every future sale.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Returns cost the refund and the shipping again, and drag your rating down. A poor rating throttles every future sale."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las devoluciones cuestan el reembolso y otra vez el envío, y bajan tu calificación. Una mala calificación frena cada venta futura."
           }
         }
       }
@@ -11912,6 +12164,24 @@
         }
       }
     },
+    "Storage is charged on every unit every day, and multiplies once stock gets old.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Storage is charged on every unit every day, and multiplies once stock gets old."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El almacenaje se cobra por cada unidad todos los días, y se multiplica cuando la mercancía envejece."
+          }
+        }
+      }
+    },
     "Storage while it sat": {
       "comment": "Season line",
       "extractionState": "manual",
@@ -12416,6 +12686,24 @@
         }
       }
     },
+    "The company": {
+      "comment": "Help section title",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The company"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La empresa"
+          }
+        }
+      }
+    },
     "The contract": {
       "comment": "Help section title",
       "extractionState": "manual",
@@ -12578,6 +12866,24 @@
         }
       }
     },
+    "The marketplace takes a cut of every sale plus a fee to pick and ship it, and pays you about two weeks later.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The marketplace takes a cut of every sale plus a fee to pick and ship it, and pays you about two weeks later."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El marketplace se queda con una comisión de cada venta más una tarifa por surtirla y enviarla, y te paga unas dos semanas después."
+          }
+        }
+      }
+    },
     "The marketplace took": {
       "comment": "Season line",
       "extractionState": "manual",
@@ -12610,6 +12916,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "La oferta"
+          }
+        }
+      }
+    },
+    "The operation": {
+      "comment": "Help section title",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The operation"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La operación"
           }
         }
       }
@@ -12754,6 +13078,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "El problema es mover dinero de forma segura. Nada sale hasta que cumple, y eso cambia a quién necesitas."
+          }
+        }
+      }
+    },
+    "The run ends in a sale. A buyer prices your revenue by how fast you are growing, takes off what diligence finds in tech debt, and pays you for the share you still own.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The run ends in a sale. A buyer prices your revenue by how fast you are growing, takes off what diligence finds in tech debt, and pays you for the share you still own."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La partida termina con una venta. El comprador valúa tus ingresos según qué tan rápido creces, descuenta la deuda técnica que encuentre la auditoría y te paga por la parte que todavía es tuya."
           }
         }
       }
@@ -13676,6 +14018,42 @@
         }
       }
     },
+    "Whatever is left when the season closes is sold off for a fraction of what it cost.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whatever is left when the season closes is sold off for a fraction of what it cost."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo que quede al cerrar la temporada se remata por una fracción de lo que costó."
+          }
+        }
+      }
+    },
+    "When a workstream finishes, its people stay on the payroll. A company keeps its team; a project sends people home.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When a workstream finishes, its people stay on the payroll. A company keeps its team; a project sends people home."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuando termina una línea de trabajo, su gente sigue en la nómina. Una empresa conserva a su equipo; un proyecto manda a la gente a casa."
+          }
+        }
+      }
+    },
     "Where the money went": {
       "comment": "Result section header",
       "extractionState": "manual",
@@ -13708,6 +14086,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dónde compras"
+          }
+        }
+      }
+    },
+    "Where you buy is the decision the run turns on. A factory abroad is cheap but slow, sells in large minimum lots, and is exposed to duty, the exchange rate and tariff changes.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where you buy is the decision the run turns on. A factory abroad is cheap but slow, sells in large minimum lots, and is exposed to duty, the exchange rate and tariff changes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dónde compras es la decisión de la que depende la partida. Una fábrica en el extranjero es barata pero lenta, vende en lotes mínimos grandes y está expuesta a aranceles, al tipo de cambio y a cambios en las tarifas."
           }
         }
       }
@@ -13892,6 +14288,42 @@
         }
       }
     },
+    "You are ranked on profit. A company that never launched scores nothing, however tidy the books look.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You are ranked on profit. A company that never launched scores nothing, however tidy the books look."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Te clasificas por utilidad. Una empresa que nunca lanzó no suma nada, por más ordenadas que estén las cuentas."
+          }
+        }
+      }
+    },
+    "You are ranked on profit: everything you sold, minus goods, freight, duty, fees, storage, returns, advertising and wages.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You are ranked on profit: everything you sold, minus goods, freight, duty, fees, storage, returns, advertising and wages."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Te clasificas por utilidad: todo lo que vendiste, menos mercancía, flete, aranceles, comisiones, almacenaje, devoluciones, publicidad y sueldos."
+          }
+        }
+      }
+    },
     "You are ranked on profit: what the client paid, minus everything the job cost you.": {
       "comment": "Help bullet",
       "extractionState": "manual",
@@ -13928,6 +14360,24 @@
         }
       }
     },
+    "You can sell every unit at a profit and still miss payroll. Fall four days behind and the operation is insolvent.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can sell every unit at a profit and still miss payroll. Fall four days behind and the operation is insolvent."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puedes vender cada unidad con ganancia y aun así no cubrir la nómina. Si acumulas cuatro días de atraso, la operación cae en insolvencia."
+          }
+        }
+      }
+    },
     "You carry the first": {
       "comment": "Insurance stat",
       "extractionState": "manual",
@@ -13960,6 +14410,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Todavía no sabes qué estás construyendo"
+          }
+        }
+      }
+    },
+    "You found it with your own capital, and you set the terms: how much you put in, and how long before interest starts.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You found it with your own capital, and you set the terms: how much you put in, and how long before interest starts."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La fundas con tu propio capital y tú pones las condiciones: cuánto aportas y cuánto tiempo pasa antes de que empiecen los intereses."
+          }
+        }
+      }
+    },
+    "You fund it yourself. The binding limit is cash: it sits in deposits, in goods at sea, in stock in the warehouse and in payouts not yet released.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You fund it yourself. The binding limit is cash: it sits in deposits, in goods at sea, in stock in the warehouse and in payouts not yet released."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La financias tú. El límite real es el efectivo: está atrapado en anticipos, en mercancía en altamar, en inventario en bodega y en pagos que aún no se liberan."
           }
         }
       }
@@ -14068,6 +14554,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Llegaste a la venta sin haber lanzado nunca. Un producto que nadie usó no vale nada."
+          }
+        }
+      }
+    },
+    "You start not knowing exactly what you are building. Discovery finds out — and only then do you learn which of your hires were the right ones.": {
+      "comment": "Help bullet",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You start not knowing exactly what you are building. Discovery finds out — and only then do you learn which of your hires were the right ones."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empiezas sin saber exactamente qué estás construyendo. El descubrimiento lo averigua — y solo entonces sabes cuáles de tus contrataciones fueron las correctas."
           }
         }
       }

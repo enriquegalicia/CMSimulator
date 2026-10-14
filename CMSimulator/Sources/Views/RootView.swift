@@ -24,6 +24,15 @@ struct RootView: View {
     @State private var pendingEntry: ScoreEntry?
     @AppStorage(AppSettings.hasSeenScenarioPickerKey) private var hasSeenScenarioPicker = false
     @AppStorage(AppSettings.lastPlayerNameKey) private var lastPlayerName = ""
+    @AppStorage(AppSettings.briefedScenariosKey) private var briefedScenarios = ""
+    /// Set when a run starts in a scenario the player has never been
+    /// briefed on; the briefing opens once the picker has finished
+    /// dismissing, since two sheets cannot present at once.
+    @State private var briefAfterPicker = false
+
+    private var isPresentingOwnSheet: Bool {
+        showScenarioPicker || briefAfterPicker || showHelp || showResult || showScores || showSettings
+    }
 
     var body: some View {
         GameView(
@@ -32,6 +41,9 @@ struct RootView: View {
             onShowScores: { showScores = true },
             onShowSettings: { showSettings = true },
             onGameCenter: { gameCenter.showDashboard() },
+            // One picker for the whole app, so every way of starting a run
+            // gets the same first-time briefing.
+            onChangeScenario: { showScenarioPicker = true },
             // Record the run the moment it ends, win or lose - waiting on
             // the debrief's "Save score" button meant a run tapped past
             // (or one that went insolvent, which never showed that button
@@ -51,7 +63,7 @@ struct RootView: View {
             }
         )
         .sheet(isPresented: $showHelp) {
-            HelpView(onExit: { showHelp = false })
+            HelpView(scenario: engine.brief.scenario, onExit: { showHelp = false })
         }
         .sheet(isPresented: $showScores) {
             ScoresView(onExit: { showScores = false })
@@ -80,11 +92,21 @@ struct RootView: View {
                 }
             )
         }
-        .sheet(isPresented: $showScenarioPicker) {
+        .sheet(isPresented: $showScenarioPicker, onDismiss: {
+            if briefAfterPicker {
+                briefAfterPicker = false
+                showHelp = true
+            }
+        }) {
             ScenarioPickerView(
                 current: engine.brief,
                 onStart: { kind, level, setup in
                     engine.restart(with: .make(scenario: kind, difficulty: level, setup: setup))
+                    var briefed = Set(briefedScenarios.split(separator: ",").map(String.init))
+                    if briefed.insert(kind.rawValue).inserted {
+                        briefedScenarios = briefed.sorted().joined(separator: ",")
+                        briefAfterPicker = true
+                    }
                     showScenarioPicker = false
                 },
                 onCancel: { showScenarioPicker = false }
@@ -98,6 +120,10 @@ struct RootView: View {
             }
         }
         .task {
+            if let shot = StoreScreenshots.requested {
+                stage(shot)
+                return
+            }
             gameCenter.authenticate()
             // First ever launch: show what is on offer rather than
             // dropping straight into whichever scenario is the default.
@@ -107,7 +133,12 @@ struct RootView: View {
             }
         }
         .sheet(item: Binding(
-            get: { gameCenter.authViewController.map(GameCenterControllerWrapper.init) },
+            // Held back while one of our own sheets is up. Where GameKit
+            // hands us its sign-in controller rather than presenting it
+            // itself, it raced the scenario picker and the briefing - two
+            // sheets cannot present at once, and the loser is silently
+            // never shown.
+            get: { isPresentingOwnSheet ? nil : gameCenter.authViewController.map(GameCenterControllerWrapper.init) },
             set: { _ in gameCenter.authViewController = nil }
         )) { wrapper in
             GameCenterControllerHost(viewController: wrapper.viewController)
@@ -117,6 +148,23 @@ struct RootView: View {
             set: { _ in gameCenter.dashboardViewController = nil }
         )) { wrapper in
             GameCenterControllerHost(viewController: wrapper.viewController)
+        }
+    }
+}
+
+extension RootView {
+    /// Sets up a staged App Store screenshot: a real run, played to the
+    /// moment the shot needs, with first-run sheets marked as seen.
+    private func stage(_ shot: StoreScreenshots.Shot) {
+        hasSeenScenarioPicker = true
+        briefedScenarios = ScenarioKind.allCases.map(\.rawValue).joined(separator: ",")
+        lastPlayerName = String(localized: "Player", comment: "Default score entry name")
+        engine.restart(with: .make(scenario: shot.scenario, difficulty: .standard, seed: StoreScreenshots.seed))
+        StoreScreenshots.play(shot, on: engine)
+        switch shot.opens {
+        case .picker: showScenarioPicker = true
+        case .help: showHelp = true
+        default: break
         }
     }
 }

@@ -12,6 +12,10 @@ enum AppSettings {
     /// Set once the player has been shown the scenario list, so the
     /// picker greets a first-time player and never nags after that.
     static let hasSeenScenarioPickerKey = "hasSeenScenarioPicker"
+    /// Comma-separated `ScenarioKind` raw values whose briefing has been
+    /// shown. Each scenario plays differently, so the first run of each
+    /// one opens its briefing once - not just the first run of the app.
+    static let briefedScenariosKey = "briefedScenarios"
     /// The name typed on the last saved score, reused as the default so a
     /// run that ends before the player revisits the debrief still saves
     /// under a recognizable name rather than "Player" every time.

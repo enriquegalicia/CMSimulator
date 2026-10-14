@@ -2,10 +2,21 @@
 """Generate CMSimulator's in-game card art via OpenAI's image API.
 
 Extends generate_icon.py's pattern to the work-stream and capability
-card images plus the intro screen's logo. Same tooling logic, same
-Aguach1leLabs family style (cream plate, espresso-brown ink outline,
-terracotta primary, green accent) so every card in the game reads as
-one visual family instead of the original 2015-era stock photography.
+card images. STYLE_PREAMBLE is the one style contract for every
+generated image in the game: cards, portraits and supplier marks
+(generate_people_art.py) and Game Center boards
+(generate_leaderboard_art.py) all import it.
+
+**Style changed 2026-10-14.** The cards used to share the Aguach1leLabs
+sticker family (cream plate, espresso outline, terracotta and green).
+App Review rejected Critical Path under guideline 4.3, and Apple's
+follow-up named "the overall design and user experience" among the
+similarity signals. That sticker family was the look every sibling app
+shared, so it is retired here. The new style is the app's own and
+matches its icon and App Store header: isometric low-poly 3D objects on
+slate night, with signal lime as the one accent.
+
+Images ship at display size, not generation size (see `ship`).
 
 Requires OPENAI_API_KEY in the environment (BYOK - your own key for a
 one-time dev-tooling cost, never shipped in the app).
@@ -23,21 +34,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 GAME_DIR = REPO_ROOT / "CMSimulator"
 API_URL = "https://api.openai.com/v1/images/generations"
 
-ACCENT_HEX = "#3DAA6E"
+ACCENT_HEX = "#7CFF5B"  # signal lime, Critical Path only
+BACKGROUND_HEX = "#16202C"  # slate night, same as the app icon
 
 STYLE_PREAMBLE = f"""
-A flat vector sticker illustration, square 1:1 crop, matching an existing
-icon family. A rounded-square backing plate in warm cream (#F6E8D3),
-inset slightly from the edge, outlined in a thick, uniform espresso-brown
-ink stroke (#4A2F1C) - the same outline weight and color used on every
-shape inside it. Flat color fills only: warm terracotta orange (#D9722C)
-as the primary fill, {ACCENT_HEX} as the one secondary accent color, both
-outlined in the same espresso-brown ink stroke as the plate. One soft,
-subtle highlight ellipse on the main rounded surface - no other
-gradients, no photorealism, no drop shadows, no text or lettering.
-Hand-crafted, warm, a little naive - like a kitchen-market sticker, not
-a corporate tech logo. Centered composition, confident scale, cropped in
-close so the subject nearly touches the plate's edges.
+A small 3D game illustration, square 1:1, full bleed: the background is
+plain deep slate night blue ({BACKGROUND_HEX}) filling the whole canvas
+edge to edge, with a very soft lighter glow behind the subject. No
+border, frame, plate, outline or rounded tile; the app clips the corners
+itself. The subject is drawn as isometric low-poly 3D: chunky faceted
+shapes viewed from above at a 3/4 angle, crisp flat facets with soft
+studio lighting and a gentle contact shadow. Natural, slightly muted
+material colours (warm greys, wood browns, steel blues, safety yellow,
+faceted grass green). Signal lime ({ACCENT_HEX}) appears only as a small
+glowing highlight on one detail, never as a large fill. One subject,
+centred and large, filling about 75% of the canvas, simple enough to
+read at 40 points. No text, letters, numbers or logos of real brands.
 """.strip()
 
 # (output filename relative to CMSimulator/, subject prompt)
@@ -74,9 +86,21 @@ IMAGES = [
 LOGO = ("AppIcon-Source.png", "Three interlocking gears - the largest containing a small money bag with a dollar sign, the second a lightbulb, the third a crossed hammer and wrench - representing cost, ideas, and construction.")
 
 
+def ship(path, max_px=256):
+    """Flatten to RGB (the asset catalog and App Store Connect refuse alpha
+    in some slots, and nothing here needs it) and downscale to display
+    size. Cards draw at 40pt and portraits at 46-56pt, so 256px covers
+    3x with headroom."""
+    from PIL import Image
+    img = Image.open(path).convert("RGB")
+    if max_px and max(img.size) > max_px:
+        img = img.resize((max_px, max_px), Image.LANCZOS)
+    img.save(path, optimize=True)
+
+
 def call_openai(prompt, api_key, size):
     body = json.dumps({
-        "model": "gpt-image-1",
+        "model": "gpt-image-2",
         "prompt": prompt,
         "size": size,
         "quality": "high",
@@ -132,6 +156,7 @@ def main():
             print(f"FAILED: {e}")
             continue
         target.write_bytes(png_bytes)
+        ship(target)
         print("done")
 
     print("Rebuild in Xcode so the bundle picks up the new files.")

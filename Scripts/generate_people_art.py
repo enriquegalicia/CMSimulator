@@ -18,15 +18,16 @@ import argparse, base64, json, os, sys, time, urllib.request, urllib.error
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from generate_art import STYLE_PREAMBLE, call_openai  # one style, one place
+from generate_art import STYLE_PREAMBLE, call_openai, ship  # one style, one place
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ASSETS = REPO_ROOT / "CMSimulator" / "Assets.xcassets"
 
 PORTRAIT_STYLE = """
 Subject: a head-and-shoulders portrait of one person, facing forward,
-friendly and composed, cropped close inside the plate. No hat, no helmet,
-no headset, no tools, no background scene - just the person. %s
+friendly and composed, drawn as a low-poly faceted 3D bust, cropped
+close. No hat, no helmet, no headset, no tools, no background scene -
+just the person. %s
 """.strip()
 
 # Varied on age, build, hair, skin tone and eyewear so a roster of a
@@ -79,6 +80,7 @@ def write_imageset(name: str, png_bytes: bytes) -> Path:
     folder = ASSETS / f"{name}.imageset"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / f"{name}.png").write_bytes(png_bytes)
+    ship(folder / f"{name}.png")
     (folder / "Contents.json").write_text(json.dumps({
         "images": [
             {"filename": f"{name}.png", "idiom": "universal", "scale": "1x"},

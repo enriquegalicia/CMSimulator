@@ -17,7 +17,7 @@ import argparse, os, sys, time, urllib.error
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from generate_art import STYLE_PREAMBLE, call_openai
+from generate_art import STYLE_PREAMBLE, call_openai, ship
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT = REPO_ROOT / "documentation" / "leaderboard-art"
@@ -81,6 +81,8 @@ def main():
         if png is None:
             continue
         (OUT / f"{name}.png").write_bytes(png)
+        # Game Center wants 512 or 1024 px, RGB: keep the size, drop alpha.
+        ship(OUT / f"{name}.png", max_px=None)
         made += 1
         print("done")
 

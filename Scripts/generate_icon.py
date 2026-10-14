@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
-"""Generate CriticalPathSim's real app icon via OpenAI's image API.
+"""Generate Critical Path's app icon via OpenAI's image API.
 
-Same tooling logic as Aguach1leLabs' generate-icons skill
-(.claude/skills/generate-icons/generate_icons.py there): calls gpt-image-1
-with a prompt matching the Lab's shared icon DNA (see ICON_STYLE_GUIDE.md
-in that repo) and drops the resulting 1024x1024 PNG straight into
-Assets.xcassets/AppIcon.appiconset/, using the exact filename Contents.json
-already expects. This app isn't part of that repo, so it gets its own copy
-of the prompt/script rather than editing Aguach1leLabs' shared guide.
+**Art direction changed 2026-10-13.** The old icon (a hard hat on a
+winding path, in the Aguach1leLabs cream-plate sticker style) was retired:
+App Review rejected Critical Path and PepperTalk under guideline 4.3 /
+4.2.6, partly because the account's apps shared one look, and the
+sticker template was that look (Aguach1leLabs' APP_REVIEW_4_3_GUARD.md).
+A hard hat also said "construction" when the game has three businesses.
 
-The first version of this prompt (three separate gears, each holding its
-own unrelated symbol - money bag, lightbulb, wrench+hammer - in four
-different fill colors) broke the style guide's core rules: "one bold
-central symbol, or a tight 2-3-piece cluster that reads as one graphic
-unit" and "never more than 3-4 total fill colors plus the outline." This
-version follows the guide's master template exactly instead of
-improvising around it.
+The new icon uses the app's own direction, the same as its App Store
+header (documentation/store-assets/creative/header.png): an isometric
+low-poly floating island crossed by a glowing signal-lime critical path.
+Slate night background and signal lime #7CFF5B are used by no other app
+on the account.
 
 This app's AppIcon.appiconset uses the older multi-file Contents.json
 format (a real, physically-present PNG per size/scale pair, not the
@@ -47,33 +44,22 @@ TARGET = APPICONSET / "icon-1024.png"
 CONTENTS_JSON = APPICONSET / "Contents.json"
 API_URL = "https://api.openai.com/v1/images/generations"
 
-# Green (#3DAA6E) is the Lab's most-shared accent (OverLanded, Sidequest,
-# TheRiseTrack, SteadyMind, LotteryLuckyNumbers per ICON_STYLE_GUIDE.md
-# section 2) - kept from the first pass rather than introducing a new one.
-ACCENT_HEX = "#3DAA6E"
+ACCENT_HEX = "#7CFF5B"  # signal lime, Critical Path only
 
 PROMPT = f"""
-A flat vector sticker illustration for an iOS app icon, square 1:1 crop.
-A rounded-square backing plate in warm cream (#F6E8D3), inset slightly
-from the edge, outlined in a thick, uniform espresso-brown ink stroke
-(#4A2F1C) - the same outline weight and color used on every shape inside it.
-
-Centered composition, drawn as ONE large, bold, continuous shape filling
-nearly the entire plate edge-to-edge - not two separate pieces with empty
-space between them: a construction hard hat planted directly on top of a
-single thick winding checkpoint path, the path growing straight out from
-under the hat's brim like a critical-path diagram, with three small round
-checkpoint nodes fused along the path. The hat's brim overlaps the top of
-the path so they read as one fused object, scaled up large and confident
-so the path's ends and the hat's crown nearly touch the plate's inner
-edge on every side - no small or floating elements, no empty margins.
-Flat color fills only: warm terracotta orange (#D9722C) as the primary
-fill (the hard hat and the path line), {ACCENT_HEX} as the one secondary
-accent color (the checkpoint nodes), both outlined in the same
-espresso-brown ink stroke as the plate. One soft, subtle highlight
-ellipse on the main rounded surface - no other gradients, no
-photorealism, no drop shadows, no text or lettering. Hand-crafted, warm,
-a little naive - like a kitchen-market sticker, not a corporate tech logo.
+A modern app icon, square 1:1, filling the whole canvas edge to edge
+with no border, frame, rounded plate or margin. Background: deep slate
+night blue (#16202C) with a very soft radial lift behind the centre.
+Centre, large and cropped in close: one small isometric low-poly 3D
+floating island block, viewed from above at a 3/4 angle, with faceted
+grassy green top and rocky brown faceted underside. Across its top runs
+one bold glowing signal-lime ({ACCENT_HEX}) path: three bright round
+nodes joined by a thick glowing line that turns once, rising from the
+front-left corner to the back-right corner like a schedule's critical
+path. Behind the last node stands one tiny yellow tower crane. Simple,
+chunky shapes that stay readable at small sizes, soft studio lighting,
+crisp facets, one gentle lime glow around the path and nothing else.
+No text, letters, numbers, people, hard hats or logos.
 """.strip()
 
 
@@ -100,7 +86,7 @@ def regenerate_smaller_sizes():
 
 def call_openai(prompt, api_key):
     body = json.dumps({
-        "model": "gpt-image-1",
+        "model": "gpt-image-2",
         "prompt": prompt,
         "size": "1024x1024",
         "quality": "high",
@@ -151,6 +137,10 @@ def main():
         sys.exit(1)
 
     TARGET.write_bytes(png_bytes)
+    # App Store Connect refuses an icon with any alpha channel, even an
+    # opaque one, and the image API can return RGBA.
+    from PIL import Image
+    Image.open(TARGET).convert("RGB").save(TARGET)
     print("done")
     print("Regenerating smaller sizes from the new master via sips:")
     regenerate_smaller_sizes()

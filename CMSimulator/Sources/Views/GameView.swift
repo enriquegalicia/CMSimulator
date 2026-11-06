@@ -11,6 +11,10 @@
 //  them. Everything else moved behind three tabs so the board stays
 //  legible on a phone.
 //
+//  Build 3 (2026-10-15): the board got the app's own face (drafting-paper
+//  slate, signal lime for the critical path, see Theme.swift), a Path tab
+//  with the live schedule, and the cash curve on the first tab.
+//
 
 import SwiftUI
 
@@ -27,11 +31,12 @@ struct GameView: View {
     let onComplete: () -> Void
 
     enum Board: String, CaseIterable, Identifiable {
-        case site, growth, trading, levers, log
+        case site, path, growth, trading, levers, log
         var id: String { rawValue }
         func title(in scenario: ScenarioKind) -> String {
             switch self {
             case .site: return scenario.boardName
+            case .path: return String(localized: "Path", comment: "Board tab: the schedule and its critical path")
             case .growth: return scenario.supplyName
             case .trading: return scenario.supplyName
             case .levers: return String(localized: "Levers", comment: "Board tab")
@@ -52,22 +57,14 @@ struct GameView: View {
         VStack(spacing: 0) {
             header.padding(.horizontal, isWide ? 20 : 14).padding(.top, 10).padding(.bottom, 8)
 
-            Picker(String(localized: "Board", comment: "Accessibility label for the board switcher"), selection: $board) {
-                // The market board only exists for scenarios with customers.
-                // Each scenario shows only the boards its own model needs.
-                ForEach(Board.allCases.filter {
-                    ($0 != .growth || engine.growth != nil) && ($0 != .trading || engine.trading != nil)
-                }) {
-                    Text($0.title(in: engine.brief.scenario)).tag($0)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, isWide ? 20 : 14)
+            boardTabs
+                .padding(.horizontal, isWide ? 20 : 14)
 
             ScrollView {
                 Group {
                     switch board {
                     case .site: siteBoard
+                    case .path: pathBoard
                     case .growth: growthBoard
                     case .trading: tradingBoard
                     case .levers: leversBoard
@@ -82,6 +79,7 @@ struct GameView: View {
 
             transportControls.padding(.horizontal, 16).padding(.vertical, 10)
         }
+        .background(BlueprintBackground())
         .onChange(of: engine.outcome) { _, outcome in
             if outcome != nil { onComplete() }
         }
@@ -183,7 +181,8 @@ struct GameView: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
-            .background(.quaternary, in: Capsule())
+            .background(CP.panelHigh, in: Capsule())
+            .overlay(Capsule().strokeBorder(CP.rule, lineWidth: 0.75))
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -295,13 +294,68 @@ struct GameView: View {
         }))
     }
 
+    /// Text tabs with a lime underline, in place of the stock segmented
+    /// control. Each scenario shows only the boards its own model needs:
+    /// the market board only exists for scenarios with customers.
+    private var visibleBoards: [Board] {
+        Board.allCases.filter {
+            ($0 != .growth || engine.growth != nil) && ($0 != .trading || engine.trading != nil)
+        }
+    }
+
+    private var boardTabs: some View {
+        HStack(spacing: 0) {
+            ForEach(visibleBoards) { item in
+                let selected = item == board
+                Button {
+                    board = item
+                } label: {
+                    VStack(spacing: 5) {
+                        Text(item.title(in: engine.brief.scenario))
+                            .font(.subheadline.weight(selected ? .bold : .medium))
+                            .foregroundStyle(selected ? CP.ink : CP.inkSoft)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Capsule()
+                            .fill(selected ? CP.lime : Color.clear)
+                            .frame(height: 3)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selected ? [.isSelected] : [])
+                .accessibilityIdentifier("board.\(item.rawValue)")
+            }
+        }
+        .padding(.top, 6)
+        .overlay(alignment: .bottom) { Rectangle().fill(CP.rule).frame(height: 0.5) }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(String(localized: "Board", comment: "Accessibility label for the board switcher"))
+    }
+
+    private var pathBoard: some View {
+        ScheduleBoardView(schedule: engine.schedule,
+                          operationNoun: engine.brief.scenario.operationNoun,
+                          usesSupplyChain: engine.brief.usesSupplyChain,
+                          paymentDelayDays: engine.paymentDelayDays,
+                          launchedDay: engine.growth?.launchDay,
+                          isTrading: engine.trading?.isTrading ?? false,
+                          hasPlanning: engine.level(of: .planning) > 0,
+                          onHire: { engine.requestHire(for: $0) },
+                          onOrder: { engine.requestMaterialOrder(for: $0) })
+    }
+
     private var siteBoard: some View {
         VStack(spacing: 10) {
             ProgressDrawingView(scenario: engine.brief.scenario, progress: streamProgress)
                 .padding(.horizontal, 8)
                 .padding(.top, 4)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+                .cpPanel(cornerRadius: 14)
                 .animation(.easeInOut(duration: 0.4), value: engine.totalProgress)
+
+            CashCurveView(points: engine.cashHistory)
+                .equatable()
 
             CashflowStripView(phase: engine.cashPhase,
                               outflows: engine.outflows,

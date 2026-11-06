@@ -43,6 +43,10 @@ struct WorkPackage: Identifiable {
     /// materials while drawing full pay. Surfaced on the results screen
     /// because it is the clearest possible lesson about lead times.
     var idleCrewDays: Double = 0
+    /// Day the first unit went in, and the day the last one did. Drawn as
+    /// the built part of this stream's bar on the Path board.
+    var startedDay: Double?
+    var finishedDay: Double?
 
     var id: ID { spec.id }
     var title: String { spec.title }

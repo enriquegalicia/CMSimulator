@@ -29,10 +29,24 @@ struct HelpView: View {
 
     private var sections: [HelpSection] {
         switch scenario {
-        case .construction: return Self.constructionSections
-        case .startup: return Self.startupSections + [leverSection, Self.startupScoring]
-        case .importing: return Self.importSections + [leverSection, Self.importScoring]
+        case .construction: return Self.constructionSections + [pathSection]
+        case .startup: return Self.startupSections + [pathSection, leverSection, Self.startupScoring]
+        case .importing: return Self.importSections + [pathSection, leverSection, Self.importScoring]
         }
+    }
+
+    /// How to read the Path board and the cash curve (build 3).
+    private var pathSection: HelpSection {
+        var points = [
+            String(localized: "The Path tab draws every piece of work on a day axis. The one in lime has no float: it sets your finish date. The number beside each of the others is how many days it could slip before the date moves.", comment: "Help bullet"),
+            String(localized: "Solid bars are work done. Outlined bars are forecasts at your crew's real pace. Hatched bars are only a plan: nobody is on them yet, so they assume a full crew working at your average pace.", comment: "Help bullet"),
+        ]
+        if scenario == .construction {
+            points.append(String(localized: "Under the bars, each diamond is a payment milestone the day it is certified, and each dot is the day that money actually lands.", comment: "Help bullet"))
+        }
+        points.append(String(localized: "The cash curve on the first tab plots money out against money in, day by day. The gap between the lines is what your own capital and the credit line are carrying.", comment: "Help bullet"))
+        return HelpSection(title: String(localized: "The Path and the cash curve", comment: "Help section title"),
+                           icon: "point.topleft.down.to.point.bottomright.curvepath", points: points)
     }
 
     /// The levers are the same six systems everywhere, renamed and
@@ -159,6 +173,7 @@ struct HelpView: View {
                 .frame(maxWidth: isWide ? 900 : .infinity)
                 .frame(maxWidth: .infinity)
             }
+            .background(BlueprintBackground())
             .navigationTitle(String(localized: "How to play", comment: "Help screen title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

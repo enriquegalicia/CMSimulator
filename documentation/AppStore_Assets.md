@@ -5,22 +5,22 @@ Aguach1leLabs repo; this app lives in its own repo). Upload-ready files go in
 [store-assets/](store-assets/), one folder per slot. Check them from the Aguach1leLabs repo:
 `python3 scripts/store_assets.py check "/Users/aguachile/Desktop/DEVELOPMENTS/CMSimulator"`.
 
-**State (2026-10-06):** 1.0 was rejected for 4.3 alongside PepperTalk (same template); see [AppReview_Uniqueness.md](AppReview_Uniqueness.md). Screenshots are being captured by this repo's own script (see Capture below). The target is `TARGETED_DEVICE_FAMILY = "1,2"`, so **iPhone 6.3" and iPad 13" are both required** ([AppStoreConnect_AppInformation.md](AppStoreConnect_AppInformation.md) was updated to match on 2026-10-06). Header art is done (`store-assets/creative/header.png`, isometric low-poly diorama). The search asset renders from the cached background once `iphone-6.3` lands.
+**State (2026-10-15):** build 3 recaptured (iPhone 6.3" and iPad 13", EN + ES) with the new look; the Path board is shot 2 so it appears in search results, and the debrief and growth shots are staged on Steady so they show a run that survives. Earlier state (2026-10-06): 1.0 was rejected for 4.3 alongside PepperTalk (same template); see [AppReview_Uniqueness.md](AppReview_Uniqueness.md). Screenshots are being captured by this repo's own script (see Capture below). The target is `TARGETED_DEVICE_FAMILY = "1,2"`, so **iPhone 6.3" and iPad 13" are both required** ([AppStoreConnect_AppInformation.md](AppStoreConnect_AppInformation.md) was updated to match on 2026-10-06). Header art is done (`store-assets/creative/header.png`, isometric low-poly diorama). The search asset renders from the cached background once `iphone-6.3` lands.
 
 ## Screenshot story
 
 Up to three can appear in search on their own, so 1-3 must explain the product without help.
 
-1. **01-board**: a mid-run board, decisions, cash and the clock
-2. **02-debrief**: the profit debrief, what each shortcut cost
-3. **03-picker**: the three scenarios (Construction, Startup, Import & Resale)
-4. 04-trading
-5. 05-growth
-6. 06-levers: the six capability levers
-7. 07-hiring
-8. 08-suppliers
-9. 09-risk
-10. 10-log
+1. **01-board**: a mid-run board with the cash curve, cash and the clock
+2. **02-path**: the live critical path, float, payments certified vs. paid
+3. **03-debrief**: the debrief: whole-run cash curve, final critical path, P&L
+4. 04-picker: the title screen, three businesses and how each gets paid
+5. 05-trading
+6. 06-growth
+7. 07-levers: the six capability levers
+8. 08-hiring
+9. 09-suppliers
+10. 10-risk
 
 **Capture:** owned by this repo's own `Scripts/capture_screenshots.sh` (build flag
 `STORE_SCREENSHOTS`, `-StoreShot <id>` stages a real run; signed without the Game Center
@@ -35,8 +35,9 @@ Aguach1leLabs repo. That uses the cached background, so no new AI cost.
 | # | EN | ES |
 |---|---|---|
 | 1 | Every shortcut has a real cost | Cada atajo tiene un costo real |
-| 2 | Profit is the only score | La ganancia es el único marcador |
-| 3 | Three businesses, three economies | Tres negocios, tres economías |
+| 2 | The critical path, live | La ruta crítica, en vivo |
+| 3 | Profitable on paper, broke in the bank | Rentable en papel, sin caja en el banco |
+| 4 | Three businesses, three economies | Tres negocios, tres economías |
 
 ## Art spec
 

@@ -59,7 +59,7 @@ struct WorkPackageCardView: View {
             }
         }
         .padding(10)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .cpPanel(cornerRadius: 12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(showsSupply && package.isStarvedOfMaterials && !activeCrew.isEmpty ? Color.red : Color.clear, lineWidth: 1.5)

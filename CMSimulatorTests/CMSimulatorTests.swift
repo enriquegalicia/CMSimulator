@@ -2265,3 +2265,131 @@ final class NameAndFaceTests: XCTestCase {
         }
     }
 }
+
+// MARK: - Critical path and cash curve (build 3)
+
+@MainActor
+final class ScheduleAndCashCurveTests: XCTestCase {
+
+    private func makeEngine(seed: UInt64 = 42) -> SimulationEngine {
+        SimulationEngine(brief: .construction(difficulty: .standard, persona: .institution, seed: seed))
+    }
+
+    private func hire(_ engine: SimulationEngine, _ count: Int, on packageID: String) {
+        for _ in 0..<count {
+            engine.requestHire(for: packageID)
+            guard let candidate = engine.hiringRequest?.candidates.first else { return XCTFail("empty pool") }
+            engine.confirmHire(candidate)
+        }
+    }
+
+    func testAFreshRunAlreadyHasAPlannedScheduleAndADayZeroPoint() {
+        let engine = makeEngine()
+        XCTAssertEqual(engine.cashHistory.count, 1)
+        XCTAssertEqual(engine.cashHistory.first?.day, 0)
+        XCTAssertGreaterThan(engine.cashHistory.first?.received ?? 0, 0, "the mobilisation advance is money in")
+
+        let schedule = engine.schedule
+        XCTAssertEqual(schedule.rows.count, engine.workPackages.count)
+        let design = schedule.rows.first { $0.id == "design" }
+        XCTAssertEqual(design?.status, .noCrew)
+        XCTAssertEqual(design?.finishIsPlanned, true, "nobody is on it, so its bar is an assumption")
+        XCTAssertNotNil(schedule.finish, "a fresh contract still has a planned shape")
+        XCTAssertNotNil(schedule.critical)
+        XCTAssertEqual(schedule.milestones.count, ProjectBrief.constructionMilestones.count)
+        XCTAssertTrue(schedule.milestones.allSatisfy(\.isProjected))
+    }
+
+    func testStaffingAStreamTurnsItsPlanIntoAForecast() {
+        let engine = makeEngine()
+        hire(engine, 6, on: "design")
+        for _ in 0..<20 { engine.advance(byDays: 0.25) }
+
+        let schedule = engine.schedule
+        let design = schedule.rows.first { $0.id == "design" }!
+        XCTAssertEqual(design.status, .building)
+        XCTAssertFalse(design.finishIsPlanned, "a staffed stream is timed at its crew's real pace")
+        XCTAssertNotNil(design.start)
+        XCTAssertLessThanOrEqual(design.start ?? .infinity, engine.elapsedDays)
+
+        // Float is never negative, and whatever sets the date has none.
+        for row in schedule.rows { XCTAssertGreaterThanOrEqual(row.float ?? 0, 0) }
+        let critical = schedule.critical!
+        XCTAssertLessThan(critical.float ?? 0, 1)
+        if let finish = schedule.finish, let own = critical.finish {
+            XCTAssertEqual(finish, own, accuracy: 1, "the critical stream finishes last")
+        }
+    }
+
+    func testTheCashCurveGetsOnePointPerDayAndNeverRunsBackwards() {
+        let engine = makeEngine()
+        hire(engine, 6, on: "design")
+        for _ in 0..<40 { engine.advance(byDays: 0.25) }   // ten days
+
+        XCTAssertEqual(engine.cashHistory.count, 11, "day 0 plus one point per day")
+        let days = engine.cashHistory.map(\.day)
+        XCTAssertEqual(days, days.sorted())
+        for (a, b) in zip(engine.cashHistory, engine.cashHistory.dropFirst()) {
+            XCTAssertGreaterThanOrEqual(b.spent, a.spent, "money out only accumulates")
+            XCTAssertGreaterThanOrEqual(b.received, a.received, "money in only accumulates")
+        }
+        XCTAssertGreaterThan(engine.cashHistory.last!.spent, engine.cashHistory.first!.spent, "payroll ran")
+    }
+
+    func testMilestonesRecordTheGapBetweenCertifiedAndPaid() {
+        let engine = makeEngine(seed: 7)
+        StoreScreenshots.play(StoreScreenshots.Shot(id: "test", scenario: .construction, days: 70), on: engine)
+        guard let first = engine.milestoneDates[0] else { return XCTFail("the first milestone should certify within 70 days") }
+        guard let paid = first.paid else { return XCTFail("and be paid") }
+        XCTAssertGreaterThanOrEqual(paid - first.certified, 1, "money always lands after the work is certified")
+        let row = engine.schedule.milestones.first { $0.id == 0 }
+        XCTAssertEqual(row?.isProjected, false)
+    }
+
+    func testTheDebriefCarriesTheWholeCurveAndTheFinalSchedule() {
+        let engine = makeEngine(seed: 7)
+        StoreScreenshots.play(StoreScreenshots.Shot(id: "test", scenario: .construction, playToEnd: true), on: engine)
+        let result = engine.result
+        XCTAssertNotNil(engine.outcome)
+        XCTAssertGreaterThan(result.cashHistory.count, 10)
+        XCTAssertEqual(floor(result.cashHistory.last!.day), floor(result.days), "the curve runs to the last day")
+        XCTAssertNotNil(result.schedule)
+        if result.outcome == .delivered {
+            XCTAssertTrue(result.schedule!.rows.allSatisfy { $0.status == .done })
+        }
+    }
+
+    /// The Path board's headline has to be worth believing. A careful
+    /// player runs three Steady contracts; the forecast taken on days 25
+    /// and 40 must land, on average, within a quarter of the real handover.
+    func testTheForecastTracksWhatActuallyHappens() {
+        var errors: [Double] = []
+        for seed in UInt64(1)...UInt64(3) {
+            let engine = SimulationEngine(brief: .construction(difficulty: .steady, persona: .institution, seed: seed))
+            engine.upgrade(.planning)
+            engine.upgrade(.quality)
+            var forecasts: [Double] = []
+            var elapsed = 0.0
+            while engine.outcome == nil, elapsed < 400 {
+                if engine.activeEvent != nil { engine.dismissEvent() }
+                StoreScreenshots.tendForTests(engine)
+                engine.advance(byDays: 0.25)
+                elapsed += 0.25
+                if [25.0, 40.0].contains(elapsed), let finish = engine.schedule.finish { forecasts.append(finish) }
+            }
+            guard engine.outcome == .delivered else { continue }
+            errors += forecasts.map { abs($0 - engine.elapsedDays) / engine.elapsedDays }
+        }
+        guard !errors.isEmpty else { return }
+        let meanError = errors.reduce(0, +) / Double(errors.count)
+        XCTAssertLessThan(meanError, 0.25, "forecasts were off by \(Int(meanError * 100))% on average")
+    }
+
+    func testStartupAndImportSchedulesPointAtTheLaunchStream() {
+        let startup = SimulationEngine(brief: .startup(difficulty: .standard, seed: 3))
+        XCTAssertEqual(startup.schedule.launch?.id, "mvp")
+        XCTAssertTrue(startup.schedule.milestones.isEmpty, "funding rounds are priced on customers, not dated on a schedule")
+        let trader = SimulationEngine(brief: .importBusiness(difficulty: .standard, seed: 3))
+        XCTAssertEqual(trader.schedule.launch?.id, "firstline")
+    }
+}

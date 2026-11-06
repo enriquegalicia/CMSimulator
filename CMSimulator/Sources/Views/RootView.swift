@@ -159,7 +159,7 @@ extension RootView {
         hasSeenScenarioPicker = true
         briefedScenarios = ScenarioKind.allCases.map(\.rawValue).joined(separator: ",")
         lastPlayerName = String(localized: "Player", comment: "Default score entry name")
-        engine.restart(with: .make(scenario: shot.scenario, difficulty: .standard, seed: StoreScreenshots.seed))
+        engine.restart(with: .make(scenario: shot.scenario, difficulty: shot.difficulty, seed: StoreScreenshots.seed))
         StoreScreenshots.play(shot, on: engine)
         switch shot.opens {
         case .picker: showScenarioPicker = true

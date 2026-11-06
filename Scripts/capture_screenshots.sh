@@ -27,7 +27,7 @@ BUNDLE=com.aguach1leLabs.CriticalPath
 RUNTIME=com.apple.CoreSimulator.SimRuntime.iOS-26-5
 
 # Story order: the number in the file name is the App Store order.
-ORDER=(board debrief picker trading growth levers hiring suppliers risk log)
+ORDER=(board path debrief picker trading growth levers hiring suppliers risk)
 SHOTS=(${=SHOTS:-$ORDER})
 LANGS=(en es)
 typeset -A LOCALE=(en en_US es es_MX)
@@ -58,7 +58,7 @@ capture() {
     sleep 3; xcrun simctl io $dev screenshot $file >/dev/null 2>&1
     cur=$(md5 -q $file)
     if (( $(stat -f%z $file) > floor )) && [[ $cur == $prev ]]; then return 0; fi
-    prev=$cur; (( n++ ))
+    prev=$cur; n=$((n + 1))  # not (( n++ )): it returns 1 when n is 0, which set -e treats as failure
   done
   echo "  timed out waiting for a stable frame: $file" >&2
 }

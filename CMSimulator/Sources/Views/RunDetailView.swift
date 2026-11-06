@@ -34,6 +34,7 @@ struct RunDetailView: View {
             }
             .padding(18)
         }
+        .background(BlueprintBackground())
         .navigationTitle(entry.scenarioName)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -75,7 +76,7 @@ struct RunDetailView: View {
             .foregroundStyle(.secondary)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     private func comparison(to previous: ScoreEntry) -> some View {
@@ -92,7 +93,7 @@ struct RunDetailView: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .cpPanel(cornerRadius: 12)
     }
 
     @ViewBuilder

@@ -25,6 +25,10 @@ enum StoreScreenshots {
         var playToEnd = false
         var board: GameView.Board = .site
         var opens: Sheet? = nil
+        /// The debrief and the growth board show a run that survives: the
+        /// staged player is careful, not clairvoyant, and on Standard a
+        /// bad week can still sink it before the shot.
+        var difficulty: Difficulty = .standard
     }
 
     enum Sheet { case picker, help, hiring, suppliers, risk, crew }
@@ -34,10 +38,12 @@ enum StoreScreenshots {
 
     static let catalogue: [Shot] = [
         Shot(id: "board", scenario: .construction, days: 34),
-        Shot(id: "debrief", scenario: .construction, playToEnd: true),
+        Shot(id: "path", scenario: .construction, days: 34, board: .path),
+        Shot(id: "path-startup", scenario: .startup, days: 20, board: .path),
+        Shot(id: "debrief", scenario: .construction, playToEnd: true, difficulty: .steady),
         Shot(id: "picker", scenario: .construction, opens: .picker),
         Shot(id: "trading", scenario: .importing, days: 70, board: .trading),
-        Shot(id: "growth", scenario: .startup, days: 90, board: .growth),
+        Shot(id: "growth", scenario: .startup, days: 80, board: .growth, difficulty: .steady),
         Shot(id: "levers", scenario: .construction, days: 24, board: .levers),
         Shot(id: "hiring", scenario: .construction, days: 12, opens: .hiring),
         Shot(id: "suppliers", scenario: .importing, days: 20, opens: .suppliers),
@@ -90,6 +96,10 @@ enum StoreScreenshots {
             break
         }
     }
+
+    /// The same careful player, for tests that need a realistically run job.
+    @MainActor
+    static func tendForTests(_ engine: SimulationEngine) { tend(engine) }
 
     @MainActor
     private static func tend(_ engine: SimulationEngine) {

@@ -37,6 +37,7 @@ struct CandidatePickerView: View {
                     footer
                 }
             }
+            .cpSheetBackground()
             .navigationTitle(String(localized: "Hire for \(request.packageTitle)", comment: "Candidate picker sheet title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

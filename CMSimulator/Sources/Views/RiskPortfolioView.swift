@@ -182,6 +182,7 @@ struct RiskPortfolioView: View {
                     }
                 }
             }
+            .cpSheetBackground()
             .navigationTitle(String(localized: "Risk", comment: "Risk sheet title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

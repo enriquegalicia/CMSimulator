@@ -111,6 +111,7 @@ struct MaterialOrderView: View {
                         .font(.caption)
                 }
             }
+            .cpSheetBackground()
             .navigationTitle(request.inputName ?? String(localized: "\(scenario.supplyOrderVerb) for \(request.packageTitle)", comment: "Material order sheet title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

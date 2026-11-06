@@ -28,6 +28,12 @@ struct ResultView: View {
             VStack(spacing: 18) {
                 banner
                 if delivered { headline }
+                if result.cashHistory.count > 1 {
+                    CashCurveView(points: result.cashHistory,
+                                  title: String(localized: "Your cash curve", comment: "Debrief: cash curve title"),
+                                  height: 180)
+                }
+                pathCard
                 exitCard
                 riskCard
                 seasonCard
@@ -39,6 +45,7 @@ struct ResultView: View {
             .frame(maxWidth: 560)
             .frame(maxWidth: .infinity)
         }
+        .background(BlueprintBackground())
     }
 
     private var banner: some View {
@@ -82,6 +89,45 @@ struct ResultView: View {
             return String(localized: "The selling season ran \(Int(result.days)) days. Whatever was left has been dumped.", comment: "Result subtitle, season end")
         case .construction:
             return String(localized: "Finished on day \(Int(result.days)) against a \(Int(result.deadlineDays))-day contract.", comment: "Result subtitle, success")
+        }
+    }
+
+    /// The schedule as the run left it, and which stream set the end date.
+    @ViewBuilder
+    private var pathCard: some View {
+        if let schedule = result.schedule {
+            VStack(alignment: .leading, spacing: 8) {
+                Label(String(localized: "Your critical path", comment: "Debrief: schedule title"),
+                      systemImage: "point.topleft.down.to.point.bottomright.curvepath")
+                    .font(.headline)
+                    .foregroundStyle(CP.ink)
+                GanttChart(schedule: schedule)
+                    .frame(height: GanttChart.height(for: schedule))
+                if let line = pathLine(schedule) {
+                    Text(line)
+                        .font(.caption)
+                        .foregroundStyle(CP.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(16)
+            .cpPanel(cornerRadius: 16)
+        }
+    }
+
+    /// One sentence on what drove the end date.
+    private func pathLine(_ schedule: ProjectSchedule) -> String? {
+        switch result.scenario {
+        case .construction:
+            guard delivered,
+                  let last = schedule.rows.filter({ $0.status == .done }).max(by: { ($0.finish ?? 0) < ($1.finish ?? 0) }),
+                  let finish = last.finish else { return nil }
+            return String(localized: "\(last.title) finished last, on day \(Int(finish.rounded())). That stream was your critical path at the end: any day it lost was a day on the handover.", comment: "Debrief: critical path summary")
+        case .startup:
+            guard let launchDay = result.launchDay else { return nil }
+            return String(localized: "You launched on day \(Int(launchDay)). Everything before that was runway spent without a customer.", comment: "Debrief: launch summary")
+        case .importing:
+            return nil
         }
     }
 
@@ -135,7 +181,7 @@ struct ResultView: View {
                 }
             }
             .padding(16)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .cpPanel(cornerRadius: 16)
         }
     }
 
@@ -162,7 +208,7 @@ struct ResultView: View {
                 }
             }
             .padding(16)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .cpPanel(cornerRadius: 16)
         }
     }
 
@@ -191,7 +237,7 @@ struct ResultView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(16)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .cpPanel(cornerRadius: 16)
         }
     }
 
@@ -232,7 +278,7 @@ struct ResultView: View {
                 tint: result.profit >= 0 ? .green : .red, bold: true)
         }
         .padding(16)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .cpPanel(cornerRadius: 16)
     }
 
     private func row(_ label: String, _ amount: Double, tint: Color = .primary,
@@ -282,7 +328,7 @@ struct ResultView: View {
                    tint: .secondary)
         }
         .padding(16)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .cpPanel(cornerRadius: 16)
     }
 
     private func lesson(systemImage: String, title: String, detail: String, tint: Color) -> some View {
@@ -315,7 +361,7 @@ struct ResultView: View {
                 } label: {
                     Text("Save score", comment: "Save score button").frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
+                .cpProminent()
                 .controlSize(.large)
             }
             Button {
@@ -327,6 +373,6 @@ struct ResultView: View {
             .controlSize(.large)
         }
         .padding(16)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .cpPanel(cornerRadius: 16)
     }
 }

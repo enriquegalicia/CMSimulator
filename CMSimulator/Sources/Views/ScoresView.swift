@@ -99,11 +99,13 @@ struct ScoresView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
             }
             .padding(isWide ? 32 : 16)
             .frame(maxWidth: isWide ? 700 : .infinity)
             .frame(maxWidth: .infinity)
+            .background(BlueprintBackground())
         }
     }
 

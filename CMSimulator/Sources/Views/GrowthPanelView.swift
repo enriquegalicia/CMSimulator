@@ -81,7 +81,7 @@ struct GrowthPanelView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .cpPanel(cornerRadius: 14)
         } else {
             VStack(alignment: .leading, spacing: 6) {
                 Label(String(localized: "You do not know what you are building yet", comment: "Pre-discovery title"),
@@ -95,7 +95,7 @@ struct GrowthPanelView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .cpPanel(cornerRadius: 14)
         }
     }
 
@@ -129,7 +129,7 @@ struct GrowthPanelView: View {
                         .font(.caption2).foregroundStyle(.secondary)
                     HStack(spacing: 8) {
                         Button(String(localized: "Take it", comment: "Accept angel button")) { onAcceptAngel(angel.id) }
-                            .buttonStyle(.borderedProminent)
+                            .cpProminent()
                         Button(String(localized: "Pass", comment: "Decline angel button")) { onDeclineAngel(angel.id) }
                             .buttonStyle(.bordered)
                     }
@@ -147,7 +147,7 @@ struct GrowthPanelView: View {
                     .font(.caption.bold())
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
+            .cpProminent()
             .tint(isSearchingForAngels ? .secondary : .accentColor)
             .controlSize(.small)
 
@@ -159,7 +159,7 @@ struct GrowthPanelView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Pre-launch
@@ -182,7 +182,7 @@ struct GrowthPanelView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Traction
@@ -215,7 +215,7 @@ struct GrowthPanelView: View {
             }
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     private var sparkline: some View {
@@ -277,7 +277,7 @@ struct GrowthPanelView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Valuation
@@ -309,7 +309,7 @@ struct GrowthPanelView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Spend
@@ -337,7 +337,7 @@ struct GrowthPanelView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Helpers

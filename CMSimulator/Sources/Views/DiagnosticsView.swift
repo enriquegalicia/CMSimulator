@@ -150,6 +150,7 @@ struct DiagnosticsView: View {
                 Text("This device", comment: "Diagnostics section header")
             }
         }
+        .cpSheetBackground()
         .navigationTitle(String(localized: "Diagnostics", comment: "Diagnostics screen title"))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: Binding(
@@ -205,6 +206,7 @@ private struct DiagnosticDetailView: View {
             }
             .padding()
         }
+        .background(BlueprintBackground())
         .navigationTitle(report.kind.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

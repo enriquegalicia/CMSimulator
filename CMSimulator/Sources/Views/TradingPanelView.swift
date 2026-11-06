@@ -68,7 +68,7 @@ struct TradingPanelView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: What you sell
@@ -94,7 +94,7 @@ struct TradingPanelView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Where you buy
@@ -154,7 +154,7 @@ struct TradingPanelView: View {
             }
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     private func stat(_ label: String, _ value: Double, suffix: String, tint: Color = .primary) -> some View {
@@ -220,11 +220,11 @@ struct TradingPanelView: View {
                     .font(.caption.bold())
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
+            .cpProminent()
             .controlSize(.small)
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Where the money goes
@@ -259,7 +259,7 @@ struct TradingPanelView: View {
             }
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     // MARK: Controls
@@ -301,7 +301,7 @@ struct TradingPanelView: View {
             }
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     private func row(_ label: String, _ amount: Double, tint: Color = .primary, bold: Bool = false) -> some View {

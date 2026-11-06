@@ -181,12 +181,20 @@ final class SimulationEngine: ObservableObject {
     @Published private(set) var savedByMitigation: Double = 0
     @Published private(set) var savedByInsurance: Double = 0
     @Published private(set) var savedByNearMiss: Double = 0
+    /// One point per simulated day: money out, money in, and money earned
+    /// but not yet received. Drawn as the cash curve on the board and in
+    /// the debrief - the picture of "profitable on paper, broke in the
+    /// bank" that the whole game is built around.
+    @Published private(set) var cashHistory: [CashPoint] = []
+    /// When each progress payment was certified, and when its money
+    /// actually arrived. The gap between the two is the lesson.
+    @Published private(set) var milestoneDates: [Int: MilestoneDates] = [:]
     var totalLossesAvoided: Double { savedByMitigation + savedByInsurance + savedByNearMiss }
 
     // MARK: Private run state
 
     private var timerCancellable: AnyCancellable?
-    private var pendingPayments: [(net: Double, retainage: Double, dueDay: Double)] = []
+    private var pendingPayments: [(net: Double, retainage: Double, dueDay: Double, milestoneID: Int?)] = []
     private var penalizedThroughDay: Double = 0
     private var nextIncidentDay: Double = .greatestFiniteMagnitude
     private var nextIncidentClass: MitigationClass = .weather
@@ -250,6 +258,7 @@ final class SimulationEngine: ObservableObject {
         log(String(localized: "Mobilisation advance of \(Int(advance).formatted()) received.", comment: "Site log: advance payment"),
             symbol: "banknote.fill", tone: .good)
         recomputeProgress()
+        recordCashPoint()
     }
 
     func restart(with newBrief: ProjectBrief? = nil) {
@@ -273,6 +282,8 @@ final class SimulationEngine: ObservableObject {
         mitigationsHeld = []
         pendingPayments = []
         siteLog = []
+        cashHistory = []
+        milestoneDates = [:]
         totalProgress = 0
         elapsedDays = 0
         clientTrust = 0.55
@@ -358,6 +369,7 @@ final class SimulationEngine: ObservableObject {
         advanceIncidentClock(step: step)
         ageActiveEvent(step: step)
         updateForecast()
+        if let last = cashHistory.last, floor(elapsedDays) > floor(last.day) { recordCashPoint() }
 
         if brief.trade != nil {
             // A trader's run ends when the selling season does. There is
@@ -435,6 +447,7 @@ final class SimulationEngine: ObservableObject {
             }
             guard produced > 0 else { continue }
 
+            if workPackages[i].startedDay == nil { workPackages[i].startedDay = max(0, elapsedDays - step) }
             workPackages[i].unitsCompleted += produced
             if workPackages[i].consumesMaterials {
                 workPackages[i].materialStock -= produced * workPackages[i].spec.materialUnitsPerWorkUnit
@@ -457,6 +470,7 @@ final class SimulationEngine: ObservableObject {
             workPackages[i].defectDebt += produced * defectPerUnit
 
             if workPackages[i].isComplete {
+                workPackages[i].finishedDay = elapsedDays
                 log(String(localized: "\(workPackages[i].title) complete.", comment: "Site log: package finished"),
                     symbol: "checkmark.seal.fill", tone: .good)
                 demobilise(packageID: workPackages[i].id, title: workPackages[i].title)
@@ -689,15 +703,23 @@ final class SimulationEngine: ObservableObject {
             } else {
                 let gross = (brief.contractValue + scopeRevenue) * milestone.share
                 let retainage = gross * brief.retainageRate
-                let delay = max(1, brief.clientPersona.basePaymentDelayDays
-                    - CapabilityEffects.paymentSpeedUpDays(level: level(of: .communications))
-                    - clientTrust * 4)
-                pendingPayments.append((net: gross - retainage, retainage: retainage, dueDay: elapsedDays + delay))
+                let delay = paymentDelayDays
+                pendingPayments.append((net: gross - retainage, retainage: retainage, dueDay: elapsedDays + delay,
+                                        milestoneID: milestone.id))
+                milestoneDates[milestone.id] = MilestoneDates(certified: elapsedDays, paid: nil)
                 reputation = min(1, reputation + 0.03)
                 log(String(localized: "Milestone certified. Payment due in \(Int(delay)) days.", comment: "Site log: milestone reached"),
                     symbol: "checkmark.circle.fill", tone: .good)
             }
         }
+    }
+
+    /// Days between a milestone being certified and its money landing, at
+    /// today's trust and Communications level.
+    var paymentDelayDays: Double {
+        max(1, brief.clientPersona.basePaymentDelayDays
+            - CapabilityEffects.paymentSpeedUpDays(level: level(of: .communications))
+            - clientTrust * 4)
     }
 
     /// Clients certify progress; investors price traction.
@@ -714,6 +736,7 @@ final class SimulationEngine: ObservableObject {
         pendingPayments.removeAll { $0.dueDay <= elapsedDays }
         for payment in due {
             ledger.receive(payment.net, retainage: payment.retainage)
+            if let id = payment.milestoneID { milestoneDates[id]?.paid = elapsedDays }
             log(String(localized: "Client paid \(Int(payment.net).formatted()).", comment: "Site log: payment received"),
                 symbol: "banknote.fill", tone: .good)
         }
@@ -1476,13 +1499,14 @@ final class SimulationEngine: ObservableObject {
 
     /// Estimated completion day with a confidence band, or nil when
     /// Planning is not staffed. Buying certainty is Planning's whole job.
+    ///
+    /// Build 3: the day comes from the Path board's schedule, so the HUD and
+    /// the Gantt never disagree. The old figure divided every remaining unit
+    /// by today's output, as if streams nobody could start yet would be
+    /// built by the crews already on site.
     var completionEstimate: (day: Double, low: Double, high: Double)? {
         let planningLevel = level(of: .planning)
-        guard planningLevel > 0 else { return nil }
-        let throughput = currentThroughput
-        guard throughput > 0.01 else { return nil }
-        let remaining = workPackages.reduce(0) { $0 + $1.unitsRemaining }
-        let eta = elapsedDays + remaining / throughput
+        guard planningLevel > 0, let eta = schedule.finish else { return nil }
         let band = (eta - elapsedDays) * CapabilityEffects.forecastUncertainty(level: planningLevel)
         return (day: eta, low: eta - band, high: eta + band)
     }
@@ -1781,7 +1805,10 @@ final class SimulationEngine: ObservableObject {
         let offer = growth.exitValuation(openTechDebt: openDebt)
         exitOffer = offer
 
-        for payment in pendingPayments { ledger.receive(payment.net, retainage: payment.retainage) }
+        for payment in pendingPayments {
+            ledger.receive(payment.net, retainage: payment.retainage)
+            if let id = payment.milestoneID { milestoneDates[id]?.paid = elapsedDays }
+        }
         pendingPayments = []
 
         let proceeds = offer.netValuation * ledger.founderEquity
@@ -1810,7 +1837,10 @@ final class SimulationEngine: ObservableObject {
             if !isInGracePeriod { accrueLatePenalties() }
         }
         // Close out anything the client still owed.
-        for payment in pendingPayments { ledger.receive(payment.net, retainage: payment.retainage) }
+        for payment in pendingPayments {
+            ledger.receive(payment.net, retainage: payment.retainage)
+            if let id = payment.milestoneID { milestoneDates[id]?.paid = elapsedDays }
+        }
         pendingPayments = []
 
         let deduction = openDefects * CapabilityEffects.reworkCostPerDefect
@@ -1829,6 +1859,7 @@ final class SimulationEngine: ObservableObject {
     private func finish(_ result: RunOutcome) {
         outcome = result
         setSpeed(.paused)
+        recordCashPoint()
         log(result == .delivered
             ? String(localized: "Project handed over.", comment: "Site log: delivered")
             : String(localized: "Insolvent. The project is over.", comment: "Site log: insolvent"),
@@ -1982,7 +2013,9 @@ final class SimulationEngine: ObservableObject {
             reputation: reputation,
             difficulty: brief.difficulty,
             persona: brief.clientPersona,
-            seed: brief.seed
+            seed: brief.seed,
+            cashHistory: cashHistory,
+            schedule: schedule
         )
     }
 
@@ -2029,6 +2062,24 @@ final class SimulationEngine: ObservableObject {
 
     func debugDrainCash() {
         ledger.debugDrain()
+    }
+
+    // MARK: - Cash curve
+
+    /// Appends today's point, or replaces it if one was already taken
+    /// today (the closing point of a run lands on the same day as the
+    /// last daily one).
+    private func recordCashPoint() {
+        let point = CashPoint(day: elapsedDays,
+                              spent: ledger.costs.total,
+                              received: ledger.revenueReceived + ledger.capitalRaised,
+                              owed: moneyOwed,
+                              balance: ledger.cash - ledger.debt)
+        if let last = cashHistory.last, floor(last.day) == floor(point.day), last.day > 0 || point.day == 0 {
+            cashHistory[cashHistory.count - 1] = point
+        } else {
+            cashHistory.append(point)
+        }
     }
 
     // MARK: - Site log
@@ -2081,6 +2132,10 @@ struct RunResult {
     let difficulty: Difficulty
     let persona: ClientPersona
     let seed: UInt64
+    /// The run's cash curve, for the debrief. Not stored with saved scores.
+    var cashHistory: [CashPoint] = []
+    /// The schedule as it stood at the end, for the debrief's critical path.
+    var schedule: ProjectSchedule? = nil
 
     var wasOnTime: Bool { days <= deadlineDays }
     var margin: Double { revenue > 0 ? profit / revenue : 0 }

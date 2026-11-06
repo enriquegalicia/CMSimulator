@@ -48,6 +48,7 @@ struct SettingsView: View {
                     Text("Crashes and errors are recorded on this device so they can be sent on and fixed. Nothing is uploaded automatically.", comment: "Settings diagnostics footer")
                 }
             }
+            .cpSheetBackground()
             .navigationTitle(String(localized: "Settings", comment: "Settings screen title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

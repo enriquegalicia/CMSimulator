@@ -21,7 +21,11 @@ struct CriticalPathSimApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // One look in every system appearance: the night-shift planning
+            // table (Theme.swift). The launch screen is the same slate.
             RootView()
+                .preferredColorScheme(.dark)
+                .tint(CP.lime)
         }
         .modelContainer(container)
         .onChange(of: scenePhase) { _, phase in

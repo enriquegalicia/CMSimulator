@@ -462,7 +462,7 @@ struct CashflowStripView: View {
             if owed > 1 { owedLine }
         }
         .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .cpPanel(cornerRadius: 14)
     }
 
     private var header: some View {

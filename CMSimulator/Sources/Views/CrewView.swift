@@ -110,6 +110,8 @@ struct CrewView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(BlueprintBackground())
             .navigationTitle(scenario.staffName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

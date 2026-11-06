@@ -1,5 +1,7 @@
 # App Store Connect — App Information
 
+> **Paste from [AppStoreConnect_Listing.md](AppStoreConnect_Listing.md)** (2026-10-19): one sheet with every App Store Connect field, Privacy Policy URL included, checked by `scripts/listing_check.py`. This file is background; where it disagrees with the sheet, the sheet wins.
+
 This is the companion to `GameCenter_Setup.md`: everything needed to fill in
 App Store Connect's **App Information**, **Pricing and Availability**, and
 first-version fields, so the only one left incomplete isn't Game Center.
@@ -45,29 +47,38 @@ flagged as a decision only Enrique can make — nothing here is guessed.
 Nothing here has been checked against App Store search-volume data; it is a
 reasoned first draft, not ASO research.
 
-**Subtitle** (30 char max): `Build. Grow. Trade. Profit.` (27 chars)
+**Subtitle** (30 char max): `Cash-flow business simulator` (28 chars). Changed 2026-10-15 for build 3: "Build. Grow. Trade. Profit." could describe any tycoon game (4.3(b)).
 
 **Promotional Text** (170 char max — the only field editable without a new
 build, so it's fine to change this often):
 
 ```
-Three businesses, one brutal economy. Build buildings, grow a startup, or import and resell — profit is the only score that means anything.
+Run a building contract, a startup or an import business on a live critical path. Watch the cash curve: profitable on paper is not the same as cash in the bank.
 ```
 
-(141 chars)
+(160 chars, build 3)
 
 **Description** (4,000 char max):
 
 ```
-Critical Path is a business decision simulator built around one idea: every shortcut has a real cost, and profit is the only number that tells you whether you found it before it found you.
+Critical Path is a business simulator built around one idea: every shortcut has a real cost, and profit is the only number that tells you whether you found it before it found you.
 
-Play three completely different businesses, each with its own economy:
+Run three completely different businesses, each with its own economy:
 
-• Construction — deliver a building against a fixed budget and a hard deadline, with a crew that gets paid whether or not they have work to do.
-• Startup — take a company from nothing to an exit, where every funding round dilutes you and every customer you don't go acquire never shows up on its own.
-• Import & Resale — buy low, sell high, and discover that cheap suppliers, big upfront orders, and heavy ad spend are usually how you lose.
+• Construction: deliver a building against a fixed budget and a hard deadline. The client pays by milestone, days behind the work, and holds back retention until handover, while your crew is paid every day whether or not it has work.
+• Startup: take a company from nothing to an exit. Customers pay you, every funding round dilutes you, and every day before launch is growth you never get back.
+• Import & Resale: buy abroad, sell on a marketplace, and find out where the margin really goes: fees, duty, the exchange rate, seasonal demand and payouts that arrive weeks later.
 
-Six capability levers — Planning, Procurement, Quality, Risk, Communications, Training — behave completely differently in each scenario. Compare your results on a dedicated leaderboard per scenario, built on profit so a building, a software company, and a trading operation are never ranked against each other on the same board.
+THE PATH
+Every piece of work sits on a live schedule. The critical path glows; everything else shows how many days of float it has. The board tells you what is setting your finish date right now, and the one move that would change it.
+
+PAID BEHIND THE WORK
+Progress payments sit on the same timeline: the day each is certified, and the day the money actually lands.
+
+THE CASH CURVE
+Money out against money in, day by day. The gap between the lines is what your own capital and your credit line are carrying, and it is how profitable businesses go broke.
+
+Six capability levers (Planning, Procurement, Quality, Risk, Communications, Training) behave differently in each business. The end-of-run debrief shows your whole cash curve, your final critical path and every line of the P&L. Each business has its own leaderboard, ranked on profit.
 
 No subscriptions, no in-app purchases, no accounts. Play in English or Spanish.
 ```
@@ -77,10 +88,10 @@ avoids repeating words already in the app name or subtitle, which Apple
 indexes separately):
 
 ```
-business simulation,tycoon,construction game,startup,economy,strategy,management,import,trading
+project schedule,gantt,cash flow,construction game,startup,economy,strategy,management,trading
 ```
 
-(95 chars)
+(94 chars, build 3. "Critical path" is already in the name, which App Store search indexes on its own.)
 
 **Copyright** (200 char max): `© 2026 Enrique Galicia` — confirm this is the
 actual rights holder; use `© 2026 Aguach1leLabs` instead if that is a

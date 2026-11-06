@@ -70,7 +70,7 @@ struct CapabilityCardView: View {
             }
         }
         .padding(10)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .cpPanel(cornerRadius: 12)
         .opacity(capability.isUnlocked ? 1 : 0.4)
     }
 
@@ -115,7 +115,7 @@ struct CapabilityCardView: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .cpProminent()
                     .disabled(!affordable)
                 }
 

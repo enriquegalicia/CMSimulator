@@ -3,6 +3,17 @@
     "allow": [
       "Bash(export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer)",
       "Bash"
+    ],
+    "deny": [
+      "Bash(git push * main)",
+      "Bash(git push * main *)",
+      "Bash(git push *:main*)",
+      "Bash(git push -f*)",
+      "Bash(git push * -f*)",
+      "Bash(git push *--force*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)"
     ]
   }
 }
